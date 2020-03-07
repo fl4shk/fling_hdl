@@ -2,161 +2,323 @@ grammar FlingHdlGrammar;
 
 //--------
 // Parser rules
-hdlProgram:
-	hdlModule
-	| hdlPackage
-	| hdlDeclType
-	| hdlDeclSubprogram
-	| hdlDeclAlias
+flingProgram:
+	flingModule
+	| flingPackage
+	| flingDeclType
+	| flingDeclSubprogram
+	| flingDeclAlias
 	;
 //--------
 
 //--------
-hdlModule:
-	KwModule MiscIdent hdlDeclParamList? hdlDeclArgList
-		(':' hdlImportList)?
-	hdlModule_Scope
+flingDeclParamList:
+	'<'
+		flingDeclParamList_Item
+		(';' flingDeclParamList_Item)*
+		';'?
+	'>'
+	;
+flingDeclParamList_Item:
+	flingIdentList ':'
+		(
+			flingTypenameOrModname ('=' flingExprList)?
+			| (KwType | KwModule) ('=' flingTypenameOrModnameList)?
+		)
 	;
 
-hdlModule_Scope:
+flingDeclArgList:
+	'('
+		flingDeclArgList_Item
+		(';' flingDeclArgList_Item)*
+		';'?
+	')'
+	;
+flingDeclArgList_Item:
+	flingIdentList ':' flingDeclArgList_PortDir flingTypenameOrModname
+		('=' flingExprList)?
+	;
+
+flingDeclArgList_PortDir:
+	KwInput | KwOutput | KwInout
+	;
+//--------
+
+//--------
+flingInstParamList:
+	'<'
+		(
+			flingInstParamList_Pos
+			| flingInstParamList_Named
+		)
+	'>'
+	;
+
+flingInstParamList_Pos:
+	flingInstParamList_Pos_Item
+	(',' flingInstParamList_Pos_Item)*
+	','?
+	;
+flingInstParamList_Pos_Item:
+	flingExpr | flingTypenameOrModname
+	;
+
+flingInstParamList_Named:
+	flingInstParamList_Named_Item
+	(',' flingInstParamList_Named_Item)*
+	','?
+	;
+flingInstParamList_Named_Item:
+	flingIdent PunctMapTo flingInstParamList_Pos_Item
+	;
+
+flingInstArgList:
+	'('
+		(
+			flingInstArgList_Pos
+			| flingInstArgList_Named
+		)
+	')'
+	;
+
+flingInstArgList_Pos:
+	flingExprList ','?
+	;
+
+flingInstArgList_Named:
+	flingInstArgList_Named_Item
+	(',' flingInstArgList_Named_Item)*
+	','?
+	;
+
+flingInstArgList_Named_Item:
+	flingIdent PunctMapTo flingExpr
+	;
+//--------
+
+//--------
+flingModule:
+	KwModule flingIdent flingDeclParamList? flingDeclArgList
+		(':' flingImportList)?
+	flingModule_Scope
+	;
+
+flingModule_Scope:
 	'{'
-		hdlModule_Item*
+		flingModule_Item*
 	'}'
 	;
 
-hdlModule_Item:
-	hdlInstModule
+flingModule_Item:
+	flingInstModule
 
 	// This is a `proc` call
-	| hdlExpr_CallSubprogram
-	| hdlGen
-	| hdlContAssign
-	| hdlImport
+	| flingExpr_CallSubprogram
+	| flingGen
+	| flingContAssign
+	| flingImport
 
-	| hdlBehav
-	| hdlDeclWire
-	| hdlDeclVar
-	| hdlDeclConst
+	| flingBehav
+	| flingDeclWire
+	| flingDeclVar
+	| flingDeclConst
 
-	| hdlDeclType
-	| hdlDeclSubprogram
-	| hdlDeclAlias
+	| flingDeclType
+	| flingDeclSubprogram
+	| flingDeclAlias
 	;
 //--------
 
 //--------
-hdlInstModule:
-	MiscIdent ':' KwModule hdlTypenameOrModname hdlInstArgList ';'
+flingInstModule:
+	flingIdent ':' KwModule flingTypenameOrModname flingInstArgList ';'
 	;
 //--------
 
 //--------
-hdlGen:
-	hdlGenerate_If
-	| hdlGenerate_Switch
-	| hdlGenerate_For
+flingGen:
+	flingGenerate_If
+	| flingGenerate_Switch
+	| flingGenerate_For
 	;
 
-hdlGenerate_If:
-	KwGenerate KwIf hdlExpr hdlModule_Scope
-	hdlGenerate_If_Elif*
-	hdlGenerate_If_Else?
+flingGenerate_If:
+	KwGenerate KwIf flingExpr flingModule_Scope
+	flingGenerate_If_Elif*
+	flingGenerate_If_Else?
 	;
-hdlGenerate_If_Elif:
-	KwGenerate KwElif hdlExpr hdlModule_Scope
+flingGenerate_If_Elif:
+	KwGenerate KwElif flingExpr flingModule_Scope
 	;
-hdlGenerate_If_Else:
-	KwGenerate KwElse hdlModule_Scope
+flingGenerate_If_Else:
+	KwGenerate KwElse flingModule_Scope
 	;
 
-hdlGenerate_Switch:
-	KwGenerate KwSwitch hdlExpr
+flingGenerate_Switch:
+	KwGenerate KwSwitch flingExpr
 	'{'
 		(
-			hdlGenerate_Switch_Default? hdlGenerate_Switch_Case*
-			| hdlGenerate_Switch_Case+ hdlGenerate_Switch_Default
+			flingGenerate_Switch_Default? flingGenerate_Switch_Case*
+			| flingGenerate_Switch_Case+ flingGenerate_Switch_Default
 		)
 	'}'
 	;
-hdlGenerate_Switch_Default:
-	KwDefault hdlModule_Scope
+flingGenerate_Switch_Default:
+	KwDefault flingModule_Scope
 	;
-hdlGenerate_Switch_Case:
-	hdlExpr hdlModule_Scope
+flingGenerate_Switch_Case:
+	flingExprList flingModule_Scope
 	;
 
-hdlGenerate_For:
-	KwGenerate '[' MiscIdent ']' KwFor MiscIdent ':' hdlExpr_Range
-		hdlModule_Scope
-	;
-//--------
-
-//--------
-hdlContAssign:
-	hdlExpr '=' hdlExpr ';'
+flingGenerate_For:
+	KwGenerate '[' flingIdent ']' KwFor flingIdent ':' flingExpr_Range
+		flingModule_Scope
 	;
 //--------
 
 //--------
-hdlDeclWire:
-	hdlIdentList ':' KwWire hdlTypenameOrModname ('=' hdlExprList)? ';'
-	;
-
-hdlDeclVar:
-	hdlIdentList ':' hdlTypenameOrModname ('=' hdlExprList)? ';'
-	;
-
-hdlDeclConst:
-	hdlIdentList ':' KwConst hdlTypenameOrModname '=' hdlExprList ';'
+flingContAssign:
+	flingExpr '=' flingExpr ';'
 	;
 //--------
 
 //--------
-hdlDeclType:
-	hdlDeclType_Enum
-	| hdlDeclType_Class
-	| hdlDeclType_Mixin
+flingBehav:
+	(
+		KwInitial
+		| KwComb
+		| KwSeq flingBehav_Seq_EdgeList
+	)
+	flingBehav_Scope
 	;
-//--------
 
-//--------
-hdlDeclSubprogram:
-	hdlDeclSubprogram_Func
-	| hdlDeclSubprogram_Task
-	| hdlDeclSubprogram_Proc
+flingBehav_Seq_EdgeList:
+	flingBehav_Seq_EdgeList_Item
+	(',' flingBehav_Seq_EdgeList_Item)*
+	','?
 	;
-//--------
+flingBehav_Seq_EdgeList_Item:
+	(KwPosedge | KwNegedge) flingExpr
+	;
 
-//--------
-hdlDeclAlias:
-	KwAlias hdlIdentList ':'
+flingBehav_Scope:
+	'{'
+		flingBehav_Item*
+	'}'
+	;
+
+flingBehav_Item:
+	flingDeclAlias
+	| flingDeclVar
+	| flingDeclConst
+	| flingDeclType
+
+	| flingBehav_Scope
+
+	| flingBehav_If
+	| flingBehav_SwitchOrSwitchz
+	| flingBehav_For
+	| flingBehav_While
+	| flingBehav_NonblkAssign
+	| flingBehav_BlkAssign
+	;
+
+flingBehav_If:
+	KwIf flingExpr flingBehav_Scope
+	flingBehav_If_Elif*
+	flingBehav_If_Else?
+	;
+flingBehav_If_Elif:
+	KwElif flingExpr flingBehav_Scope
+	;
+flingBehav_If_Else:
+	KwElse flingBehav_Scope
+	;
+
+flingBehav_SwitchOrSwitchz:
+	(KwSwitch | KwSwitchz) flingExpr
+	'{'
 		(
-			hdlTypenameOrModname '=' hdlExprList
-			| (KwType | KwModule) '=' hdlTypenameOrModnameList
+			flingBehav_SwitchOrSwitchz_Default?
+				flingBehav_SwitchOrSwitchz_Case*
+			| flingBehav_SwitchOrSwitchz_Case+
+				flingBehav_SwitchOrSwitchz_Default
+		)
+	'}'
+	;
+flingBehav_SwitchOrSwitchz_Default:
+	KwDefault flingBehav_Scope
+	;
+flingBehav_SwitchOrSwitchz_Case:
+	flingExprList flingBehav_Scope
+	;
+//--------
+
+//--------
+flingDeclWire:
+	flingIdentList ':' KwWire flingTypenameOrModname ('=' flingExprList)?
+		';'
+	;
+
+flingDeclVar:
+	flingIdentList ':' flingTypenameOrModname ('=' flingExprList)? ';'
+	;
+
+flingDeclConst:
+	flingIdentList ':' KwConst flingTypenameOrModname '=' flingExprList ';'
+	;
+//--------
+
+//--------
+flingDeclType:
+	flingDeclType_Enum
+	| flingDeclType_Class
+	| flingDeclType_Mixin
+	;
+//--------
+
+//--------
+flingDeclSubprogram:
+	flingDeclSubprogram_Func
+	| flingDeclSubprogram_Task
+	| flingDeclSubprogram_Proc
+	;
+//--------
+
+//--------
+flingDeclAlias:
+	KwAlias flingIdentList ':'
+		(
+			flingTypenameOrModname '=' flingExprList
+			| (KwType | KwModule) '=' flingTypenameOrModnameList
 		)
 	';'
 	;
 //--------
 
 //--------
-hdlIdentList:
-	MiscIdent (',' MiscIdent)*
+flingIdent:
+	MiscIdent
 	;
-hdlExprList:
-	hdlExpr (',' hdlExpr)*
+flingIdentList:
+	flingIdent (',' flingIdent)*
 	;
-hdlTypenameOrModnameList:
-	hdlTypenameOrModname (',' hdlTypenameOrModname)*
+flingScopedIdent:
+	flingIdent (PunctScopeAccess flingIdent)*
 	;
 
-hdlImport_MainContents:
-	MiscIdent (PunctScopeAccess MiscIdent)*
+flingExprList:
+	flingExpr (',' flingExpr)*
 	;
-hdlImport:
-	KwImport hdlImport_MainContents ';'
+flingTypenameOrModnameList:
+	flingTypenameOrModname (',' flingTypenameOrModname)*
 	;
-hdlImportList:
-	KwImport hdlImport_MainContents (',' hdlImport_MainContents)*
+
+flingImport:
+	KwImport flingScopedIdent ';'
+	;
+flingImportList:
+	KwImport flingScopedIdent (',' flingScopedIdent)*
 	;
 //--------
 
@@ -263,7 +425,7 @@ PunctLogNot: '!' ;
 //--------
 
 //--------
-PunctMapsTo: '=>' ;
+PunctMapTo: '=>' ;
 //--------
 
 //--------
@@ -393,7 +555,6 @@ KwTypeof: 'typeof' ;
 KwAlias: 'alias' ;
 
 KwEnum: 'enum' ;
-KwEncAs: 'enc_as' ;
 
 KwClass: 'class' ;
 KwPacked: 'packed' ;
@@ -417,21 +578,17 @@ KwPriv: 'priv' ;
 KwRef: 'ref' ;
 
 KwInit: 'init' ;
-KwDest: 'dest' ;
-KwNull: 'null' ;
-
-KwMove: 'move' ;
-
-//KwGenerate: 'generate' ;
-
-KwList: 'list' ;
-KwDict: 'dict' ;
-KwSet: 'set' ;
-KwStr: 'str' ;
-KwFloat: 'float' ;
-KwFile: 'file' ;
-
-//KwEval: 'eval' ;
+//KwDest: 'dest' ;
+//KwNull: 'null' ;
+//
+//KwMove: 'move' ;
+//
+//KwList: 'list' ;
+//KwDict: 'dict' ;
+//KwSet: 'set' ;
+//KwStr: 'str' ;
+//KwFloat: 'float' ;
+////KwFile: 'file' ;
 //--------
 
 //--------
