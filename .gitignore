@@ -45,3 +45,4 @@ disassembly*.armasm
 verilog_types_extension
 verilog_types_extension_debug
 *.elf
+src/gen_src

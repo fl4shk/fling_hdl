@@ -556,7 +556,14 @@ flingExpr_BinaryPlus_Or_BinaryMinus:
 	;
 
 flingExpr_Mul_Or_Div_Or_Mod:
-	(PunctPlus | PunctMinus | PunctLogNot | PunctBitNot) flingExpr
+	(
+		PunctPlus | PunctMinus | PunctLogNot | PunctBitNot
+
+		// Reduction operators
+		| PunctBitOr | PunctBitNor | PunctBitAnd | PunctBitNand
+		| PunctBitXor | PunctBitXnor
+	) flingExpr
+
 	| flingExpr_Unary
 	;
 
@@ -569,7 +576,8 @@ flingExpr_Unary:
 	| KwRepl '(' flingExpr_LitRange_Item ',' flingExpr ')'
 	| (KwDollarSigned | KwDollarUnsigned | KwDollarClog2) '(' flingExpr ')'
 	| KwDollarPow '(' flingExpr ',' flingExpr ')'
-	| flingExpr_IdentEtc
+	| flingExpr_IdentEtc (KwDollarSize | KwDollarRange
+		| KwDollarHigh | KwDollarLow)
 	| flingExpr_CallSubprog
 	;
 
@@ -592,6 +600,7 @@ flingExpr_IdentEtc:
 	(flingTypenameOrModname PunctScopeAccess)?
 	flingExpr_IdentEtc_Item 
 	(PunctMemberAccess flingExpr_IdentEtc_Item)*
+	;
 
 flingExpr_IdentEtc_Item:
 	flingIdent flingExpr_IdentEtc_Item_End*
@@ -600,6 +609,7 @@ flingExpr_IdentEtc_Item:
 flingExpr_IdentEtc_Item_End:
 	'[' flingExpr ']'
 	| flingInstParamList? flingInstArgList
+	| KwDollarFirstel | KwDollarLastel
 	;
 
 flingExpr_CallSubprog:
