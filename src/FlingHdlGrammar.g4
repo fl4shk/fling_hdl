@@ -3,8 +3,8 @@ grammar FlingHdlGrammar;
 //--------
 // Parser rules
 flingProgram:
-	flingPackage
-	| flingModule
+	flingDeclPackage
+	| flingDeclModule
 	| flingDeclType
 	| flingDeclSubprog
 	| flingDeclAlias
@@ -12,15 +12,15 @@ flingProgram:
 //--------
 
 //--------
-flingPackage:
+flingDeclPackage:
 	KwPackage flingIdent
 	'{'
-		flingPackage_Item*
+		flingDeclPackage_Item*
 	'}'
 	;
 
-flingPackage_Item:
-	flingPackage
+flingDeclPackage_Item:
+	flingDeclPackage
 	| flingDeclType
 	| flingDeclSubprog
 	| flingDeclAlias
@@ -108,19 +108,19 @@ flingInstArgList_Named_Item:
 //--------
 
 //--------
-flingModule:
+flingDeclModule:
 	KwModule flingIdent flingDeclParamList? flingDeclArgList
 		(':' flingImportList)?
-	flingModule_Scope
+	flingDeclModule_Scope
 	;
 
-flingModule_Scope:
+flingDeclModule_Scope:
 	'{'
-		flingModule_Item*
+		flingDeclModule_Item*
 	'}'
 	;
 
-flingModule_Item:
+flingDeclModule_Item:
 	flingInstModule
 
 	// This is a `proc` call
@@ -154,15 +154,15 @@ flingGenerate:
 	;
 
 flingGenerate_If:
-	KwGenerate KwIf flingExpr flingModule_Scope
+	KwGenerate KwIf flingExpr flingDeclModule_Scope
 	flingGenerate_If_Elif*
 	flingGenerate_If_Else?
 	;
 flingGenerate_If_Elif:
-	KwGenerate KwElif flingExpr flingModule_Scope
+	KwGenerate KwElif flingExpr flingDeclModule_Scope
 	;
 flingGenerate_If_Else:
-	KwGenerate KwElse flingModule_Scope
+	KwGenerate KwElse flingDeclModule_Scope
 	;
 
 flingGenerate_Switch:
@@ -175,15 +175,15 @@ flingGenerate_Switch:
 	'}'
 	;
 flingGenerate_Switch_Default:
-	KwDefault flingModule_Scope
+	KwDefault flingDeclModule_Scope
 	;
 flingGenerate_Switch_Case:
-	flingExprList flingModule_Scope
+	flingExprList flingDeclModule_Scope
 	;
 
 flingGenerate_For:
 	KwGenerate '[' flingIdent ']' KwFor flingIdent ':' flingExpr
-		flingModule_Scope
+		flingDeclModule_Scope
 	;
 //--------
 
@@ -308,7 +308,7 @@ flingDeclType:
 
 //--------
 flingDeclType_Enum:
-	KwEnum flingIdent (':' flingTypenameOrModname_Builtin)?
+	KwEnum flingIdent (':' flingTypenameOrModname)?
 	'{'
 		flingIdentList ','?
 	'}'
@@ -391,7 +391,7 @@ flingDeclSubprog_Task_Header:
 	;
 
 flingDeclSubprog_Proc:
-	flingDeclSubprog_Proc_Header flingModule_Scope
+	flingDeclSubprog_Proc_Header flingDeclModule_Scope
 	;
 flingDeclSubprog_Proc_Header:
 	KwProc flingIdent flingDeclParamList? flingDeclSubprog_Proc_ArgList
@@ -439,6 +439,45 @@ flingTypenameOrModnameList:
 
 flingImportList:
 	KwImport flingScopedIdent (',' flingScopedIdent)*
+	;
+//--------
+
+//--------
+flingTypenameOrModname:
+	flingTypenameOrModname_Cstm
+	| KwSelfT
+	| KwRetT
+
+	| KwTypeof '(' flingExpr ')'
+	| flingTypenameOrModname_Builtin
+	;
+
+flingTypenameOrModname_Cstm:
+	flingTypenameOrModname_Cstm_Item
+	(PunctScopeAccess flingTypenameOrModname_Cstm_Item)*
+	;
+
+flingTypenameOrModname_Cstm_Item:
+	flingScopedIdent flingInstParamList
+	;
+
+flingTypenameOrModname_Builtin:
+	KwSigned? KwLogic flingInstParamList
+
+	| KwInteger
+	| KwSizeT
+	| KwRange
+
+	| KwU8
+	| KwI8
+	| KwU16
+	| KwI16
+	| KwU32
+	| KwI32
+	| KwU64
+	| KwI64
+	| KwU128
+	| KwI128
 	;
 //--------
 
@@ -612,7 +651,7 @@ KwWire: 'wire' ;
 KwLogic: 'logic' ;
 
 KwConst: 'const' ;
-KwUnsigned: 'unsigned' ;
+//KwUnsigned: 'unsigned' ;
 KwSigned: 'signed' ;
 
 KwInteger: 'integer' ;
