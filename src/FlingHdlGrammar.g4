@@ -12,6 +12,23 @@ flingProgram:
 //--------
 
 //--------
+flingPackage:
+	KwPackage flingIdent
+	'{'
+		flingPackage_Item*
+	'}'
+	;
+
+flingPackage_Item:
+	flingPackage
+	| flingDeclType
+	| flingDeclSubprog
+	| flingDeclAlias
+	| flingDeclConst
+	;
+//--------
+
+//--------
 flingDeclParamList:
 	'<'
 		flingDeclParamList_Item
@@ -110,10 +127,10 @@ flingModule_Item:
 	flingInstModule
 
 	// This is a `proc` call
-	| flingExpr_CallSubprogram
-	| flingGen
+	| flingExpr_CallSubprog
+	| flingGenerate
 	| flingContAssign
-	| flingImport
+	| flingImportList
 
 	| flingBehav
 	| flingDeclWire
@@ -133,7 +150,7 @@ flingInstModule:
 //--------
 
 //--------
-flingGen:
+flingGenerate:
 	flingGenerate_If
 	| flingGenerate_Switch
 	| flingGenerate_For
@@ -168,7 +185,7 @@ flingGenerate_Switch_Case:
 	;
 
 flingGenerate_For:
-	KwGenerate '[' flingIdent ']' KwFor flingIdent ':' flingExpr_Range
+	KwGenerate '[' flingIdent ']' KwFor flingIdent ':' flingExpr
 		flingModule_Scope
 	;
 //--------
@@ -219,8 +236,8 @@ flingBehav_Item:
 	| flingBehav_NonBlkAssign
 	| flingBehav_BlkAssign
 
-	// `func` or `task` call
-	| flingExpr_CallSubprogram
+	// Call a `func` or a `task`
+	| flingExpr_CallSubprog
 	;
 
 flingBehav_If:
@@ -254,7 +271,7 @@ flingBehav_SwitchOrSwitchz_Case:
 	;
 
 flingBehav_For:
-	KwFor flingIdent ':' flingExpr_Range
+	KwFor flingIdent ':' flingExpr
 		flingBehav_Scope
 	;
 
@@ -304,8 +321,8 @@ flingDeclType_Enum:
 
 //--------
 flingDeclType_Class:
-	KwPacked? KwClass flingIdent flingDeclParamList
-		flingDeclType_ClassOrMixin_Extends
+	KwBase? KwClass (KwPacked KwSigned?)? flingIdent flingDeclParamList
+		flingDeclType_ClassOrMixin_Extends?
 	'{'
 		flingDeclType_Class_Item*
 	'}'
@@ -315,23 +332,54 @@ flingDeclType_ClassOrMixin_Extends:
 	KwExtends flingTypenameOrModnameList
 	;
 
+
+flingDeclType_Class_Item:
+	flingDeclType_ClassOrMixin_Item
+	| flingDeclType_ClassOrMixin_AccessSpecifier flingDeclVar
+	;
+
+flingDeclType_ClassOrMixin_Item:
+	(
+		flingDeclType_ClassOrMixin_AccessSpecifier
+		(flingDeclType | flingDeclAlias | flingDeclConst)
+	)
+
+	| flingImportList
+
+	| flingDeclType_ClassOrMixin_DeclSubprog
+	;
+
+flingDeclType_ClassOrMixin_AccessSpecifier:
+	KwPub | KwProt | KwPriv
+	;
+
+flingDeclType_ClassOrMixin_DeclSubprog:
+	;
+
 flingDeclType_Mixin:
 	KwMixin flingIdent flingDeclParamList
-		flingDeclType_ClassOrMixin_Extends
+		flingDeclType_ClassOrMixin_Extends?
 	'{'
-		flingDeclType_Mixin_Item*
+		flingDeclType_ClassOrMixin_Item*
 	'}'
 	;
+
 //--------
 
 //--------
 flingDeclSubprog:
-	flingDeclSubprog_FuncOrTask
+	flingDeclSubprog_Func
+	| flingDeclSubprog_Task
 	| flingDeclSubprog_Proc
 	;
 
-flingDeclSubprog_FuncOrTask:
-	(KwFunc | KwTask) flingIdent flingDeclParamList? flingDeclArgList
+flingDeclSubprog_Func:
+	KwFunc flingIdent flingDeclParamList? flingDeclArgList
+		':' flingTypenameOrModname
+		flingBehav_Scope
+	;
+flingDeclSubprog_Task:
+	KwTask flingIdent flingDeclParamList? flingDeclArgList
 		flingBehav_Scope
 	;
 
@@ -380,9 +428,6 @@ flingTypenameOrModnameList:
 	flingTypenameOrModname (',' flingTypenameOrModname)*
 	;
 
-flingImport:
-	KwImport flingScopedIdent ';'
-	;
 flingImportList:
 	KwImport flingScopedIdent (',' flingScopedIdent)*
 	;
@@ -632,9 +677,10 @@ KwExtends: 'extends' ;
 KwModport: 'modport' ;
 
 KwVirtual: 'virtual' ;
+KwAbstract: 'abstract' ;
 KwIsvtype: 'isvtype' ;
 
-KwFinal: 'final' ;
+KwBase: 'base' ;
 KwStatic: 'static' ;
 KwProc: 'proc' ;
 KwSelf: 'self' ;
@@ -646,19 +692,19 @@ KwPriv: 'priv' ;
 KwRef: 'ref' ;
 
 KwInit: 'init' ;
-//KwDest: 'dest' ;
-//KwNone: 'none' ;
-//
-//KwMove: 'move' ;
-//
-//KwList: 'list' ;
-//KwDict: 'dict' ;
-//KwSet: 'set' ;
-//KwString: 'string' ;
-//KwFloat: 'float' ;
-//KwFile: 'file' ;
-//
-//KwDelay: 'delay' ;
+KwDest: 'dest' ;
+KwNone: 'none' ;
+
+KwMove: 'move' ;
+
+KwList: 'list' ;
+KwDict: 'dict' ;
+KwSet: 'set' ;
+KwString: 'string' ;
+KwFloat: 'float' ;
+KwFile: 'file' ;
+
+KwDelay: 'delay' ;
 //--------
 
 //--------
