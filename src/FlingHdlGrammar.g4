@@ -71,7 +71,6 @@ flingInstParamList:
 flingInstParamList_Pos:
 	flingInstParamList_Pos_Item
 	(',' flingInstParamList_Pos_Item)*
-	','?
 	;
 flingInstParamList_Pos_Item:
 	flingExpr | flingTypenameOrModname
@@ -80,7 +79,6 @@ flingInstParamList_Pos_Item:
 flingInstParamList_Named:
 	flingInstParamList_Named_Item
 	(',' flingInstParamList_Named_Item)*
-	','?
 	;
 flingInstParamList_Named_Item:
 	flingIdent PunctMapTo flingInstParamList_Pos_Item
@@ -96,13 +94,12 @@ flingInstArgList:
 	;
 
 flingInstArgList_Pos:
-	flingExprList ','?
+	flingExprList
 	;
 
 flingInstArgList_Named:
 	flingInstArgList_Named_Item
 	(',' flingInstArgList_Named_Item)*
-	','?
 	;
 
 flingInstArgList_Named_Item:
@@ -209,7 +206,6 @@ flingBehav:
 flingBehav_Seq_EdgeList:
 	flingBehav_Seq_EdgeList_Item
 	(',' flingBehav_Seq_EdgeList_Item)*
-	','?
 	;
 flingBehav_Seq_EdgeList_Item:
 	(KwPosedge | KwNegedge) flingExpr
@@ -335,25 +331,30 @@ flingDeclType_ClassOrMixin_Extends:
 
 flingDeclType_Class_Item:
 	flingDeclType_ClassOrMixin_Item
-	| flingDeclType_ClassOrMixin_AccessSpecifier flingDeclVar
+	| flingDeclType_ClassOrMixin_AccessSpecifier? KwStatic? flingDeclVar
 	;
 
 flingDeclType_ClassOrMixin_Item:
 	(
-		flingDeclType_ClassOrMixin_AccessSpecifier
+		flingDeclType_ClassOrMixin_AccessSpecifier? KwStatic?
 		(flingDeclType | flingDeclAlias | flingDeclConst)
 	)
+	| flingDeclType_ClassOrMixin_Item_DeclSubprog
 
 	| flingImportList
 
-	| flingDeclType_ClassOrMixin_DeclSubprog
 	;
 
 flingDeclType_ClassOrMixin_AccessSpecifier:
 	KwPub | KwProt | KwPriv
 	;
 
-flingDeclType_ClassOrMixin_DeclSubprog:
+flingDeclType_ClassOrMixin_Item_DeclSubprog:
+	flingDeclType_ClassOrMixin_AccessSpecifier? (KwVirtual | KwStatic)?
+		KwConst? flingDeclSubprog
+	| KwAbstract KwVirtual KwConst?
+		(flingDeclSubprog_Func_Header | flingDeclSubprog_Task_Header
+		| flingDeclSubprog_Proc_Header) ';'
 	;
 
 flingDeclType_Mixin:
@@ -374,18 +375,26 @@ flingDeclSubprog:
 	;
 
 flingDeclSubprog_Func:
+	flingDeclSubprog_Func_Header flingBehav_Scope
+	;
+flingDeclSubprog_Func_Header:
 	KwFunc flingIdent flingDeclParamList? flingDeclArgList
 		':' flingTypenameOrModname
-		flingBehav_Scope
 	;
+
 flingDeclSubprog_Task:
+	flingDeclSubprog_Task_Header flingBehav_Scope
+	;
+
+flingDeclSubprog_Task_Header:
 	KwTask flingIdent flingDeclParamList? flingDeclArgList
-		flingBehav_Scope
 	;
 
 flingDeclSubprog_Proc:
+	flingDeclSubprog_Proc_Header flingModule_Scope
+	;
+flingDeclSubprog_Proc_Header:
 	KwProc flingIdent flingDeclParamList? flingDeclSubprog_Proc_ArgList
-		flingModule_Scope
 	;
 flingDeclSubprog_Proc_ArgList:
 	'('
