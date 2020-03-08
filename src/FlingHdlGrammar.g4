@@ -64,7 +64,7 @@ flingInstParamList:
 		(
 			flingInstParamList_Pos
 			| flingInstParamList_Named
-		)
+		)?
 	'>'
 	;
 
@@ -89,7 +89,7 @@ flingInstArgList:
 		(
 			flingInstArgList_Pos
 			| flingInstArgList_Named
-		)
+		)?
 	')'
 	;
 
@@ -218,12 +218,15 @@ flingBehav_Scope:
 	;
 
 flingBehav_Item:
+	flingBehav_Item_WithoutScope
+	| flingBehav_Scope
+	;
+
+flingBehav_Item_WithoutScope:
 	flingDeclAlias
 	| flingDeclVar
 	| flingDeclConst
 	| flingDeclType
-
-	| flingBehav_Scope
 
 	| flingBehav_If
 	| flingBehav_SwitchOrSwitchz
@@ -317,7 +320,7 @@ flingDeclType_Enum:
 
 //--------
 flingDeclType_Class:
-	KwBase? KwClass (KwPacked KwSigned?)? flingIdent flingDeclParamList
+	KwBase? KwClass (KwSigned? KwPacked)? flingIdent flingDeclParamList
 		flingDeclType_ClassOrMixin_Extends?
 	'{'
 		flingDeclType_Class_Item*
@@ -350,11 +353,14 @@ flingDeclType_ClassOrMixin_AccessSpecifier:
 	;
 
 flingDeclType_ClassOrMixin_Item_DeclSubprog:
-	flingDeclType_ClassOrMixin_AccessSpecifier? (KwVirtual | KwStatic)?
-		KwConst? flingDeclSubprog
-	| KwAbstract KwVirtual KwConst?
-		(flingDeclSubprog_Func_Header | flingDeclSubprog_Task_Header
-		| flingDeclSubprog_Proc_Header) ';'
+	flingDeclType_ClassOrMixin_AccessSpecifier?
+	(
+		(KwVirtual | KwStatic)?
+			KwConst? flingDeclSubprog
+		| KwAbstract KwVirtual KwConst?
+			(flingDeclSubprog_Func_Header | flingDeclSubprog_Task_Header
+			| flingDeclSubprog_Proc_Header) ';'
+	)
 	;
 
 flingDeclType_Mixin:
@@ -364,7 +370,6 @@ flingDeclType_Mixin:
 		flingDeclType_ClassOrMixin_Item*
 	'}'
 	;
-
 //--------
 
 //--------
@@ -375,11 +380,22 @@ flingDeclSubprog:
 	;
 
 flingDeclSubprog_Func:
-	flingDeclSubprog_Func_Header flingBehav_Scope
+	flingDeclSubprog_Func_Header flingDeclSubprog_Func_Scope
 	;
 flingDeclSubprog_Func_Header:
 	KwFunc flingIdent flingDeclParamList? flingDeclArgList
 		':' flingTypenameOrModname
+	;
+
+flingDeclSubprog_Func_Scope:
+	'{'
+		flingDeclSubprog_Func_Scope_Item*
+	'}'
+	;
+flingDeclSubprog_Func_Scope_Item:
+	flingDeclSubprog_Func_Scope
+	| flingBehav_Item_WithoutScope
+	| KwReturn flingExpr ';'
 	;
 
 flingDeclSubprog_Task:
@@ -455,14 +471,19 @@ flingTypenameOrModname:
 flingTypenameOrModname_Cstm:
 	flingTypenameOrModname_Cstm_Item
 	(PunctScopeAccess flingTypenameOrModname_Cstm_Item)*
+		flingTypenameOrModname_Cstm_ArrDim*
 	;
 
 flingTypenameOrModname_Cstm_Item:
-	flingScopedIdent flingInstParamList
+	flingScopedIdent flingInstParamList?
+	;
+
+flingTypenameOrModname_Cstm_ArrDim:
+	'[' flingExpr? ']'
 	;
 
 flingTypenameOrModname_Builtin:
-	KwSigned? KwLogic flingInstParamList
+	KwSigned? KwLogic flingInstParamList?
 
 	| KwInteger
 	| KwSizeT
@@ -478,6 +499,116 @@ flingTypenameOrModname_Builtin:
 	| KwI64
 	| KwU128
 	| KwI128
+
+	| KwVoid
+	;
+//--------
+
+//--------
+flingExpr:
+	KwMux '(' flingExpr ',' flingExpr ',' flingExpr ')' 
+	| flingExpr_Mux
+	;
+
+flingExpr_Mux:
+	flingExpr_LogOr (PunctLogOr flingExpr)?
+	;
+
+flingExpr_LogOr:
+	flingExpr_LogAnd (PunctLogAnd flingExpr)?
+	;
+
+flingExpr_LogAnd:
+	flingExpr_BitOr_Or_BitNor ((PunctBitOr | PunctBitNor) flingExpr)?
+	;
+
+flingExpr_BitOr_Or_BitNor:
+	flingExpr_BitAnd_Or_BitNand ((PunctBitAnd | PunctBitNand) flingExpr)?
+	;
+
+flingExpr_BitAnd_Or_BitNand:
+	flingExpr_BitXor_Or_BitXnor ((PunctBitXor | PunctBitXnor) flingExpr)?
+	;
+
+flingExpr_BitXor_Or_BitXnor:
+	flingExpr_CmpEqEtc
+		((PunctCmpEq | PunctCmpNe | PunctCaseCmpEq | PunctCaseCmpNe)
+		flingExpr)?
+	;
+
+flingExpr_CmpEqEtc:
+	flingExpr_CmpLtEtc
+		((PunctCmpLt | PunctCmpLe | PunctCmpGt | PunctCmpGe) flingExpr)?
+	;
+
+flingExpr_CmpLtEtc:
+	flingExpr_BitShift ((KwLsl | KwLsr | KwAsr) flingExpr)?
+	;
+
+flingExpr_BitShift:
+	flingExpr_BinaryPlus_Or_BinaryMinus
+		((PunctPlus | PunctMinus) flingExpr)?
+	;
+
+flingExpr_BinaryPlus_Or_BinaryMinus:
+	flingExpr_Mul_Or_Div_Or_Mod
+		((PunctMul | PunctDiv | PunctMod) flingExpr)?
+	;
+
+flingExpr_Mul_Or_Div_Or_Mod:
+	(PunctPlus | PunctMinus | PunctLogNot | PunctBitNot) flingExpr
+	| flingExpr_Unary
+	;
+
+flingExpr_Unary:
+	flingExpr_LitNum
+	//| LitFloatNum
+	//| LitString
+	| flingExpr_LitRange
+	| KwCat '(' flingExprList ')'
+	| KwRepl '(' flingExpr_LitRange_Item ',' flingExpr ')'
+	| (KwDollarSigned | KwDollarUnsigned | KwDollarClog2) '(' flingExpr ')'
+	| KwDollarPow '(' flingExpr ',' flingExpr ')'
+	| flingExpr_IdentEtc
+	| flingExpr_CallSubprog
+	;
+
+flingExpr_LitNum:
+	LitDecNum
+	| LitHexNum
+	| LitOctNum
+	| LitBinNum
+	;
+
+flingExpr_LitRange:
+	flingExpr_LitRange_Item '..' flingExpr_LitRange_Item
+	;
+flingExpr_LitRange_Item:
+	flingExpr_LitNum
+	| flingExpr_IdentEtc
+	;
+
+flingExpr_IdentEtc:
+	(flingTypenameOrModname PunctScopeAccess)?
+	flingExpr_IdentEtc_Item 
+	(PunctMemberAccess flingExpr_IdentEtc_Item)*
+
+flingExpr_IdentEtc_Item:
+	flingIdent flingExpr_IdentEtc_Item_End*
+	;
+
+flingExpr_IdentEtc_Item_End:
+	'[' flingExpr ']'
+	| flingInstParamList? flingInstArgList
+	;
+
+flingExpr_CallSubprog:
+	(flingTypenameOrModname PunctScopeAccess)?
+	(
+		flingExpr_IdentEtc_Item
+		(PunctMemberAccess flingExpr_IdentEtc_Item)*
+	)?
+	flingIdent flingInstParamList? flingInstArgList
 	;
 //--------
 
@@ -572,8 +703,13 @@ PunctDiv: '/' ;
 PunctMod: '%' ;
 
 PunctBitOr: '|' ;
+PunctBitNor: '~|' ;
+
 PunctBitAnd: '&' ;
+PunctBitNand: '~&' ;
+
 PunctBitXor: '^' ;
+PunctBitXnor: '^~' | '~^' ;
 
 KwLsl: 'lsl' ;
 KwLsr: 'lsr' ;
@@ -679,6 +815,7 @@ KwHighZ: 'high_z' ;
 KwUnkX: 'unk_x' ;
 KwSized: 'sized' ;
 KwCat: 'cat' ;
+KwRepl: 'repl' ;
 KwAs: 'as' ;
 
 KwDollarSize: '$size' ;
@@ -693,10 +830,10 @@ KwDollarUnsigned: '$unsigned' ;
 KwDollarPow: '$pow' ;
 KwDollarClog2: '$clog2' ;
 
-KwDollarDisplay: '$display' ;
-KwDollarMonitor: '$monitor' ;
-KwDollarFinish: '$finish' ;
-KwDollarStop: '$stop' ;
+//KwDollarDisplay: '$display' ;
+//KwDollarMonitor: '$monitor' ;
+//KwDollarFinish: '$finish' ;
+//KwDollarStop: '$stop' ;
 
 
 KwAssert: 'assert' ;
@@ -739,20 +876,20 @@ KwProt: 'prot' ;
 KwPriv: 'priv' ;
 KwRef: 'ref' ;
 
-KwInit: 'init' ;
-KwDest: 'dest' ;
-KwNone: 'none' ;
+//KwInit: 'init' ;
+//KwDest: 'dest' ;
+//KwNone: 'none' ;
 
-KwMove: 'move' ;
-
-KwList: 'list' ;
-KwDict: 'dict' ;
-KwSet: 'set' ;
-KwString: 'string' ;
-KwFloat: 'float' ;
-KwFile: 'file' ;
-
-KwDelay: 'delay' ;
+//KwMove: 'move' ;
+//
+//KwList: 'list' ;
+//KwDict: 'dict' ;
+//KwSet: 'set' ;
+//KwString: 'string' ;
+//KwFloat: 'float' ;
+//KwFile: 'file' ;
+//
+//KwDelay: 'delay' ;
 //--------
 
 //--------
