@@ -3,10 +3,10 @@ grammar FlingHdlGrammar;
 //--------
 // Parser rules
 flingProgram:
-	flingModule
-	| flingPackage
+	flingPackage
+	| flingModule
 	| flingDeclType
-	| flingDeclSubprogram
+	| flingDeclSubprog
 	| flingDeclAlias
 	;
 //--------
@@ -35,12 +35,9 @@ flingDeclArgList:
 	')'
 	;
 flingDeclArgList_Item:
-	flingIdentList ':' flingDeclArgList_PortDir flingTypenameOrModname
-		('=' flingExprList)?
-	;
-
-flingDeclArgList_PortDir:
-	KwInput | KwOutput | KwInout
+	flingIdentList ':'
+		(KwInput | KwOutput | KwInout | KwInterface | KwModport)
+		flingTypenameOrModname ('=' flingExprList)?
 	;
 //--------
 
@@ -124,7 +121,7 @@ flingModule_Item:
 	| flingDeclConst
 
 	| flingDeclType
-	| flingDeclSubprogram
+	| flingDeclSubprog
 	| flingDeclAlias
 	;
 //--------
@@ -219,8 +216,11 @@ flingBehav_Item:
 	| flingBehav_SwitchOrSwitchz
 	| flingBehav_For
 	| flingBehav_While
-	| flingBehav_NonblkAssign
+	| flingBehav_NonBlkAssign
 	| flingBehav_BlkAssign
+
+	// `func` or `task` call
+	| flingExpr_CallSubprogram
 	;
 
 flingBehav_If:
@@ -252,6 +252,22 @@ flingBehav_SwitchOrSwitchz_Default:
 flingBehav_SwitchOrSwitchz_Case:
 	flingExprList flingBehav_Scope
 	;
+
+flingBehav_For:
+	KwFor flingIdent ':' flingExpr_Range
+		flingBehav_Scope
+	;
+
+flingBehav_While:
+	KwWhile flingExpr flingBehav_Scope
+	;
+
+flingBehav_NonBlkAssign:
+	flingExpr PunctNonBlkAssign flingExpr ';'
+	;
+flingBehav_BlkAssign:
+	flingExpr PunctBlkAssign flingExpr ';'
+	;
 //--------
 
 //--------
@@ -278,10 +294,60 @@ flingDeclType:
 //--------
 
 //--------
-flingDeclSubprogram:
-	flingDeclSubprogram_Func
-	| flingDeclSubprogram_Task
-	| flingDeclSubprogram_Proc
+flingDeclType_Enum:
+	KwEnum flingIdent (':' flingTypenameOrModname_Builtin)?
+	'{'
+		flingIdentList ','?
+	'}'
+	;
+//--------
+
+//--------
+flingDeclType_Class:
+	KwPacked? KwClass flingIdent flingDeclParamList
+		flingDeclType_ClassOrMixin_Extends
+	'{'
+		flingDeclType_Class_Item*
+	'}'
+	;
+
+flingDeclType_ClassOrMixin_Extends:
+	KwExtends flingTypenameOrModnameList
+	;
+
+flingDeclType_Mixin:
+	KwMixin flingIdent flingDeclParamList
+		flingDeclType_ClassOrMixin_Extends
+	'{'
+		flingDeclType_Mixin_Item*
+	'}'
+	;
+//--------
+
+//--------
+flingDeclSubprog:
+	flingDeclSubprog_FuncOrTask
+	| flingDeclSubprog_Proc
+	;
+
+flingDeclSubprog_FuncOrTask:
+	(KwFunc | KwTask) flingIdent flingDeclParamList? flingDeclArgList
+		flingBehav_Scope
+	;
+
+flingDeclSubprog_Proc:
+	KwProc flingIdent flingDeclParamList? flingDeclSubprog_Proc_ArgList
+		flingModule_Scope
+	;
+flingDeclSubprog_Proc_ArgList:
+	'('
+		flingDeclSubprog_Proc_ArgList_Item
+		(';' flingDeclSubprog_Proc_ArgList_Item)*
+		';'?
+	')'
+	;
+flingDeclSubprog_Proc_ArgList_Item:
+	flingIdentList ':' KwConst? KwRef flingTypenameOrModname 
 	;
 //--------
 
@@ -386,7 +452,7 @@ PunctRangeSeparator: '..' ;
 //--------
 
 //--------
-PunctNonblkAssign: ':=' ;
+PunctNonBlkAssign: ':=' ;
 PunctBlkAssign: '=' ;
 //--------
 
@@ -443,7 +509,7 @@ PunctRBrace: '}' ;
 PunctSemicolon: ';' ;
 PunctColon: ':' ;
 PunctComma: ',' ;
-PunctParamPack: '...' ;
+//PunctParamPack: '...' ;
 //--------
 
 
@@ -537,6 +603,8 @@ KwDollarClog2: '$clog2' ;
 KwDollarDisplay: '$display' ;
 KwDollarMonitor: '$monitor' ;
 KwDollarFinish: '$finish' ;
+KwDollarStop: '$stop' ;
+
 
 KwAssert: 'assert' ;
 KwAssume: 'assume' ;
@@ -579,16 +647,18 @@ KwRef: 'ref' ;
 
 KwInit: 'init' ;
 //KwDest: 'dest' ;
-//KwNull: 'null' ;
+//KwNone: 'none' ;
 //
 //KwMove: 'move' ;
 //
 //KwList: 'list' ;
 //KwDict: 'dict' ;
 //KwSet: 'set' ;
-//KwStr: 'str' ;
+//KwString: 'string' ;
 //KwFloat: 'float' ;
-////KwFile: 'file' ;
+//KwFile: 'file' ;
+//
+//KwDelay: 'delay' ;
 //--------
 
 //--------
