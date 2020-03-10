@@ -501,6 +501,7 @@ flingTypenameOrModname_Builtin:
 	| KwI128
 
 	| KwVoid
+	| KwAuto
 	;
 //--------
 

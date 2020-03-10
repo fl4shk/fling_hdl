@@ -42,7 +42,7 @@ disassembly*.armasm
 */tags
 */types_*.taghl
 *.txt.ignore
-verilog_types_extension
-verilog_types_extension_debug
+fling_hdl
+fling_hdl_debug
 *.elf
 src/gen_src
