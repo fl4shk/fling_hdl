@@ -20,6 +20,11 @@ antlrcpp::Any Compiler::visitFlingProgram
 {
 	return nullptr;
 }
+antlrcpp::Any Compiler::visitFlingProgram_Item
+	(Parser::FlingProgram_ItemContext *ctx)
+{
+	return nullptr;
+}
 antlrcpp::Any Compiler::visitFlingDeclPackage
 	(Parser::FlingDeclPackageContext *ctx)
 {

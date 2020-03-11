@@ -3,6 +3,10 @@ grammar FlingHdlGrammar;
 //--------
 // Parser rules
 flingProgram:
+	flingProgram_Item*
+	;
+
+flingProgram_Item:
 	flingDeclPackage
 	| flingDeclModule
 	| flingDeclType
@@ -46,9 +50,11 @@ flingDeclParamList_Item:
 
 flingDeclArgList:
 	'('
-		flingDeclArgList_Item
-		(';' flingDeclArgList_Item)*
-		';'?
+		(
+			flingDeclArgList_Item
+			(';' flingDeclArgList_Item)*
+			';'?
+		)?
 	')'
 	;
 flingDeclArgList_Item:
@@ -892,11 +898,12 @@ KwRef: 'ref' ;
 //KwNone: 'none' ;
 
 //KwMove: 'move' ;
-//
+
 //KwList: 'list' ;
 //KwDict: 'dict' ;
 //KwSet: 'set' ;
 //KwString: 'string' ;
+
 //KwFloat: 'float' ;
 //KwFile: 'file' ;
 //

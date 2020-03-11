@@ -112,6 +112,8 @@ private:		// error/warning functions
 private:		// visitor functions
 	antlrcpp::Any visitFlingProgram
 		(Parser::FlingProgramContext *ctx);
+	antlrcpp::Any visitFlingProgram_Item
+		(Parser::FlingProgram_ItemContext *ctx);
 	antlrcpp::Any visitFlingDeclPackage
 		(Parser::FlingDeclPackageContext *ctx);
 	antlrcpp::Any visitFlingDeclPackage_Item

@@ -27,8 +27,11 @@ using namespace liborangepower::bignum;
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <variant>
+
 using std::stack;
 using std::vector;
 using std::string;
+using std::variant;
 
 #endif		// src_misc_includes_hpp
