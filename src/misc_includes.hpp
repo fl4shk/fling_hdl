@@ -28,10 +28,13 @@ using namespace liborangepower::bignum;
 #include <fstream>
 #include <sstream>
 #include <variant>
+#include <optional>
+#include <type_traits>
 
 using std::stack;
 using std::vector;
 using std::string;
 using std::variant;
+using std::optional;
 
 #endif		// src_misc_includes_hpp

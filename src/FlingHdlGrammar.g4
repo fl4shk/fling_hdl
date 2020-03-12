@@ -25,6 +25,7 @@ flingDeclPackage:
 
 flingDeclPackage_Item:
 	flingDeclPackage
+	| flingDeclModule
 	| flingDeclType
 	| flingDeclSubprog
 	| flingDeclAlias
@@ -59,7 +60,7 @@ flingDeclArgList:
 	;
 flingDeclArgList_Item:
 	flingIdentList ':'
-		(KwInput | KwOutput | KwInout | KwInterface | KwModport)
+		(KwInput | KwOutput | KwInout | KwInterface)
 		flingTypenameOrModname ('=' flingExprList)?
 	;
 //--------
@@ -876,7 +877,6 @@ KwPacked: 'packed' ;
 
 KwMixin: 'mixin' ;
 KwExtends: 'extends' ;
-KwModport: 'modport' ;
 
 KwVirtual: 'virtual' ;
 KwAbstract: 'abstract' ;
