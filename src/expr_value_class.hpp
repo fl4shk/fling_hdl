@@ -20,17 +20,18 @@ class ExprValue final
 {
 private:		// variables
 	vector<FourState> _vec;
+	bool _is_signed = false;
 public:		// functions
 	inline ExprValue() = default;
+	ExprValue(const BigNum& to_cast);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(ExprValue);
-	inline ExprValue(BigNum
 	inline ~ExprValue() = default;
 
 	operator BigNum () const;
 	bool can_be_big_num() const;
 
-	GEN_GETTER_BY_CON_REF(vec);
-	GEN_GETTER_BY_REF(vec);
+	GEN_GETTERS_BY_CON_REF_AND_REF(vec);
+	GEN_GETTER_AND_SETTER_BY_VAL(is_signed);
 };
 
 } // namespace fling_hdl

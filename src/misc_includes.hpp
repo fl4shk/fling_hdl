@@ -30,11 +30,14 @@ using namespace liborangepower::bignum;
 #include <variant>
 #include <optional>
 #include <type_traits>
+#include <memory>
 
 using std::stack;
 using std::vector;
 using std::string;
 using std::variant;
 using std::optional;
+using std::unique_ptr;
+using std::shared_ptr;
 
 #endif		// src_misc_includes_hpp

@@ -52,8 +52,9 @@ public:		// functions
 	GEN_GETTER_BCR_AND_SETTER_BRR(children);
 };
 
-class Program: public HasChildrenBase<variant<DeclPackage, DeclModule,
-	DeclType, DeclSubprog, DeclAlias>>
+class Program: public HasChildrenBase<variant<shared_ptr<DeclPackage>,
+	shared_ptr<DeclModule>, shared_ptr<DeclType>, shared_ptr<DeclSubprog>,
+	shared_ptr<DeclAlias>>>
 {
 public:		// functions
 	SHARED_FUNC_CONTENTS(Program);
@@ -61,15 +62,16 @@ public:		// functions
 
 class DeclConst;
 
-class DeclPackage: public HasChildrenBase<variant<DeclPackage, DeclModule,
-	DeclType, DeclSubprog, DeclAlias, DeclConst>>
+class DeclPackage: public HasChildrenBase<variant<shared_ptr<DeclPackage>,
+	shared_ptr<DeclModule>, shared_ptr<DeclType>, shared_ptr<DeclSubprog>,
+	shared_ptr<DeclAlias>, shared_ptr<DeclConst>>>
 {
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclPackage);
 };
 
 class DeclParamList_Item;
-class DeclParamList: public HasChildrenBase<DeclParamList_Item>
+class DeclParamList: public HasChildrenBase<DeclParamList_Item*>
 {
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclParamList);
@@ -88,22 +90,22 @@ public:		// types
 		Type,
 		Module,
 	};
-	using OptDefValList = optional<variant<ExprList,
-		TypenameOrModnameList>>;
+	using OptDefValList = optional<variant<shared_ptr<ExprList>,
+		shared_ptr<TypenameOrModnameList>>>;
 private:		// variables
-	IdentList _id_list;
+	shared_ptr<IdentList> _name_list = nullptr;
 	Kind _kind;
 	OptDefValList _opt_def_val_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclParamList_Item);
 
-	GEN_GETTER_BCR_AND_SETTER_BRR(id_list);
+	GEN_GETTER_BCR_AND_SETTER_BRR(name_list);
 	GEN_GETTER_AND_SETTER_BY_VAL(kind);
 	GEN_GETTER_BCR_AND_SETTER_BRR(opt_def_val_list);
 };
 
 class DeclArgList_Item;
-class DeclArgList: public HasChildrenBase<DeclArgList_Item>
+class DeclArgList: public HasChildrenBase<DeclArgList_Item*>
 {
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclArgList);
@@ -119,15 +121,15 @@ public:		// types
 		Inout,
 		Interface
 	};
-	using OptDefValList = optional<ExprList>;
+	using OptDefValList = optional<shared_ptr<ExprList>>;
 private:		// variables
-	IdentList _id_list;
+	shared_ptr<IdentList> _name_list;
 	PortType _port_type;
 	OptDefValList _opt_def_val_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclArgList_Item);
 
-	GEN_GETTER_BCR_AND_SETTER_BRR(id_list);
+	GEN_GETTER_BCR_AND_SETTER_BRR(name_list);
 	GEN_GETTER_AND_SETTER_BY_VAL(port_type);
 	GEN_GETTER_BCR_AND_SETTER_BRR(opt_def_val_list);
 };
@@ -137,8 +139,8 @@ class InstParamList_Named;
 class InstParamList: public Base
 {
 public:		// types
-	using OptList = optional<variant<InstParamList_Pos,
-		InstParamList_Named>>;
+	using OptList = optional<variant<shared_ptr<InstParamList_Pos>,
+		shared_ptr<InstParamList_Named>>>;
 private:		// variables
 	OptList _opt_list;
 public:		// functions
@@ -148,16 +150,17 @@ public:		// functions
 };
 
 class Expr;
-class TypenameOrModname
-class InstParamList_Pos: public HasChildrenBase<variant<Expr,
-	TypenameOrModname>>
+class TypenameOrModname;
+class InstParamList_Pos: public HasChildrenBase<variant<Expr*,
+	TypenameOrModname*>>
 {
 public:		// functions
 	SHARED_FUNC_CONTENTS(InstParamList_Pos);
 };
 
 class InstParamList_Named_Item;
-class InstParamList_Named: public HasChildrenBase<InstParamList_Named_Item>
+class InstParamList_Named:
+	public HasChildrenBase<InstParamList_Named_Item*>
 {
 public:		// functions
 	SHARED_FUNC_CONTENTS(InstParamList_Named);
@@ -170,12 +173,12 @@ public:		// types
 	using Rhs = typename InstParamList_Pos::Child;
 
 private:		// variables
-	Ident _id;
+	shared_ptr<Ident> _name = nullptr;
 	Rhs _rhs;
 public:		// functions
 	SHARED_FUNC_CONTENTS(InstParamList_Named_Item);
 
-	GEN_GETTER_BCR_AND_SETTER_BRR(id);
+	GEN_GETTER_AND_SETTER_BY_VAL(name);
 	GEN_GETTER_BCR_AND_SETTER_BRR(rhs);
 };
 
@@ -183,22 +186,20 @@ class InstArgList_Named;
 class InstArgList: public Base
 {
 public:		// types
-	using OptList = optional<variant<ExprList, InstArgList_Named>>;
+	using OptList = optional<variant<shared_ptr<ExprList>,
+		shared_ptr<InstArgList_Named>>>;
 private:		// variables
 	OptList _opt_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(InstArgList);
 };
 
-class TypenameOrModname
-{
-};
-class InstArgList_Named
+class InstArgList_Named_Item;
+class InstArgList_Named:
+	public HasChildrenBase<shared_ptr<InstArgList_Named_Item>>
 {
 public:		// functions
-	inline InstArgList_Named() = default;
-	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(InstArgList_Named);
-	virtual inline ~InstArgList_Named() = default;
+	SHARED_FUNC_CONTENTS(InstArgList_Named);
 };
 
 #undef SHARED_FUNC_CONTENTS

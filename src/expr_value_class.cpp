@@ -3,8 +3,18 @@
 namespace fling_hdl
 {
 
+ExprValue::ExprValue(const BigNum& to_cast)
+{
+}
 ExprValue::operator BigNum() const
 {
+	BigNum ret;
+
+	for (const auto& iter: _vec)
+	{
+	}
+
+	return ret;
 }
 
 bool ExprValue::can_be_big_num() const
