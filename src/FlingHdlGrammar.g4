@@ -225,30 +225,24 @@ flingBehav_Scope:
 	;
 
 flingBehav_Item:
-	flingBehav_Item_ValidInTask
-	| flingBehav_Scope
-	;
-
-flingBehav_Item_ValidInTask:
-	flingBehav_Item_ValidInFunc
-	| flingBehav_NonBlkAssign
-	;
-
-flingBehav_Item_ValidInFunc:
-	flingDeclAlias
+	flingBehav_Scope
+	| flingDeclAlias
 	| flingDeclVar
 	| flingDeclConst
 	| flingDeclType
+
+	| flingBehav_BlkAssign
+	| flingBehav_NonBlkAssign
 
 	| flingBehav_If
 	| flingBehav_SwitchOrSwitchz
 	| flingBehav_For
 	| flingBehav_While
-	| flingBehav_BlkAssign
 
 	// Call a `func` or a `task`
 	| flingExpr_CallSubprog
 	;
+
 
 flingBehav_If:
 	KwIf flingExpr flingBehav_Scope
@@ -404,9 +398,62 @@ flingDeclSubprog_Func_Scope:
 	'}'
 	;
 flingDeclSubprog_Func_Item:
-	flingDeclSubprog_Func_Scope
-	| flingBehav_Item_ValidInFunc
-	| KwReturn flingExpr ';'
+	KwReturn flingExpr ';'
+	| flingDeclSubprog_Func_Scope
+	| flingDeclAlias
+	| flingDeclVar
+	| flingDeclConst
+	| flingDeclType
+
+	| flingBehav_BlkAssign
+	| flingBehav_NonBlkAssign
+
+	| flingDeclSubprog_Func_If
+	| flingDeclSubprog_Func_SwitchOrSwitchz
+	| flingDeclSubprog_Func_For
+	| flingDeclSubprog_Func_While
+
+	// Call a `func` or a `task`
+	| flingExpr_CallSubprog
+	;
+
+flingDeclSubprog_Func_If:
+	KwIf flingExpr flingDeclSubprog_Func_Scope
+	flingDeclSubprog_Func_If_Elif*
+	flingDeclSubprog_Func_If_Else?
+	;
+flingDeclSubprog_Func_If_Elif:
+	KwElif flingExpr flingDeclSubprog_Func_Scope
+	;
+flingDeclSubprog_Func_If_Else:
+	KwElse flingDeclSubprog_Func_Scope
+	;
+
+flingDeclSubprog_Func_SwitchOrSwitchz:
+	(KwSwitch | KwSwitchz) flingExpr
+	'{'
+		(
+			flingDeclSubprog_Func_SwitchOrSwitchz_Default?
+				flingDeclSubprog_Func_SwitchOrSwitchz_Case*
+			| flingDeclSubprog_Func_SwitchOrSwitchz_Case+
+				flingDeclSubprog_Func_SwitchOrSwitchz_Default
+		)
+	'}'
+	;
+flingDeclSubprog_Func_SwitchOrSwitchz_Default:
+	KwDefault flingDeclSubprog_Func_Scope
+	;
+flingDeclSubprog_Func_SwitchOrSwitchz_Case:
+	flingExprList flingDeclSubprog_Func_Scope
+	;
+
+flingDeclSubprog_Func_For:
+	KwFor flingIdent ':' flingExpr
+		flingDeclSubprog_Func_Scope
+	;
+
+flingDeclSubprog_Func_While:
+	KwWhile flingExpr flingDeclSubprog_Func_Scope
 	;
 
 flingDeclSubprog_Task:
@@ -423,7 +470,61 @@ flingDeclSubprog_Task_Scope:
 	;
 flingDeclSubprog_Task_Item:
 	flingDeclSubprog_Task_Scope
-	| flingBehav_Item_ValidInTask
+	| flingDeclAlias
+	| flingDeclVar
+	| flingDeclConst
+	| flingDeclType
+
+	| flingBehav_BlkAssign
+	| flingBehav_NonBlkAssign
+
+	| flingDeclSubprog_Task_If
+	| flingDeclSubprog_Task_SwitchOrSwitchz
+	| flingDeclSubprog_Task_For
+	| flingDeclSubprog_Task_While
+
+	// Call a `func` or a `task`
+	| flingExpr_CallSubprog
+
+	;
+
+flingDeclSubprog_Task_If:
+	KwIf flingExpr flingDeclSubprog_Task_Scope
+	flingDeclSubprog_Task_If_Elif*
+	flingDeclSubprog_Task_If_Else?
+	;
+flingDeclSubprog_Task_If_Elif:
+	KwElif flingExpr flingDeclSubprog_Task_Scope
+	;
+flingDeclSubprog_Task_If_Else:
+	KwElse flingDeclSubprog_Task_Scope
+	;
+
+flingDeclSubprog_Task_SwitchOrSwitchz:
+	(KwSwitch | KwSwitchz) flingExpr
+	'{'
+		(
+			flingDeclSubprog_Task_SwitchOrSwitchz_Default?
+				flingDeclSubprog_Task_SwitchOrSwitchz_Case*
+			| flingDeclSubprog_Task_SwitchOrSwitchz_Case+
+				flingDeclSubprog_Task_SwitchOrSwitchz_Default
+		)
+	'}'
+	;
+flingDeclSubprog_Task_SwitchOrSwitchz_Default:
+	KwDefault flingDeclSubprog_Task_Scope
+	;
+flingDeclSubprog_Task_SwitchOrSwitchz_Case:
+	flingExprList flingDeclSubprog_Task_Scope
+	;
+
+flingDeclSubprog_Task_For:
+	KwFor flingIdent ':' flingExpr
+		flingDeclSubprog_Task_Scope
+	;
+
+flingDeclSubprog_Task_While:
+	KwWhile flingExpr flingDeclSubprog_Task_Scope
 	;
 
 flingDeclSubprog_Proc:

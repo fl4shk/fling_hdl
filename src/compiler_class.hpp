@@ -180,10 +180,6 @@ private:		// visitor functions
 		(Parser::FlingBehav_ScopeContext *ctx);
 	antlrcpp::Any visitFlingBehav_Item
 		(Parser::FlingBehav_ItemContext *ctx);
-	antlrcpp::Any visitFlingBehav_Item_ValidInTask
-		(Parser::FlingBehav_Item_ValidInTaskContext *ctx);
-	antlrcpp::Any visitFlingBehav_Item_ValidInFunc
-		(Parser::FlingBehav_Item_ValidInFuncContext *ctx);
 	antlrcpp::Any visitFlingBehav_If
 		(Parser::FlingBehav_IfContext *ctx);
 	antlrcpp::Any visitFlingBehav_If_Elif
@@ -238,6 +234,23 @@ private:		// visitor functions
 		(Parser::FlingDeclSubprog_Func_ScopeContext *ctx);
 	antlrcpp::Any visitFlingDeclSubprog_Func_Item
 		(Parser::FlingDeclSubprog_Func_ItemContext *ctx);
+	antlrcpp::Any visitFlingDeclSubprog_Func_If
+		(Parser::FlingDeclSubprog_Func_IfContext *ctx);
+	antlrcpp::Any visitFlingDeclSubprog_Func_If_Elif
+		(Parser::FlingDeclSubprog_Func_If_ElifContext *ctx);
+	antlrcpp::Any visitFlingDeclSubprog_Func_If_Else
+		(Parser::FlingDeclSubprog_Func_If_ElseContext *ctx);
+	antlrcpp::Any visitFlingDeclSubprog_Func_SwitchOrSwitchz
+		(Parser::FlingDeclSubprog_Func_SwitchOrSwitchzContext *ctx);
+	antlrcpp::Any visitFlingDeclSubprog_Func_SwitchOrSwitchz_Default
+		(Parser::FlingDeclSubprog_Func_SwitchOrSwitchz_DefaultContext
+		*ctx);
+	antlrcpp::Any visitFlingDeclSubprog_Func_SwitchOrSwitchz_Case
+		(Parser::FlingDeclSubprog_Func_SwitchOrSwitchz_CaseContext *ctx);
+	antlrcpp::Any visitFlingDeclSubprog_Func_For
+		(Parser::FlingDeclSubprog_Func_ForContext *ctx);
+	antlrcpp::Any visitFlingDeclSubprog_Func_While
+		(Parser::FlingDeclSubprog_Func_WhileContext *ctx);
 	antlrcpp::Any visitFlingDeclSubprog_Task
 		(Parser::FlingDeclSubprog_TaskContext *ctx);
 	antlrcpp::Any visitFlingDeclSubprog_Task_Header
@@ -246,6 +259,23 @@ private:		// visitor functions
 		(Parser::FlingDeclSubprog_Task_ScopeContext *ctx);
 	antlrcpp::Any visitFlingDeclSubprog_Task_Item
 		(Parser::FlingDeclSubprog_Task_ItemContext *ctx);
+	antlrcpp::Any visitFlingDeclSubprog_Task_If
+		(Parser::FlingDeclSubprog_Task_IfContext *ctx);
+	antlrcpp::Any visitFlingDeclSubprog_Task_If_Elif
+		(Parser::FlingDeclSubprog_Task_If_ElifContext *ctx);
+	antlrcpp::Any visitFlingDeclSubprog_Task_If_Else
+		(Parser::FlingDeclSubprog_Task_If_ElseContext *ctx);
+	antlrcpp::Any visitFlingDeclSubprog_Task_SwitchOrSwitchz
+		(Parser::FlingDeclSubprog_Task_SwitchOrSwitchzContext *ctx);
+	antlrcpp::Any visitFlingDeclSubprog_Task_SwitchOrSwitchz_Default
+		(Parser::FlingDeclSubprog_Task_SwitchOrSwitchz_DefaultContext
+		*ctx);
+	antlrcpp::Any visitFlingDeclSubprog_Task_SwitchOrSwitchz_Case
+		(Parser::FlingDeclSubprog_Task_SwitchOrSwitchz_CaseContext *ctx);
+	antlrcpp::Any visitFlingDeclSubprog_Task_For
+		(Parser::FlingDeclSubprog_Task_ForContext *ctx);
+	antlrcpp::Any visitFlingDeclSubprog_Task_While
+		(Parser::FlingDeclSubprog_Task_WhileContext *ctx);
 	antlrcpp::Any visitFlingDeclSubprog_Proc
 		(Parser::FlingDeclSubprog_ProcContext *ctx);
 	antlrcpp::Any visitFlingDeclSubprog_Proc_Header

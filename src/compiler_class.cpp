@@ -190,16 +190,6 @@ antlrcpp::Any Compiler::visitFlingBehav_Item
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingBehav_Item_ValidInTask
-	(Parser::FlingBehav_Item_ValidInTaskContext *ctx)
-{
-	return nullptr;
-}
-antlrcpp::Any Compiler::visitFlingBehav_Item_ValidInFunc
-	(Parser::FlingBehav_Item_ValidInFuncContext *ctx)
-{
-	return nullptr;
-}
 antlrcpp::Any Compiler::visitFlingBehav_If
 	(Parser::FlingBehav_IfContext *ctx)
 {
@@ -335,6 +325,46 @@ antlrcpp::Any Compiler::visitFlingDeclSubprog_Func_Item
 {
 	return nullptr;
 }
+antlrcpp::Any Compiler::visitFlingDeclSubprog_Func_If
+	(Parser::FlingDeclSubprog_Func_IfContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingDeclSubprog_Func_If_Elif
+	(Parser::FlingDeclSubprog_Func_If_ElifContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingDeclSubprog_Func_If_Else
+	(Parser::FlingDeclSubprog_Func_If_ElseContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingDeclSubprog_Func_SwitchOrSwitchz
+	(Parser::FlingDeclSubprog_Func_SwitchOrSwitchzContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingDeclSubprog_Func_SwitchOrSwitchz_Default
+	(Parser::FlingDeclSubprog_Func_SwitchOrSwitchz_DefaultContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingDeclSubprog_Func_SwitchOrSwitchz_Case
+	(Parser::FlingDeclSubprog_Func_SwitchOrSwitchz_CaseContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingDeclSubprog_Func_For
+	(Parser::FlingDeclSubprog_Func_ForContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingDeclSubprog_Func_While
+	(Parser::FlingDeclSubprog_Func_WhileContext *ctx)
+{
+	return nullptr;
+}
 antlrcpp::Any Compiler::visitFlingDeclSubprog_Task
 	(Parser::FlingDeclSubprog_TaskContext *ctx)
 {
@@ -352,6 +382,46 @@ antlrcpp::Any Compiler::visitFlingDeclSubprog_Task_Scope
 }
 antlrcpp::Any Compiler::visitFlingDeclSubprog_Task_Item
 	(Parser::FlingDeclSubprog_Task_ItemContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingDeclSubprog_Task_If
+	(Parser::FlingDeclSubprog_Task_IfContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingDeclSubprog_Task_If_Elif
+	(Parser::FlingDeclSubprog_Task_If_ElifContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingDeclSubprog_Task_If_Else
+	(Parser::FlingDeclSubprog_Task_If_ElseContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingDeclSubprog_Task_SwitchOrSwitchz
+	(Parser::FlingDeclSubprog_Task_SwitchOrSwitchzContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingDeclSubprog_Task_SwitchOrSwitchz_Default
+	(Parser::FlingDeclSubprog_Task_SwitchOrSwitchz_DefaultContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingDeclSubprog_Task_SwitchOrSwitchz_Case
+	(Parser::FlingDeclSubprog_Task_SwitchOrSwitchz_CaseContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingDeclSubprog_Task_For
+	(Parser::FlingDeclSubprog_Task_ForContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingDeclSubprog_Task_While
+	(Parser::FlingDeclSubprog_Task_WhileContext *ctx)
 {
 	return nullptr;
 }

@@ -439,18 +439,12 @@ public:		// functions
 	GEN_AST_GETTER_AND_SETTER(expr);
 };
 
-class Behav_Item;
-class Behav_Scope: public HasChildrenBase<shared_ptr<Behav_Item>>
-{
-public:		// functions
-	SHARED_FUNC_CONTENTS(Behav_Scope);
-};
-
-class Behav_Item_WithoutScope;
-class Behav_Item: public Base
-{
-
-};
+class Behav_BlkAssign;
+class Behav_NonBlkAssign;
+class Behav_If;
+class Behav_SwitchOrSwitchz;
+class Behav_For;
+class Behav_While;
 
 #undef SHARED_FUNC_CONTENTS
 #undef GEN_AST_GETTER_AND_SETTER
