@@ -23,6 +23,8 @@ namespace ast
 	{ \
 		return string(#name); \
 	}
+#define GEN_AST_GETTER_AND_SETTER(name) \
+	GEN_GETTER_BCR_AND_SETTER_BRR(name)
 
 class Base
 {
@@ -50,7 +52,7 @@ protected:		// variables
 public:		// functions
 	SHARED_FUNC_CONTENTS(HasChildrenBase)
 
-	GEN_GETTER_BCR_AND_SETTER_BRR(children);
+	GEN_AST_GETTER_AND_SETTER(children);
 };
 
 class Program: public HasChildrenBase<variant<shared_ptr<DeclPackage>,
@@ -100,9 +102,9 @@ private:		// variables
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclParamList_Item);
 
-	GEN_GETTER_BCR_AND_SETTER_BRR(name_list);
+	GEN_AST_GETTER_AND_SETTER(name_list);
 	GEN_GETTER_AND_SETTER_BY_VAL(kind);
-	GEN_GETTER_BCR_AND_SETTER_BRR(opt_def_val_list);
+	GEN_AST_GETTER_AND_SETTER(opt_def_val_list);
 };
 
 class DeclArgList_Item;
@@ -130,9 +132,9 @@ private:		// variables
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclArgList_Item);
 
-	GEN_GETTER_BCR_AND_SETTER_BRR(name_list);
+	GEN_AST_GETTER_AND_SETTER(name_list);
 	GEN_GETTER_AND_SETTER_BY_VAL(port_type);
-	GEN_GETTER_BCR_AND_SETTER_BRR(opt_def_val_list);
+	GEN_AST_GETTER_AND_SETTER(opt_def_val_list);
 };
 
 class InstParamList_Pos;
@@ -147,7 +149,7 @@ private:		// variables
 public:		// functions
 	SHARED_FUNC_CONTENTS(InstParamList);
 
-	GEN_GETTER_BCR_AND_SETTER_BRR(opt_list);
+	GEN_AST_GETTER_AND_SETTER(opt_list);
 };
 
 class Expr;
@@ -178,8 +180,8 @@ private:		// variables
 public:		// functions
 	SHARED_FUNC_CONTENTS(InstParamList_Named_Item);
 
-	GEN_GETTER_BCR_AND_SETTER_BRR(name);
-	GEN_GETTER_BCR_AND_SETTER_BRR(rhs);
+	GEN_AST_GETTER_AND_SETTER(name);
+	GEN_AST_GETTER_AND_SETTER(rhs);
 };
 
 class InstArgList_Named;
@@ -210,8 +212,8 @@ private:		// variables
 public:		// functions
 	SHARED_FUNC_CONTENTS(InstArgList_Named_Item);
 
-	GEN_GETTER_BCR_AND_SETTER_BRR(name);
-	GEN_GETTER_BCR_AND_SETTER_BRR(expr);
+	GEN_AST_GETTER_AND_SETTER(name);
+	GEN_AST_GETTER_AND_SETTER(expr);
 };
 
 class ImportList;
@@ -226,20 +228,20 @@ private:		// variables
 	OptDeclParamList _opt_decl_param_list;
 	shared_ptr<DeclArgList> _decl_arg_list;
 	OptImportList _opt_import_list;
-	shared_ptr<DeclModule_Scope> _decl_module_scope;
+	shared_ptr<DeclModule_Scope> _scope;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclModule);
 
-	GEN_GETTER_BCR_AND_SETTER_BRR(name);
-	GEN_GETTER_BCR_AND_SETTER_BRR(opt_decl_param_list);
-	GEN_GETTER_BCR_AND_SETTER_BRR(decl_arg_list);
-	GEN_GETTER_BCR_AND_SETTER_BRR(opt_import_list);
-	GEN_GETTER_BCR_AND_SETTER_BRR(decl_module_scope);
+	GEN_AST_GETTER_AND_SETTER(name);
+	GEN_AST_GETTER_AND_SETTER(opt_decl_param_list);
+	GEN_AST_GETTER_AND_SETTER(decl_arg_list);
+	GEN_AST_GETTER_AND_SETTER(opt_import_list);
+	GEN_AST_GETTER_AND_SETTER(scope);
 };
 
 class InstModule;
 class Expr_CallSubprog;
-class Generate;
+class Gen;
 class ContAssign;
 class Behav;
 class DeclWire;
@@ -247,7 +249,7 @@ class DeclVar;
 
 class DeclModule_Scope: public HasChildrenBase<variant
 	<shared_ptr<InstModule>, shared_ptr<Expr_CallSubprog>,
-	shared_ptr<Generate>, shared_ptr<ContAssign>, shared_ptr<ImportList>,
+	shared_ptr<Gen>, shared_ptr<ContAssign>, shared_ptr<ImportList>,
 	shared_ptr<Behav>, shared_ptr<DeclWire>, shared_ptr<DeclVar>,
 	shared_ptr<DeclConst>, shared_ptr<DeclType>, shared_ptr<DeclSubprog>,
 	shared_ptr<DeclAlias>>>
@@ -265,22 +267,193 @@ private:		// variables
 public:		// functions
 	SHARED_FUNC_CONTENTS(InstModule);
 
-	GEN_GETTER_BCR_AND_SETTER_BRR(name);
-	GEN_GETTER_BCR_AND_SETTER_BRR(typename_or_modname);
-	GEN_GETTER_BCR_AND_SETTER_BRR(inst_arg_list);
+	GEN_AST_GETTER_AND_SETTER(name);
+	GEN_AST_GETTER_AND_SETTER(typename_or_modname);
+	GEN_AST_GETTER_AND_SETTER(inst_arg_list);
 };
 
-class Generate_If;
-class Generate_Switch;
-class Generate_For;
-class Generate: public Base
+class Gen_If;
+class Gen_Switch;
+class Gen_For;
+class Gen: public Base
 {
 public:		// types
-	using SpecificGenerate = variant<shared_ptr<Generate_If>,
-		shared_ptr<Generate_Switch>, shared_ptr<Generate_For>>;
+	using SpecificGen = variant<shared_ptr<Gen_If>,
+		shared_ptr<Gen_Switch>, shared_ptr<Gen_For>>;
+private:		// variables
+	SpecificGen _specific_generate;
+public:		// functions
+	SHARED_FUNC_CONTENTS(Gen);
+
+	GEN_AST_GETTER_AND_SETTER(specific_generate);
+};
+
+class Gen_If_Elif;
+class Gen_If_Else;
+class Gen_If: public Base
+{
+public:		// types
+	using GenElifVec = vector<shared_ptr<Gen_If_Elif>>;
+	using OptGenElse = optional<shared_ptr<Gen_If_Else>>;
+private:		// variables
+	shared_ptr<Expr> _expr;
+	shared_ptr<DeclModule_Scope> _scope;
+	GenElifVec _gen_elif_vec;
+	OptGenElse _opt_gen_else;
+
+public:		// functions
+	SHARED_FUNC_CONTENTS(Gen_If);
+
+	GEN_AST_GETTER_AND_SETTER(expr);
+	GEN_AST_GETTER_AND_SETTER(scope);
+	GEN_AST_GETTER_AND_SETTER(gen_elif_vec);
+	GEN_AST_GETTER_AND_SETTER(opt_gen_else);
+};
+
+class Gen_If_Elif: public Base
+{
+private:		// variables
+	shared_ptr<Expr> _expr;
+	shared_ptr<DeclModule_Scope> _scope;
+public:		// functions
+	SHARED_FUNC_CONTENTS(Gen_If_Elif);
+
+	GEN_AST_GETTER_AND_SETTER(expr);
+	GEN_AST_GETTER_AND_SETTER(scope);
+};
+
+class Gen_If_Else: public Base
+{
+private:		// variables
+	shared_ptr<DeclModule_Scope> _scope;
+public:		// functions
+	SHARED_FUNC_CONTENTS(Gen_If_Else);
+
+	GEN_AST_GETTER_AND_SETTER(scope);
+};
+
+class Gen_Switch_Default;
+class Gen_Switch_Case;
+class Gen_Switch: public Base
+{
+public:		// types
+	using OptGenDefault = optional<shared_ptr<Gen_Switch_Default>>;
+	using GenCaseVec = vector<shared_ptr<Gen_Switch_Case>>;
+private:		// variables
+};
+
+class Gen_Switch_Default: public Base
+{
+private:		// variables
+	shared_ptr<DeclModule_Scope> _scope;
+public:		// functions
+	SHARED_FUNC_CONTENTS(Gen_Switch_Default);
+
+	GEN_AST_GETTER_AND_SETTER(scope);
+};
+class Gen_Switch_Case: public Base
+{
+private:		// variables
+	shared_ptr<Expr> _expr;
+	shared_ptr<DeclModule_Scope> _scope;
+public:		// functions
+	SHARED_FUNC_CONTENTS(Gen_Switch_Case);
+
+	GEN_AST_GETTER_AND_SETTER(expr);
+	GEN_AST_GETTER_AND_SETTER(scope);
+};
+
+class Gen_For: public Base
+{
+private:		// variables
+	string _label, _var_name;
+	shared_ptr<Expr> _range;
+	shared_ptr<DeclModule_Scope> _scope;
+public:		// functions
+	SHARED_FUNC_CONTENTS(Gen_For);
+
+	GEN_AST_GETTER_AND_SETTER(label);
+	GEN_AST_GETTER_AND_SETTER(var_name);
+	GEN_AST_GETTER_AND_SETTER(range);
+	GEN_AST_GETTER_AND_SETTER(scope);
+};
+
+class ContAssign: public Base
+{
+private:		// variables
+	shared_ptr<Expr> _lhs, _rhs;
+public:		// functions
+	SHARED_FUNC_CONTENTS(ContAssign);
+
+	GEN_AST_GETTER_AND_SETTER(lhs);
+	GEN_AST_GETTER_AND_SETTER(rhs);
+};
+
+class Behav_Seq_EdgeList;
+class Behav_Scope;
+class Behav: public Base
+{
+public:		// types
+	enum class Kind
+	{
+		Initial,
+		Comb,
+		Seq,
+	};
+	using OptEdgeList = optional<shared_ptr<Behav_Seq_EdgeList>>;
+private:		// variables
+	Kind _kind;
+	OptEdgeList _opt_edge_list;
+	shared_ptr<Behav_Scope> _scope;
+public:		// functions
+	SHARED_FUNC_CONTENTS(Behav);
+
+	GEN_GETTER_AND_SETTER_BY_VAL(kind);
+	GEN_AST_GETTER_AND_SETTER(opt_edge_list);
+	GEN_AST_GETTER_AND_SETTER(scope);
+};
+
+class Behav_Seq_EdgeList_Item;
+class Behav_Seq_EdgeList:
+	public HasChildrenBase<shared_ptr<Behav_Seq_EdgeList_Item>>
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Behav_Seq_EdgeList);
+};
+
+class Behav_Seq_EdgeList_Item: public Base
+{
+public:		// types
+	enum class Kind
+	{
+		Posedge,
+		Negedge,
+	};
+private:		// variables
+	Kind _kind;
+	shared_ptr<Expr> _expr;
+public:		// functions
+	SHARED_FUNC_CONTENTS(Behav_Seq_EdgeList_Item);
+
+	GEN_GETTER_AND_SETTER_BY_VAL(kind);
+	GEN_AST_GETTER_AND_SETTER(expr);
+};
+
+class Behav_Item;
+class Behav_Scope: public HasChildrenBase<shared_ptr<Behav_Item>>
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Behav_Scope);
+};
+
+class Behav_Item_WithoutScope;
+class Behav_Item: public Base
+{
+
 };
 
 #undef SHARED_FUNC_CONTENTS
+#undef GEN_AST_GETTER_AND_SETTER
 
 } // namespace ast
 

@@ -152,22 +152,22 @@ private:		// visitor functions
 		(Parser::FlingDeclModule_ItemContext *ctx);
 	antlrcpp::Any visitFlingInstModule
 		(Parser::FlingInstModuleContext *ctx);
-	antlrcpp::Any visitFlingGenerate
-		(Parser::FlingGenerateContext *ctx);
-	antlrcpp::Any visitFlingGenerate_If
-		(Parser::FlingGenerate_IfContext *ctx);
-	antlrcpp::Any visitFlingGenerate_If_Elif
-		(Parser::FlingGenerate_If_ElifContext *ctx);
-	antlrcpp::Any visitFlingGenerate_If_Else
-		(Parser::FlingGenerate_If_ElseContext *ctx);
-	antlrcpp::Any visitFlingGenerate_Switch
-		(Parser::FlingGenerate_SwitchContext *ctx);
-	antlrcpp::Any visitFlingGenerate_Switch_Default
-		(Parser::FlingGenerate_Switch_DefaultContext *ctx);
-	antlrcpp::Any visitFlingGenerate_Switch_Case
-		(Parser::FlingGenerate_Switch_CaseContext *ctx);
-	antlrcpp::Any visitFlingGenerate_For
-		(Parser::FlingGenerate_ForContext *ctx);
+	antlrcpp::Any visitFlingGen
+		(Parser::FlingGenContext *ctx);
+	antlrcpp::Any visitFlingGen_If
+		(Parser::FlingGen_IfContext *ctx);
+	antlrcpp::Any visitFlingGen_If_Elif
+		(Parser::FlingGen_If_ElifContext *ctx);
+	antlrcpp::Any visitFlingGen_If_Else
+		(Parser::FlingGen_If_ElseContext *ctx);
+	antlrcpp::Any visitFlingGen_Switch
+		(Parser::FlingGen_SwitchContext *ctx);
+	antlrcpp::Any visitFlingGen_Switch_Default
+		(Parser::FlingGen_Switch_DefaultContext *ctx);
+	antlrcpp::Any visitFlingGen_Switch_Case
+		(Parser::FlingGen_Switch_CaseContext *ctx);
+	antlrcpp::Any visitFlingGen_For
+		(Parser::FlingGen_ForContext *ctx);
 	antlrcpp::Any visitFlingContAssign
 		(Parser::FlingContAssignContext *ctx);
 	antlrcpp::Any visitFlingBehav
@@ -180,8 +180,10 @@ private:		// visitor functions
 		(Parser::FlingBehav_ScopeContext *ctx);
 	antlrcpp::Any visitFlingBehav_Item
 		(Parser::FlingBehav_ItemContext *ctx);
-	antlrcpp::Any visitFlingBehav_Item_WithoutScope
-		(Parser::FlingBehav_Item_WithoutScopeContext *ctx);
+	antlrcpp::Any visitFlingBehav_Item_ValidInTask
+		(Parser::FlingBehav_Item_ValidInTaskContext *ctx);
+	antlrcpp::Any visitFlingBehav_Item_ValidInFunc
+		(Parser::FlingBehav_Item_ValidInFuncContext *ctx);
 	antlrcpp::Any visitFlingBehav_If
 		(Parser::FlingBehav_IfContext *ctx);
 	antlrcpp::Any visitFlingBehav_If_Elif
@@ -234,12 +236,16 @@ private:		// visitor functions
 		(Parser::FlingDeclSubprog_Func_HeaderContext *ctx);
 	antlrcpp::Any visitFlingDeclSubprog_Func_Scope
 		(Parser::FlingDeclSubprog_Func_ScopeContext *ctx);
-	antlrcpp::Any visitFlingDeclSubprog_Func_Scope_Item
-		(Parser::FlingDeclSubprog_Func_Scope_ItemContext *ctx);
+	antlrcpp::Any visitFlingDeclSubprog_Func_Item
+		(Parser::FlingDeclSubprog_Func_ItemContext *ctx);
 	antlrcpp::Any visitFlingDeclSubprog_Task
 		(Parser::FlingDeclSubprog_TaskContext *ctx);
 	antlrcpp::Any visitFlingDeclSubprog_Task_Header
 		(Parser::FlingDeclSubprog_Task_HeaderContext *ctx);
+	antlrcpp::Any visitFlingDeclSubprog_Task_Scope
+		(Parser::FlingDeclSubprog_Task_ScopeContext *ctx);
+	antlrcpp::Any visitFlingDeclSubprog_Task_Item
+		(Parser::FlingDeclSubprog_Task_ItemContext *ctx);
 	antlrcpp::Any visitFlingDeclSubprog_Proc
 		(Parser::FlingDeclSubprog_ProcContext *ctx);
 	antlrcpp::Any visitFlingDeclSubprog_Proc_Header

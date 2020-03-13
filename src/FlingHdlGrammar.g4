@@ -132,7 +132,7 @@ flingDeclModule_Item:
 
 	// This is a `proc` call
 	| flingExpr_CallSubprog
-	| flingGenerate
+	| flingGen
 	| flingContAssign
 	| flingImportList
 
@@ -154,49 +154,49 @@ flingInstModule:
 //--------
 
 //--------
-flingGenerate:
-	flingGenerate_If
-	| flingGenerate_Switch
-	| flingGenerate_For
+flingGen:
+	flingGen_If
+	| flingGen_Switch
+	| flingGen_For
 	;
 
-flingGenerate_If:
-	KwGenerate KwIf flingExpr flingDeclModule_Scope
-	flingGenerate_If_Elif*
-	flingGenerate_If_Else?
+flingGen_If:
+	KwGen KwIf flingExpr flingDeclModule_Scope
+	flingGen_If_Elif*
+	flingGen_If_Else?
 	;
-flingGenerate_If_Elif:
-	KwGenerate KwElif flingExpr flingDeclModule_Scope
+flingGen_If_Elif:
+	KwGen KwElif flingExpr flingDeclModule_Scope
 	;
-flingGenerate_If_Else:
-	KwGenerate KwElse flingDeclModule_Scope
+flingGen_If_Else:
+	KwGen KwElse flingDeclModule_Scope
 	;
 
-flingGenerate_Switch:
-	KwGenerate KwSwitch flingExpr
+flingGen_Switch:
+	KwGen KwSwitch flingExpr
 	'{'
 		(
-			flingGenerate_Switch_Default? flingGenerate_Switch_Case*
-			| flingGenerate_Switch_Case+ flingGenerate_Switch_Default
+			flingGen_Switch_Default? flingGen_Switch_Case*
+			| flingGen_Switch_Case+ flingGen_Switch_Default
 		)
 	'}'
 	;
-flingGenerate_Switch_Default:
+flingGen_Switch_Default:
 	KwDefault flingDeclModule_Scope
 	;
-flingGenerate_Switch_Case:
+flingGen_Switch_Case:
 	flingExprList flingDeclModule_Scope
 	;
 
-flingGenerate_For:
-	KwGenerate '[' flingIdent ']' KwFor flingIdent ':' flingExpr
+flingGen_For:
+	KwGen '[' flingIdent ']' KwFor flingIdent ':' flingExpr
 		flingDeclModule_Scope
 	;
 //--------
 
 //--------
 flingContAssign:
-	flingExpr '=' flingExpr ';'
+	flingExpr PunctNonBlkAssign flingExpr ';'
 	;
 //--------
 
@@ -225,11 +225,16 @@ flingBehav_Scope:
 	;
 
 flingBehav_Item:
-	flingBehav_Item_WithoutScope
+	flingBehav_Item_ValidInTask
 	| flingBehav_Scope
 	;
 
-flingBehav_Item_WithoutScope:
+flingBehav_Item_ValidInTask:
+	flingBehav_Item_ValidInFunc
+	| flingBehav_NonBlkAssign
+	;
+
+flingBehav_Item_ValidInFunc:
 	flingDeclAlias
 	| flingDeclVar
 	| flingDeclConst
@@ -239,7 +244,6 @@ flingBehav_Item_WithoutScope:
 	| flingBehav_SwitchOrSwitchz
 	| flingBehav_For
 	| flingBehav_While
-	| flingBehav_NonBlkAssign
 	| flingBehav_BlkAssign
 
 	// Call a `func` or a `task`
@@ -396,21 +400,30 @@ flingDeclSubprog_Func_Header:
 
 flingDeclSubprog_Func_Scope:
 	'{'
-		flingDeclSubprog_Func_Scope_Item*
+		flingDeclSubprog_Func_Item*
 	'}'
 	;
-flingDeclSubprog_Func_Scope_Item:
+flingDeclSubprog_Func_Item:
 	flingDeclSubprog_Func_Scope
-	| flingBehav_Item_WithoutScope
+	| flingBehav_Item_ValidInFunc
 	| KwReturn flingExpr ';'
 	;
 
 flingDeclSubprog_Task:
-	flingDeclSubprog_Task_Header flingBehav_Scope
+	flingDeclSubprog_Task_Header flingDeclSubprog_Task_Scope
 	;
 
 flingDeclSubprog_Task_Header:
 	KwTask flingIdent flingDeclParamList? flingDeclArgList
+	;
+flingDeclSubprog_Task_Scope:
+	'{'
+		flingDeclSubprog_Task_Item*
+	'}'
+	;
+flingDeclSubprog_Task_Item:
+	flingDeclSubprog_Task_Scope
+	| flingBehav_Item_ValidInTask
 	;
 
 flingDeclSubprog_Proc:
@@ -786,7 +799,7 @@ KwOutput: 'output' ;
 KwInout: 'inout' ;
 KwInterface: 'interface' ;
 
-KwGenerate: 'generate' ;
+KwGen: 'gen' ;
 
 KwInitial: 'initial' ;
 KwComb: 'comb' ;

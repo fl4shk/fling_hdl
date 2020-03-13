@@ -120,43 +120,43 @@ antlrcpp::Any Compiler::visitFlingInstModule
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingGenerate
-	(Parser::FlingGenerateContext *ctx)
+antlrcpp::Any Compiler::visitFlingGen
+	(Parser::FlingGenContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingGenerate_If
-	(Parser::FlingGenerate_IfContext *ctx)
+antlrcpp::Any Compiler::visitFlingGen_If
+	(Parser::FlingGen_IfContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingGenerate_If_Elif
-	(Parser::FlingGenerate_If_ElifContext *ctx)
+antlrcpp::Any Compiler::visitFlingGen_If_Elif
+	(Parser::FlingGen_If_ElifContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingGenerate_If_Else
-	(Parser::FlingGenerate_If_ElseContext *ctx)
+antlrcpp::Any Compiler::visitFlingGen_If_Else
+	(Parser::FlingGen_If_ElseContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingGenerate_Switch
-	(Parser::FlingGenerate_SwitchContext *ctx)
+antlrcpp::Any Compiler::visitFlingGen_Switch
+	(Parser::FlingGen_SwitchContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingGenerate_Switch_Default
-	(Parser::FlingGenerate_Switch_DefaultContext *ctx)
+antlrcpp::Any Compiler::visitFlingGen_Switch_Default
+	(Parser::FlingGen_Switch_DefaultContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingGenerate_Switch_Case
-	(Parser::FlingGenerate_Switch_CaseContext *ctx)
+antlrcpp::Any Compiler::visitFlingGen_Switch_Case
+	(Parser::FlingGen_Switch_CaseContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingGenerate_For
-	(Parser::FlingGenerate_ForContext *ctx)
+antlrcpp::Any Compiler::visitFlingGen_For
+	(Parser::FlingGen_ForContext *ctx)
 {
 	return nullptr;
 }
@@ -190,8 +190,13 @@ antlrcpp::Any Compiler::visitFlingBehav_Item
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingBehav_Item_WithoutScope
-	(Parser::FlingBehav_Item_WithoutScopeContext *ctx)
+antlrcpp::Any Compiler::visitFlingBehav_Item_ValidInTask
+	(Parser::FlingBehav_Item_ValidInTaskContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingBehav_Item_ValidInFunc
+	(Parser::FlingBehav_Item_ValidInFuncContext *ctx)
 {
 	return nullptr;
 }
@@ -325,8 +330,8 @@ antlrcpp::Any Compiler::visitFlingDeclSubprog_Func_Scope
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Func_Scope_Item
-	(Parser::FlingDeclSubprog_Func_Scope_ItemContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclSubprog_Func_Item
+	(Parser::FlingDeclSubprog_Func_ItemContext *ctx)
 {
 	return nullptr;
 }
@@ -337,6 +342,16 @@ antlrcpp::Any Compiler::visitFlingDeclSubprog_Task
 }
 antlrcpp::Any Compiler::visitFlingDeclSubprog_Task_Header
 	(Parser::FlingDeclSubprog_Task_HeaderContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingDeclSubprog_Task_Scope
+	(Parser::FlingDeclSubprog_Task_ScopeContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingDeclSubprog_Task_Item
+	(Parser::FlingDeclSubprog_Task_ItemContext *ctx)
 {
 	return nullptr;
 }
