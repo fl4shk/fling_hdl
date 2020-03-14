@@ -801,6 +801,129 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(DeclAlias_Module);
 };
 
+class IdentList: public HasChildrenBase<string>
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(IdentList);
+};
+
+class ScopedIdent: public IdentList
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(ScopedIdent);
+};
+
+class ExprList: public HasChildrenBase<Expr>
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(ExprList);
+};
+
+class TypenameOrModnameList: public HasChildrenBase<TypenameOrModname>
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(TypenameOrModnameList);
+};
+
+class ImportList: public HasChildrenBase<ScopedIdent>
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(ImportList);
+};
+
+class TypenameOrModname_SelfT: public Base
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(TypenameOrModname_SelfT);
+};
+class TypenameOrModname_RetT: public Base
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(TypenameOrModname_RetT);
+};
+
+class TypenameOrModname_Cstm;
+class TypenameOrModname_Builtin;
+class TypenameOrModname: public Base
+{
+public:		// variables
+	variant<shared_ptr<TypenameOrModname_Cstm>,
+		shared_ptr<TypenameOrModname_SelfT>,
+		shared_ptr<TypenameOrModname_RetT>,
+		shared_ptr<TypenameOrModname_Builtin>> item;
+public:		// functions
+	SHARED_FUNC_CONTENTS(TypenameOrModname);
+};
+
+class TypenameOrModname_Cstm_Item;
+class TypenameOrModname_Cstm: public Base
+{
+public:		// variables
+	vector<shared_ptr<TypenameOrModname_Cstm_Item>> item_vec;
+	vector<optional<shared_ptr<Expr>>> arr_dim_vec;
+public:		// functions
+	SHARED_FUNC_CONTENTS(TypenameOrModname_Cstm);
+};
+
+class TypenameOrModname_Cstm_Item: public Base
+{
+public:		// variables
+	shared_ptr<ScopedIdent> scoped_ident;
+	optional<shared_ptr<InstParamList>> opt_param_list;
+public:		// functions
+	SHARED_FUNC_CONTENTS(TypenameOrModname_Cstm_Item);
+};
+
+class TypenameOrModname_Builtin: public Base
+{
+public:		// variables
+	enum class Kind
+	{
+		Logic,
+		SignedLogic,
+
+		Integer,
+		SizeT,
+		Range,
+
+		U8,
+		I8,
+		U16,
+		I16,
+		U32,
+		I32,
+		U64,
+		I64,
+		U128,
+		I128,
+
+		Void,
+		Auto,
+	};
+	Kind kind;
+	optional<shared_ptr<InstParamList>> opt_param_list;
+public:		// functions
+	SHARED_FUNC_CONTENTS(TypenameOrModname_Builtin);
+};
+
+class Expr_Mux;
+class Expr: public Base
+{
+public:		// variables
+	class MuxItem
+	{
+		shared_ptr<Expr> cond_expr, true_expr, false_expr;
+	};
+
+	variant<MuxItem, shared_ptr<Expr_Mux>> item;
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr);
+};
+
+//class Expr_Mux: public Base
+//{
+//};
+
 
 #undef SHARED_FUNC_CONTENTS
 
