@@ -107,13 +107,13 @@ public:		// functions
 };
 
 template<typename HeaderType, typename ScopeType>
-class DeclSubprogHeaderBase
+class DeclSubprogBase
 {
 public:		// variables
 	shared_ptr<HeaderType> header;
 	shared_ptr<ScopeType> scope;
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclSubprogHeaderBase);
+	SHARED_FUNC_CONTENTS(DeclSubprogBase);
 };
 
 
@@ -599,7 +599,7 @@ public:		// functions
 };
 
 class DeclFunc_Scope;
-class DeclFunc: public DeclSubprogHeaderBase<DeclFunc_Header,
+class DeclFunc: public DeclSubprogBase<DeclFunc_Header,
 	DeclFunc_Scope>
 {
 public:		// functions
@@ -618,19 +618,188 @@ public:		// functions
 };
 
 class DeclFunc_Item_If;
-class DeclFunc_Item_SwitchOrSwitchz;
+class DeclFunc_Item_Switch;
+class DeclFunc_Item_Switchz;
 class DeclFunc_Item_For;
 class DeclFunc_Item_While;
 class DeclFunc_Scope: public HasChildrenBase<variant
-	<shared_ptr<Expr>, shared_ptr<DeclFunc_Scope>, shared_ptr<DeclAlias>,
+	<shared_ptr<Expr>, // return
+	shared_ptr<DeclFunc_Scope>, shared_ptr<DeclAlias>,
 	shared_ptr<DeclVar>, shared_ptr<DeclConst>, shared_ptr<DeclType>,
-	shared_ptr<Behav_Item_BlkAssign>, shared_ptr<Behav_Item_NonBlkAssign>,
-	shared_ptr<DeclFunc_Item_If>,
-	shared_ptr<DeclFunc_Item_SwitchOrSwitchz>,
-	shared_ptr<DeclFunc_Item_For>, shared_ptr<DeclFunc_Item_While>>>
+	shared_ptr<Behav_Item_BlkAssign>,
+	shared_ptr<DeclFunc_Item_If>, shared_ptr<DeclFunc_Item_Switch>,
+	shared_ptr<DeclFunc_Item_Switchz>, shared_ptr<DeclFunc_Item_For>,
+	shared_ptr<DeclFunc_Item_While>, shared_ptr<Expr_CallSubprog>>>
 {
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclFunc_Scope);
 };
 
+class DeclFunc_Item_If: public IfBase<DeclFunc_Scope>
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclFunc_Item_If);
+};
+
+class DeclFunc_Item_Switch: public SwitchBase<DeclFunc_Scope>
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclFunc_Item_Switch);
+};
+class DeclFunc_Item_Switchz: public SwitchBase<DeclFunc_Scope>
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclFunc_Item_Switchz);
+};
+class DeclFunc_Item_For: public ForBase<DeclFunc_Scope>
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclFunc_Item_For);
+};
+class DeclFunc_Item_While: public WhileBase<DeclFunc_Scope>
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclFunc_Item_While);
+};
+
+
+class DeclTask_Header;
+class DeclTask_Scope;
+class DeclTask: public DeclSubprogBase<DeclTask_Header, DeclTask_Scope>
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclTask);
+};
+
+class DeclTask_Header: public Base
+{
+public:		// variables
+	string name;
+	optional<shared_ptr<DeclParamList>> opt_param_list;
+	shared_ptr<DeclArgList> arg_list;
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclTask_Header);
+};
+
+class DeclTask_Item_If;
+class DeclTask_Item_Switch;
+class DeclTask_Item_Switchz;
+class DeclTask_Item_For;
+class DeclTask_Item_While;
+class DeclTask_Scope: public HasChildrenBase<variant
+	<shared_ptr<DeclTask_Scope>, shared_ptr<DeclAlias>,
+	shared_ptr<DeclVar>, shared_ptr<DeclConst>, shared_ptr<DeclType>,
+	shared_ptr<Behav_Item_BlkAssign>, shared_ptr<Behav_Item_NonBlkAssign>,
+	shared_ptr<DeclTask_Item_If>, shared_ptr<DeclTask_Item_Switch>,
+	shared_ptr<DeclTask_Item_Switchz>, shared_ptr<DeclTask_Item_For>,
+	shared_ptr<DeclTask_Item_While>, shared_ptr<Expr_CallSubprog>>>
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclTask_Scope);
+};
+
+
+class DeclTask_Item_If: public IfBase<DeclTask_Scope>
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclTask_Item_If);
+};
+
+class DeclTask_Item_Switch: public SwitchBase<DeclTask_Scope>
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclTask_Item_Switch);
+};
+class DeclTask_Item_Switchz: public SwitchBase<DeclTask_Scope>
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclTask_Item_Switchz);
+};
+class DeclTask_Item_For: public ForBase<DeclTask_Scope>
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclTask_Item_For);
+};
+class DeclTask_Item_While: public WhileBase<DeclTask_Scope>
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclTask_Item_While);
+};
+
+class DeclProc_Header;
+class DeclProc: public DeclSubprogBase<DeclProc_Header, DeclModule_Scope>
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclProc);
+};
+
+class DeclProc_ArgList;
+class DeclProc_Header: public Base
+{
+public:		// variables
+	string name;
+	optional<shared_ptr<DeclParamList>> opt_param_list;
+	shared_ptr<DeclProc_ArgList> arg_list;
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclProc_Header);
+};
+
+class DeclProc_ArgList_Item;
+class DeclProc_ArgList: public HasChildrenBase
+	<shared_ptr<DeclProc_ArgList_Item>>
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclProc_ArgList);
+};
+
+class DeclProc_ArgList_Item: public Base
+{
+public:		// variables
+	shared_ptr<IdentList> name_list;
+	bool is_ref = false;
+	shared_ptr<TypenameOrModname> typename_or_modname;
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclProc_ArgList_Item);
+};
+
+class DeclAlias_Value;
+class DeclAlias_Type;
+class DeclAlias_Module;
+class DeclAlias: public Base
+{
+public:		// variables
+	variant<shared_ptr<DeclAlias_Value>, shared_ptr<DeclAlias_Type>,
+		shared_ptr<DeclAlias_Module>> item;
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclAlias);
+};
+
+class DeclAlias_Value: public Base
+{
+public:		// variables
+	shared_ptr<IdentList> name_list;
+	shared_ptr<TypenameOrModname> typename_or_modname;
+	shared_ptr<ExprList> expr_list;
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclAlias_Value);
+};
+
+class DeclAlias_Type: public Base
+{
+public:		// variables
+	shared_ptr<IdentList> name_list;
+	shared_ptr<TypenameOrModnameList> typename_or_modname_list;
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclAlias_Type);
+};
+class DeclAlias_Module: public Base
+{
+public:		// variables
+	shared_ptr<IdentList> name_list;
+	shared_ptr<TypenameOrModnameList> typename_or_modname_list;
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclAlias_Module);
+};
 
 
 #undef SHARED_FUNC_CONTENTS

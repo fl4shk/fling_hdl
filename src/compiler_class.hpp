@@ -294,6 +294,12 @@ private:		// visitor functions
 		(Parser::FlingDeclProc_ArgList_ItemContext *ctx);
 	antlrcpp::Any visitFlingDeclAlias
 		(Parser::FlingDeclAliasContext *ctx);
+	antlrcpp::Any visitFlingDeclAlias_Value
+		(Parser::FlingDeclAlias_ValueContext *ctx);
+	antlrcpp::Any visitFlingDeclAlias_Type
+		(Parser::FlingDeclAlias_TypeContext *ctx);
+	antlrcpp::Any visitFlingDeclAlias_Module
+		(Parser::FlingDeclAlias_ModuleContext *ctx);
 	antlrcpp::Any visitFlingIdent
 		(Parser::FlingIdentContext *ctx);
 	antlrcpp::Any visitFlingIdentList

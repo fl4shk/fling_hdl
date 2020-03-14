@@ -475,6 +475,21 @@ antlrcpp::Any Compiler::visitFlingDeclAlias
 {
 	return nullptr;
 }
+antlrcpp::Any Compiler::visitFlingDeclAlias_Value
+	(Parser::FlingDeclAlias_ValueContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingDeclAlias_Type
+	(Parser::FlingDeclAlias_TypeContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingDeclAlias_Module
+	(Parser::FlingDeclAlias_ModuleContext *ctx)
+{
+	return nullptr;
+}
 antlrcpp::Any Compiler::visitFlingIdent
 	(Parser::FlingIdentContext *ctx)
 {

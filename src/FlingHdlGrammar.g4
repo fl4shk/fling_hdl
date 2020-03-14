@@ -422,14 +422,13 @@ flingDeclFunc_Item:
 	| flingDeclType
 
 	| flingBehav_Item_BlkAssign
-	| flingBehav_Item_NonBlkAssign
 
 	| flingDeclFunc_Item_If
 	| flingDeclFunc_Item_SwitchOrSwitchz
 	| flingDeclFunc_Item_For
 	| flingDeclFunc_Item_While
 
-	// Call a `func` or a `task`
+	// Call a `func`
 	| flingExpr_CallSubprog
 	;
 
@@ -557,18 +556,24 @@ flingDeclProc_ArgList:
 	')'
 	;
 flingDeclProc_ArgList_Item:
-	flingIdentList ':' KwConst? KwRef flingTypenameOrModname 
+	flingIdentList ':' KwRef? flingTypenameOrModname 
 	;
 //--------
 
 //--------
 flingDeclAlias:
-	KwAlias flingIdentList ':'
-		(
-			flingTypenameOrModname '=' flingExprList
-			| (KwType | KwModule) '=' flingTypenameOrModnameList
-		)
-	';'
+	flingDeclAlias_Value
+	| flingDeclAlias_Type
+	| flingDeclAlias_Module
+	;
+flingDeclAlias_Value:
+	KwAlias flingIdentList ':' flingTypenameOrModname '=' flingExprList ';'
+	;
+flingDeclAlias_Type:
+	KwAlias flingIdentList ':' KwType '=' flingTypenameOrModnameList ';'
+	;
+flingDeclAlias_Module:
+	KwAlias flingIdentList ':' KwModule '=' flingTypenameOrModnameList ';'
 	;
 //--------
 
