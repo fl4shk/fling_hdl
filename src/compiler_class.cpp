@@ -190,53 +190,53 @@ antlrcpp::Any Compiler::visitFlingBehav_Item
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingBehav_If
-	(Parser::FlingBehav_IfContext *ctx)
+antlrcpp::Any Compiler::visitFlingBehav_Item_If
+	(Parser::FlingBehav_Item_IfContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingBehav_If_Elif
-	(Parser::FlingBehav_If_ElifContext *ctx)
+antlrcpp::Any Compiler::visitFlingBehav_Item_If_Elif
+	(Parser::FlingBehav_Item_If_ElifContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingBehav_If_Else
-	(Parser::FlingBehav_If_ElseContext *ctx)
+antlrcpp::Any Compiler::visitFlingBehav_Item_If_Else
+	(Parser::FlingBehav_Item_If_ElseContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingBehav_SwitchOrSwitchz
-	(Parser::FlingBehav_SwitchOrSwitchzContext *ctx)
+antlrcpp::Any Compiler::visitFlingBehav_Item_SwitchOrSwitchz
+	(Parser::FlingBehav_Item_SwitchOrSwitchzContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingBehav_SwitchOrSwitchz_Default
-	(Parser::FlingBehav_SwitchOrSwitchz_DefaultContext *ctx)
+antlrcpp::Any Compiler::visitFlingBehav_Item_SwitchOrSwitchz_Default
+	(Parser::FlingBehav_Item_SwitchOrSwitchz_DefaultContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingBehav_SwitchOrSwitchz_Case
-	(Parser::FlingBehav_SwitchOrSwitchz_CaseContext *ctx)
+antlrcpp::Any Compiler::visitFlingBehav_Item_SwitchOrSwitchz_Case
+	(Parser::FlingBehav_Item_SwitchOrSwitchz_CaseContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingBehav_For
-	(Parser::FlingBehav_ForContext *ctx)
+antlrcpp::Any Compiler::visitFlingBehav_Item_For
+	(Parser::FlingBehav_Item_ForContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingBehav_While
-	(Parser::FlingBehav_WhileContext *ctx)
+antlrcpp::Any Compiler::visitFlingBehav_Item_While
+	(Parser::FlingBehav_Item_WhileContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingBehav_NonBlkAssign
-	(Parser::FlingBehav_NonBlkAssignContext *ctx)
+antlrcpp::Any Compiler::visitFlingBehav_Item_NonBlkAssign
+	(Parser::FlingBehav_Item_NonBlkAssignContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingBehav_BlkAssign
-	(Parser::FlingBehav_BlkAssignContext *ctx)
+antlrcpp::Any Compiler::visitFlingBehav_Item_BlkAssign
+	(Parser::FlingBehav_Item_BlkAssignContext *ctx)
 {
 	return nullptr;
 }
@@ -260,43 +260,68 @@ antlrcpp::Any Compiler::visitFlingDeclType
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclType_Enum
-	(Parser::FlingDeclType_EnumContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclEnum
+	(Parser::FlingDeclEnumContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclType_Class
-	(Parser::FlingDeclType_ClassContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclClass
+	(Parser::FlingDeclClassContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclType_ClassOrMixin_Extends
-	(Parser::FlingDeclType_ClassOrMixin_ExtendsContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclClsOrMxn_Extends
+	(Parser::FlingDeclClsOrMxn_ExtendsContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclType_Class_Item
-	(Parser::FlingDeclType_Class_ItemContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclClass_Item
+	(Parser::FlingDeclClass_ItemContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclType_ClassOrMixin_Item
-	(Parser::FlingDeclType_ClassOrMixin_ItemContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclClass_Item_DeclVar
+	(Parser::FlingDeclClass_Item_DeclVarContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclType_ClassOrMixin_AccessSpecifier
-	(Parser::FlingDeclType_ClassOrMixin_AccessSpecifierContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclClsOrMxn_Item
+	(Parser::FlingDeclClsOrMxn_ItemContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclType_ClassOrMixin_Item_DeclSubprog
-	(Parser::FlingDeclType_ClassOrMixin_Item_DeclSubprogContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclClsOrMxn_Item_DeclType
+	(Parser::FlingDeclClsOrMxn_Item_DeclTypeContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclType_Mixin
-	(Parser::FlingDeclType_MixinContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclClsOrMxn_Item_DeclAliasOrConst
+	(Parser::FlingDeclClsOrMxn_Item_DeclAliasOrConstContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingDeclClsOrMxn_AccessSpecifier
+	(Parser::FlingDeclClsOrMxn_AccessSpecifierContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingDeclClsOrMxn_Item_DeclSubprog
+	(Parser::FlingDeclClsOrMxn_Item_DeclSubprogContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingDeclClsOrMxn_Item_DeclSubprog_FullDefn
+	(Parser::FlingDeclClsOrMxn_Item_DeclSubprog_FullDefnContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingDeclClsOrMxn_Item_DeclSubprog_Abstract
+	(Parser::FlingDeclClsOrMxn_Item_DeclSubprog_AbstractContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingDeclMixin
+	(Parser::FlingDeclMixinContext *ctx)
 {
 	return nullptr;
 }
@@ -305,143 +330,143 @@ antlrcpp::Any Compiler::visitFlingDeclSubprog
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Func
-	(Parser::FlingDeclSubprog_FuncContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclFunc
+	(Parser::FlingDeclFuncContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Func_Header
-	(Parser::FlingDeclSubprog_Func_HeaderContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclFunc_Header
+	(Parser::FlingDeclFunc_HeaderContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Func_Scope
-	(Parser::FlingDeclSubprog_Func_ScopeContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclFunc_Scope
+	(Parser::FlingDeclFunc_ScopeContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Func_Item
-	(Parser::FlingDeclSubprog_Func_ItemContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclFunc_Item
+	(Parser::FlingDeclFunc_ItemContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Func_If
-	(Parser::FlingDeclSubprog_Func_IfContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclFunc_Item_If
+	(Parser::FlingDeclFunc_Item_IfContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Func_If_Elif
-	(Parser::FlingDeclSubprog_Func_If_ElifContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclFunc_Item_If_Elif
+	(Parser::FlingDeclFunc_Item_If_ElifContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Func_If_Else
-	(Parser::FlingDeclSubprog_Func_If_ElseContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclFunc_Item_If_Else
+	(Parser::FlingDeclFunc_Item_If_ElseContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Func_SwitchOrSwitchz
-	(Parser::FlingDeclSubprog_Func_SwitchOrSwitchzContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclFunc_Item_SwitchOrSwitchz
+	(Parser::FlingDeclFunc_Item_SwitchOrSwitchzContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Func_SwitchOrSwitchz_Default
-	(Parser::FlingDeclSubprog_Func_SwitchOrSwitchz_DefaultContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclFunc_Item_SwitchOrSwitchz_Default
+	(Parser::FlingDeclFunc_Item_SwitchOrSwitchz_DefaultContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Func_SwitchOrSwitchz_Case
-	(Parser::FlingDeclSubprog_Func_SwitchOrSwitchz_CaseContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclFunc_Item_SwitchOrSwitchz_Case
+	(Parser::FlingDeclFunc_Item_SwitchOrSwitchz_CaseContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Func_For
-	(Parser::FlingDeclSubprog_Func_ForContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclFunc_Item_For
+	(Parser::FlingDeclFunc_Item_ForContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Func_While
-	(Parser::FlingDeclSubprog_Func_WhileContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclFunc_Item_While
+	(Parser::FlingDeclFunc_Item_WhileContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Task
-	(Parser::FlingDeclSubprog_TaskContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclTask
+	(Parser::FlingDeclTaskContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Task_Header
-	(Parser::FlingDeclSubprog_Task_HeaderContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclTask_Header
+	(Parser::FlingDeclTask_HeaderContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Task_Scope
-	(Parser::FlingDeclSubprog_Task_ScopeContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclTask_Scope
+	(Parser::FlingDeclTask_ScopeContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Task_Item
-	(Parser::FlingDeclSubprog_Task_ItemContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclTask_Item
+	(Parser::FlingDeclTask_ItemContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Task_If
-	(Parser::FlingDeclSubprog_Task_IfContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclTask_Item_If
+	(Parser::FlingDeclTask_Item_IfContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Task_If_Elif
-	(Parser::FlingDeclSubprog_Task_If_ElifContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclTask_Item_If_Elif
+	(Parser::FlingDeclTask_Item_If_ElifContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Task_If_Else
-	(Parser::FlingDeclSubprog_Task_If_ElseContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclTask_Item_If_Else
+	(Parser::FlingDeclTask_Item_If_ElseContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Task_SwitchOrSwitchz
-	(Parser::FlingDeclSubprog_Task_SwitchOrSwitchzContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclTask_Item_SwitchOrSwitchz
+	(Parser::FlingDeclTask_Item_SwitchOrSwitchzContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Task_SwitchOrSwitchz_Default
-	(Parser::FlingDeclSubprog_Task_SwitchOrSwitchz_DefaultContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclTask_Item_SwitchOrSwitchz_Default
+	(Parser::FlingDeclTask_Item_SwitchOrSwitchz_DefaultContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Task_SwitchOrSwitchz_Case
-	(Parser::FlingDeclSubprog_Task_SwitchOrSwitchz_CaseContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclTask_Item_SwitchOrSwitchz_Case
+	(Parser::FlingDeclTask_Item_SwitchOrSwitchz_CaseContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Task_For
-	(Parser::FlingDeclSubprog_Task_ForContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclTask_Item_For
+	(Parser::FlingDeclTask_Item_ForContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Task_While
-	(Parser::FlingDeclSubprog_Task_WhileContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclTask_Item_While
+	(Parser::FlingDeclTask_Item_WhileContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Proc
-	(Parser::FlingDeclSubprog_ProcContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclProc
+	(Parser::FlingDeclProcContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Proc_Header
-	(Parser::FlingDeclSubprog_Proc_HeaderContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclProc_Header
+	(Parser::FlingDeclProc_HeaderContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Proc_ArgList
-	(Parser::FlingDeclSubprog_Proc_ArgListContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclProc_ArgList
+	(Parser::FlingDeclProc_ArgListContext *ctx)
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingDeclSubprog_Proc_ArgList_Item
-	(Parser::FlingDeclSubprog_Proc_ArgList_ItemContext *ctx)
+antlrcpp::Any Compiler::visitFlingDeclProc_ArgList_Item
+	(Parser::FlingDeclProc_ArgList_ItemContext *ctx)
 {
 	return nullptr;
 }

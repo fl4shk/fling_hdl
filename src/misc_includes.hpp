@@ -39,5 +39,6 @@ using std::variant;
 using std::optional;
 using std::unique_ptr;
 using std::shared_ptr;
+using std::move;
 
 #endif		// src_misc_includes_hpp

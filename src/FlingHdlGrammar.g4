@@ -231,62 +231,62 @@ flingBehav_Item:
 	| flingDeclConst
 	| flingDeclType
 
-	| flingBehav_BlkAssign
-	| flingBehav_NonBlkAssign
+	| flingBehav_Item_BlkAssign
+	| flingBehav_Item_NonBlkAssign
 
-	| flingBehav_If
-	| flingBehav_SwitchOrSwitchz
-	| flingBehav_For
-	| flingBehav_While
+	| flingBehav_Item_If
+	| flingBehav_Item_SwitchOrSwitchz
+	| flingBehav_Item_For
+	| flingBehav_Item_While
 
 	// Call a `func` or a `task`
 	| flingExpr_CallSubprog
 	;
 
 
-flingBehav_If:
+flingBehav_Item_If:
 	KwIf flingExpr flingBehav_Scope
-	flingBehav_If_Elif*
-	flingBehav_If_Else?
+	flingBehav_Item_If_Elif*
+	flingBehav_Item_If_Else?
 	;
-flingBehav_If_Elif:
+flingBehav_Item_If_Elif:
 	KwElif flingExpr flingBehav_Scope
 	;
-flingBehav_If_Else:
+flingBehav_Item_If_Else:
 	KwElse flingBehav_Scope
 	;
 
-flingBehav_SwitchOrSwitchz:
+flingBehav_Item_SwitchOrSwitchz:
 	(KwSwitch | KwSwitchz) flingExpr
 	'{'
 		(
-			flingBehav_SwitchOrSwitchz_Default?
-				flingBehav_SwitchOrSwitchz_Case*
-			| flingBehav_SwitchOrSwitchz_Case+
-				flingBehav_SwitchOrSwitchz_Default
+			flingBehav_Item_SwitchOrSwitchz_Default?
+				flingBehav_Item_SwitchOrSwitchz_Case*
+			| flingBehav_Item_SwitchOrSwitchz_Case+
+				flingBehav_Item_SwitchOrSwitchz_Default
 		)
 	'}'
 	;
-flingBehav_SwitchOrSwitchz_Default:
+flingBehav_Item_SwitchOrSwitchz_Default:
 	KwDefault flingBehav_Scope
 	;
-flingBehav_SwitchOrSwitchz_Case:
+flingBehav_Item_SwitchOrSwitchz_Case:
 	flingExprList flingBehav_Scope
 	;
 
-flingBehav_For:
+flingBehav_Item_For:
 	KwFor flingIdent ':' flingExpr
 		flingBehav_Scope
 	;
 
-flingBehav_While:
+flingBehav_Item_While:
 	KwWhile flingExpr flingBehav_Scope
 	;
 
-flingBehav_NonBlkAssign:
+flingBehav_Item_NonBlkAssign:
 	flingExpr PunctNonBlkAssign flingExpr ';'
 	;
-flingBehav_BlkAssign:
+flingBehav_Item_BlkAssign:
 	flingExpr PunctBlkAssign flingExpr ';'
 	;
 //--------
@@ -308,14 +308,14 @@ flingDeclConst:
 
 //--------
 flingDeclType:
-	flingDeclType_Enum
-	| flingDeclType_Class
-	| flingDeclType_Mixin
+	flingDeclEnum
+	| flingDeclClass
+	| flingDeclMixin
 	;
 //--------
 
 //--------
-flingDeclType_Enum:
+flingDeclEnum:
 	KwEnum flingIdent (':' flingTypenameOrModname)?
 	'{'
 		flingIdentList ','?
@@ -324,223 +324,239 @@ flingDeclType_Enum:
 //--------
 
 //--------
-flingDeclType_Class:
+flingDeclClass:
 	KwBase? KwClass (KwSigned? KwPacked)? flingIdent flingDeclParamList
-		flingDeclType_ClassOrMixin_Extends?
+		flingDeclClsOrMxn_Extends?
 	'{'
-		flingDeclType_Class_Item*
+		flingDeclClass_Item*
 	'}'
 	;
 
-flingDeclType_ClassOrMixin_Extends:
+flingDeclClsOrMxn_Extends:
 	KwExtends flingTypenameOrModnameList
 	;
 
 
-flingDeclType_Class_Item:
-	flingDeclType_ClassOrMixin_Item
-	| flingDeclType_ClassOrMixin_AccessSpecifier? KwStatic? flingDeclVar
+flingDeclClass_Item:
+	flingDeclClass_Item_DeclVar
+	| flingDeclClsOrMxn_Item
+	;
+flingDeclClass_Item_DeclVar:
+	flingDeclClsOrMxn_AccessSpecifier? KwStatic? flingDeclVar
 	;
 
-flingDeclType_ClassOrMixin_Item:
-	(
-		flingDeclType_ClassOrMixin_AccessSpecifier? KwStatic?
-		(flingDeclType | flingDeclAlias | flingDeclConst)
-	)
-	| flingDeclType_ClassOrMixin_Item_DeclSubprog
+flingDeclClsOrMxn_Item:
+	flingDeclClsOrMxn_Item_DeclType 
+	| flingDeclClsOrMxn_Item_DeclAliasOrConst
+	| flingDeclClsOrMxn_Item_DeclSubprog
 
 	| flingImportList
-
 	;
 
-flingDeclType_ClassOrMixin_AccessSpecifier:
+flingDeclClsOrMxn_Item_DeclType:
+	flingDeclClsOrMxn_AccessSpecifier? flingDeclType
+	;
+flingDeclClsOrMxn_Item_DeclAliasOrConst:
+	flingDeclClsOrMxn_AccessSpecifier? KwStatic?
+	(flingDeclAlias | flingDeclConst)
+	;
+
+flingDeclClsOrMxn_AccessSpecifier:
 	KwPub | KwProt | KwPriv
 	;
 
-flingDeclType_ClassOrMixin_Item_DeclSubprog:
-	flingDeclType_ClassOrMixin_AccessSpecifier?
+flingDeclClsOrMxn_Item_DeclSubprog:
+	flingDeclClsOrMxn_Item_DeclSubprog_FullDefn
+	| flingDeclClsOrMxn_Item_DeclSubprog_Abstract
+	;
+flingDeclClsOrMxn_Item_DeclSubprog_FullDefn:
+	flingDeclClsOrMxn_AccessSpecifier?
+	(KwVirtual | KwStatic)? KwConst? flingDeclSubprog
+	;
+flingDeclClsOrMxn_Item_DeclSubprog_Abstract:
+	flingDeclClsOrMxn_AccessSpecifier?
+	KwAbstract KwConst?
 	(
-		(KwVirtual | KwStatic)?
-			KwConst? flingDeclSubprog
-		| KwAbstract KwVirtual KwConst?
-			(flingDeclSubprog_Func_Header | flingDeclSubprog_Task_Header
-			| flingDeclSubprog_Proc_Header) ';'
+		flingDeclFunc_Header
+		| flingDeclTask_Header
+		| flingDeclProc_Header
 	)
+	';'
 	;
 
-flingDeclType_Mixin:
-	KwMixin flingIdent flingDeclParamList
-		flingDeclType_ClassOrMixin_Extends?
+flingDeclMixin:
+	KwBase? KwMixin flingIdent flingDeclParamList
+		flingDeclClsOrMxn_Extends?
 	'{'
-		flingDeclType_ClassOrMixin_Item*
+		flingDeclClsOrMxn_Item*
 	'}'
 	;
 //--------
 
 //--------
 flingDeclSubprog:
-	flingDeclSubprog_Func
-	| flingDeclSubprog_Task
-	| flingDeclSubprog_Proc
+	flingDeclFunc
+	| flingDeclTask
+	| flingDeclProc
 	;
 
-flingDeclSubprog_Func:
-	flingDeclSubprog_Func_Header flingDeclSubprog_Func_Scope
+flingDeclFunc:
+	flingDeclFunc_Header flingDeclFunc_Scope
 	;
-flingDeclSubprog_Func_Header:
+flingDeclFunc_Header:
 	KwFunc flingIdent flingDeclParamList? flingDeclArgList
 		':' flingTypenameOrModname
 	;
 
-flingDeclSubprog_Func_Scope:
+flingDeclFunc_Scope:
 	'{'
-		flingDeclSubprog_Func_Item*
+		flingDeclFunc_Item*
 	'}'
 	;
-flingDeclSubprog_Func_Item:
+flingDeclFunc_Item:
 	KwReturn flingExpr ';'
-	| flingDeclSubprog_Func_Scope
+	| flingDeclFunc_Scope
 	| flingDeclAlias
 	| flingDeclVar
 	| flingDeclConst
 	| flingDeclType
 
-	| flingBehav_BlkAssign
-	| flingBehav_NonBlkAssign
+	| flingBehav_Item_BlkAssign
+	| flingBehav_Item_NonBlkAssign
 
-	| flingDeclSubprog_Func_If
-	| flingDeclSubprog_Func_SwitchOrSwitchz
-	| flingDeclSubprog_Func_For
-	| flingDeclSubprog_Func_While
+	| flingDeclFunc_Item_If
+	| flingDeclFunc_Item_SwitchOrSwitchz
+	| flingDeclFunc_Item_For
+	| flingDeclFunc_Item_While
 
 	// Call a `func` or a `task`
 	| flingExpr_CallSubprog
 	;
 
-flingDeclSubprog_Func_If:
-	KwIf flingExpr flingDeclSubprog_Func_Scope
-	flingDeclSubprog_Func_If_Elif*
-	flingDeclSubprog_Func_If_Else?
+flingDeclFunc_Item_If:
+	KwIf flingExpr flingDeclFunc_Scope
+	flingDeclFunc_Item_If_Elif*
+	flingDeclFunc_Item_If_Else?
 	;
-flingDeclSubprog_Func_If_Elif:
-	KwElif flingExpr flingDeclSubprog_Func_Scope
+flingDeclFunc_Item_If_Elif:
+	KwElif flingExpr flingDeclFunc_Scope
 	;
-flingDeclSubprog_Func_If_Else:
-	KwElse flingDeclSubprog_Func_Scope
+flingDeclFunc_Item_If_Else:
+	KwElse flingDeclFunc_Scope
 	;
 
-flingDeclSubprog_Func_SwitchOrSwitchz:
+flingDeclFunc_Item_SwitchOrSwitchz:
 	(KwSwitch | KwSwitchz) flingExpr
 	'{'
 		(
-			flingDeclSubprog_Func_SwitchOrSwitchz_Default?
-				flingDeclSubprog_Func_SwitchOrSwitchz_Case*
-			| flingDeclSubprog_Func_SwitchOrSwitchz_Case+
-				flingDeclSubprog_Func_SwitchOrSwitchz_Default
+			flingDeclFunc_Item_SwitchOrSwitchz_Default?
+				flingDeclFunc_Item_SwitchOrSwitchz_Case*
+			| flingDeclFunc_Item_SwitchOrSwitchz_Case+
+				flingDeclFunc_Item_SwitchOrSwitchz_Default
 		)
 	'}'
 	;
-flingDeclSubprog_Func_SwitchOrSwitchz_Default:
-	KwDefault flingDeclSubprog_Func_Scope
+flingDeclFunc_Item_SwitchOrSwitchz_Default:
+	KwDefault flingDeclFunc_Scope
 	;
-flingDeclSubprog_Func_SwitchOrSwitchz_Case:
-	flingExprList flingDeclSubprog_Func_Scope
+flingDeclFunc_Item_SwitchOrSwitchz_Case:
+	flingExprList flingDeclFunc_Scope
 	;
 
-flingDeclSubprog_Func_For:
+flingDeclFunc_Item_For:
 	KwFor flingIdent ':' flingExpr
-		flingDeclSubprog_Func_Scope
+		flingDeclFunc_Scope
 	;
 
-flingDeclSubprog_Func_While:
-	KwWhile flingExpr flingDeclSubprog_Func_Scope
+flingDeclFunc_Item_While:
+	KwWhile flingExpr flingDeclFunc_Scope
 	;
 
-flingDeclSubprog_Task:
-	flingDeclSubprog_Task_Header flingDeclSubprog_Task_Scope
+flingDeclTask:
+	flingDeclTask_Header flingDeclTask_Scope
 	;
 
-flingDeclSubprog_Task_Header:
+flingDeclTask_Header:
 	KwTask flingIdent flingDeclParamList? flingDeclArgList
 	;
-flingDeclSubprog_Task_Scope:
+flingDeclTask_Scope:
 	'{'
-		flingDeclSubprog_Task_Item*
+		flingDeclTask_Item*
 	'}'
 	;
-flingDeclSubprog_Task_Item:
-	flingDeclSubprog_Task_Scope
+flingDeclTask_Item:
+	flingDeclTask_Scope
 	| flingDeclAlias
 	| flingDeclVar
 	| flingDeclConst
 	| flingDeclType
 
-	| flingBehav_BlkAssign
-	| flingBehav_NonBlkAssign
+	| flingBehav_Item_BlkAssign
+	| flingBehav_Item_NonBlkAssign
 
-	| flingDeclSubprog_Task_If
-	| flingDeclSubprog_Task_SwitchOrSwitchz
-	| flingDeclSubprog_Task_For
-	| flingDeclSubprog_Task_While
+	| flingDeclTask_Item_If
+	| flingDeclTask_Item_SwitchOrSwitchz
+	| flingDeclTask_Item_For
+	| flingDeclTask_Item_While
 
 	// Call a `func` or a `task`
 	| flingExpr_CallSubprog
 
 	;
 
-flingDeclSubprog_Task_If:
-	KwIf flingExpr flingDeclSubprog_Task_Scope
-	flingDeclSubprog_Task_If_Elif*
-	flingDeclSubprog_Task_If_Else?
+flingDeclTask_Item_If:
+	KwIf flingExpr flingDeclTask_Scope
+	flingDeclTask_Item_If_Elif*
+	flingDeclTask_Item_If_Else?
 	;
-flingDeclSubprog_Task_If_Elif:
-	KwElif flingExpr flingDeclSubprog_Task_Scope
+flingDeclTask_Item_If_Elif:
+	KwElif flingExpr flingDeclTask_Scope
 	;
-flingDeclSubprog_Task_If_Else:
-	KwElse flingDeclSubprog_Task_Scope
+flingDeclTask_Item_If_Else:
+	KwElse flingDeclTask_Scope
 	;
 
-flingDeclSubprog_Task_SwitchOrSwitchz:
+flingDeclTask_Item_SwitchOrSwitchz:
 	(KwSwitch | KwSwitchz) flingExpr
 	'{'
 		(
-			flingDeclSubprog_Task_SwitchOrSwitchz_Default?
-				flingDeclSubprog_Task_SwitchOrSwitchz_Case*
-			| flingDeclSubprog_Task_SwitchOrSwitchz_Case+
-				flingDeclSubprog_Task_SwitchOrSwitchz_Default
+			flingDeclTask_Item_SwitchOrSwitchz_Default?
+				flingDeclTask_Item_SwitchOrSwitchz_Case*
+			| flingDeclTask_Item_SwitchOrSwitchz_Case+
+				flingDeclTask_Item_SwitchOrSwitchz_Default
 		)
 	'}'
 	;
-flingDeclSubprog_Task_SwitchOrSwitchz_Default:
-	KwDefault flingDeclSubprog_Task_Scope
+flingDeclTask_Item_SwitchOrSwitchz_Default:
+	KwDefault flingDeclTask_Scope
 	;
-flingDeclSubprog_Task_SwitchOrSwitchz_Case:
-	flingExprList flingDeclSubprog_Task_Scope
+flingDeclTask_Item_SwitchOrSwitchz_Case:
+	flingExprList flingDeclTask_Scope
 	;
 
-flingDeclSubprog_Task_For:
+flingDeclTask_Item_For:
 	KwFor flingIdent ':' flingExpr
-		flingDeclSubprog_Task_Scope
+		flingDeclTask_Scope
 	;
 
-flingDeclSubprog_Task_While:
-	KwWhile flingExpr flingDeclSubprog_Task_Scope
+flingDeclTask_Item_While:
+	KwWhile flingExpr flingDeclTask_Scope
 	;
 
-flingDeclSubprog_Proc:
-	flingDeclSubprog_Proc_Header flingDeclModule_Scope
+flingDeclProc:
+	flingDeclProc_Header flingDeclModule_Scope
 	;
-flingDeclSubprog_Proc_Header:
-	KwProc flingIdent flingDeclParamList? flingDeclSubprog_Proc_ArgList
+flingDeclProc_Header:
+	KwProc flingIdent flingDeclParamList? flingDeclProc_ArgList
 	;
-flingDeclSubprog_Proc_ArgList:
+flingDeclProc_ArgList:
 	'('
-		flingDeclSubprog_Proc_ArgList_Item
-		(';' flingDeclSubprog_Proc_ArgList_Item)*
+		flingDeclProc_ArgList_Item
+		(';' flingDeclProc_ArgList_Item)*
 		';'?
 	')'
 	;
-flingDeclSubprog_Proc_ArgList_Item:
+flingDeclProc_ArgList_Item:
 	flingIdentList ':' KwConst? KwRef flingTypenameOrModname 
 	;
 //--------
