@@ -363,9 +363,9 @@ private:		// visitor functions
 	antlrcpp::Any visitFlingExpr_KwDollarFuncOf
 		(Parser::FlingExpr_KwDollarFuncOfContext *ctx);
 	antlrcpp::Any visitFlingExpr_KwDollarFuncOf_NonPow
-		(Parser::FlingExpr_KwDollarFuncOfContext_NonPow *ctx);
+		(Parser::FlingExpr_KwDollarFuncOf_NonPowContext *ctx);
 	antlrcpp::Any visitFlingExpr_KwDollarFuncOf_Pow
-		(Parser::FlingExpr_KwDollarFuncOfContext_Pow *ctx);
+		(Parser::FlingExpr_KwDollarFuncOf_PowContext *ctx);
 	antlrcpp::Any visitFlingExpr_IdentEtcAndOptKwDollarFuncOf
 		(Parser::FlingExpr_IdentEtcAndOptKwDollarFuncOfContext *ctx);
 	antlrcpp::Any visitFlingExpr_IdentEtc
