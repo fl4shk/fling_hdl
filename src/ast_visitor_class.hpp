@@ -11,6 +11,8 @@ namespace fling_hdl
 
 class AstVisitor
 {
+public:		// functions
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AstVisitor);
 };
 
 } // namespace fling_hdl

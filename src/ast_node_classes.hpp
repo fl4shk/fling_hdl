@@ -9,8 +9,6 @@
 namespace fling_hdl
 {
 
-class AstVisitor;
-
 namespace ast
 {
 
@@ -18,7 +16,6 @@ namespace ast
 	inline name() = default; \
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(name); \
 	virtual inline ~name() = default; \
-	virtual void accept(AstVisitor& visitor); \
 	virtual inline string id() const \
 	{ \
 		return string(#name); \

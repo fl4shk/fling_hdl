@@ -11,4 +11,4 @@ is largely an exception to that.
 
 The language itself is inspired mainly by C++, Rust, VHDL 2008, and
 SystemVerilog.  It is an object-oriented hardware description language with
-a powerful compile-time language. 
+a powerful compile-time language built in. 
