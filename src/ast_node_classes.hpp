@@ -956,14 +956,21 @@ class Expr_UnopBitNand;
 class Expr_UnopBitXor;
 class Expr_UnopBitXnor;
 
-class Expr_LitNonRange;
+class Expr_Literal;
 class Expr_Sized;
-class Expr_LitRange;
+class Expr_Range;
 class Expr_Cat;
 class Expr_Repl;
-class Expr_KwDollarFuncOf;
+class Expr_KwDollarFuncOf_NonPow;
+class Expr_KwDollarFuncOf_Pow;
 class Expr_IdentEtcAndOptKwDollarFuncOf;
-class Expr_CallSubprog;
+class Expr_IdentEtc;
+class Expr_IdentEtc_Item;
+class Expr_IdentEtc_Item_End_Index;
+class Expr_IdentEtc_Item_End_SubprogCallSuffix;
+class Expr_IdentEtc_Item_End_KwDollarOper;
+class Expr_CallSubprog_Regular;
+class Expr_CallSubprog_PseudoOper;
 
 class Expr: public Base
 {
@@ -996,11 +1003,18 @@ public:		// variables
 		shared_ptr<Expr_UnopBitAnd>, shared_ptr<Expr_UnopBitNand>,
 		shared_ptr<Expr_UnopBitXor>, shared_ptr<Expr_UnopBitXnor>,
 
-		shared_ptr<Expr_LitNonRange>, shared_ptr<Expr_Sized>,
-		shared_ptr<Expr_LitRange>, shared_ptr<Expr_Cat>,
-		shared_ptr<Expr_Repl>, shared_ptr<Expr_KwDollarFuncOf>,
+		shared_ptr<Expr_Literal>, shared_ptr<Expr_Sized>,
+		shared_ptr<Expr_Range>, shared_ptr<Expr_Cat>,
+		shared_ptr<Expr_Repl>, shared_ptr<Expr_KwDollarFuncOf_NonPow>,
+		shared_ptr<Expr_KwDollarFuncOf_Pow>,
 		shared_ptr<Expr_IdentEtcAndOptKwDollarFuncOf>,
-		shared_ptr<Expr_CallSubprog>> item;
+		shared_ptr<Expr_IdentEtc>,
+		shared_ptr<Expr_IdentEtc_Item>,
+		shared_ptr<Expr_IdentEtc_Item_End_Index>,
+		shared_ptr<Expr_IdentEtc_Item_End_SubprogCallSuffix>,
+		shared_ptr<Expr_IdentEtc_Item_End_KwDollarOper>,
+		shared_ptr<Expr_CallSubprog_Regular>,
+		shared_ptr<Expr_CallSubprog_PseudoOper>> item;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Expr);
 };
@@ -1208,46 +1222,127 @@ public:		// functions
 };
 
 // Continue here
-//class Expr_LitNonRange: public Base
-//{
-//public:		// functions
-//	SHARED_FUNC_CONTENTS(Expr_LitNonRange);
-//};
-//class Expr_Sized: public Base
-//{
-//public:		// functions
-//	SHARED_FUNC_CONTENTS(Expr_Sized);
-//};
-//class Expr_LitRange: public Base
-//{
-//public:		// functions
-//	SHARED_FUNC_CONTENTS(Expr_LitRange);
-//};
-//class Expr_Cat: public Base
-//{
-//public:		// functions
-//	SHARED_FUNC_CONTENTS(Expr_Cat);
-//};
-//class Expr_Repl: public Base
-//{
-//public:		// functions
-//	SHARED_FUNC_CONTENTS(Expr_Repl);
-//};
-//class Expr_KwDollarFuncOf: public Base
-//{
-//public:		// functions
-//	SHARED_FUNC_CONTENTS(Expr_KwDollarFuncOf);
-//};
-//class Expr_IdentEtcAndOptKwDollarFuncOf: public Base
-//{
-//public:		// functions
-//	SHARED_FUNC_CONTENTS(Expr_IdentEtcAndOptKwDollarFuncOf);
-//};
-//class Expr_CallSubprog: public Base
-//{
-//public:		// functions
-//	SHARED_FUNC_CONTENTS(Expr_CallSubprog);
-//};
+class Expr_Literal: public Base
+{
+public:		// variables
+	enum class Kind
+	{
+		Uint,
+		Float,
+		String,
+		HighZ,
+		UnkX,
+	};
+	Kind kind;
+	variant<BigNum, double, string> item;
+	optional<shared_ptr<Expr>> opt_expr;
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_Literal);
+};
+class Expr_Sized: public Base
+{
+public:		// variables
+	shared_ptr<Expr> size, to_size;
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_Sized);
+};
+class Expr_Range: public Base
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_Range);
+};
+class Expr_Cat: public Base
+{
+public:		// variables
+	shared_ptr<ExprList> expr_list;
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_Cat);
+};
+class Expr_Repl: public Base
+{
+public:		// variables
+	shared_ptr<Expr> width, to_repl;
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_Repl);
+};
+class Expr_KwDollarFuncOf_NonPow: public Base
+{
+public:		// variables
+	enum class Kind
+	{
+		Signed,
+		Unsigned,
+		Clog2,
+	};
+	Kind kind;
+	shared_ptr<Expr> arg;
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_KwDollarFuncOf_NonPow);
+};
+class Expr_KwDollarFuncOf_Pow: public Base
+{
+public:		// variables
+	shared_ptr<Expr> left, right;
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_KwDollarFuncOf_Pow);
+};
+class Expr_IdentEtcAndOptKwDollarFuncOf: public Base
+{
+public:		// variables
+	enum class KwDollarFuncOf
+	{
+		Size,
+		Range,
+		High,
+		Low,
+	};
+	optional<KwDollarFuncOf> opt_kw_dollar_func_of;
+	shared_ptr<Expr_IdentEtc> ident_etc;
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_IdentEtcAndOptKwDollarFuncOf);
+};
+class Expr_IdentEtc: public Base
+{
+public:		// variables
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_IdentEtc);
+};
+class Expr_IdentEtc_Item: public Base
+{
+public:		// variables
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_IdentEtc_Item);
+};
+class Expr_IdentEtc_Item_End_Index: public Base
+{
+public:		// variables
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_IdentEtc_Item_End_Index);
+};
+class Expr_IdentEtc_Item_End_SubprogCallSuffix: public Base
+{
+public:		// variables
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_IdentEtc_Item_End_SubprogCallSuffix);
+};
+class Expr_IdentEtc_Item_End_KwDollarOper: public Base
+{
+public:		// variables
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_IdentEtc_Item_End_KwDollarOper);
+};
+class Expr_CallSubprog_Regular: public Base
+{
+public:		// variables
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_CallSubprog_Regular);
+};
+class Expr_CallSubprog_PseudoOper: public Base
+{
+public:		// variables
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_CallSubprog_PseudoOper);
+};
 
 
 #undef SHARED_FUNC_CONTENTS

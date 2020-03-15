@@ -716,9 +716,13 @@ flingExpr_Mul_Or_Div_Or_Mod:
 	;
 
 flingExpr_Unary:
-	flingExpr_LitNonRange
+	flingExpr_Unary_ItemWithoutRange
+	| flingExpr_Range
+	;
+
+flingExpr_Unary_ItemWithoutRange:
+	flingExpr_Literal
 	| flingExpr_Sized
-	| flingExpr_LitRange
 	| flingExpr_Cat
 	| flingExpr_Repl
 	| flingExpr_KwDollarFuncOf 
@@ -727,7 +731,7 @@ flingExpr_Unary:
 	| '(' flingExpr ')'
 	;
 
-flingExpr_LitNonRange:
+flingExpr_Literal:
 	LitDecNum
 	| LitHexNum
 	| LitOctNum
@@ -741,12 +745,9 @@ flingExpr_Sized:
 	KwSized '(' flingExpr ',' flingExpr ')'
 	;
 
-flingExpr_LitRange:
-	flingExpr_LitRange_Item '..' flingExpr_LitRange_Item
-	;
-flingExpr_LitRange_Item:
-	flingExpr_LitNonRange
-	| flingExpr_IdentEtc
+flingExpr_Range:
+	flingExpr_Unary_ItemWithoutRange '..' flingExpr
+	| KwRange '(' flingExpr ',' flingExpr ')'
 	;
 
 flingExpr_Cat:
@@ -754,11 +755,19 @@ flingExpr_Cat:
 	;
 
 flingExpr_Repl:
-	KwRepl '(' flingExpr_LitRange_Item ',' flingExpr ')'
+	KwRepl '(' flingExpr ',' flingExpr ')'
 	;
 flingExpr_KwDollarFuncOf:
+	flingExpr_KwDollarFuncOf_NonPow
+	| flingExpr_KwDollarFuncOf_Pow
+	;
+
+flingExpr_KwDollarFuncOf_NonPow:
 	(KwDollarSigned | KwDollarUnsigned | KwDollarClog2) '(' flingExpr ')'
-	| KwDollarPow '(' flingExpr ',' flingExpr ')'
+	;
+
+flingExpr_KwDollarFuncOf_Pow:
+	KwDollarPow '(' flingExpr ',' flingExpr ')'
 	;
 
 flingExpr_IdentEtcAndOptKwDollarFuncOf:
@@ -798,7 +807,7 @@ flingExpr_CallSubprog_Regular:
 	;
 flingExpr_CallSubprog_PseudoOper:
 	flingExpr_IdentEtc flingIdent flingInstParamList? flingExpr
-	| '(' flingExpr flingIdent flingInstParamList? flingExpr ')'
+	//| '(' flingExpr flingIdent flingInstParamList? flingExpr ')'
 	;
 //--------
 
