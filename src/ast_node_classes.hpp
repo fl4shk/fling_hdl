@@ -26,6 +26,8 @@ namespace ast
 
 class Base
 {
+public:		// variables
+	ExprValue ev;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Base);
 	virtual inline void eval()

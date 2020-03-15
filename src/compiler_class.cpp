@@ -670,5 +670,15 @@ antlrcpp::Any Compiler::visitFlingExpr_CallSubprog
 {
 	return nullptr;
 }
+antlrcpp::Any Compiler::visitFlingExpr_CallSubprog_Regular
+	(Parser::FlingExpr_CallSubprog_RegularContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingExpr_CallSubprog_PseudoOper
+	(Parser::FlingExpr_CallSubprog_PseudoOperContext *ctx)
+{
+	return nullptr;
+}
 
 } // namespace fling_hdl

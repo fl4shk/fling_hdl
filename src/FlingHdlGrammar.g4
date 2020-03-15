@@ -780,12 +780,20 @@ flingExpr_IdentEtc_Item_End:
 	;
 
 flingExpr_CallSubprog:
+	flingExpr_CallSubprog_Regular
+	| flingExpr_CallSubprog_PseudoOper
+	;
+
+flingExpr_CallSubprog_Regular:
 	(flingTypenameOrModname PunctScopeAccess)?
 	(
 		flingExpr_IdentEtc_Item
 		(PunctMemberAccess flingExpr_IdentEtc_Item)*
 	)?
 	flingIdent flingInstParamList? flingInstArgList
+	;
+flingExpr_CallSubprog_PseudoOper:
+	flingExpr_IdentEtc flingIdent flingExpr_IdentEtc
 	;
 //--------
 
@@ -1080,7 +1088,7 @@ MiscReservedIdent:
 //	'`' [A-Za-z_] [A-Za-z0-9_]*
 //	;
 
-fragment FragBasicIdent: ([_]? [A-Za-z]) ([_]? [A-Za-z0-9])* [_]?  ;
+fragment FragBasicIdent: '_'? [A-Za-z] ('_'? [A-Za-z0-9])* '_'?  ;
 fragment FragRawIdent: 'r#' [A-Za-z_0-9]+ ;
 
 MiscIdent: 
