@@ -16,146 +16,141 @@ public:		// functions
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AstVisitor);
 	virtual inline ~AstVisitor() = default;
 
-	//#define LIST \
-	//	Base, \
-	//	Program, \
-	//	DeclPackage, \
-	//	DeclParamList, \
-	//	DeclParamList_Item, \
-	//	DeclArgList, \
-	//	DeclArgList_Item, \
-	//	InstParamList, \
-	//	InstParamList_Pos, \
-	//	InstParamList_Named, \
-	//	InstParamList_Named_Item, \
-	//	InstArgList, \
-	//	InstArgList_Named, \
-	//	InstArgList_Named_Item, \
-	//	DeclModule, \
-	//	DeclModule_Scope, \
-	//	InstModule, \
-	//	Gen, \
-	//	Gen_If, \
-	//	Gen_Switch, \
-	//	Gen_For, \
-	//	ContAssign, \
-	//	Behav, \
-	//	Behav_Seq_EdgeList, \
-	//	Behav_Seq_EdgeList_Item, \
-	//	Behav_Scope, \
-	//	Behav_Item_If, \
-	//	Behav_Item_Switch, \
-	//	Behav_Item_Switchz, \
-	//	Behav_Item_For, \
-	//	Behav_Item_While, \
-	//	Behav_Item_NonBlkAssign, \
-	//	Behav_Item_BlkAssign, \
-	//	DeclWire, \
-	//	DeclVar, \
-	//	DeclConst, \
-	//	DeclType, \
-	//	DeclEnum, \
-	//	DeclClass, \
-	//	DeclClass_Item_DeclVar, \
-	//	DeclClsOrMxn_Item_DeclType, \
-	//	DeclClsOrMxn_Item_DeclAliasOrConst, \
-	//	DeclClsOrMxn_Item_DeclSubprog_FullDefn, \
-	//	DeclClsOrMxn_Item_DeclSubprog_Abstract, \
-	//	DeclMixin, \
-	//	DeclSubprog, \
-	//	DeclFunc, \
-	//	DeclFunc_Header, \
-	//	DeclFunc_Scope, \
-	//	DeclFunc_Item_If, \
-	//	DeclFunc_Item_Switch, \
-	//	DeclFunc_Item_Switchz, \
-	//	DeclFunc_Item_For, \
-	//	DeclFunc_Item_While, \
-	//	DeclTask, \
-	//	DeclTask_Header, \
-	//	DeclTask_Scope, \
-	//	DeclTask_Item_If, \
-	//	DeclTask_Item_Switch, \
-	//	DeclTask_Item_Switchz, \
-	//	DeclTask_Item_For, \
-	//	DeclTask_Item_While, \
-	//	DeclProc, \
-	//	DeclProc_Header, \
-	//	DeclProc_ArgList, \
-	//	DeclProc_ArgList_Item, \
-	//	DeclAlias, \
-	//	DeclAlias_Value, \
-	//	DeclAlias_Type, \
-	//	DeclAlias_Module, \
-	//	IdentList, \
-	//	ScopedIdent, \
-	//	ExprList, \
-	//	TypenameOrModnameList, \
-	//	ImportList, \
-	//	TypenameOrModname_SelfT, \
-	//	TypenameOrModname_RetT, \
-	//	TypenameOrModname, \
-	//	TypenameOrModname_Cstm, \
-	//	TypenameOrModname_Cstm_Item, \
-	//	TypenameOrModname_Builtin, \
-	//	Expr, \
-	//	Expr_Mux, \
-	//	ExprBinopBase, \
-	//	ExprUnopBase, \
-	//	Expr_LogOr, \
-	//	Expr_LogAnd, \
-	//	Expr_BinopBitOr, \
-	//	Expr_BinopBitNor, \
-	//	Expr_BinopBitAnd, \
-	//	Expr_BinopBitNand, \
-	//	Expr_BinopBitXor, \
-	//	Expr_BinopBitXnor, \
-	//	Expr_CmpEq, \
-	//	Expr_CmpNe, \
-	//	Expr_CaseCmpEq, \
-	//	Expr_CaseCmpNe, \
-	//	Expr_CmpLt, \
-	//	Expr_CmpLe, \
-	//	Expr_CmpGt, \
-	//	Expr_CmpGe, \
-	//	Expr_BitLsl, \
-	//	Expr_BitLsr, \
-	//	Expr_BitAsr, \
-	//	Expr_BinopPlus, \
-	//	Expr_BinopMinus, \
-	//	Expr_Mul, \
-	//	Expr_Div, \
-	//	Expr_Mod, \
-	//	Expr_UnopPlus, \
-	//	Expr_UnopMinus, \
-	//	Expr_LogNot, \
-	//	Expr_BitNot, \
-	//	Expr_UnopBitOr, \
-	//	Expr_UnopBitNor, \
-	//	Expr_UnopBitAnd, \
-	//	Expr_UnopBitNand, \
-	//	Expr_UnopBitXor, \
-	//	Expr_UnopBitXnor, \
-	//	Expr_Literal, \
-	//	Expr_Sized, \
-	//	Expr_Range, \
-	//	Expr_Cat, \
-	//	Expr_Repl, \
-	//	Expr_KwDollarFuncOf_NonPow, \
-	//	Expr_KwDollarFuncOf_Pow, \
-	//	Expr_IdentEtcAndOptKwDollarFuncOf, \
-	//	Expr_IdentEtc, \
-	//	Expr_IdentEtc_Item, \
-	//	Expr_IdentEtc_Item_End_Index, \
-	//	Expr_IdentEtc_Item_End_SubprogCallSuffix, \
-	//	Expr_IdentEtc_Item_End_KwDollarOper, \
-	//	Expr_CallSubprog_Regular, \
-	//	Expr_CallSubprog_PseudoOper
-
-	//#define BUILD_VISIT(name) \
-	//	virtual void visit##name(shared_ptr<ast::name>& self) = 0;
-	//EVAL(MAP(BUILD_VISIT, COMMA, LIST))
-	//#undef BUILD_VISIT
+	#define LIST(X) \
+		X(Base) \
+		X(Program) \
+		X(DeclPackage) \
+		X(DeclParamList) \
+		X(DeclParamList_Item) \
+		X(DeclArgList) \
+		X(DeclArgList_Item) \
+		X(InstParamList) \
+		X(InstParamList_Pos) \
+		X(InstParamList_Named) \
+		X(InstParamList_Named_Item) \
+		X(InstArgList) \
+		X(InstArgList_Named) \
+		X(InstArgList_Named_Item) \
+		X(DeclModule) \
+		X(DeclModule_Scope) \
+		X(InstModule) \
+		X(Gen) \
+		X(Gen_If) \
+		X(Gen_Switch) \
+		X(Gen_For) \
+		X(ContAssign) \
+		X(Behav) \
+		X(Behav_Seq_EdgeList) \
+		X(Behav_Seq_EdgeList_Item) \
+		X(Behav_Scope) \
+		X(Behav_Item_If) \
+		X(Behav_Item_Switch) \
+		X(Behav_Item_Switchz) \
+		X(Behav_Item_For) \
+		X(Behav_Item_While) \
+		X(Behav_Item_NonBlkAssign) \
+		X(Behav_Item_BlkAssign) \
+		X(DeclWire) \
+		X(DeclVar) \
+		X(DeclConst) \
+		X(DeclType) \
+		X(DeclEnum) \
+		X(DeclClass) \
+		X(DeclClass_Item_DeclVar) \
+		X(DeclClsOrMxn_Item_DeclType) \
+		X(DeclClsOrMxn_Item_DeclAliasOrConst) \
+		X(DeclClsOrMxn_Item_DeclSubprog_FullDefn) \
+		X(DeclClsOrMxn_Item_DeclSubprog_Abstract) \
+		X(DeclMixin) \
+		X(DeclSubprog) \
+		X(DeclFunc) \
+		X(DeclFunc_Header) \
+		X(DeclFunc_Scope) \
+		X(DeclFunc_Item_If) \
+		X(DeclFunc_Item_Switch) \
+		X(DeclFunc_Item_Switchz) \
+		X(DeclFunc_Item_For) \
+		X(DeclFunc_Item_While) \
+		X(DeclTask) \
+		X(DeclTask_Header) \
+		X(DeclTask_Scope) \
+		X(DeclTask_Item_If) \
+		X(DeclTask_Item_Switch) \
+		X(DeclTask_Item_Switchz) \
+		X(DeclTask_Item_For) \
+		X(DeclTask_Item_While) \
+		X(DeclProc) \
+		X(DeclProc_Header) \
+		X(DeclProc_ArgList) \
+		X(DeclProc_ArgList_Item) \
+		X(DeclAlias) \
+		X(DeclAlias_Value) \
+		X(DeclAlias_Type) \
+		X(DeclAlias_Module) \
+		X(IdentList) \
+		X(ScopedIdent) \
+		X(ExprList) \
+		X(TypenameOrModnameList) \
+		X(ImportList) \
+		X(TypenameOrModname_SelfT) \
+		X(TypenameOrModname_RetT) \
+		X(TypenameOrModname) \
+		X(TypenameOrModname_Cstm) \
+		X(TypenameOrModname_Cstm_Item) \
+		X(TypenameOrModname_Builtin) \
+		X(Expr) \
+		X(Expr_Mux) \
+		X(ExprBinopBase) \
+		X(ExprUnopBase) \
+		X(Expr_LogOr) \
+		X(Expr_LogAnd) \
+		X(Expr_BinopBitOr) \
+		X(Expr_BinopBitNor) \
+		X(Expr_BinopBitAnd) \
+		X(Expr_BinopBitNand) \
+		X(Expr_BinopBitXor) \
+		X(Expr_BinopBitXnor) \
+		X(Expr_CmpEq) \
+		X(Expr_CmpNe) \
+		X(Expr_CaseCmpEq) \
+		X(Expr_CaseCmpNe) \
+		X(Expr_CmpLt) \
+		X(Expr_CmpLe) \
+		X(Expr_CmpGt) \
+		X(Expr_CmpGe) \
+		X(Expr_BitLsl) \
+		X(Expr_BitLsr) \
+		X(Expr_BitAsr) \
+		X(Expr_BinopPlus) \
+		X(Expr_BinopMinus) \
+		X(Expr_Mul) \
+		X(Expr_Div) \
+		X(Expr_Mod) \
+		X(Expr_UnopPlus) \
+		X(Expr_UnopMinus) \
+		X(Expr_LogNot) \
+		X(Expr_BitNot) \
+		X(Expr_UnopBitOr) \
+		X(Expr_UnopBitNor) \
+		X(Expr_UnopBitAnd) \
+		X(Expr_UnopBitNand) \
+		X(Expr_UnopBitXor) \
+		X(Expr_UnopBitXnor) \
+		X(Expr_Literal) \
+		X(Expr_Sized) \
+		X(Expr_Range) \
+		X(Expr_Cat) \
+		X(Expr_Repl) \
+		X(Expr_KwDollarFuncOf_NonPow) \
+		X(Expr_KwDollarFuncOf_Pow) \
+		X(Expr_IdentEtcAndOptKwDollarFuncOf) \
+		X(Expr_IdentEtc) \
+		X(Expr_IdentEtc_Item) \
+		X(Expr_IdentEtc_Item_End_Index) \
+		X(Expr_IdentEtc_Item_End_SubprogCallSuffix) \
+		X(Expr_IdentEtc_Item_End_KwDollarOper) \
+		X(Expr_CallSubprog_Regular) \
+		X(Expr_CallSubprog_PseudoOper
 
 	#undef LIST
 };
