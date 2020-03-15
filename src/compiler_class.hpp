@@ -318,8 +318,8 @@ private:		// visitor functions
 		(Parser::FlingTypenameOrModname_CstmContext *ctx);
 	antlrcpp::Any visitFlingTypenameOrModname_Cstm_Item
 		(Parser::FlingTypenameOrModname_Cstm_ItemContext *ctx);
-	antlrcpp::Any visitFlingTypenameOrModname_Cstm_ArrDim
-		(Parser::FlingTypenameOrModname_Cstm_ArrDimContext *ctx);
+	antlrcpp::Any visitFlingTypenameOrModname_ArrDim
+		(Parser::FlingTypenameOrModname_ArrDimContext *ctx);
 	antlrcpp::Any visitFlingTypenameOrModname_Builtin
 		(Parser::FlingTypenameOrModname_BuiltinContext *ctx);
 	antlrcpp::Any visitFlingExpr

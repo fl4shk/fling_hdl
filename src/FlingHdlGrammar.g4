@@ -615,37 +615,40 @@ flingTypenameOrModname:
 flingTypenameOrModname_Cstm:
 	flingTypenameOrModname_Cstm_Item
 	(PunctScopeAccess flingTypenameOrModname_Cstm_Item)*
-		flingTypenameOrModname_Cstm_ArrDim*
+		flingTypenameOrModname_ArrDim*
 	;
 
 flingTypenameOrModname_Cstm_Item:
 	flingScopedIdent flingInstParamList?
 	;
 
-flingTypenameOrModname_Cstm_ArrDim:
-	'[' flingExpr? ']'
+flingTypenameOrModname_ArrDim:
+	'[' (flingExpr | flingTypenameOrModname_Builtin)? ']'
 	;
 
 flingTypenameOrModname_Builtin:
-	KwSigned? KwLogic flingInstParamList?
+	(
+		KwSigned? KwLogic flingInstParamList?
 
-	| KwInteger
-	| KwSizeT
-	| KwRange
+		| KwInteger
+		| KwSizeT
+		| KwRange
+		| KwString
 
-	| KwU8
-	| KwI8
-	| KwU16
-	| KwI16
-	| KwU32
-	| KwI32
-	| KwU64
-	| KwI64
-	| KwU128
-	| KwI128
+		| KwU8
+		| KwI8
+		| KwU16
+		| KwI16
+		| KwU32
+		| KwI32
+		| KwU64
+		| KwI64
+		| KwU128
+		| KwI128
 
+		| KwAuto
+	) flingTypenameOrModname_ArrDim*
 	| KwVoid
-	| KwAuto
 	;
 //--------
 
@@ -721,6 +724,7 @@ flingExpr_Unary:
 	| flingExpr_KwDollarFuncOf 
 	| flingExpr_IdentEtcAndOptKwDollarFuncOf
 	| flingExpr_CallSubprog
+	| '(' flingExpr ')'
 	;
 
 flingExpr_LitNonRange:
@@ -729,7 +733,7 @@ flingExpr_LitNonRange:
 	| LitOctNum
 	| LitBinNum
 	//| LitFloatNum
-	//| LitString
+	| LitString
 	| KwHighZ ('(' flingExpr ')')?
 	| KwUnkX ('(' flingExpr ')')?
 	;
@@ -793,7 +797,8 @@ flingExpr_CallSubprog_Regular:
 	flingIdent flingInstParamList? flingInstArgList
 	;
 flingExpr_CallSubprog_PseudoOper:
-	flingExpr_IdentEtc flingIdent flingExpr_IdentEtc
+	flingExpr_IdentEtc flingIdent flingInstParamList? flingExpr
+	| '(' flingExpr flingIdent flingInstParamList? flingExpr ')'
 	;
 //--------
 
@@ -1069,7 +1074,7 @@ KwRef: 'ref' ;
 //KwList: 'list' ;
 //KwDict: 'dict' ;
 //KwSet: 'set' ;
-//KwString: 'string' ;
+KwString: 'string' ;
 
 //KwFloat: 'float' ;
 //KwFile: 'file' ;

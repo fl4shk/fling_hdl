@@ -30,9 +30,9 @@ public:		// variables
 	ExprValue ev;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Base);
-	virtual inline void eval()
-	{
-	}
+	//virtual inline void eval()
+	//{
+	//}
 };
 
 class DeclPackage;
@@ -862,7 +862,10 @@ class TypenameOrModname_Cstm: public Base
 {
 public:		// variables
 	vector<shared_ptr<TypenameOrModname_Cstm_Item>> item_vec;
-	vector<optional<shared_ptr<Expr>>> arr_dim_vec;
+
+	using OneArrDim = variant<shared_ptr<Expr>,
+		shared_ptr<TypenameOrModname_Builtin>>;
+	vector<optional<OneArrDim>> arr_dim_vec;
 public:		// functions
 	SHARED_FUNC_CONTENTS(TypenameOrModname_Cstm);
 };
@@ -904,6 +907,9 @@ public:		// variables
 	};
 	Kind kind;
 	optional<shared_ptr<InstParamList>> opt_param_list;
+	using OneArrDim = variant<shared_ptr<Expr>,
+		shared_ptr<TypenameOrModname_Builtin>>;
+	vector<optional<OneArrDim>> arr_dim_vec;
 public:		// functions
 	SHARED_FUNC_CONTENTS(TypenameOrModname_Builtin);
 };
@@ -1002,6 +1008,249 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(Expr);
 };
 
+class Expr_Mux: public Base
+{
+public:		// variables
+	shared_ptr<Expr> cond, when_true, when_false;
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_Mux);
+};
+
+class ExprBinopBase: public Base
+{
+public:		// variables
+	shared_ptr<Expr> left, right;
+public:		// functions
+	SHARED_FUNC_CONTENTS(ExprBinopBase);
+};
+class ExprUnopBase: public Base
+{
+public:		// variables
+	shared_ptr<Expr> arg;
+public:		// functions
+	SHARED_FUNC_CONTENTS(ExprUnopBase);
+};
+
+class Expr_LogOr: public ExprBinopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_LogOr);
+};
+class Expr_LogAnd: public ExprBinopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_LogAnd);
+};
+
+class Expr_BinopBitOr: public ExprBinopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_BinopBitOr);
+};
+class Expr_BinopBitNor: public ExprBinopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_BinopBitNor);
+};
+class Expr_BinopBitAnd: public ExprBinopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_BinopBitAnd);
+};
+class Expr_BinopBitNand: public ExprBinopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_BinopBitNand);
+};
+class Expr_BinopBitXor: public ExprBinopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_BinopBitXor);
+};
+class Expr_BinopBitXnor: public ExprBinopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_BinopBitXnor);
+};
+
+class Expr_CmpEq: public ExprBinopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_CmpEq);
+};
+class Expr_CmpNe: public ExprBinopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_CmpNe);
+};
+class Expr_CaseCmpEq: public ExprBinopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_CaseCmpEq);
+};
+class Expr_CaseCmpNe: public ExprBinopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_CaseCmpNe);
+};
+
+class Expr_CmpLt: public ExprBinopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_CmpLt);
+};
+class Expr_CmpLe: public ExprBinopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_CmpLe);
+};
+class Expr_CmpGt: public ExprBinopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_CmpGt);
+};
+class Expr_CmpGe: public ExprBinopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_CmpGe);
+};
+
+class Expr_BitLsl: public ExprBinopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_BitLsl);
+};
+class Expr_BitLsr: public ExprBinopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_BitLsr);
+};
+class Expr_BitAsr: public ExprBinopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_BitAsr);
+};
+
+class Expr_BinopPlus: public ExprBinopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_BinopPlus);
+};
+class Expr_BinopMinus: public ExprBinopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_BinopMinus);
+};
+
+class Expr_Mul: public ExprBinopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_Mul);
+};
+class Expr_Div: public ExprBinopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_Div);
+};
+class Expr_Mod: public ExprBinopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_Mod);
+};
+
+class Expr_UnopPlus: public ExprUnopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_UnopPlus);
+};
+class Expr_UnopMinus: public ExprUnopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_UnopMinus);
+};
+class Expr_LogNot: public ExprUnopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_LogNot);
+};
+class Expr_BitNot: public ExprUnopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_BitNot);
+};
+
+class Expr_UnopBitOr: public ExprUnopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_UnopBitOr);
+};
+class Expr_UnopBitNor: public ExprUnopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_UnopBitNor);
+};
+class Expr_UnopBitAnd: public ExprUnopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_UnopBitAnd);
+};
+class Expr_UnopBitNand: public ExprUnopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_UnopBitNand);
+};
+class Expr_UnopBitXor: public ExprUnopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_UnopBitXor);
+};
+class Expr_UnopBitXnor: public ExprUnopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Expr_UnopBitXnor);
+};
+
+// Continue here
+//class Expr_LitNonRange: public Base
+//{
+//public:		// functions
+//	SHARED_FUNC_CONTENTS(Expr_LitNonRange);
+//};
+//class Expr_Sized: public Base
+//{
+//public:		// functions
+//	SHARED_FUNC_CONTENTS(Expr_Sized);
+//};
+//class Expr_LitRange: public Base
+//{
+//public:		// functions
+//	SHARED_FUNC_CONTENTS(Expr_LitRange);
+//};
+//class Expr_Cat: public Base
+//{
+//public:		// functions
+//	SHARED_FUNC_CONTENTS(Expr_Cat);
+//};
+//class Expr_Repl: public Base
+//{
+//public:		// functions
+//	SHARED_FUNC_CONTENTS(Expr_Repl);
+//};
+//class Expr_KwDollarFuncOf: public Base
+//{
+//public:		// functions
+//	SHARED_FUNC_CONTENTS(Expr_KwDollarFuncOf);
+//};
+//class Expr_IdentEtcAndOptKwDollarFuncOf: public Base
+//{
+//public:		// functions
+//	SHARED_FUNC_CONTENTS(Expr_IdentEtcAndOptKwDollarFuncOf);
+//};
+//class Expr_CallSubprog: public Base
+//{
+//public:		// functions
+//	SHARED_FUNC_CONTENTS(Expr_CallSubprog);
+//};
 
 
 #undef SHARED_FUNC_CONTENTS

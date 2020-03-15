@@ -535,8 +535,8 @@ antlrcpp::Any Compiler::visitFlingTypenameOrModname_Cstm_Item
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingTypenameOrModname_Cstm_ArrDim
-	(Parser::FlingTypenameOrModname_Cstm_ArrDimContext *ctx)
+antlrcpp::Any Compiler::visitFlingTypenameOrModname_ArrDim
+	(Parser::FlingTypenameOrModname_ArrDimContext *ctx)
 {
 	return nullptr;
 }
