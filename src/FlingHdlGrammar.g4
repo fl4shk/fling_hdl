@@ -4,6 +4,7 @@ grammar FlingHdlGrammar;
 // Parser rules
 flingProgram:
 	flingProgram_Item*
+	EOF
 	;
 
 flingProgram_Item:
@@ -12,6 +13,7 @@ flingProgram_Item:
 	| flingDeclType
 	| flingDeclSubprog
 	| flingDeclAlias
+	| flingDeclConst
 	;
 //--------
 
@@ -117,7 +119,7 @@ flingInstArgList_Named_Item:
 //--------
 flingDeclModule:
 	KwModule flingIdent flingDeclParamList? flingDeclArgList
-		(':' flingImportList)?
+		(flingImportList)?
 	flingDeclModule_Scope
 	;
 
@@ -711,33 +713,55 @@ flingExpr_Mul_Or_Div_Or_Mod:
 	;
 
 flingExpr_Unary:
-	flingExpr_LitNum
-	//| LitFloatNum
-	//| LitString
+	flingExpr_LitNonRange
+	| flingExpr_Sized
 	| flingExpr_LitRange
-	| KwCat '(' flingExprList ')'
-	| KwRepl '(' flingExpr_LitRange_Item ',' flingExpr ')'
-	| (KwDollarSigned | KwDollarUnsigned | KwDollarClog2) '(' flingExpr ')'
-	| KwDollarPow '(' flingExpr ',' flingExpr ')'
-	| flingExpr_IdentEtc (KwDollarSize | KwDollarRange
-		| KwDollarHigh | KwDollarLow)
+	| flingExpr_Cat
+	| flingExpr_Repl
+	| flingExpr_KwDollarFuncOf 
+	| flingExpr_IdentEtcAndOptKwDollarFuncOf
 	| flingExpr_CallSubprog
 	;
 
-flingExpr_LitNum:
+flingExpr_LitNonRange:
 	LitDecNum
 	| LitHexNum
 	| LitOctNum
 	| LitBinNum
+	//| LitFloatNum
+	//| LitString
+	| KwHighZ ('(' flingExpr ')')?
+	| KwUnkX ('(' flingExpr ')')?
+	;
+flingExpr_Sized:
+	KwSized '(' flingExpr ',' flingExpr ')'
 	;
 
 flingExpr_LitRange:
 	flingExpr_LitRange_Item '..' flingExpr_LitRange_Item
 	;
 flingExpr_LitRange_Item:
-	flingExpr_LitNum
+	flingExpr_LitNonRange
 	| flingExpr_IdentEtc
 	;
+
+flingExpr_Cat:
+	KwCat '(' flingExprList ')'
+	;
+
+flingExpr_Repl:
+	KwRepl '(' flingExpr_LitRange_Item ',' flingExpr ')'
+	;
+flingExpr_KwDollarFuncOf:
+	(KwDollarSigned | KwDollarUnsigned | KwDollarClog2) '(' flingExpr ')'
+	| KwDollarPow '(' flingExpr ',' flingExpr ')'
+	;
+
+flingExpr_IdentEtcAndOptKwDollarFuncOf:
+	flingExpr_IdentEtc
+		(KwDollarSize | KwDollarRange | KwDollarHigh | KwDollarLow)?
+	;
+
 
 flingExpr_IdentEtc:
 	(flingTypenameOrModname PunctScopeAccess)?

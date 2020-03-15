@@ -907,22 +907,99 @@ public:		// functions
 };
 
 class Expr_Mux;
+
+class Expr_LogOr;
+class Expr_LogAnd;
+
+class Expr_BinopBitOr;
+class Expr_BinopBitNor;
+class Expr_BinopBitAnd;
+class Expr_BinopBitNand;
+class Expr_BinopBitXor;
+class Expr_BinopBitXnor;
+
+class Expr_CmpEq;
+class Expr_CmpNe;
+class Expr_CaseCmpEq;
+class Expr_CaseCmpNe;
+
+class Expr_CmpLt;
+class Expr_CmpLe;
+class Expr_CmpGt;
+class Expr_CmpGe;
+
+class Expr_BitLsl;
+class Expr_BitLsr;
+class Expr_BitAsr;
+
+class Expr_BinopPlus;
+class Expr_BinopMinus;
+
+class Expr_Mul;
+class Expr_Div;
+class Expr_Mod;
+
+class Expr_UnopPlus;
+class Expr_UnopMinus;
+class Expr_LogNot;
+class Expr_BitNot;
+
+class Expr_UnopBitOr;
+class Expr_UnopBitNor;
+class Expr_UnopBitAnd;
+class Expr_UnopBitNand;
+class Expr_UnopBitXor;
+class Expr_UnopBitXnor;
+
+class Expr_LitNonRange;
+class Expr_Sized;
+class Expr_LitRange;
+class Expr_Cat;
+class Expr_Repl;
+class Expr_KwDollarFuncOf;
+class Expr_IdentEtcAndOptKwDollarFuncOf;
+class Expr_CallSubprog;
+
 class Expr: public Base
 {
 public:		// variables
-	class MuxItem
-	{
-		shared_ptr<Expr> cond_expr, true_expr, false_expr;
-	};
+	variant<shared_ptr<Expr_Mux>,
 
-	variant<MuxItem, shared_ptr<Expr_Mux>> item;
+		shared_ptr<Expr_LogOr>, shared_ptr<Expr_LogAnd>,
+
+		shared_ptr<Expr_BinopBitOr>, shared_ptr<Expr_BinopBitNor>,
+		shared_ptr<Expr_BinopBitAnd>, shared_ptr<Expr_BinopBitNand>,
+		shared_ptr<Expr_BinopBitXor>, shared_ptr<Expr_BinopBitXnor>,
+
+		shared_ptr<Expr_CmpEq>, shared_ptr<Expr_CmpNe>,
+		shared_ptr<Expr_CaseCmpEq>, shared_ptr<Expr_CaseCmpNe>,
+
+		shared_ptr<Expr_CmpLt>, shared_ptr<Expr_CmpLe>,
+		shared_ptr<Expr_CmpGt>, shared_ptr<Expr_CmpGe>,
+
+		shared_ptr<Expr_BitLsl>, shared_ptr<Expr_BitLsr>,
+		shared_ptr<Expr_BitAsr>,
+
+		shared_ptr<Expr_BinopPlus>, shared_ptr<Expr_BinopMinus>,
+
+		shared_ptr<Expr_Mul>, shared_ptr<Expr_Div>, shared_ptr<Expr_Mod>,
+
+		shared_ptr<Expr_UnopPlus>, shared_ptr<Expr_UnopMinus>,
+		shared_ptr<Expr_LogNot>, shared_ptr<Expr_BitNot>,
+
+		shared_ptr<Expr_UnopBitOr>, shared_ptr<Expr_UnopBitNor>,
+		shared_ptr<Expr_UnopBitAnd>, shared_ptr<Expr_UnopBitNand>,
+		shared_ptr<Expr_UnopBitXor>, shared_ptr<Expr_UnopBitXnor>,
+
+		shared_ptr<Expr_LitNonRange>, shared_ptr<Expr_Sized>,
+		shared_ptr<Expr_LitRange>, shared_ptr<Expr_Cat>,
+		shared_ptr<Expr_Repl>, shared_ptr<Expr_KwDollarFuncOf>,
+		shared_ptr<Expr_IdentEtcAndOptKwDollarFuncOf>,
+		shared_ptr<Expr_CallSubprog>> item;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Expr);
 };
 
-//class Expr_Mux: public Base
-//{
-//};
 
 
 #undef SHARED_FUNC_CONTENTS

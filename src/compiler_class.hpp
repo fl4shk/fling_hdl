@@ -348,12 +348,22 @@ private:		// visitor functions
 		(Parser::FlingExpr_Mul_Or_Div_Or_ModContext *ctx);
 	antlrcpp::Any visitFlingExpr_Unary
 		(Parser::FlingExpr_UnaryContext *ctx);
-	antlrcpp::Any visitFlingExpr_LitNum
-		(Parser::FlingExpr_LitNumContext *ctx);
+	antlrcpp::Any visitFlingExpr_LitNonRange
+		(Parser::FlingExpr_LitNonRangeContext *ctx);
+	antlrcpp::Any visitFlingExpr_Sized
+		(Parser::FlingExpr_SizedContext *ctx);
 	antlrcpp::Any visitFlingExpr_LitRange
 		(Parser::FlingExpr_LitRangeContext *ctx);
 	antlrcpp::Any visitFlingExpr_LitRange_Item
 		(Parser::FlingExpr_LitRange_ItemContext *ctx);
+	antlrcpp::Any visitFlingExpr_Cat
+		(Parser::FlingExpr_CatContext *ctx);
+	antlrcpp::Any visitFlingExpr_Repl
+		(Parser::FlingExpr_ReplContext *ctx);
+	antlrcpp::Any visitFlingExpr_KwDollarFuncOf
+		(Parser::FlingExpr_KwDollarFuncOfContext *ctx);
+	antlrcpp::Any visitFlingExpr_IdentEtcAndOptKwDollarFuncOf
+		(Parser::FlingExpr_IdentEtcAndOptKwDollarFuncOfContext *ctx);
 	antlrcpp::Any visitFlingExpr_IdentEtc
 		(Parser::FlingExpr_IdentEtcContext *ctx);
 	antlrcpp::Any visitFlingExpr_IdentEtc_Item

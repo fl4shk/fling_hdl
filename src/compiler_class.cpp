@@ -610,8 +610,13 @@ antlrcpp::Any Compiler::visitFlingExpr_Unary
 {
 	return nullptr;
 }
-antlrcpp::Any Compiler::visitFlingExpr_LitNum
-	(Parser::FlingExpr_LitNumContext *ctx)
+antlrcpp::Any Compiler::visitFlingExpr_LitNonRange
+	(Parser::FlingExpr_LitNonRangeContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingExpr_Sized
+	(Parser::FlingExpr_SizedContext *ctx)
 {
 	return nullptr;
 }
@@ -622,6 +627,26 @@ antlrcpp::Any Compiler::visitFlingExpr_LitRange
 }
 antlrcpp::Any Compiler::visitFlingExpr_LitRange_Item
 	(Parser::FlingExpr_LitRange_ItemContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingExpr_Cat
+	(Parser::FlingExpr_CatContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingExpr_Repl
+	(Parser::FlingExpr_ReplContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingExpr_KwDollarFuncOf
+	(Parser::FlingExpr_KwDollarFuncOfContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any Compiler::visitFlingExpr_IdentEtcAndOptKwDollarFuncOf
+	(Parser::FlingExpr_IdentEtcAndOptKwDollarFuncOfContext *ctx)
 {
 	return nullptr;
 }
