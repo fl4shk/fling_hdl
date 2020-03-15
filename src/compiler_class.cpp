@@ -646,12 +646,12 @@ antlrcpp::Any Compiler::visitFlingExpr_KwDollarFuncOf
 	return nullptr;
 }
 antlrcpp::Any Compiler::visitFlingExpr_KwDollarFuncOf_NonPow
-	(Parser::FlingExpr_KwDollarFuncOf_NonPow_Context *ctx)
+	(Parser::FlingExpr_KwDollarFuncOf_NonPowContext *ctx)
 {
 	return nullptr;
 }
 antlrcpp::Any Compiler::visitFlingExpr_KwDollarFuncOf_Pow
-	(Parser::FlingExpr_KwDollarFuncOf_Pow_Context *ctx)
+	(Parser::FlingExpr_KwDollarFuncOf_PowContext *ctx)
 {
 	return nullptr;
 }
