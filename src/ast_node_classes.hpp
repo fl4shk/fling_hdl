@@ -1301,45 +1301,67 @@ public:		// variables
 public:		// functions
 	SHARED_FUNC_CONTENTS(Expr_IdentEtcAndOptKwDollarFuncOf);
 };
-class Expr_IdentEtc: public Base
+class Expr_IdentEtc: public HasChildrenBase<shared_ptr<Expr_IdentEtc_Item>>
 {
 public:		// variables
+	optional<shared_ptr<TypenameOrModname>> opt_typename_or_modname;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Expr_IdentEtc);
 };
-class Expr_IdentEtc_Item: public Base
+class Expr_IdentEtc_Item: public HasChildrenBase<variant
+	<shared_ptr<Expr_IdentEtc_Item_End_Index>,
+	shared_ptr<Expr_IdentEtc_Item_End_SubprogCallSuffix>,
+	shared_ptr<Expr_IdentEtc_Item_End_KwDollarOper>>>
 {
 public:		// variables
+	string name;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Expr_IdentEtc_Item);
 };
 class Expr_IdentEtc_Item_End_Index: public Base
 {
 public:		// variables
+	shared_ptr<Expr> expr;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Expr_IdentEtc_Item_End_Index);
 };
 class Expr_IdentEtc_Item_End_SubprogCallSuffix: public Base
 {
 public:		// variables
+	optional<shared_ptr<InstParamList>> opt_param_list;
+	shared_ptr<InstArgList> arg_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Expr_IdentEtc_Item_End_SubprogCallSuffix);
 };
 class Expr_IdentEtc_Item_End_KwDollarOper: public Base
 {
 public:		// variables
+	enum class Kind
+	{
+		Firstel,
+		Lastel,
+	};
+	Kind kind;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Expr_IdentEtc_Item_End_KwDollarOper);
 };
-class Expr_CallSubprog_Regular: public Base
+class Expr_CallSubprog_Regular:
+	public HasChildrenBase<shared_ptr<Expr_IdentEtc_Item>>
 {
 public:		// variables
+	optional<shared_ptr<TypenameOrModname>> opt_typename_or_modname;
+	string name;
+	optional<shared_ptr<InstParamList>> opt_param_list;
+	shared_ptr<InstArgList> arg_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Expr_CallSubprog_Regular);
 };
 class Expr_CallSubprog_PseudoOper: public Base
 {
 public:		// variables
+	variant<shared_ptr<Expr_IdentEtc>, shared_ptr<Expr>> left;
+	optional<shared_ptr<InstParamList>> opt_param_list;
+	shared_ptr<Expr> right;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Expr_CallSubprog_PseudoOper);
 };

@@ -736,7 +736,7 @@ flingExpr_Literal:
 	| LitHexNum
 	| LitOctNum
 	| LitBinNum
-	//| LitFloatNum
+	| LitFloatNum
 	| LitString
 	| KwHighZ ('(' flingExpr ')')?
 	| KwUnkX ('(' flingExpr ')')?
@@ -807,7 +807,7 @@ flingExpr_CallSubprog_Regular:
 	;
 flingExpr_CallSubprog_PseudoOper:
 	flingExpr_IdentEtc flingIdent flingInstParamList? flingExpr
-	//| '(' flingExpr flingIdent flingInstParamList? flingExpr ')'
+	| '(' flingExpr flingIdent flingInstParamList? flingExpr ')'
 	;
 //--------
 
@@ -1085,7 +1085,7 @@ KwRef: 'ref' ;
 //KwSet: 'set' ;
 KwString: 'string' ;
 
-//KwFloat: 'float' ;
+KwFloat: 'float' ;
 //KwFile: 'file' ;
 //
 //KwDelay: 'delay' ;
