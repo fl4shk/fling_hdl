@@ -10,6 +10,7 @@
 #include "gen_src/FlingHdlGrammarVisitor.h"
 
 #include "ast_node_classes.hpp"
+#include "liborangepower_src/cpp_magic.hpp"
 
 namespace fling_hdl
 {
