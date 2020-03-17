@@ -9,6 +9,8 @@
 #include "gen_src/FlingHdlGrammarParser.h"
 #include "gen_src/FlingHdlGrammarVisitor.h"
 
+#include "ast_node_classes.hpp"
+
 namespace fling_hdl
 {
 
@@ -23,6 +25,8 @@ private:		// variables
 
 	std::stack<string> _str_stack;
 	std::stack<BigNum> _num_stack;
+
+	shared_ptr<ast::Program> _ast;
 
 private:		// stack functions
 	inline void _push_str(const string& to_push)
