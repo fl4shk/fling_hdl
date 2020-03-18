@@ -1,7 +1,7 @@
-#ifndef src_compiler_class_hpp
-#define src_compiler_class_hpp
+#ifndef src_pt_visitor_class_hpp
+#define src_pt_visitor_class_hpp
 
-// src/compiler_class.hpp
+// src/pt_visitor_class.hpp
 
 #include "misc_includes.hpp"
 #include "ANTLRErrorListener.h"
@@ -10,24 +10,59 @@
 #include "gen_src/FlingHdlGrammarVisitor.h"
 
 #include "ast_node_classes.hpp"
+#include "list_of_ast_node_classes_define.hpp"
 #include "liborangepower_src/cpp_magic.hpp"
 
 namespace fling_hdl
 {
 
-class Compiler : public FlingHdlGrammarVisitor
+class AstEtc final
+{
+public:		// types
+	using Parser = FlingHdlGrammarParser;
+	using ProgramContext = Parser::FlingProgramContext;
+private:		// variables
+	string _filename;
+	ProgramContext* _program_ctx = nullptr;
+	shared_ptr<ast::Program> _ast;
+public:		// functions
+	inline AstEtc() = default;
+	inline AstEtc(const string& s_filename, ProgramContext* s_program_ctx)
+		: _filename(s_filename), _program_ctx(s_program_ctx)
+	{
+	}
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AstEtc);
+	inline ~AstEtc() = default;
+
+	GEN_GETTER_BY_CON_REF(filename);
+	GEN_GETTER_BY_VAL(program_ctx);
+	GEN_GETTERS_BY_CON_REF_AND_REF(ast);
+};
+
+class PtVisitor final: public FlingHdlGrammarVisitor
 {
 public:		// typedefs
 	using ParserRuleContext = antlr4::ParserRuleContext;
 
 	using Parser = FlingHdlGrammarParser;
 private:		// variables
-	Parser::FlingProgramContext* _program_ctx = nullptr;
 
-	std::stack<string> _str_stack;
-	std::stack<BigNum> _num_stack;
+	int _argc;
+	char** _argv;
+	map<string, AstEtc> _ast_etc_map;
 
-	shared_ptr<ast::Program> _ast;
+	stack<string> _str_stack;
+	stack<BigNum> _num_stack;
+	
+	using AstSptr = variant
+		<
+			#define X(name) \
+				shared_ptr<ast::name>,
+			LIST_OF_AST_NODE_CLASSES(X)
+			#undef X
+			std::nullptr_t
+		>;
+	stack<AstSptr> _ast_stack;
 
 private:		// stack functions
 	inline void _push_str(const string& to_push)
@@ -60,9 +95,25 @@ private:		// stack functions
 		return ret;
 	}
 
+	template<typename Type>
+	inline void _push_ast(shared_ptr<Type>&& to_push)
+	{
+		_ast_stack.push(to_push);
+	}
+	inline auto _get_top_ast()
+	{
+		return _ast_stack.top();
+	}
+	inline auto _pop_ast()
+	{
+		auto ret = _ast_stack.top();
+		_ast_stack.pop();
+		return ret;
+	}
+
 public:		// functions
-	Compiler(FlingHdlGrammarParser& parser);
-	virtual ~Compiler();
+	PtVisitor(int s_argc, char** s_argv);
+	virtual ~PtVisitor();
 	int run();
 
 private:		// error/warning functions
@@ -390,4 +441,4 @@ private:		// visitor functions
 } // namespace fling_hdl
 
 
-#endif		// src_compiler_class_hpp
+#endif		// src_pt_visitor_class_hpp

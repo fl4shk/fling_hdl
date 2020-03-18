@@ -6,6 +6,8 @@
 #include "misc_includes.hpp"
 #include "expr_value_class.hpp"
 
+#include "list_of_ast_node_classes_define.hpp"
+
 namespace fling_hdl
 {
 
@@ -21,6 +23,11 @@ namespace ast
 		return string(#name); \
 	}
 
+#define X(name) \
+	class name;
+LIST_OF_AST_NODE_CLASSES(X)
+#undef X
+
 class Base
 {
 public:		// variables
@@ -32,12 +39,6 @@ public:		// functions
 	//}
 };
 
-class DeclPackage;
-class DeclModule;
-
-class DeclType;
-class DeclSubprog;
-class DeclAlias;
 
 template<typename ChildType>
 class HasChildrenBase: public Base
@@ -48,8 +49,6 @@ public:		// variables
 public:		// functions
 	SHARED_FUNC_CONTENTS(HasChildrenBase)
 };
-
-class Expr;
 
 template<typename ScopeType>
 class IfBase: public Base
@@ -67,7 +66,6 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(IfBase);
 };
 
-class ExprList;
 template<typename ScopeType>
 class SwitchBase: public Base
 {
@@ -124,8 +122,6 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(Program);
 };
 
-class DeclConst;
-
 class DeclPackage: public HasChildrenBase<variant<shared_ptr<DeclPackage>,
 	shared_ptr<DeclModule>, shared_ptr<DeclType>, shared_ptr<DeclSubprog>,
 	shared_ptr<DeclAlias>, shared_ptr<DeclConst>>>
@@ -134,15 +130,11 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(DeclPackage);
 };
 
-class DeclParamList_Item;
 class DeclParamList: public HasChildrenBase<shared_ptr<DeclParamList_Item>>
 {
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclParamList);
 };
-
-class IdentList;
-class TypenameOrModnameList;
 
 class DeclParamList_Item: public Base
 {
@@ -161,7 +153,6 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(DeclParamList_Item);
 };
 
-class DeclArgList_Item;
 class DeclArgList: public HasChildrenBase<shared_ptr<DeclArgList_Item>>
 {
 public:		// functions
@@ -185,8 +176,6 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(DeclArgList_Item);
 };
 
-class InstParamList_Pos;
-class InstParamList_Named;
 class InstParamList: public Base
 {
 public:		// variables
@@ -196,7 +185,6 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(InstParamList);
 };
 
-class TypenameOrModname;
 class InstParamList_Pos: public HasChildrenBase<variant<shared_ptr<Expr>,
 	shared_ptr<TypenameOrModname>>>
 {
@@ -204,7 +192,6 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(InstParamList_Pos);
 };
 
-class InstParamList_Named_Item;
 class InstParamList_Named:
 	public HasChildrenBase<shared_ptr<InstParamList_Named_Item>>
 {
@@ -221,7 +208,6 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(InstParamList_Named_Item);
 };
 
-class InstArgList_Named;
 class InstArgList: public Base
 {
 public:		// variables
@@ -231,7 +217,6 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(InstArgList);
 };
 
-class InstArgList_Named_Item;
 class InstArgList_Named:
 	public HasChildrenBase<shared_ptr<InstArgList_Named_Item>>
 {
@@ -248,8 +233,6 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(InstArgList_Named_Item);
 };
 
-class ImportList;
-class DeclModule_Scope;
 class DeclModule: public Base
 {
 public:		// variables
@@ -264,20 +247,13 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(DeclModule);
 };
 
-class InstModule;
-class Expr_CallSubprog;
-class Gen;
-class ContAssign;
-class Behav;
-class DeclWire;
-class DeclVar;
 
 class DeclModule_Scope: public HasChildrenBase<variant
-	<shared_ptr<InstModule>, shared_ptr<Expr_CallSubprog>,
-	shared_ptr<Gen>, shared_ptr<ContAssign>, shared_ptr<ImportList>,
-	shared_ptr<Behav>, shared_ptr<DeclWire>, shared_ptr<DeclVar>,
-	shared_ptr<DeclConst>, shared_ptr<DeclType>, shared_ptr<DeclSubprog>,
-	shared_ptr<DeclAlias>>>
+	<shared_ptr<InstModule>, shared_ptr<Expr_CallSubprog_Regular>,
+	shared_ptr<Expr_CallSubprog_PseudoOper>, shared_ptr<Gen>,
+	shared_ptr<ContAssign>, shared_ptr<ImportList>, shared_ptr<Behav>,
+	shared_ptr<DeclWire>, shared_ptr<DeclVar>, shared_ptr<DeclConst>,
+	shared_ptr<DeclType>, shared_ptr<DeclSubprog>, shared_ptr<DeclAlias>>>
 {
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclModule_Scope);
@@ -293,9 +269,6 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(InstModule);
 };
 
-class Gen_If;
-class Gen_Switch;
-class Gen_For;
 class Gen: public Base
 {
 public:		// variables
@@ -336,8 +309,6 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(ContAssign);
 };
 
-class Behav_Seq_EdgeList;
-class Behav_Scope;
 class Behav: public Base
 {
 public:		// variables
@@ -354,7 +325,6 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(Behav);
 };
 
-class Behav_Seq_EdgeList_Item;
 class Behav_Seq_EdgeList:
 	public HasChildrenBase<shared_ptr<Behav_Seq_EdgeList_Item>>
 {
@@ -376,21 +346,15 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(Behav_Seq_EdgeList_Item);
 };
 
-class Behav_Item_BlkAssign;
-class Behav_Item_NonBlkAssign;
 
-class Behav_Item_If;
-class Behav_Item_Switch;
-class Behav_Item_Switchz;
-class Behav_Item_For;
-class Behav_Item_While;
 class Behav_Scope: public HasChildrenBase<variant<shared_ptr<Behav_Scope>,
 	shared_ptr<DeclAlias>, shared_ptr<DeclVar>, shared_ptr<DeclConst>,
 	shared_ptr<DeclType>, shared_ptr<Behav_Item_BlkAssign>,
 	shared_ptr<Behav_Item_NonBlkAssign>, shared_ptr<Behav_Item_If>,
 	shared_ptr<Behav_Item_Switch>, shared_ptr<Behav_Item_Switchz>,
 	shared_ptr<Behav_Item_For>, shared_ptr<Behav_Item_While>,
-	shared_ptr<Expr_CallSubprog>>>
+	shared_ptr<Expr_CallSubprog_Regular>,
+	shared_ptr<Expr_CallSubprog_PseudoOper>>>
 {
 public:		// functions
 	SHARED_FUNC_CONTENTS(Behav_Scope);
@@ -457,9 +421,6 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(DeclConst);
 };
 
-class DeclEnum;
-class DeclClass;
-class DeclMixin;
 class DeclType: public Base
 {
 public:		// variables
@@ -481,11 +442,6 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(DeclEnum);
 };
 
-class DeclClass_Item_DeclVar;
-class DeclClsOrMxn_Item_DeclType;
-class DeclClsOrMxn_Item_DeclAliasOrConst;
-class DeclClsOrMxn_Item_DeclSubprog_FullDefn;
-class DeclClsOrMxn_Item_DeclSubprog_Abstract;
 class DeclClass: public HasChildrenBase<variant
 	<shared_ptr<DeclClass_Item_DeclVar>,
 	shared_ptr<DeclClsOrMxn_Item_DeclType>,
@@ -554,9 +510,6 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(DeclClsOrMxn_Item_DeclSubprog_FullDefn);
 };
 
-class DeclFunc_Header;
-class DeclTask_Header;
-class DeclProc_Header;
 
 class DeclClsOrMxn_Item_DeclSubprog_Abstract: public Base
 {
@@ -585,9 +538,6 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(DeclMixin);
 };
 
-class DeclFunc;
-class DeclTask;
-class DeclProc;
 class DeclSubprog: public Base
 {
 public:		// variables
@@ -597,7 +547,6 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(DeclSubprog);
 };
 
-class DeclFunc_Scope;
 class DeclFunc: public DeclSubprogBase<DeclFunc_Header,
 	DeclFunc_Scope>
 {
@@ -616,11 +565,6 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(DeclFunc_Header);
 };
 
-class DeclFunc_Item_If;
-class DeclFunc_Item_Switch;
-class DeclFunc_Item_Switchz;
-class DeclFunc_Item_For;
-class DeclFunc_Item_While;
 class DeclFunc_Scope: public HasChildrenBase<variant
 	<shared_ptr<Expr>, // return
 	shared_ptr<DeclFunc_Scope>, shared_ptr<DeclAlias>,
@@ -628,7 +572,8 @@ class DeclFunc_Scope: public HasChildrenBase<variant
 	shared_ptr<Behav_Item_BlkAssign>,
 	shared_ptr<DeclFunc_Item_If>, shared_ptr<DeclFunc_Item_Switch>,
 	shared_ptr<DeclFunc_Item_Switchz>, shared_ptr<DeclFunc_Item_For>,
-	shared_ptr<DeclFunc_Item_While>, shared_ptr<Expr_CallSubprog>>>
+	shared_ptr<DeclFunc_Item_While>, shared_ptr<Expr_CallSubprog_Regular>,
+	shared_ptr<Expr_CallSubprog_PseudoOper>>>
 {
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclFunc_Scope);
@@ -662,8 +607,6 @@ public:		// functions
 };
 
 
-class DeclTask_Header;
-class DeclTask_Scope;
 class DeclTask: public DeclSubprogBase<DeclTask_Header, DeclTask_Scope>
 {
 public:		// functions
@@ -680,18 +623,14 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(DeclTask_Header);
 };
 
-class DeclTask_Item_If;
-class DeclTask_Item_Switch;
-class DeclTask_Item_Switchz;
-class DeclTask_Item_For;
-class DeclTask_Item_While;
 class DeclTask_Scope: public HasChildrenBase<variant
 	<shared_ptr<DeclTask_Scope>, shared_ptr<DeclAlias>,
 	shared_ptr<DeclVar>, shared_ptr<DeclConst>, shared_ptr<DeclType>,
 	shared_ptr<Behav_Item_BlkAssign>, shared_ptr<Behav_Item_NonBlkAssign>,
 	shared_ptr<DeclTask_Item_If>, shared_ptr<DeclTask_Item_Switch>,
 	shared_ptr<DeclTask_Item_Switchz>, shared_ptr<DeclTask_Item_For>,
-	shared_ptr<DeclTask_Item_While>, shared_ptr<Expr_CallSubprog>>>
+	shared_ptr<DeclTask_Item_While>, shared_ptr<Expr_CallSubprog_Regular>,
+	shared_ptr<Expr_CallSubprog_PseudoOper>>>
 {
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclTask_Scope);
@@ -725,14 +664,12 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(DeclTask_Item_While);
 };
 
-class DeclProc_Header;
 class DeclProc: public DeclSubprogBase<DeclProc_Header, DeclModule_Scope>
 {
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclProc);
 };
 
-class DeclProc_ArgList;
 class DeclProc_Header: public Base
 {
 public:		// variables
@@ -743,7 +680,6 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(DeclProc_Header);
 };
 
-class DeclProc_ArgList_Item;
 class DeclProc_ArgList: public HasChildrenBase
 	<shared_ptr<DeclProc_ArgList_Item>>
 {
@@ -761,9 +697,6 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(DeclProc_ArgList_Item);
 };
 
-class DeclAlias_Value;
-class DeclAlias_Type;
-class DeclAlias_Module;
 class DeclAlias: public Base
 {
 public:		// variables
@@ -841,8 +774,6 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(TypenameOrModname_RetT);
 };
 
-class TypenameOrModname_Cstm;
-class TypenameOrModname_Builtin;
 class TypenameOrModname: public Base
 {
 public:		// variables
@@ -854,7 +785,6 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(TypenameOrModname);
 };
 
-class TypenameOrModname_Cstm_Item;
 class TypenameOrModname_Cstm: public Base
 {
 public:		// variables
@@ -911,66 +841,6 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(TypenameOrModname_Builtin);
 };
 
-class Expr_Mux;
-
-class Expr_LogOr;
-class Expr_LogAnd;
-
-class Expr_BinopBitOr;
-class Expr_BinopBitNor;
-class Expr_BinopBitAnd;
-class Expr_BinopBitNand;
-class Expr_BinopBitXor;
-class Expr_BinopBitXnor;
-
-class Expr_CmpEq;
-class Expr_CmpNe;
-class Expr_CaseCmpEq;
-class Expr_CaseCmpNe;
-
-class Expr_CmpLt;
-class Expr_CmpLe;
-class Expr_CmpGt;
-class Expr_CmpGe;
-
-class Expr_BitLsl;
-class Expr_BitLsr;
-class Expr_BitAsr;
-
-class Expr_BinopPlus;
-class Expr_BinopMinus;
-
-class Expr_Mul;
-class Expr_Div;
-class Expr_Mod;
-
-class Expr_UnopPlus;
-class Expr_UnopMinus;
-class Expr_LogNot;
-class Expr_BitNot;
-
-class Expr_UnopBitOr;
-class Expr_UnopBitNor;
-class Expr_UnopBitAnd;
-class Expr_UnopBitNand;
-class Expr_UnopBitXor;
-class Expr_UnopBitXnor;
-
-class Expr_Literal;
-class Expr_Sized;
-class Expr_Range;
-class Expr_Cat;
-class Expr_Repl;
-class Expr_KwDollarFuncOf_NonPow;
-class Expr_KwDollarFuncOf_Pow;
-class Expr_IdentEtcAndOptKwDollarFuncOf;
-class Expr_IdentEtc;
-class Expr_IdentEtc_Item;
-class Expr_IdentEtc_Item_End_Index;
-class Expr_IdentEtc_Item_End_SubprogCallSuffix;
-class Expr_IdentEtc_Item_End_KwDollarOper;
-class Expr_CallSubprog_Regular;
-class Expr_CallSubprog_PseudoOper;
 
 class Expr: public Base
 {

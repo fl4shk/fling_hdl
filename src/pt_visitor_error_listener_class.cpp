@@ -1,13 +1,13 @@
-#include "src/compiler_error_listener_class.hpp"
+#include "src/pt_visitor_error_listener_class.hpp"
 
 namespace fling_hdl
 {
 
-CompilerErrorListener::~CompilerErrorListener()
+PtVisitorErrorListener::~PtVisitorErrorListener()
 {
 }
 
-void CompilerErrorListener::syntaxError(antlr4::Recognizer *recognizer, 
+void PtVisitorErrorListener::syntaxError(antlr4::Recognizer *recognizer, 
 	antlr4::Token *offendingSymbol, size_t line, 
 	size_t charPositionInLine, const std::string &msg, 
 	std::exception_ptr e)
@@ -17,14 +17,14 @@ void CompilerErrorListener::syntaxError(antlr4::Recognizer *recognizer,
 		":  ", msg, "\n");
 	exit(1);
 }
-void CompilerErrorListener::reportAmbiguity(antlr4::Parser *recognizer, 
+void PtVisitorErrorListener::reportAmbiguity(antlr4::Parser *recognizer, 
 	const antlr4::dfa::DFA &dfa, size_t startIndex, size_t stopIndex, 
 	bool exact, const antlrcpp::BitSet &ambigAlts, 
 	antlr4::atn::ATNConfigSet *configs)
 {
 }
 
-void CompilerErrorListener::reportAttemptingFullContext
+void PtVisitorErrorListener::reportAttemptingFullContext
 	(antlr4::Parser *recognizer, const antlr4::dfa::DFA &dfa, 
 	size_t startIndex, size_t stopIndex,
 	const antlrcpp::BitSet &conflictingAlts, 
@@ -32,7 +32,7 @@ void CompilerErrorListener::reportAttemptingFullContext
 {
 }
 
-void CompilerErrorListener::reportContextSensitivity
+void PtVisitorErrorListener::reportContextSensitivity
 	(antlr4::Parser *recognizer, const antlr4::dfa::DFA &dfa, 
 	size_t startIndex, size_t stopIndex, size_t prediction, 
 	antlr4::atn::ATNConfigSet *configs)

@@ -31,6 +31,7 @@ using namespace liborangepower::bignum;
 #include <optional>
 #include <type_traits>
 #include <memory>
+#include <map>
 
 using std::stack;
 using std::vector;
@@ -40,5 +41,6 @@ using std::optional;
 using std::unique_ptr;
 using std::shared_ptr;
 using std::move;
+using std::map;
 
 #endif		// src_misc_includes_hpp

@@ -1,7 +1,7 @@
-#ifndef src_compiler_error_listener_class_hpp
-#define src_compiler_error_listener_class_hpp
+#ifndef src_pt_visitor_error_listener_class_hpp
+#define src_pt_visitor_error_listener_class_hpp
 
-// src/compiler_error_listener_class.hpp
+// src/pt_visitor_error_listener_class.hpp
 
 #include "misc_includes.hpp"
 #include "ANTLRErrorListener.h"
@@ -9,10 +9,10 @@
 namespace fling_hdl
 {
 
-class CompilerErrorListener : public antlr4::ANTLRErrorListener
+class PtVisitorErrorListener : public antlr4::ANTLRErrorListener
 {
 public:		// functions
-	virtual ~CompilerErrorListener();
+	virtual ~PtVisitorErrorListener();
 
 	void syntaxError(antlr4::Recognizer *recognizer, 
 		antlr4::Token *offendingSymbol, size_t line, 
@@ -35,4 +35,4 @@ public:		// functions
 
 } // namespace fling_hdl
 
-#endif		// src_compiler_error_listener_class_hpp
+#endif		// src_pt_visitor_error_listener_class_hpp
