@@ -4,16 +4,21 @@
 // src/pt_visitor_class.hpp
 
 #include "misc_includes.hpp"
-#include "ANTLRErrorListener.h"
-#include "gen_src/FlingHdlGrammarLexer.h"
-#include "gen_src/FlingHdlGrammarParser.h"
-#include "gen_src/FlingHdlGrammarVisitor.h"
 
 #include "ast_node_classes.hpp"
 #include "liborangepower_src/cpp_magic.hpp"
 
 namespace fling_hdl
 {
+
+using AstSptr = variant
+	<
+		#define X(name) \
+			shared_ptr<ast::name>,
+		LIST_OF_AST_NODE_CLASSES(X)
+		#undef X
+		std::nullptr_t
+	>;
 
 class AstEtc final
 {
@@ -49,7 +54,10 @@ private:		// variables
 	int _argc;
 	char** _argv;
 	map<string, AstEtc> _ast_etc_map;
+
+	// The current filename
 	string _filename;
+	ast::Program* _ast = nullptr;
 
 	stack<string> _str_stack;
 	stack<BigNum> _num_stack;
@@ -117,13 +125,7 @@ private:		// error/warning functions
 		}
 		else
 		{
-			auto tok = ctx->getStart();
-			const size_t line = tok->getLine();
-			const size_t pos_in_line = tok->getCharPositionInLine();
-			//printerr("Error in file \"", *__file_name, "\", on line ",
-			//	line, ", position ", pos_in_line, ":  ", msg, "\n");
-			printerr("Error on line ", line, ", position ", pos_in_line, 
-				":  ", msg, "\n");
+			ErrWarn(_filename, ctx).err(msg);
 		}
 		exit(1);
 	}
@@ -143,13 +145,7 @@ private:		// error/warning functions
 		}
 		else
 		{
-			auto tok = ctx->getStart();
-			const size_t line = tok->getLine();
-			const size_t pos_in_line = tok->getCharPositionInLine();
-			//printerr("Error in file \"", *__file_name, "\", on line ",
-			//	line, ", position ", pos_in_line, ":  ", msg, "\n");
-			printerr("Warning on line ", line, ", position ", pos_in_line, 
-				":  ", msg, "\n");
+			ErrWarn(_filename, ctx).warn(msg);
 		}
 	}
 	inline void _warn(const std::string& msg)

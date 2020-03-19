@@ -6,6 +6,8 @@
 #include "misc_includes.hpp"
 #include "expr_value_class.hpp"
 
+#include "err_warn_class.hpp"
+
 #include "list_of_ast_node_classes_define.hpp"
 
 namespace fling_hdl
@@ -32,9 +34,8 @@ LIST_OF_AST_NODE_CLASSES(X)
 class Base
 {
 public:		// variables
-	ExprValue ev;
-	string filename;
-	size_t line, pos_in_line;
+	ExprValue val;
+	ErrWarn ew;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Base);
 	//virtual inline void eval()
@@ -1243,15 +1244,6 @@ public:		// functions
 #undef SHARED_FUNC_CONTENTS
 
 } // namespace ast
-
-using AstSptr = variant
-	<
-		#define X(name) \
-			shared_ptr<ast::name>,
-		LIST_OF_AST_NODE_CLASSES(X)
-		#undef X
-		std::nullptr_t
-	>;
 
 } // namespace fling_hdl
 

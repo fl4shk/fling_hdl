@@ -44,9 +44,9 @@ public:		// functions
 		return _vec.at(index);
 	}
 
-	inline void resize(size_t n_size)
+	inline ExprValue resized(size_t n_size) const
 	{
-		*this = ExprValue(BigNum(*this), is_signed(), n_size);
+		return ExprValue(BigNum(*this), is_signed(), n_size);
 	}
 
 	GEN_GETTER_BY_CON_REF(vec);

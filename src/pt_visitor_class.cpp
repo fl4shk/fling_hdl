@@ -40,11 +40,12 @@ PtVisitor::~PtVisitor()
 }
 int PtVisitor::run()
 {
-	//for (auto iter=_ast_etc_map.begin(); iter!=_ast_etc_map.end(); ++iter)
-	for (auto& iter: _ast_etc_map)
+	for (auto& item: _ast_etc_map)
 	{
-		//iter.second.ast().reset(new ast::Program());
-		_filename = iter.second.filename();
+		_ast = new ast::Program();
+		item.second.ast().reset(_ast);
+		_filename = item.second.ast()->ew.filename();
+		visitFlingProgram(item.second.program_ctx());
 	}
 	return 0;
 }
