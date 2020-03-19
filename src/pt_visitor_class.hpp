@@ -10,7 +10,6 @@
 #include "gen_src/FlingHdlGrammarVisitor.h"
 
 #include "ast_node_classes.hpp"
-#include "list_of_ast_node_classes_define.hpp"
 #include "liborangepower_src/cpp_magic.hpp"
 
 namespace fling_hdl
@@ -50,18 +49,11 @@ private:		// variables
 	int _argc;
 	char** _argv;
 	map<string, AstEtc> _ast_etc_map;
+	string _filename;
 
 	stack<string> _str_stack;
 	stack<BigNum> _num_stack;
 	
-	using AstSptr = variant
-		<
-			#define X(name) \
-				shared_ptr<ast::name>,
-			LIST_OF_AST_NODE_CLASSES(X)
-			#undef X
-			std::nullptr_t
-		>;
 	stack<AstSptr> _ast_stack;
 
 private:		// stack functions

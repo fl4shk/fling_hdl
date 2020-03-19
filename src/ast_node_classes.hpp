@@ -11,6 +11,7 @@
 namespace fling_hdl
 {
 
+
 namespace ast
 {
 
@@ -32,6 +33,8 @@ class Base
 {
 public:		// variables
 	ExprValue ev;
+	string filename;
+	size_t line, pos_in_line;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Base);
 	//virtual inline void eval()
@@ -1240,6 +1243,15 @@ public:		// functions
 #undef SHARED_FUNC_CONTENTS
 
 } // namespace ast
+
+using AstSptr = variant
+	<
+		#define X(name) \
+			shared_ptr<ast::name>,
+		LIST_OF_AST_NODE_CLASSES(X)
+		#undef X
+		std::nullptr_t
+	>;
 
 } // namespace fling_hdl
 

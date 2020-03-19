@@ -43,7 +43,8 @@ int PtVisitor::run()
 	//for (auto iter=_ast_etc_map.begin(); iter!=_ast_etc_map.end(); ++iter)
 	for (auto& iter: _ast_etc_map)
 	{
-		iter.second.ast().reset(new ast::Program());
+		//iter.second.ast().reset(new ast::Program());
+		_filename = iter.second.filename();
 	}
 	return 0;
 }
