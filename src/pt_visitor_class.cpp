@@ -3,6 +3,13 @@
 
 namespace fling_hdl
 {
+#define ELSE() else
+#define APPEND_CHILD_IF(type) \
+	if (std::holds_alternative<shared_ptr<ast::type>>(child)) \
+	{ \
+		/* More like, we need to feed *our* childrens */ \
+		to_feed.push_back(std::get<shared_ptr<ast::type>>(child)); \
+	}
 
 PtVisitor::PtVisitor(int s_argc, char** s_argv)
 {
@@ -45,7 +52,7 @@ int PtVisitor::run()
 		_ast = new ast::Program();
 		item.second.ast().reset(_ast);
 		_filename = item.second.ast()->ew.filename();
-		visitFlingProgram(item.second.program_ctx());
+		item.second.program_ctx()->accept(this);
 	}
 	return 0;
 }
@@ -53,13 +60,20 @@ int PtVisitor::run()
 antlrcpp::Any PtVisitor::visitFlingProgram
 	(Parser::FlingProgramContext *ctx)
 {
-	//_ast.reset(new ast::Program());
-	//_curr_ast = _ast.get();
+	for (const auto& item: ctx->flingProgram_Item())
+	{
+		item->accept(this);
+		auto&& child = _pop_ast();
 
-	//for (const auto& item: ctx->flingProgram_Item())
-	//{
-	//	item->accept(this);
-	//}
+		auto& to_feed = _ast->children;
+
+		EVAL(MAP(APPEND_CHILD_IF, ELSE,
+			DeclPackage, DeclModule, DeclType, DeclSubprog, DeclAlias))
+		else
+		{
+			_err("PtVisitor::visitFlingProgram():  Internal error.");
+		}
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingProgram_Item
