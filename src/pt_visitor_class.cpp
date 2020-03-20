@@ -11,6 +11,15 @@ namespace fling_hdl
 		to_feed.push_back(std::get<shared_ptr<ast::type>>(child)); \
 	}
 
+#define JUST_ACCEPT(arg) \
+	arg->accept(this)
+
+#define ACCEPT_IF(pt_node) \
+	if (ctx->pt_node()) \
+	{ \
+		JUST_ACCEPT(ctx->pt_node()); \
+	}
+
 PtVisitor::PtVisitor(int s_argc, char** s_argv)
 {
 	_argc = s_argc;
@@ -63,15 +72,15 @@ antlrcpp::Any PtVisitor::visitFlingProgram
 	for (const auto& item: ctx->flingProgram_Item())
 	{
 		item->accept(this);
-		auto&& child = _pop_ast();
 
+		auto&& child = _pop_ast();
 		auto& to_feed = _ast->children;
 
 		EVAL(MAP(APPEND_CHILD_IF, ELSE,
 			DeclPackage, DeclModule, DeclType, DeclSubprog, DeclAlias))
 		else
 		{
-			_err("PtVisitor::visitFlingProgram():  Internal error.");
+			_err(ctx, "PtVisitor::visitFlingProgram():  Internal error.");
 		}
 	}
 	return nullptr;
@@ -79,6 +88,13 @@ antlrcpp::Any PtVisitor::visitFlingProgram
 antlrcpp::Any PtVisitor::visitFlingProgram_Item
 	(Parser::FlingProgram_ItemContext *ctx)
 {
+	EVAL(MAP(ACCEPT_IF, ELSE,
+		flingDeclPackage, flingDeclModule, flingDeclType, flingDeclSubprog,
+		flingDeclAlias, flingDeclConst))
+	else
+	{
+		_err(ctx, "PtVisitor::visitFlingProgram_Item():  Internal error.");
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclPackage
