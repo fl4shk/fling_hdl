@@ -3,22 +3,25 @@
 
 namespace fling_hdl
 {
-#define ELSE() else
-#define APPEND_CHILD_IF(type) \
+#define RAW_APPEND_CHILD_IF(to_feed, type) \
 	if (std::holds_alternative<shared_ptr<ast::type>>(child)) \
 	{ \
 		/* More like, we need to feed *our* childrens */ \
-		to_feed.push_back(std::get<shared_ptr<ast::type>>(child)); \
+		to_feed.push_back(std::get<shared_ptr<ast::type>> \
+			(child)); \
 	}
 
-#define JUST_ACCEPT(arg) \
-	arg->accept(this)
+#define JUST_ACCEPT(pt_node) \
+	ctx->pt_node()->accept(this)
 
 #define ACCEPT_IF(pt_node) \
 	if (ctx->pt_node()) \
 	{ \
-		JUST_ACCEPT(ctx->pt_node()); \
+		JUST_ACCEPT(pt_node); \
 	}
+
+#define make_ast(type) \
+	make_shared<type>(ErrWarn(_filename, ctx))
 
 PtVisitor::PtVisitor(int s_argc, char** s_argv)
 {
@@ -56,12 +59,13 @@ PtVisitor::~PtVisitor()
 }
 int PtVisitor::run()
 {
-	for (auto& item: _ast_etc_map)
+	for (auto& p: _ast_etc_map)
 	{
-		_ast = new ast::Program();
-		item.second.ast().reset(_ast);
-		_filename = item.second.ast()->ew.filename();
-		item.second.program_ctx()->accept(this);
+		_filename = p.second.filename();
+		_ast = new ast::Program(ErrWarn(_filename,
+			p.second.program_ctx()));
+		p.second.ast().reset(_ast);
+		p.second.program_ctx()->accept(this);
 	}
 	return 0;
 }
@@ -69,15 +73,20 @@ int PtVisitor::run()
 antlrcpp::Any PtVisitor::visitFlingProgram
 	(Parser::FlingProgramContext *ctx)
 {
-	for (const auto& item: ctx->flingProgram_Item())
+	for (const auto& p: ctx->flingProgram_Item())
 	{
-		item->accept(this);
+		p->accept(this);
 
 		auto&& child = _pop_ast();
-		auto& to_feed = _ast->children;
-
+		#define APPEND_CHILD_IF(type) \
+			RAW_APPEND_CHILD_IF(_ast->children, type)
 		EVAL(MAP(APPEND_CHILD_IF, ELSE,
-			DeclPackage, DeclModule, DeclType, DeclSubprog, DeclAlias))
+			DeclPackage,
+			DeclModule,
+			DeclType,
+			DeclSubprog,
+			DeclAlias))
+		#undef APPEND_CHILD_IF
 		else
 		{
 			_err(ctx, "PtVisitor::visitFlingProgram():  Internal error.");
@@ -89,8 +98,12 @@ antlrcpp::Any PtVisitor::visitFlingProgram_Item
 	(Parser::FlingProgram_ItemContext *ctx)
 {
 	EVAL(MAP(ACCEPT_IF, ELSE,
-		flingDeclPackage, flingDeclModule, flingDeclType, flingDeclSubprog,
-		flingDeclAlias, flingDeclConst))
+		flingDeclPackage,
+		flingDeclModule,
+		flingDeclType,
+		flingDeclSubprog,
+		flingDeclAlias,
+		flingDeclConst))
 	else
 	{
 		_err(ctx, "PtVisitor::visitFlingProgram_Item():  Internal error.");
@@ -100,6 +113,11 @@ antlrcpp::Any PtVisitor::visitFlingProgram_Item
 antlrcpp::Any PtVisitor::visitFlingDeclPackage
 	(Parser::FlingDeclPackageContext *ctx)
 {
+	JUST_ACCEPT(flingIdent);
+
+	auto&& node = make_ast(DeclPackage);
+
+	_push_ast(move(node));
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclPackage_Item

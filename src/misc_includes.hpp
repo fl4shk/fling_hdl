@@ -40,6 +40,8 @@ using std::variant;
 using std::optional;
 using std::unique_ptr;
 using std::shared_ptr;
+using std::make_shared;
+using std::hash;
 using std::move;
 using std::map;
 

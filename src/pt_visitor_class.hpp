@@ -63,8 +63,7 @@ private:		// variables
 	stack<BigNum> _num_stack;
 	
 	stack<AstSptr> _ast_stack;
-
-private:		// stack functions
+private:		// misc functions
 	inline void _push_str(const string& to_push)
 	{
 		_str_stack.push(to_push);

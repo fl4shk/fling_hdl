@@ -19,6 +19,10 @@ namespace ast
 
 #define SHARED_FUNC_CONTENTS(name) \
 	inline name() = default; \
+	inline name(ErrWarn&& s_ew) \
+		: ew(s_ew) \
+	{ \
+	} \
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(name); \
 	virtual inline ~name() = default; \
 	virtual inline string id() const \
@@ -1234,6 +1238,7 @@ class Expr_CallSubprog_PseudoOper: public Base
 {
 public:		// variables
 	variant<shared_ptr<Expr_IdentEtc>, shared_ptr<Expr>> left;
+	string name;
 	optional<shared_ptr<InstParamList>> opt_param_list;
 	shared_ptr<Expr> right;
 public:		// functions
