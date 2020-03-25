@@ -21,7 +21,7 @@ namespace fling_hdl
 	}
 
 #define make_ast(type) \
-	make_shared<type>(ErrWarn(_filename, ctx))
+	make_shared<ast::type>(ErrWarn(_filename, ctx))
 
 PtVisitor::PtVisitor(int s_argc, char** s_argv)
 {

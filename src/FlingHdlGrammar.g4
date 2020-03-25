@@ -806,7 +806,8 @@ flingExpr_CallSubprog_Regular:
 	flingIdent flingInstParamList? flingInstArgList
 	;
 flingExpr_CallSubprog_PseudoOper:
-	flingExpr_IdentEtc flingIdent flingInstParamList? flingExpr
+	('(' flingExpr ')' | flingExpr_IdentEtc) flingIdent
+		flingInstParamList? flingExpr
 	| '(' flingExpr flingIdent flingInstParamList? flingExpr ')'
 	;
 //--------
