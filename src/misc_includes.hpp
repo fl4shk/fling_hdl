@@ -12,6 +12,7 @@
 #include "liborangepower_src/misc_defines.hpp"
 #include "liborangepower_src/gen_class_innards_defines.hpp"
 #include "liborangepower_src/string_conversion_stuff.hpp"
+#include "liborangepower_src/linked_list_classes.hpp"
 #include "liborangepower_src/gmp_stuff.hpp"
 
 using namespace liborangepower::misc_output;
@@ -21,6 +22,7 @@ using namespace liborangepower::misc_util;
 using namespace liborangepower::bitwise;
 using namespace liborangepower::strings;
 using namespace liborangepower::bignum;
+using namespace liborangepower::containers;
 
 #include <stack>
 #include <vector>

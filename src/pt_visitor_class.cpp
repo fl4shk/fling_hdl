@@ -73,6 +73,8 @@ int PtVisitor::run()
 antlrcpp::Any PtVisitor::visitFlingProgram
 	(Parser::FlingProgramContext *ctx)
 {
+
+	/*
 	for (const auto& p: ctx->flingProgram_Item())
 	{
 		p->accept(this);
@@ -92,6 +94,7 @@ antlrcpp::Any PtVisitor::visitFlingProgram
 			_err(ctx, "PtVisitor::visitFlingProgram():  Internal error.");
 		}
 	}
+	*/
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingProgram_Item
