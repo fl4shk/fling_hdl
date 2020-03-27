@@ -703,8 +703,8 @@ antlrcpp::Any PtVisitor::visitFlingExpr_Unary
 {
 	return nullptr;
 }
-antlrcpp::Any PtVisitor::visitFlingExpr_Unary_ItemWithoutRange
-	(Parser::FlingExpr_Unary_ItemWithoutRangeContext *ctx)
+antlrcpp::Any PtVisitor::visitFlingExpr_Unary_ItemFromMajority
+	(Parser::FlingExpr_Unary_ItemFromMajorityContext *ctx)
 {
 	return nullptr;
 }
@@ -720,6 +720,16 @@ antlrcpp::Any PtVisitor::visitFlingExpr_Sized
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_Range
 	(Parser::FlingExpr_RangeContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingExpr_Range_DotDot
+	(Parser::FlingExpr_Range_DotDotContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingExpr_Range_CallFunc
+	(Parser::FlingExpr_Range_CallFuncContext *ctx)
 {
 	return nullptr;
 }

@@ -2,6 +2,6 @@
 
 int main(int argc, char** argv)
 {
-	//fling_hdl::PtVisitor visitor(argc, argv);
-	//return visitor.run();
+	fling_hdl::PtVisitor visitor(argc, argv);
+	return visitor.run();
 }

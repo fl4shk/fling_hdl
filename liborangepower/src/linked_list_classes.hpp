@@ -427,6 +427,7 @@ public:		// functions
 	{
 		return at(_head_index);
 	}
+	GEN_GETTER_BY_VAL(head_index);
 
 	inline Node& at(ArgIndexT index)
 	{

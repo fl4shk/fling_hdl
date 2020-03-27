@@ -119,7 +119,7 @@ flingInstArgList_Named_Item:
 //--------
 flingDeclModule:
 	KwModule flingIdent flingDeclParamList? flingDeclArgList
-		(flingImportList)?
+		flingImportList?
 	flingDeclModule_Scope
 	;
 
@@ -558,7 +558,7 @@ flingDeclProc_ArgList:
 	')'
 	;
 flingDeclProc_ArgList_Item:
-	flingIdentList ':' KwRef? flingTypenameOrModname 
+	flingIdentList ':' (KwInput | KwInout)? flingTypenameOrModname 
 	;
 //--------
 
@@ -705,29 +705,31 @@ flingExpr_BinaryPlus_Or_BinaryMinus:
 
 flingExpr_Mul_Or_Div_Or_Mod:
 	(
-		PunctPlus | PunctMinus | PunctLogNot | PunctBitNot
+		(
+			PunctPlus | PunctMinus | PunctLogNot | PunctBitNot
 
-		// Reduction operators
-		| PunctBitOr | PunctBitNor | PunctBitAnd | PunctBitNand
-		| PunctBitXor | PunctBitXnor
-	) flingExpr
+			// Reduction operators
+			| PunctBitOr | PunctBitNor | PunctBitAnd | PunctBitNand
+			| PunctBitXor | PunctBitXnor
+		) flingExpr
 
-	| flingExpr_Unary
+		| flingExpr_Unary
+	)
 	;
 
 flingExpr_Unary:
-	flingExpr_Unary_ItemWithoutRange
+	flingExpr_Unary_ItemFromMajority
 	| flingExpr_Range
+	| flingExpr_CallSubprog
 	;
 
-flingExpr_Unary_ItemWithoutRange:
+flingExpr_Unary_ItemFromMajority:
 	flingExpr_Literal
 	| flingExpr_Sized
 	| flingExpr_Cat
 	| flingExpr_Repl
 	| flingExpr_KwDollarFuncOf 
 	| flingExpr_IdentEtcAndOptKwDollarFuncOf
-	| flingExpr_CallSubprog
 	| '(' flingExpr ')'
 	;
 
@@ -746,8 +748,19 @@ flingExpr_Sized:
 	;
 
 flingExpr_Range:
-	flingExpr_Unary_ItemWithoutRange '..' flingExpr
-	| KwRange '(' flingExpr ',' flingExpr ')'
+	flingExpr_Range_DotDot
+	| flingExpr_Range_CallFunc
+	;
+
+flingExpr_Range_DotDot:
+	(
+		flingExpr_Unary_ItemFromMajority
+		| flingExpr_CallSubprog
+	)
+	PunctRangeSeparator flingExpr
+	;
+flingExpr_Range_CallFunc:
+	KwRange '(' flingExpr ',' flingExpr ')'
 	;
 
 flingExpr_Cat:
@@ -805,10 +818,15 @@ flingExpr_CallSubprog_Regular:
 	)?
 	flingIdent flingInstParamList? flingInstArgList
 	;
+
+// call a function via `a plus b` instead of `a.plus(b)`
 flingExpr_CallSubprog_PseudoOper:
-	('(' flingExpr ')' | flingExpr_IdentEtc) flingIdent
-		flingInstParamList? flingExpr
-	| '(' flingExpr flingIdent flingInstParamList? flingExpr ')'
+	(
+		flingExpr_Unary_ItemFromMajority
+		| flingExpr_Range_CallFunc
+		| flingExpr_CallSubprog_Regular
+	)
+	flingIdent flingInstParamList? flingExpr
 	;
 //--------
 
@@ -1073,7 +1091,6 @@ KwSelfT: 'self_t' ;
 KwPub: 'pub' ;
 KwProt: 'prot' ;
 KwPriv: 'priv' ;
-KwRef: 'ref' ;
 
 //KwInit: 'init' ;
 //KwDest: 'dest' ;

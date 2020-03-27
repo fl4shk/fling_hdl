@@ -11,14 +11,6 @@
 namespace fling_hdl
 {
 
-using AstSptr = variant
-	<
-		#define X(name) \
-			shared_ptr<ast::name>,
-		LIST_OF_AST_NODE_CLASSES(X)
-		#undef X
-		std::nullptr_t
-	>;
 
 class AstEtc final
 {
@@ -62,7 +54,7 @@ private:		// variables
 	stack<string> _str_stack;
 	stack<BigNum> _num_stack;
 	
-	stack<AstSptr> _ast_stack;
+	stack<shared_ptr<ast::Base>> _ast_stack;
 private:		// misc functions
 	inline void _push_str(const string& to_push)
 	{
@@ -94,8 +86,7 @@ private:		// misc functions
 		return ret;
 	}
 
-	template<typename Type>
-	inline void _push_ast(shared_ptr<Type>&& to_push)
+	inline void _push_ast(shared_ptr<ast::Base>&& to_push)
 	{
 		_ast_stack.push(to_push);
 	}
@@ -391,14 +382,18 @@ private:		// visitor functions
 		(Parser::FlingExpr_Mul_Or_Div_Or_ModContext *ctx);
 	antlrcpp::Any visitFlingExpr_Unary
 		(Parser::FlingExpr_UnaryContext *ctx);
-	antlrcpp::Any visitFlingExpr_Unary_ItemWithoutRange
-		(Parser::FlingExpr_Unary_ItemWithoutRangeContext *ctx);
+	antlrcpp::Any visitFlingExpr_Unary_ItemFromMajority
+		(Parser::FlingExpr_Unary_ItemFromMajorityContext *ctx);
 	antlrcpp::Any visitFlingExpr_Literal
 		(Parser::FlingExpr_LiteralContext *ctx);
 	antlrcpp::Any visitFlingExpr_Sized
 		(Parser::FlingExpr_SizedContext *ctx);
 	antlrcpp::Any visitFlingExpr_Range
 		(Parser::FlingExpr_RangeContext *ctx);
+	antlrcpp::Any visitFlingExpr_Range_DotDot
+		(Parser::FlingExpr_Range_DotDotContext *ctx);
+	antlrcpp::Any visitFlingExpr_Range_CallFunc
+		(Parser::FlingExpr_Range_CallFuncContext *ctx);
 	antlrcpp::Any visitFlingExpr_Cat
 		(Parser::FlingExpr_CatContext *ctx);
 	antlrcpp::Any visitFlingExpr_Repl

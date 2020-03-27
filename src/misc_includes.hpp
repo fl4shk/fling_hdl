@@ -21,8 +21,8 @@ using namespace liborangepower::integer_types;
 using namespace liborangepower::misc_util;
 using namespace liborangepower::bitwise;
 using namespace liborangepower::strings;
-using namespace liborangepower::bignum;
 using namespace liborangepower::containers;
+using namespace liborangepower::bignum;
 
 #include <stack>
 #include <vector>
