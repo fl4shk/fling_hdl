@@ -758,11 +758,6 @@ antlrcpp::Any PtVisitor::visitFlingExpr_KwDollarFuncOf_Pow
 {
 	return nullptr;
 }
-antlrcpp::Any PtVisitor::visitFlingExpr_IdentEtcAndOptKwDollarFuncOf
-	(Parser::FlingExpr_IdentEtcAndOptKwDollarFuncOfContext *ctx)
-{
-	return nullptr;
-}
 antlrcpp::Any PtVisitor::visitFlingExpr_IdentEtc
 	(Parser::FlingExpr_IdentEtcContext *ctx)
 {

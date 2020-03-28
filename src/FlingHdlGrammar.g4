@@ -590,9 +590,11 @@ flingScopedIdent:
 	flingIdent (PunctScopeAccess flingIdent)*
 	;
 
+// Don't need an AST node specifically for this
 flingExprList:
 	flingExpr (',' flingExpr)*
 	;
+// Don't need an AST node specifically for this
 flingTypenameOrModnameList:
 	flingTypenameOrModname (',' flingTypenameOrModname)*
 	;
@@ -619,11 +621,11 @@ flingTypenameOrModname_Cstm:
 	;
 
 flingTypenameOrModname_Cstm_Item:
-	flingScopedIdent flingInstParamList?
+	flingIdent flingInstParamList?
 	;
 
 flingTypenameOrModname_ArrDim:
-	'[' (flingExpr | flingTypenameOrModname_Builtin)? ']'
+	'[' (flingExpr | flingTypenameOrModname)? ']'
 	;
 
 flingTypenameOrModname_Builtin:
@@ -729,7 +731,7 @@ flingExpr_Unary_ItemFromMajority:
 	| flingExpr_Cat
 	| flingExpr_Repl
 	| flingExpr_KwDollarFuncOf 
-	| flingExpr_IdentEtcAndOptKwDollarFuncOf
+	| flingExpr_IdentEtc
 	| '(' flingExpr ')'
 	;
 
@@ -783,26 +785,21 @@ flingExpr_KwDollarFuncOf_Pow:
 	KwDollarPow '(' flingExpr ',' flingExpr ')'
 	;
 
-flingExpr_IdentEtcAndOptKwDollarFuncOf:
-	flingExpr_IdentEtc
-		(KwDollarSize | KwDollarRange | KwDollarHigh | KwDollarLow)?
-	;
-
-
 flingExpr_IdentEtc:
 	(flingTypenameOrModname PunctScopeAccess)?
 	flingExpr_IdentEtc_Item 
 	(PunctMemberAccess flingExpr_IdentEtc_Item)*
+
+	(KwDollarSize | KwDollarRange | KwDollarHigh | KwDollarLow)?
 	;
 
 flingExpr_IdentEtc_Item:
-	flingIdent flingExpr_IdentEtc_Item_End*
+	flingIdent (flingInstParamList? flingInstArgList)?
+		flingExpr_IdentEtc_Item_End*
 	;
 
 flingExpr_IdentEtc_Item_End:
-	'[' flingExpr ']'
-	| flingInstParamList? flingInstArgList
-	| KwDollarFirstel | KwDollarLastel
+	'[' flingExpr ']' | KwDollarFirstel | KwDollarLastel
 	;
 
 flingExpr_CallSubprog:
