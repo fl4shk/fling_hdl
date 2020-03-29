@@ -33,6 +33,15 @@ namespace ast
 		return #which;
 #define CONV_KIND_CASE(which) \
 	CONV_ENUM_CASE(Kind, which)
+#define CONV_ENUM_SWITCH(CONV_CASE, ...) \
+	switch (to_conv) \
+	{ \
+	/* -------- */ \
+	EVAL(MAP(CONV_CASE, EMPTY, __VA_ARGS__)) \
+	default: \
+		return "Eek!"; \
+	/* -------- */ \
+	}
 
 class Base;
 using BaseSptr = shared_ptr<Base>;
@@ -145,18 +154,11 @@ public:		// types
 	};
 	static inline string conv_kind(Kind to_conv)
 	{
-		switch (to_conv)
-		{
-		//--------
-		EVAL(MAP(CONV_KIND_CASE, EMPTY,
+		CONV_ENUM_SWITCH(CONV_KIND_CASE,
 			Input,
 			Output,
 			Inout,
-			Interface))
-		default:
-			return "Eek!";
-		//--------
-		}
+			Interface)
 	}
 public:		// variables
 	BaseSptr ident_list;
@@ -297,17 +299,10 @@ public:		// types
 	};
 	static string conv_kind(Kind to_conv)
 	{
-		switch (to_conv)
-		{
-		//--------
-		EVAL(MAP(CONV_KIND_CASE, EMPTY,
+		CONV_ENUM_SWITCH(CONV_KIND_CASE,
 			Initial,
 			Comb,
-			Seq))
-		default:
-			return "Eek!";
-		//--------
-		}
+			Seq);
 	}
 public:		// variables
 	Kind kind;
@@ -335,16 +330,9 @@ public:		// types
 	};
 	static inline string conv_kind(Kind to_conv)
 	{
-		switch (to_conv)
-		{
-		//--------
-		EVAL(MAP(CONV_KIND_CASE, EMPTY,
+		CONV_ENUM_SWITCH(CONV_KIND_CASE,
 			Posedge,
-			Negedge))
-		default:
-			return "Eek!";
-		//--------
-		}
+			Negedge);
 	}
 public:		// variables
 	Kind kind;
@@ -494,19 +482,13 @@ enum class AccSpec
 };
 inline string conv_acc_spec(AccSpec to_conv)
 {
-	switch (to_conv)
-	{
-	//--------
-	case AccSpec::Pub:
-		return "Pub";
-	case AccSpec::Prot:
-		return "Prot";
-	case AccSpec::Priv:
-		return "Priv";
-	default:
-		return "Eek!";
-	//--------
-	}
+	#define CONV_ACC_SPEC_CASE(which) \
+		CONV_ENUM_CASE(AccSpec, which)
+	CONV_ENUM_SWITCH(CONV_ACC_SPEC_CASE,
+		Pub,
+		Prot,
+		Priv);
+	#undef CONV_ACC_SPEC_CASE
 }
 
 class DeclClass_DeclVar: public DeclVar
@@ -552,17 +534,10 @@ public:		// types
 	};
 	static string conv_kind(Kind to_conv)
 	{
-		switch (to_conv)
-		{
-		//--------
-		EVAL(MAP(CONV_KIND_CASE, EMPTY,
+		CONV_ENUM_SWITCH(CONV_KIND_CASE,
 			Func,
 			Task,
-			Proc))
-		default:
-			return "Eek!";
-		//--------
-		}
+			Proc);
 	}
 public:		// variables
 	AccSpec acc_spec = AccSpec::Pub;
@@ -705,19 +680,12 @@ public:		// types
 	};
 	static string conv_kind(Kind to_conv)
 	{
-		switch (to_conv)
-		{
-		//--------
-		EVAL(MAP(CONV_KIND_CASE, EMPTY,
+		CONV_ENUM_SWITCH(CONV_KIND_CASE,
 			Cstm,
 			SelfT,
 			RetT,
 			Typeof,
-			Builtin))
-		default:
-			return "Eek!";
-		//--------
-		}
+			Builtin);
 	}
 public:		// variables
 	Kind kind;
@@ -773,10 +741,7 @@ public:		// types
 	};
 	static string conv_kind(Kind to_conv)
 	{
-		switch (to_conv)
-		{
-		//--------
-		EVAL(MAP(CONV_KIND_CASE, EMPTY,
+		CONV_ENUM_SWITCH(CONV_KIND_CASE,
 			Logic,
 			SignedLogic,
 
@@ -798,11 +763,7 @@ public:		// types
 			I128,
 
 			Auto,
-			Void))
-		default:
-			return "Eek!";
-		//--------
-		}
+			Void);
 	}
 public:		// variables
 	Kind kind;
@@ -1102,22 +1063,15 @@ public:		// types
 	};
 	static string conv_suff_kind(SuffKind to_conv)
 	{
-		switch (to_conv)
-		{
-		//--------
 		#define CONV_SUFF_KIND_CASE(which) \
 			CONV_ENUM_CASE(SuffKind, which) 
-		EVAL(MAP(CONV_SUFF_KIND_CASE, EMPTY,
+		CONV_ENUM_SWITCH(CONV_SUFF_KIND_CASE,
 			None,
 			DollarSize,
 			DollarRange,
 			DollarHigh,
-			DollarLow))
+			DollarLow);
 		#undef CONV_SUFF_KIND_CASE
-		default:
-			return "Eek!";
-		//--------
-		}
 	}
 public:		// variables
 	BaseSptr opt_typename_or_modname, first_item;
@@ -1137,16 +1091,9 @@ public:		// types
 	};
 	static string conv_kind(Kind to_conv)
 	{
-		switch (to_conv)
-		{
-		//--------
-		EVAL(MAP(CONV_KIND_CASE, EMPTY,
+		CONV_ENUM_SWITCH(CONV_KIND_CASE,
 			Self,
-			NonSelf))
-		default:
-			return "Eek!";
-		//--------
-		}
+			NonSelf);
 	}
 public:		// variables
 	Kind kind;
@@ -1176,23 +1123,39 @@ public:		// types
 	};
 	static string conv_kind(Kind to_conv)
 	{
-		switch (to_conv)
-		{
-		//--------
-		EVAL(MAP(CONV_KIND_CASE, EMPTY,
+		CONV_ENUM_SWITCH(CONV_KIND_CASE,
 			ArrIndex,
 			DollarFirstel,
-			DollarLastel))
-		default:
-			return "Eek!";
-		//--------
-		}
+			DollarLastel);
 	}
 public:		// variables
 	Kind kind;
 	BaseSptr opt_index;
 public:		// functions
 	SHARED_FUNC_CONTENTS(ExprIdentEtc_ItemEnd, Base);
+};
+
+class ExprIdentEtc_ItemEndIndex: public Base
+{
+public:		// types
+	enum class Kind
+	{
+		Single,
+		PlusColon,
+		MinusColon
+	};
+	static string conv_kind(Kind to_conv)
+	{
+		CONV_ENUM_SWITCH(CONV_KIND_CASE,
+			Single,
+			PlusColon,
+			MinusColon);
+	}
+public:		// variables
+	Kind kind;
+	BaseSptr left, opt_right;
+public:		// functions
+	SHARED_FUNC_CONTENTS(ExprIdentEtc_ItemEndIndex, Base);
 };
 
 // Call a member function via `a plus b` instead of `a.plus(b)`
@@ -1208,6 +1171,7 @@ public:		// functions
 #undef SHARED_FUNC_CONTENTS
 #undef CONV_ENUM_CASE
 #undef CONV_KIND_CASE
+#undef CONV_ENUM_SWITCH
 
 
 } // namespace ast

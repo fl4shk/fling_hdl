@@ -756,7 +756,7 @@ flingExpr_Range_DotDot:
 		flingExpr_Unary_ItemFromMajority
 		| flingExpr_Range_CallFunc
 	)
-	PunctRangeSeparator flingExpr
+	PunctColon flingExpr
 	;
 flingExpr_Range_CallFunc:
 	KwRange '(' flingExpr ',' flingExpr ')'
@@ -801,7 +801,12 @@ flingExpr_IdentEtc_NonSelfItem:
 	;
 
 flingExpr_IdentEtc_Item_End:
-	'[' flingExpr ']' | KwDollarFirstel | KwDollarLastel
+	flingExpr_IdentEtc_Item_End_Index
+	| KwDollarFirstel
+	| KwDollarLastel
+	;
+flingExpr_IdentEtc_Item_End_Index:
+	'[' flingExpr ((PunctPlusColon | PunctMinusColon) flingExpr)? ']'
 	;
 
 // Call a member function via `a plus b` instead of `a.plus(b)`
@@ -874,10 +879,6 @@ LitString: '"' FragChar* '"' ;
 //--------
 
 //--------
-PunctRangeSeparator: '..' ;
-//--------
-
-//--------
 PunctNonBlkAssign: ':=' ;
 PunctBlkAssign: '=' ;
 //--------
@@ -939,6 +940,8 @@ PunctLBrace: '{' ;
 PunctRBrace: '}' ;
 PunctSemicolon: ';' ;
 PunctColon: ':' ;
+PunctPlusColon: '+:' ;
+PunctMinusColon: '-:' ;
 PunctComma: ',' ;
 //PunctParamPack: '...' ;
 //--------

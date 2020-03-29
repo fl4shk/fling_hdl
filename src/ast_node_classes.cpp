@@ -589,6 +589,13 @@ std::ostream& operator << (std::ostream& os, Base* node)
 			#define TYPE ExprIdentEtc_ItemEnd
 			osprintout(os, strappcom2(wrap_conv(kind), wrap(opt_index)));
 		}
+		else idcmp(ExprIdentEtc_ItemEndIndex)
+		{
+			#undef TYPE
+			#define TYPE ExprIdentEtc_ItemEndIndex
+			osprintout(os, strappcom2(wrap_conv(kind), wrap(left),
+				wrap(opt_right)));
+		}
 		else idcmp(ExprCallSubprog_PseudoOper)
 		{
 			#undef TYPE
