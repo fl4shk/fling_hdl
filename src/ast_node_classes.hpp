@@ -28,9 +28,11 @@ namespace ast
 		return string(#name); \
 	}
 
-#define CONV_KIND_CASE(which) \
-	case Kind::which: \
+#define CONV_ENUM_CASE(type, which) \
+	case type::which: \
 		return #which;
+#define CONV_KIND_CASE(which) \
+	CONV_ENUM_CASE(Kind, which)
 
 class Base;
 using BaseSptr = shared_ptr<Base>;
@@ -490,9 +492,9 @@ enum class AccSpec
 	Prot,
 	Priv,
 };
-inline string conv_acc_spec(AccSpec acc_spec)
+inline string conv_acc_spec(AccSpec to_conv)
 {
-	switch (acc_spec)
+	switch (to_conv)
 	{
 	//--------
 	case AccSpec::Pub:
@@ -548,9 +550,9 @@ public:		// types
 		Task,
 		Proc,
 	};
-	static string conv_kind(Kind kind)
+	static string conv_kind(Kind to_conv)
 	{
-		switch (kind)
+		switch (to_conv)
 		{
 		//--------
 		EVAL(MAP(CONV_KIND_CASE, EMPTY,
@@ -575,9 +577,9 @@ class DeclClsOrMxn_DeclSubprogAbstract: public Base
 {
 public:		// types
 	using Kind = typename DeclClsOrMxn_DeclSubprogFullDefn::Kind;
-	static inline string conv_kind(Kind kind)
+	static inline string conv_kind(Kind to_conv)
 	{
-		return DeclClsOrMxn_DeclSubprogFullDefn::conv_kind(kind);
+		return DeclClsOrMxn_DeclSubprogFullDefn::conv_kind(to_conv);
 	}
 public:		// variables
 	AccSpec acc_spec = AccSpec::Pub;
@@ -685,6 +687,8 @@ public:		// functions
 };
 class ImportList: public Base
 {
+public:		// variables
+	BaseSptrList item_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(ImportList, Base);
 };
@@ -699,6 +703,22 @@ public:		// types
 		Typeof,
 		Builtin,
 	};
+	static string conv_kind(Kind to_conv)
+	{
+		switch (to_conv)
+		{
+		//--------
+		EVAL(MAP(CONV_KIND_CASE, EMPTY,
+			Cstm,
+			SelfT,
+			RetT,
+			Typeof,
+			Builtin))
+		default:
+			return "Eek!";
+		//--------
+		}
+	}
 public:		// variables
 	Kind kind;
 	BaseSptr opt_child;
@@ -734,6 +754,7 @@ public:		// types
 		Integer,
 		SizeT,
 		Range,
+		//Float,
 		String,
 
 		U8,
@@ -750,6 +771,39 @@ public:		// types
 		Auto,
 		Void,
 	};
+	static string conv_kind(Kind to_conv)
+	{
+		switch (to_conv)
+		{
+		//--------
+		EVAL(MAP(CONV_KIND_CASE, EMPTY,
+			Logic,
+			SignedLogic,
+
+			Integer,
+			SizeT,
+			Range,
+			//Float,
+			String,
+
+			U8,
+			I8,
+			U16,
+			I16,
+			U32,
+			I32,
+			U64,
+			I64,
+			U128,
+			I128,
+
+			Auto,
+			Void))
+		default:
+			return "Eek!";
+		//--------
+		}
+	}
 public:		// variables
 	Kind kind;
 	BaseSptr opt_param_list;
@@ -769,7 +823,8 @@ public:		// functions
 class ExprUnopBase: public Base
 {
 public:		// variables
-	BaseSptr only_child;
+	// More like, we need to feed *our* childrens
+	BaseSptr to_feed;
 public:		// functions
 	SHARED_FUNC_CONTENTS(ExprUnopBase, Base);
 };
@@ -972,7 +1027,7 @@ public:		// types
 		UnkX,
 	};
 public:		// variables
-	string raw_literal;
+	string text;
 	BaseSptr opt_size;
 public:		// functions
 	SHARED_FUNC_CONTENTS(ExprLiteral, Base);
@@ -980,7 +1035,7 @@ public:		// functions
 class ExprSized: public Base
 {
 public:		// variables
-	BaseSptr size, to_size;
+	BaseSptr dst_size, src;
 public:		// functions
 	SHARED_FUNC_CONTENTS(ExprSized, Base);
 };
@@ -1045,9 +1100,28 @@ public:		// types
 		DollarHigh,
 		DollarLow,
 	};
+	static string conv_suff_kind(SuffKind to_conv)
+	{
+		switch (to_conv)
+		{
+		//--------
+		#define CONV_SUFF_KIND_CASE(which) \
+			CONV_ENUM_CASE(SuffKind, which) 
+		EVAL(MAP(CONV_SUFF_KIND_CASE, EMPTY,
+			None,
+			DollarSize,
+			DollarRange,
+			DollarHigh,
+			DollarLow))
+		#undef CONV_SUFF_KIND_CASE
+		default:
+			return "Eek!";
+		//--------
+		}
+	}
 public:		// variables
 	BaseSptr opt_typename_or_modname, first_item;
-	BaseSptrList post_first_item_list;
+	BaseSptrList opt_later_item_list;
 	SuffKind suff_kind = SuffKind::None;
 public:		// functions
 	SHARED_FUNC_CONTENTS(ExprIdentEtc, Base);
@@ -1061,6 +1135,19 @@ public:		// types
 		Self,
 		NonSelf,
 	};
+	static string conv_kind(Kind to_conv)
+	{
+		switch (to_conv)
+		{
+		//--------
+		EVAL(MAP(CONV_KIND_CASE, EMPTY,
+			Self,
+			NonSelf))
+		default:
+			return "Eek!";
+		//--------
+		}
+	}
 public:		// variables
 	Kind kind;
 	BaseSptr opt_non_self_item;
@@ -1087,6 +1174,20 @@ public:		// types
 		DollarFirstel,
 		DollarLastel,
 	};
+	static string conv_kind(Kind to_conv)
+	{
+		switch (to_conv)
+		{
+		//--------
+		EVAL(MAP(CONV_KIND_CASE, EMPTY,
+			ArrIndex,
+			DollarFirstel,
+			DollarLastel))
+		default:
+			return "Eek!";
+		//--------
+		}
+	}
 public:		// variables
 	Kind kind;
 	BaseSptr opt_index;
@@ -1105,6 +1206,7 @@ public:		// functions
 };
 
 #undef SHARED_FUNC_CONTENTS
+#undef CONV_ENUM_CASE
 #undef CONV_KIND_CASE
 
 
