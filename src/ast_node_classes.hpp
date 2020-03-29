@@ -28,8 +28,8 @@ namespace ast
 	}
 
 class Base;
-using BaseUptr = unique_ptr<Base>;
-using BaseUptrList = IndCircLinkList<BaseUptr>;
+using BaseSptr = shared_ptr<Base>;
+using BaseSptrList = IndCircLinkList<BaseSptr>;
 
 class Base
 {
@@ -57,7 +57,7 @@ public:		// functions
 class Program: public Base
 {
 public:		// variables
-	BaseUptrList item_list;
+	BaseSptrList item_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Program, Base);
 };
@@ -66,7 +66,7 @@ class DeclPackage: public Base
 {
 public:		// variables
 	string ident;
-	BaseUptrList item_list;
+	BaseSptrList item_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclPackage, Base);
 };
@@ -74,7 +74,7 @@ public:		// functions
 class DeclParamList: public Base
 {
 public:		// variables
-	BaseUptrList item_list;
+	BaseSptrList item_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclParamList, Base);
 };
@@ -85,8 +85,8 @@ public:		// types
 	class LocalVar final
 	{
 	public:		// variables
-		BaseUptr typename_or_modname;
-		BaseUptrList opt_expr_list;
+		BaseSptr typename_or_modname;
+		BaseSptrList opt_expr_list;
 	public:		// functions
 		inline LocalVar() = default;
 		GEN_MOVE_ONLY_CONSTRUCTORS_AND_ASSIGN(LocalVar);
@@ -96,7 +96,7 @@ public:		// types
 	class LocalTypename
 	{
 	public:		// variables
-		BaseUptrList opt_typename_or_modname_list;
+		BaseSptrList opt_typename_or_modname_list;
 	public:		// functions
 		inline LocalTypename() = default;
 		GEN_MOVE_ONLY_CONSTRUCTORS_AND_ASSIGN(LocalTypename);
@@ -111,7 +111,7 @@ public:		// types
 	};
 
 public:		// variables
-	BaseUptr ident_list;
+	BaseSptr ident_list;
 	variant<LocalVar, LocalTypename, LocalModname> post_ident_list;
 
 public:		// functions
@@ -121,7 +121,7 @@ public:		// functions
 class DeclArgList: public Base
 {
 public:		// variables
-	BaseUptrList item_list;
+	BaseSptrList item_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclArgList, Base);
 };
@@ -138,10 +138,10 @@ public:		// types
 		Interface,
 	};
 public:		// variables
-	BaseUptr ident_list;
+	BaseSptr ident_list;
 	Kind kind;
-	BaseUptr typename_or_modname;
-	BaseUptrList opt_expr_list;
+	BaseSptr typename_or_modname;
+	BaseSptrList opt_expr_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclArgList_Item, Base);
 };
@@ -149,7 +149,7 @@ public:		// functions
 class InstParamList: public Base
 {
 public:		// variables
-	BaseUptrList opt_item_list;
+	BaseSptrList opt_item_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(InstParamList, Base);
 };
@@ -158,7 +158,7 @@ class InstParamList_Named_Item: public Base
 public:		// variables
 	string ident;
 	// Expr or TypenameOrModname
-	BaseUptr item;
+	BaseSptr item;
 public:		// functions
 	SHARED_FUNC_CONTENTS(InstParamList_Named_Item, Base);
 };
@@ -166,7 +166,7 @@ public:		// functions
 class InstArgList: public InstParamList
 {
 public:		// variables
-	BaseUptrList opt_item_list;
+	BaseSptrList opt_item_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(InstArgList, InstParamList);
 };
@@ -175,7 +175,7 @@ class InstArgList_Named_Item: public Base
 {
 public:		// variables
 	string ident;
-	BaseUptr expr;
+	BaseSptr expr;
 public:		// functions
 	SHARED_FUNC_CONTENTS(InstArgList_Named_Item, Base);
 };
@@ -184,8 +184,8 @@ class DeclModule: public Base
 {
 public:		// variables
 	string ident;
-	BaseUptr opt_param_list, arg_list, opt_import_list;
-	BaseUptrList item_list;
+	BaseSptr opt_param_list, arg_list, opt_import_list;
+	BaseSptrList item_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclModule, Base);
 };
@@ -194,7 +194,7 @@ class InstModule: public Base
 {
 public:		// variables
 	string ident;
-	BaseUptr typename_or_modname, arg_list;
+	BaseSptr typename_or_modname, arg_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(InstModule, Base);
 };
@@ -202,24 +202,24 @@ public:		// functions
 class Gen_If: public Base
 {
 public:		// variables
-	BaseUptr cond;
-	BaseUptrList item_list, elif_list;
-	BaseUptr opt_else;
+	BaseSptr cond;
+	BaseSptrList item_list, elif_list;
+	BaseSptr opt_else;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Gen_If, Base);
 };
 class Gen_If_Elif: public Base
 {
 public:		// variables
-	BaseUptr cond;
-	BaseUptrList item_list;
+	BaseSptr cond;
+	BaseSptrList item_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Gen_If_Elif, Base);
 };
 class Gen_If_Else: public Base
 {
 public:		// variables
-	BaseUptrList item_list;
+	BaseSptrList item_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Gen_If_Else, Base);
 };
@@ -227,24 +227,24 @@ public:		// functions
 class Gen_Switch: public Base
 {
 public:		// variables
-	BaseUptr cond;
-	BaseUptrList case_list;
-	BaseUptr opt_default;
+	BaseSptr cond;
+	BaseSptrList case_list;
+	BaseSptr opt_default;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Gen_Switch, Base);
 };
 class Gen_Switch_Case: public Base
 {
 public:		// variables
-	BaseUptr expr;
-	BaseUptrList item_list;
+	BaseSptr expr;
+	BaseSptrList item_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Gen_Switch_Case, Base);
 };
 class Gen_Switch_Default: public Base
 {
 public:		// variables
-	BaseUptrList item_list;
+	BaseSptrList item_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Gen_Switch_Default, Base);
 };
@@ -253,8 +253,8 @@ class Gen_For: public Base
 {
 public:		// variables
 	string label, ident;
-	BaseUptr expr;
-	BaseUptrList item_list;
+	BaseSptr expr;
+	BaseSptrList item_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Gen_For, Base);
 };
@@ -262,7 +262,7 @@ public:		// functions
 class ContAssign: public Base
 {
 public:		// variables
-	BaseUptr left, right;
+	BaseSptr left, right;
 public:		// functions
 	SHARED_FUNC_CONTENTS(ContAssign, Base);
 };
@@ -278,7 +278,7 @@ public:		// types
 	};
 public:		// variables
 	Kind kind;
-	BaseUptr behav_seq_edge_list, scope;
+	BaseSptr behav_seq_edge_list, scope;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Behav, Base);
 };
@@ -287,7 +287,7 @@ public:		// functions
 class Behav_Seq_EdgeList: public Base
 {
 public:		// variables
-	BaseUptrList item_list;
+	BaseSptrList item_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Behav_Seq_EdgeList, Base);
 };
@@ -302,7 +302,7 @@ public:		// types
 	};
 public:		// variables
 	Kind kind;
-	BaseUptr expr;
+	BaseSptr expr;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Behav_Seq_EdgeList_Item, Base);
 };
@@ -310,7 +310,7 @@ public:		// functions
 class Behav_Scope: public Base
 {
 public:		// variables
-	BaseUptrList item_list;
+	BaseSptrList item_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Behav_Scope, Base);
 };
@@ -318,23 +318,23 @@ public:		// functions
 class If: public Base
 {
 public:		// variables
-	BaseUptr cond, scope;
-	BaseUptrList elif_list;
-	BaseUptr opt_else;
+	BaseSptr cond, scope;
+	BaseSptrList elif_list;
+	BaseSptr opt_else;
 public:		// functions
 	SHARED_FUNC_CONTENTS(If, Base);
 };
 class If_Elif: public Base
 {
 public:		// variables
-	BaseUptr cond, scope;
+	BaseSptr cond, scope;
 public:		// functions
 	SHARED_FUNC_CONTENTS(If_Elif, Base);
 };
 class If_Else: public Base
 {
 public:		// variables
-	BaseUptr scope;
+	BaseSptr scope;
 public:		// functions
 	SHARED_FUNC_CONTENTS(If_Else, Base);
 };
@@ -352,14 +352,14 @@ public:		// functions
 class SwitchOrSwitchz_Case: public Base
 {
 public:		// variables
-	BaseUptr expr, scope;
+	BaseSptr expr, scope;
 public:		// functions
 	SHARED_FUNC_CONTENTS(SwitchOrSwitchz_Case, Base);
 };
 class SwitchOrSwitchz_Default: public Base
 {
 public:		// variables
-	BaseUptr scope;
+	BaseSptr scope;
 public:		// functions
 	SHARED_FUNC_CONTENTS(SwitchOrSwitchz_Default, Base);
 };
@@ -368,14 +368,14 @@ class For: public Base
 {
 public:		// variables
 	string ident;
-	BaseUptr expr, scope;
+	BaseSptr expr, scope;
 public:		// functions
 	SHARED_FUNC_CONTENTS(For, Base);
 };
 class While: public Base
 {
 public:		// variables
-	BaseUptr expr, scope;
+	BaseSptr expr, scope;
 public:		// functions
 	SHARED_FUNC_CONTENTS(While, Base);
 };
@@ -394,8 +394,8 @@ public:		// functions
 class DeclWire: public Base
 {
 public:		// variables
-	BaseUptr ident_list, typename_or_modname;
-	BaseUptrList opt_expr_list;
+	BaseSptr ident_list, typename_or_modname;
+	BaseSptrList opt_expr_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclWire, Base);
 };
@@ -407,8 +407,8 @@ public:		// functions
 class DeclConst: public Base
 {
 public:		// variables
-	BaseUptr ident_list, typename_or_modname;
-	BaseUptrList expr_list;
+	BaseSptr ident_list, typename_or_modname;
+	BaseSptrList expr_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclConst, Base);
 };
@@ -417,7 +417,7 @@ class DeclEnum: public Base
 {
 public:		// variables
 	string ident;
-	BaseUptr opt_typename_or_modname, ident_list;
+	BaseSptr opt_typename_or_modname, ident_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclEnum, Base);
 };
@@ -427,8 +427,8 @@ class DeclMixin: public Base
 public:		// variables
 	bool is_base = false;
 	string ident;
-	BaseUptr param_list, opt_extends;
-	BaseUptrList item_list;
+	BaseSptr param_list, opt_extends;
+	BaseSptrList item_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclMixin, Base);
 };
@@ -494,7 +494,7 @@ public:		// variables
 	bool is_virtual = false;
 	bool is_static = false;
 	bool is_const = false;
-	BaseUptr subprog;
+	BaseSptr subprog;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclClsOrMxn_DeclSubprogFullDefn, Base);
 };
@@ -507,7 +507,7 @@ public:		// variables
 	AccSpec acc_spec = AccSpec::Pub;
 	Kind kind;
 	bool is_const = false;
-	BaseUptr header;
+	BaseSptr header;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclClsOrMxn_DeclSubprogAbstract, Base);
 };
@@ -515,8 +515,8 @@ public:		// functions
 class DeclFunc: public Base
 {
 public:		// variables
-	BaseUptr header;
-	BaseUptrList item_list;
+	BaseSptr header;
+	BaseSptrList item_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclFunc, Base);
 };
@@ -525,7 +525,7 @@ class DeclFunc_Header: public Base
 {
 public:		// variables
 	string ident;
-	BaseUptr opt_param_list, arg_list, return_typename;
+	BaseSptr opt_param_list, arg_list, return_typename;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclFunc_Header, Base);
 };
@@ -533,7 +533,7 @@ public:		// functions
 class DeclFunc_Return: public Base
 {
 public:		// variables
-	BaseUptr expr;
+	BaseSptr expr;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclFunc_Return, Base);
 };
@@ -548,7 +548,7 @@ class DeclTask_Header: public Base
 {
 public:		// variables
 	string ident;
-	BaseUptr opt_param_list, arg_list;
+	BaseSptr opt_param_list, arg_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclTask_Header, Base);
 };
@@ -568,8 +568,8 @@ public:		// functions
 class DeclAlias_Value: public Base
 {
 public:		// variables
-	BaseUptr ident_list, typename_or_modname;
-	BaseUptrList expr_list;
+	BaseSptr ident_list, typename_or_modname;
+	BaseSptrList expr_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclAlias_Value, Base);
 };
@@ -577,8 +577,8 @@ public:		// functions
 class DeclAlias_Type: public Base
 {
 public:		// variables
-	BaseUptr ident_list;
-	BaseUptrList typename_or_modname_list;
+	BaseSptr ident_list;
+	BaseSptrList typename_or_modname_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclAlias_Type, Base);
 };
@@ -619,7 +619,7 @@ public:		// types
 	};
 public:		// variables
 	Kind kind;
-	BaseUptr opt_child;
+	BaseSptr opt_child;
 public:		// variables
 	SHARED_FUNC_CONTENTS(TypenameOrModname, Base);
 };
@@ -627,7 +627,7 @@ public:		// variables
 class TypenameOrModname_Cstm: public Base
 {
 public:		// variables
-	BaseUptrList item_list, arr_dim_list;
+	BaseSptrList item_list, arr_dim_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(TypenameOrModname_Cstm, Base);
 };
@@ -636,7 +636,7 @@ class TypenameOrModname_Cstm_Item: public Base
 {
 public:		// variables
 	string ident;
-	BaseUptr opt_param_list;
+	BaseSptr opt_param_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(TypenameOrModname_Cstm_Item, Base);
 };
@@ -670,8 +670,8 @@ public:		// types
 	};
 public:		// variables
 	Kind kind;
-	BaseUptr opt_param_list;
-	BaseUptrList arr_dim_list;
+	BaseSptr opt_param_list;
+	BaseSptrList arr_dim_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(TypenameOrModname_Builtin, Base);
 };
@@ -679,7 +679,7 @@ public:		// functions
 class ExprMux: public Base
 {
 public:		// variables
-	BaseUptr cond, when_true, when_false;
+	BaseSptr cond, when_true, when_false;
 public:		// functions
 	SHARED_FUNC_CONTENTS(ExprMux, Base);
 };
@@ -687,7 +687,7 @@ public:		// functions
 class ExprUnopBase: public Base
 {
 public:		// variables
-	BaseUptr only_child;
+	BaseSptr only_child;
 public:		// functions
 	SHARED_FUNC_CONTENTS(ExprUnopBase, Base);
 };
@@ -695,7 +695,7 @@ public:		// functions
 class ExprBinopBase: public Base
 {
 public:		// variables
-	BaseUptr left, right;
+	BaseSptr left, right;
 public:		// functions
 	SHARED_FUNC_CONTENTS(ExprBinopBase, Base);
 };
@@ -891,14 +891,14 @@ public:		// types
 	};
 public:		// variables
 	string raw_literal;
-	BaseUptr opt_size;
+	BaseSptr opt_size;
 public:		// functions
 	SHARED_FUNC_CONTENTS(ExprLiteral, Base);
 };
 class ExprSized: public Base
 {
 public:		// variables
-	BaseUptr size, to_size;
+	BaseSptr size, to_size;
 public:		// functions
 	SHARED_FUNC_CONTENTS(ExprSized, Base);
 };
@@ -912,7 +912,7 @@ public:		// functions
 class ExprCat: public Base
 {
 public:		// variables
-	BaseUptrList item_list;
+	BaseSptrList item_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(ExprCat, Base);
 };
@@ -920,7 +920,7 @@ public:		// functions
 class ExprRepl: public Base
 {
 public:		// variables
-	BaseUptr amount, to_repl;
+	BaseSptr amount, to_repl;
 public:		// functions
 	SHARED_FUNC_CONTENTS(ExprRepl, Base);
 };
@@ -959,7 +959,7 @@ public:		// types
 		DollarLow,
 	};
 public:		// variables
-	BaseUptr opt_typename_or_modname;
+	BaseSptr opt_typename_or_modname;
 	SuffKind suff_kind = SuffKind::None;
 public:		// functions
 	SHARED_FUNC_CONTENTS(ExprIdentEtc, Base);
@@ -969,8 +969,8 @@ class ExprIdentEtc_Item: public Base
 {
 public:		// variables
 	string ident;
-	BaseUptr opt_param_list, opt_arg_list;
-	BaseUptrList end_item_list;
+	BaseSptr opt_param_list, opt_arg_list;
+	BaseSptrList end_item_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(ExprIdentEtc_Item, Base);
 };
@@ -986,7 +986,7 @@ public:		// types
 	};
 public:		// variables
 	Kind kind;
-	BaseUptr opt_index;
+	BaseSptr opt_index;
 public:		// functions
 	SHARED_FUNC_CONTENTS(ExprIdentEtc_ItemEnd, Base);
 };
@@ -996,7 +996,7 @@ class ExprCallSubprog_PseudoOper: public ExprBinopBase
 {
 public:		// variables
 	string ident;
-	BaseUptr opt_param_list; 
+	BaseSptr opt_param_list; 
 public:		// functions
 	SHARED_FUNC_CONTENTS(ExprCallSubprog_PseudoOper, ExprBinopBase);
 };

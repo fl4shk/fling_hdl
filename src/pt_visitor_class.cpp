@@ -4,11 +4,10 @@
 namespace fling_hdl
 {
 #define RAW_APPEND_CHILD_IF(to_feed, type) \
-	if (std::holds_alternative<shared_ptr<ast::type>>(child)) \
+	if (child->id() == string(#type)) \
 	{ \
 		/* More like, we need to feed *our* childrens */ \
-		to_feed.push_back(std::get<shared_ptr<ast::type>> \
-			(child)); \
+		to_feed.push_back(move(child)); \
 	}
 
 #define JUST_ACCEPT(pt_node) \
@@ -21,7 +20,7 @@ namespace fling_hdl
 	}
 
 #define make_ast(type) \
-	make_shared<ast::type>(ErrWarn(_filename, ctx))
+	BaseSptr(new ast::type(ErrWarn(_filename, ctx)))
 
 PtVisitor::PtVisitor(int s_argc, char** s_argv)
 {
@@ -74,27 +73,39 @@ antlrcpp::Any PtVisitor::visitFlingProgram
 	(Parser::FlingProgramContext *ctx)
 {
 
-	/*
 	for (const auto& p: ctx->flingProgram_Item())
 	{
 		p->accept(this);
 
 		auto&& child = _pop_ast();
 		#define APPEND_CHILD_IF(type) \
-			RAW_APPEND_CHILD_IF(_ast->children, type)
+			RAW_APPEND_CHILD_IF(_ast->item_list, type)
 		EVAL(MAP(APPEND_CHILD_IF, ELSE,
 			DeclPackage,
 			DeclModule,
-			DeclType,
-			DeclSubprog,
-			DeclAlias))
+
+			// DeclType
+			DeclEnum,
+			DeclClass,
+			DeclMixin,
+
+			// DeclSubprog
+			DeclFunc,
+			DeclTask,
+			DeclProc,
+
+			// DeclAlias
+			DeclAlias_Value,
+			DeclAlias_Type,
+			DeclAlias_Module,
+
+			DeclConst))
 		#undef APPEND_CHILD_IF
 		else
 		{
 			_err(ctx, "PtVisitor::visitFlingProgram():  Internal error.");
 		}
 	}
-	*/
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingProgram_Item
@@ -118,9 +129,9 @@ antlrcpp::Any PtVisitor::visitFlingDeclPackage
 {
 	JUST_ACCEPT(flingIdent);
 
-	auto&& node = make_ast(DeclPackage);
+	//auto&& node = make_ast(DeclPackage);
 
-	_push_ast(move(node));
+	//_push_ast(move(node));
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclPackage_Item

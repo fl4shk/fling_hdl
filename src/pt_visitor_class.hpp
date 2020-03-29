@@ -54,8 +54,15 @@ private:		// variables
 	stack<string> _str_stack;
 	stack<BigNum> _num_stack;
 	
-	stack<shared_ptr<ast::Base>> _ast_stack;
+	stack<ast::BaseSptr> _ast_stack;
+public:		// misc functions
+	template<typename Type>
+	static inline Type* as(ast::BaseSptr& base_sptr)
+	{
+		return static_cast<Type*>(base_sptr.get());
+	}
 private:		// misc functions
+
 	inline void _push_str(const string& to_push)
 	{
 		_str_stack.push(to_push);
@@ -86,7 +93,7 @@ private:		// misc functions
 		return ret;
 	}
 
-	inline void _push_ast(shared_ptr<ast::Base>&& to_push)
+	inline void _push_ast(ast::BaseSptr&& to_push)
 	{
 		_ast_stack.push(to_push);
 	}
