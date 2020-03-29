@@ -593,7 +593,8 @@ std::ostream& operator << (std::ostream& os, Base* node)
 		{
 			#undef TYPE
 			#define TYPE ExprCallSubprog_PseudoOper
-			osprintout(os, strappcom2(wrap(ident), wrap(opt_param_list)));
+			osprintout(os, strappcom2(wrap(left), wrap(right), wrap(ident),
+				wrap(opt_param_list)));
 		}
 		else
 		{
