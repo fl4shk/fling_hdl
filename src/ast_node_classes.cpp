@@ -410,6 +410,51 @@ std::ostream& operator << (std::ostream& os, Base* node)
 			#define TYPE DeclFunc_Return
 			osprintout(os, wrap(expr));
 		}
+		else idcmp(DeclTask)
+		{
+			#undef TYPE
+			#define TYPE DeclTask
+			osprintout(os, strappcom2(wrap(header), wrap(item_list)));
+		}
+		else idcmp(DeclTask_Header)
+		{
+			#undef TYPE
+			#define TYPE DeclTask_Header
+			osprintout(os, strappcom2(wrap(ident), wrap(opt_param_list),
+				wrap(arg_list)));
+		}
+		else idcmp(DeclProc)
+		{
+			#undef TYPE
+			#define TYPE DeclProc
+			osprintout(os, strappcom2(wrap(header), wrap(item_list)));
+		}
+		else idcmp(DeclProc_Header)
+		{
+			#undef TYPE
+			#define TYPE DeclProc_Header
+			osprintout(os, strappcom2(wrap(ident), wrap(opt_param_list),
+				wrap(arg_list)));
+		}
+		else idcmp(DeclAlias_Value)
+		{
+			#undef TYPE
+			#define TYPE DeclAlias_Value
+			osprintout(os, strappcom2(wrap(ident_list),
+				wrap(typename_or_modname), wrap(expr_list)));
+		}
+		else idcmp(DeclAlias_Type, DeclAlias_Module)
+		{
+			#undef TYPE
+			#define TYPE DeclAlias_Type
+			osprintout(os, strappcom2(wrap(ident_list),
+				wrap(typename_or_modname_list)));
+		}
+		else idcmp(IdentList)
+		{
+			#undef TYPE
+			#define TYPE IdentList
+		}
 
 
 		osprintout(os, ")");
