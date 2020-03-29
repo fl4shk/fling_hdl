@@ -7,6 +7,7 @@
 #include "expr_value_class.hpp"
 
 #include "file_pos_class.hpp"
+#include "liborangepower_src/cpp_magic.hpp"
 
 namespace fling_hdl
 {
@@ -26,6 +27,10 @@ namespace ast
 	{ \
 		return string(#name); \
 	}
+
+#define CONV_KIND_CASE(which) \
+	case Kind::which: \
+		return #which;
 
 class Base;
 using BaseSptr = shared_ptr<Base>;
@@ -136,6 +141,21 @@ public:		// types
 		Inout,
 		Interface,
 	};
+	static inline string conv_kind(Kind to_conv)
+	{
+		switch (to_conv)
+		{
+		//--------
+		EVAL(MAP(CONV_KIND_CASE, EMPTY,
+			Input,
+			Output,
+			Inout,
+			Interface))
+		default:
+			return "Eek!";
+		//--------
+		}
+	}
 public:		// variables
 	BaseSptr ident_list;
 	Kind kind;
@@ -164,8 +184,6 @@ public:		// functions
 
 class InstArgList: public InstParamList
 {
-public:		// variables
-	BaseSptrList opt_item_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(InstArgList, InstParamList);
 };
@@ -198,64 +216,64 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(InstModule, Base);
 };
 
-class Gen_If: public Base
+class GenIf: public Base
 {
 public:		// variables
 	BaseSptr cond;
 	BaseSptrList item_list, elif_list;
 	BaseSptr opt_else;
 public:		// functions
-	SHARED_FUNC_CONTENTS(Gen_If, Base);
+	SHARED_FUNC_CONTENTS(GenIf, Base);
 };
-class Gen_If_Elif: public Base
+class GenIf_Elif: public Base
 {
 public:		// variables
 	BaseSptr cond;
 	BaseSptrList item_list;
 public:		// functions
-	SHARED_FUNC_CONTENTS(Gen_If_Elif, Base);
+	SHARED_FUNC_CONTENTS(GenIf_Elif, Base);
 };
-class Gen_If_Else: public Base
+class GenIf_Else: public Base
 {
 public:		// variables
 	BaseSptrList item_list;
 public:		// functions
-	SHARED_FUNC_CONTENTS(Gen_If_Else, Base);
+	SHARED_FUNC_CONTENTS(GenIf_Else, Base);
 };
 
-class Gen_Switch: public Base
+class GenSwitch: public Base
 {
 public:		// variables
 	BaseSptr cond;
 	BaseSptrList case_list;
 	BaseSptr opt_default;
 public:		// functions
-	SHARED_FUNC_CONTENTS(Gen_Switch, Base);
+	SHARED_FUNC_CONTENTS(GenSwitch, Base);
 };
-class Gen_Switch_Case: public Base
+class GenSwitch_Case: public Base
 {
 public:		// variables
 	BaseSptr expr;
 	BaseSptrList item_list;
 public:		// functions
-	SHARED_FUNC_CONTENTS(Gen_Switch_Case, Base);
+	SHARED_FUNC_CONTENTS(GenSwitch_Case, Base);
 };
-class Gen_Switch_Default: public Base
+class GenSwitch_Default: public Base
 {
 public:		// variables
 	BaseSptrList item_list;
 public:		// functions
-	SHARED_FUNC_CONTENTS(Gen_Switch_Default, Base);
+	SHARED_FUNC_CONTENTS(GenSwitch_Default, Base);
 };
 
-class Gen_For: public Base
+class GenFor: public Base
 {
 public:		// variables
 	string label, ident;
 	BaseSptr expr;
 	BaseSptrList item_list;
 public:		// functions
-	SHARED_FUNC_CONTENTS(Gen_For, Base);
+	SHARED_FUNC_CONTENTS(GenFor, Base);
 };
 
 class ContAssign: public Base
@@ -275,6 +293,20 @@ public:		// types
 		Comb,
 		Seq,
 	};
+	static string conv_kind(Kind to_conv)
+	{
+		switch (to_conv)
+		{
+		//--------
+		EVAL(MAP(CONV_KIND_CASE, EMPTY,
+			Initial,
+			Comb,
+			Seq))
+		default:
+			return "Eek!";
+		//--------
+		}
+	}
 public:		// variables
 	Kind kind;
 	BaseSptr behav_seq_edge_list, scope;
@@ -283,15 +315,15 @@ public:		// functions
 };
 
 
-class Behav_Seq_EdgeList: public Base
+class Behav_SeqEdgeList: public Base
 {
 public:		// variables
 	BaseSptrList item_list;
 public:		// functions
-	SHARED_FUNC_CONTENTS(Behav_Seq_EdgeList, Base);
+	SHARED_FUNC_CONTENTS(Behav_SeqEdgeList, Base);
 };
 
-class Behav_Seq_EdgeList_Item: public Base
+class Behav_SeqEdgeList_Item: public Base
 {
 public:		// types
 	enum class Kind
@@ -299,11 +331,24 @@ public:		// types
 		Posedge,
 		Negedge,
 	};
+	static inline string conv_kind(Kind to_conv)
+	{
+		switch (to_conv)
+		{
+		//--------
+		EVAL(MAP(CONV_KIND_CASE, EMPTY,
+			Posedge,
+			Negedge))
+		default:
+			return "Eek!";
+		//--------
+		}
+	}
 public:		// variables
 	Kind kind;
 	BaseSptr expr;
 public:		// functions
-	SHARED_FUNC_CONTENTS(Behav_Seq_EdgeList_Item, Base);
+	SHARED_FUNC_CONTENTS(Behav_SeqEdgeList_Item, Base);
 };
 
 class Behav_Scope: public Base
@@ -338,10 +383,10 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(If_Else, Base);
 };
 
-class Switch: public Gen_Switch
+class Switch: public GenSwitch
 {
 public:		// functions
-	SHARED_FUNC_CONTENTS(Switch, Gen_Switch);
+	SHARED_FUNC_CONTENTS(Switch, GenSwitch);
 };
 class Switchz: public Switch
 {
@@ -445,6 +490,22 @@ enum class AccSpec
 	Prot,
 	Priv,
 };
+inline string conv_acc_spec(AccSpec acc_spec)
+{
+	switch (acc_spec)
+	{
+	//--------
+	case AccSpec::Pub:
+		return "Pub";
+	case AccSpec::Prot:
+		return "Prot";
+	case AccSpec::Priv:
+		return "Priv";
+	default:
+		return "Eek!";
+	//--------
+	}
+}
 
 class DeclClass_DeclVar: public DeclVar
 {
@@ -487,12 +548,24 @@ public:		// types
 		Task,
 		Proc,
 	};
+	static string conv_kind(Kind kind)
+	{
+		switch (kind)
+		{
+		//--------
+		EVAL(MAP(CONV_KIND_CASE, EMPTY,
+			Func,
+			Task,
+			Proc))
+		default:
+			return "Eek!";
+		//--------
+		}
+	}
 public:		// variables
 	AccSpec acc_spec = AccSpec::Pub;
 	Kind kind;
-	bool is_virtual = false;
-	bool is_static = false;
-	bool is_const = false;
+	bool is_virtual = false, is_static = false, is_const = false;
 	BaseSptr subprog;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclClsOrMxn_DeclSubprogFullDefn, Base);
@@ -502,6 +575,10 @@ class DeclClsOrMxn_DeclSubprogAbstract: public Base
 {
 public:		// types
 	using Kind = typename DeclClsOrMxn_DeclSubprogFullDefn::Kind;
+	static inline string conv_kind(Kind kind)
+	{
+		return DeclClsOrMxn_DeclSubprogFullDefn::conv_kind(kind);
+	}
 public:		// variables
 	AccSpec acc_spec = AccSpec::Pub;
 	Kind kind;
@@ -535,6 +612,12 @@ public:		// variables
 	BaseSptr expr;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclFunc_Return, Base);
+};
+
+class DeclFunc_Expr: public DeclFunc_Return
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclFunc_Expr, DeclFunc_Return);
 };
 
 class DeclTask: public DeclFunc
@@ -1022,6 +1105,7 @@ public:		// functions
 };
 
 #undef SHARED_FUNC_CONTENTS
+#undef CONV_KIND_CASE
 
 
 } // namespace ast
