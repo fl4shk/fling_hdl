@@ -46,7 +46,7 @@ std::ostream& operator << (std::ostream& os, const BaseSptrList& list)
 {
 	for (const auto& item: list)
 	{
-		osprintout(os, item, ",\n");
+		osprintout(os, item.data, ",\n");
 	}
 	return os;
 }
