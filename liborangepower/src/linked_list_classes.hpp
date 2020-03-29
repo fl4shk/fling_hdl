@@ -401,18 +401,19 @@ public:		// types
 		}
 	};
 
+
+public:		// constants
+	static constexpr IndexT HEAD_INDEX = 0;
 private:		// variables
 	std::stack<IndexT> _avail_index_stack;
 	std::vector<Node> _node_vec;
-	IndexT _head_index = 0;
 
 public:		// functions
 	inline IndCircLinkList()
 	{
 		_node_vec.push_back(Node());
-		_head_index = 0;
-		head()._next = _head_index;
-		head()._prev = _head_index;
+		head()._next = HEAD_INDEX;
+		head()._prev = HEAD_INDEX;
 	}
 
 	GEN_MOVE_ONLY_CONSTRUCTORS_AND_ASSIGN(IndCircLinkList);
@@ -421,11 +422,11 @@ public:		// functions
 
 	inline Node& head()
 	{
-		return at(_head_index);
+		return at(HEAD_INDEX);
 	}
 	inline const Node& head() const
 	{
-		return at(_head_index);
+		return at(HEAD_INDEX);
 	}
 	GEN_GETTER_BY_VAL(head_index);
 
@@ -440,7 +441,7 @@ public:		// functions
 
 	inline bool empty() const
 	{
-		return (head()._next == _head_index);
+		return (head()._next == HEAD_INDEX);
 	}
 
 	inline NodeIterator begin()
@@ -449,7 +450,7 @@ public:		// functions
 	}
 	inline NodeIterator end()
 	{
-		return NodeIterator(this, _head_index);
+		return NodeIterator(this, HEAD_INDEX);
 	}
 
 	inline NodeIterator cbegin() const
@@ -458,7 +459,7 @@ public:		// functions
 	}
 	inline NodeIterator cend() const
 	{
-		return NodeIterator(this, _head_index);
+		return NodeIterator(this, HEAD_INDEX);
 	}
 
 	inline NodeIterator front()
@@ -472,27 +473,27 @@ public:		// functions
 
 	inline NodeIterator push_front(const Type& to_push)
 	{
-		return insert_after(head(), to_push);
+		return insert_after(HEAD_INDEX, to_push);
 	}
 	inline NodeIterator push_front(Type&& to_push)
 	{
-		return insert_after(head(), std::move(to_push));
+		return insert_after(HEAD_INDEX, std::move(to_push));
 	}
 	inline NodeIterator push_back(const Type& to_push)
 	{
-		return insert_before(head(), to_push);
+		return insert_before(HEAD_INDEX, to_push);
 	}
 	inline NodeIterator push_back(Type&& to_push)
 	{
-		return insert_before(head(), std::move(to_push));
+		return insert_before(HEAD_INDEX, std::move(to_push));
 	}
 	inline void pop_front()
 	{
-		remove_after(head());
+		remove_after(HEAD_INDEX);
 	}
 	inline void pop_back()
 	{
-		remove_before(head());
+		remove_before(HEAD_INDEX);
 	}
 
 	inline NodeIterator insert_before(IndexT where, const Type& to_insert)
