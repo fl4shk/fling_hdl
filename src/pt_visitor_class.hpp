@@ -112,6 +112,13 @@ private:		// misc functions
 		return ret;
 	}
 
+	inline void _internal_err(antlr4::ParserRuleContext* ctx,
+		const string& func) const
+	{
+		FilePos(_filename, ctx).err(sconcat("PtVisitor::", func, "():  ",
+			"Internal error."));
+	}
+
 public:		// functions
 	PtVisitor(int s_argc, char** s_argv);
 	virtual ~PtVisitor();

@@ -9,6 +9,8 @@ namespace fling_hdl
 		/* More like, we need to feed *our* childrens */ \
 		to_feed.push_back(move(child)); \
 	}
+#define MULTI_APPEND_CHILD_IF(...) \
+	EVAL(MAP(APPEND_CHILD_IF, ELSE, __VA_ARGS__))
 
 #define JUST_ACCEPT(pt_node) \
 	ctx->pt_node()->accept(this)
@@ -25,6 +27,16 @@ namespace fling_hdl
 #define DEFER_PUSH(name, type) \
 	auto name = make_ast(type); \
 	AstNodePusher ast_node_pusher_ ## name (this, name)
+
+// More like, we need to feed *our* childrens
+#define DECL_TYPE_TO_FEED \
+	DeclEnum, DeclClass, DeclMixin
+
+#define DECL_SUBPROG_TO_FEED \
+	DeclFunc, DeclTask, DeclProc
+
+#define DECL_ALIAS_TO_FEED \
+	DeclAlias_Value, DeclAlias_Type, DeclAlias_Module
 
 
 PtVisitor::PtVisitor(int s_argc, char** s_argv)
@@ -84,30 +96,15 @@ antlrcpp::Any PtVisitor::visitFlingProgram
 		auto&& child = _pop_ast();
 		#define APPEND_CHILD_IF(type) \
 			RAW_APPEND_CHILD_IF(_ast->item_list, type)
-		EVAL(MAP(APPEND_CHILD_IF, ELSE,
-			DeclPackage,
-			DeclModule,
-
-			// DeclType
-			DeclEnum,
-			DeclClass,
-			DeclMixin,
-
-			// DeclSubprog
-			DeclFunc,
-			DeclTask,
-			DeclProc,
-
-			// DeclAlias
-			DeclAlias_Value,
-			DeclAlias_Type,
-			DeclAlias_Module,
-
-			DeclConst))
+		MULTI_APPEND_CHILD_IF(DeclPackage, DeclModule,
+			DECL_TYPE_TO_FEED,
+			DECL_SUBPROG_TO_FEED,
+			DECL_ALIAS_TO_FEED,
+			DeclConst)
 		#undef APPEND_CHILD_IF
 		else
 		{
-			_err(ctx, "PtVisitor::visitFlingProgram():  Internal error.");
+			_internal_err(ctx, "visitFlingProgram");
 		}
 	}
 	return nullptr;
@@ -124,7 +121,7 @@ antlrcpp::Any PtVisitor::visitFlingProgram_Item
 		flingDeclConst))
 	else
 	{
-		_err(ctx, "PtVisitor::visitFlingProgram_Item():  Internal error.");
+		_internal_err(ctx, "visitFlingProgram_Item");
 	}
 	return nullptr;
 }
@@ -135,6 +132,25 @@ antlrcpp::Any PtVisitor::visitFlingDeclPackage
 
 	DEFER_PUSH(node, DeclPackage);
 	node->ident = _pop_str();
+
+	for (const auto& p: ctx->flingDeclPackage_Item())
+	{
+		p->accept(this);
+
+		auto&& child = _pop_ast();
+		#define APPEND_CHILD_IF(type) \
+			RAW_APPEND_CHILD_IF(node->item_list, type)
+		MULTI_APPEND_CHILD_IF(DeclPackage, DeclModule,
+			DECL_TYPE_TO_FEED,
+			DECL_SUBPROG_TO_FEED,
+			DECL_ALIAS_TO_FEED,
+			DeclConst)
+		#undef APPEND_CHILD_IF
+		else
+		{
+			_internal_err(ctx, "visitFlingDeclPackage");
+		}
+	}
 
 	return nullptr;
 }
