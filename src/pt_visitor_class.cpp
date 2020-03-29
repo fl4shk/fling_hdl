@@ -20,7 +20,12 @@ namespace fling_hdl
 	}
 
 #define make_ast(type) \
-	BaseSptr(new ast::type(ErrWarn(_filename, ctx)))
+	new ast::type(FilePos(_filename, ctx))
+
+#define DEFER_PUSH(name, type) \
+	auto name = make_ast(type); \
+	AstNodePusher ast_node_pusher_ ## name (this, name)
+
 
 PtVisitor::PtVisitor(int s_argc, char** s_argv)
 {
@@ -61,7 +66,7 @@ int PtVisitor::run()
 	for (auto& p: _ast_etc_map)
 	{
 		_filename = p.second.filename();
-		_ast = new ast::Program(ErrWarn(_filename,
+		_ast = new ast::Program(FilePos(_filename,
 			p.second.program_ctx()));
 		p.second.ast().reset(_ast);
 		p.second.program_ctx()->accept(this);
@@ -72,7 +77,6 @@ int PtVisitor::run()
 antlrcpp::Any PtVisitor::visitFlingProgram
 	(Parser::FlingProgramContext *ctx)
 {
-
 	for (const auto& p: ctx->flingProgram_Item())
 	{
 		p->accept(this);
@@ -129,9 +133,9 @@ antlrcpp::Any PtVisitor::visitFlingDeclPackage
 {
 	JUST_ACCEPT(flingIdent);
 
-	//auto&& node = make_ast(DeclPackage);
+	DEFER_PUSH(node, DeclPackage);
+	node->ident = _pop_str();
 
-	//_push_ast(move(node));
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclPackage_Item
@@ -774,8 +778,13 @@ antlrcpp::Any PtVisitor::visitFlingExpr_IdentEtc
 {
 	return nullptr;
 }
-antlrcpp::Any PtVisitor::visitFlingExpr_IdentEtc_Item
-	(Parser::FlingExpr_IdentEtc_ItemContext *ctx)
+antlrcpp::Any PtVisitor::visitFlingExpr_IdentEtc_FirstItem
+	(Parser::FlingExpr_IdentEtc_FirstItemContext *ctx)
+{
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingExpr_IdentEtc_NonSelfItem
+	(Parser::FlingExpr_IdentEtc_NonSelfItemContext *ctx)
 {
 	return nullptr;
 }

@@ -6,7 +6,7 @@
 #include "misc_includes.hpp"
 #include "expr_value_class.hpp"
 
-#include "err_warn_class.hpp"
+#include "file_pos_class.hpp"
 
 #include "list_of_ast_node_classes_define.hpp"
 
@@ -19,7 +19,7 @@ namespace ast
 
 #define SHARED_FUNC_CONTENTS(name, base_name) \
 	inline name() = default; \
-	inline name(const ErrWarn& s_ew) \
+	inline name(const FilePos& s_ew) \
 		: base_name(s_ew) \
 	{ \
 	} \
@@ -41,10 +41,10 @@ class Base
 {
 public:		// variables
 	ExprValue val;
-	ErrWarn ew;
+	FilePos ew;
 public:		// functions
 	inline Base() = default;
-	inline Base(const ErrWarn& s_ew)
+	inline Base(const FilePos& s_ew)
 		: ew(s_ew)
 	{
 	}

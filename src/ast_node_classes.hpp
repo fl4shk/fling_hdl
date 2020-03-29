@@ -6,7 +6,7 @@
 #include "misc_includes.hpp"
 #include "expr_value_class.hpp"
 
-#include "err_warn_class.hpp"
+#include "file_pos_class.hpp"
 
 namespace fling_hdl
 {
@@ -16,8 +16,8 @@ namespace ast
 
 #define SHARED_FUNC_CONTENTS(name, base_name) \
 	inline name() = default; \
-	inline name(const ErrWarn& s_ew) \
-		: base_name(s_ew) \
+	inline name(const FilePos& s_fp) \
+		: base_name(s_fp) \
 	{ \
 	} \
 	GEN_MOVE_ONLY_CONSTRUCTORS_AND_ASSIGN(name); \
@@ -34,13 +34,12 @@ using BaseSptrList = IndCircLinkList<BaseSptr>;
 class Base
 {
 protected:		// variables
-	ExprValue _val;
-	ErrWarn _ew;
+	FilePos _fp;
 
 public:		// functions
 	inline Base() = default;
-	inline Base(const ErrWarn& s_ew)
-		: _ew(s_ew)
+	inline Base(const FilePos& s_fp)
+		: _fp(s_fp)
 	{
 	}
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(Base);
@@ -50,8 +49,8 @@ public:		// functions
 		return string("Base");
 	}
 
-	GEN_GETTER_AND_SETTER_BY_CON_REF(val);
-	GEN_GETTER_AND_SETTER_BY_VAL(ew);
+	GEN_GETTER_AND_SETTER_BY_VAL(fp);
+
 };
 
 class Program: public Base
@@ -884,7 +883,7 @@ public:		// types
 		HexNum,
 		OctNum,
 		BinNum,
-		Float,
+		//Float,
 		String,
 		HighZ,
 		UnkX,
@@ -940,6 +939,11 @@ class ExprDollarClog2: public ExprUnopBase
 public:		// functions
 	SHARED_FUNC_CONTENTS(ExprDollarClog2, ExprUnopBase);
 };
+class ExprDollarIsvtype: public ExprUnopBase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(ExprDollarIsvtype, ExprUnopBase);
+};
 class ExprDollarPow: public ExprBinopBase
 {
 public:		// functions
@@ -959,20 +963,36 @@ public:		// types
 		DollarLow,
 	};
 public:		// variables
-	BaseSptr opt_typename_or_modname;
+	BaseSptr opt_typename_or_modname, first_item;
+	BaseSptrList post_first_item_list;
 	SuffKind suff_kind = SuffKind::None;
 public:		// functions
 	SHARED_FUNC_CONTENTS(ExprIdentEtc, Base);
 };
 
-class ExprIdentEtc_Item: public Base
+class ExprIdentEtc_FirstItem: public Base
+{
+public:		// types
+	enum class Kind
+	{
+		Self,
+		NonSelf,
+	};
+public:		// variables
+	Kind kind;
+	BaseSptr opt_non_self_item;
+public:		// functions
+	SHARED_FUNC_CONTENTS(ExprIdentEtc_FirstItem, Base);
+};
+
+class ExprIdentEtc_NonSelfItem: public Base
 {
 public:		// variables
 	string ident;
 	BaseSptr opt_param_list, opt_arg_list;
 	BaseSptrList end_item_list;
 public:		// functions
-	SHARED_FUNC_CONTENTS(ExprIdentEtc_Item, Base);
+	SHARED_FUNC_CONTENTS(ExprIdentEtc_NonSelfItem, Base);
 };
 
 class ExprIdentEtc_ItemEnd: public Base
@@ -1003,8 +1023,18 @@ public:		// functions
 
 #undef SHARED_FUNC_CONTENTS
 
+
 } // namespace ast
 
 } // namespace fling_hdl
+
+std::ostream& operator << (std::ostream& os, fling_hdl::ast::Base* node);
+
+inline std::ostream& operator << (std::ostream& os,
+	fling_hdl::ast::BaseSptr& node)
+{
+	os << node.get();
+	return os;
+}
 
 #endif		// src_ast_node_classes_hpp

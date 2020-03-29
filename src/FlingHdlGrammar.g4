@@ -737,7 +737,7 @@ flingExpr_Literal:
 	| LitHexNum
 	| LitOctNum
 	| LitBinNum
-	| LitFloatNum
+	//| LitFloatNum
 	| LitString
 	| KwHighZ ('(' flingExpr ')')?
 	| KwUnkX ('(' flingExpr ')')?
@@ -775,7 +775,8 @@ flingExpr_KwDollarFuncOf:
 	;
 
 flingExpr_KwDollarFuncOf_NonPow:
-	(KwDollarSigned | KwDollarUnsigned | KwDollarClog2) '(' flingExpr ')'
+	(KwDollarSigned | KwDollarUnsigned | KwDollarClog2 | KwDollarIsvtype)
+		'(' flingExpr ')'
 	;
 
 flingExpr_KwDollarFuncOf_Pow:
@@ -784,13 +785,17 @@ flingExpr_KwDollarFuncOf_Pow:
 
 flingExpr_IdentEtc:
 	(flingTypenameOrModname PunctScopeAccess)?
-	flingExpr_IdentEtc_Item 
-	(PunctMemberAccess flingExpr_IdentEtc_Item)*
+	flingExpr_IdentEtc_FirstItem
+	(PunctMemberAccess flingExpr_IdentEtc_NonSelfItem)*
 
 	(KwDollarSize | KwDollarRange | KwDollarHigh | KwDollarLow)?
 	;
+flingExpr_IdentEtc_FirstItem:
+	KwSelf
+	| flingExpr_IdentEtc_NonSelfItem
+	;
 
-flingExpr_IdentEtc_Item:
+flingExpr_IdentEtc_NonSelfItem:
 	flingIdent (flingInstParamList? flingInstArgList)?
 		flingExpr_IdentEtc_Item_End*
 	;
@@ -1059,7 +1064,7 @@ KwExtends: 'extends' ;
 
 KwVirtual: 'virtual' ;
 KwAbstract: 'abstract' ;
-KwIsvtype: 'isvtype' ;
+KwDollarIsvtype: '$isvtype' ;
 
 KwBase: 'base' ;
 KwStatic: 'static' ;

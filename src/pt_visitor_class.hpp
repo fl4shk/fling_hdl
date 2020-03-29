@@ -20,7 +20,7 @@ public:		// types
 private:		// variables
 	string _filename;
 	ProgramContext* _program_ctx = nullptr;
-	shared_ptr<ast::Program> _ast;
+	ast::BaseSptr _ast;
 public:		// functions
 	inline AstEtc() = default;
 	inline AstEtc(const string& s_filename, ProgramContext* s_program_ctx)
@@ -35,8 +35,11 @@ public:		// functions
 	GEN_GETTERS_BY_CON_REF_AND_REF(ast);
 };
 
+class AstNodePusher;
+
 class PtVisitor final: public FlingHdlGrammarVisitor
 {
+	friend class AstNodePusher;
 public:		// typedefs
 	using ParserRuleContext = antlr4::ParserRuleContext;
 
@@ -45,6 +48,8 @@ private:		// variables
 
 	int _argc;
 	char** _argv;
+
+	// This maps a filename to an `AstEtc`.
 	map<string, AstEtc> _ast_etc_map;
 
 	// The current filename
@@ -62,7 +67,6 @@ public:		// misc functions
 		return static_cast<Type*>(base_sptr.get());
 	}
 private:		// misc functions
-
 	inline void _push_str(const string& to_push)
 	{
 		_str_stack.push(to_push);
@@ -93,9 +97,9 @@ private:		// misc functions
 		return ret;
 	}
 
-	inline void _push_ast(ast::BaseSptr&& to_push)
+	inline void _push_ast(ast::Base* to_push)
 	{
-		_ast_stack.push(to_push);
+		_ast_stack.push(ast::BaseSptr(to_push));
 	}
 	inline auto _get_top_ast()
 	{
@@ -122,7 +126,7 @@ private:		// error/warning functions
 		}
 		else
 		{
-			ErrWarn(_filename, ctx).err(msg);
+			FilePos(_filename, ctx).err(msg);
 		}
 		exit(1);
 	}
@@ -142,7 +146,7 @@ private:		// error/warning functions
 		}
 		else
 		{
-			ErrWarn(_filename, ctx).warn(msg);
+			FilePos(_filename, ctx).warn(msg);
 		}
 	}
 	inline void _warn(const std::string& msg)
@@ -413,12 +417,31 @@ private:		// visitor functions
 		(Parser::FlingExpr_KwDollarFuncOf_PowContext *ctx);
 	antlrcpp::Any visitFlingExpr_IdentEtc
 		(Parser::FlingExpr_IdentEtcContext *ctx);
-	antlrcpp::Any visitFlingExpr_IdentEtc_Item
-		(Parser::FlingExpr_IdentEtc_ItemContext *ctx);
+	antlrcpp::Any visitFlingExpr_IdentEtc_FirstItem
+		(Parser::FlingExpr_IdentEtc_FirstItemContext *ctx);
+	antlrcpp::Any visitFlingExpr_IdentEtc_NonSelfItem
+		(Parser::FlingExpr_IdentEtc_NonSelfItemContext *ctx);
 	antlrcpp::Any visitFlingExpr_IdentEtc_Item_End
 		(Parser::FlingExpr_IdentEtc_Item_EndContext *ctx);
 	antlrcpp::Any visitFlingExpr_CallSubprog_PseudoOper
 		(Parser::FlingExpr_CallSubprog_PseudoOperContext *ctx);
+};
+
+class AstNodePusher final
+{
+private:		// variables
+	PtVisitor* _pt_visitor = nullptr;
+	ast::Base* _node = nullptr;
+public:		// functions
+	inline AstNodePusher(PtVisitor* s_pt_visitor, ast::Base* s_node)
+		: _pt_visitor(s_pt_visitor), _node(s_node)
+	{
+	}
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AstNodePusher);
+	inline ~AstNodePusher()
+	{
+		_pt_visitor->_push_ast(_node);
+	}
 };
 
 } // namespace fling_hdl
