@@ -410,10 +410,6 @@ private:		// visitor functions
 		(Parser::FlingExpr_IdentEtc_ItemContext *ctx);
 	antlrcpp::Any visitFlingExpr_IdentEtc_Item_End
 		(Parser::FlingExpr_IdentEtc_Item_EndContext *ctx);
-	antlrcpp::Any visitFlingExpr_CallSubprog
-		(Parser::FlingExpr_CallSubprogContext *ctx);
-	antlrcpp::Any visitFlingExpr_CallSubprog_Regular
-		(Parser::FlingExpr_CallSubprog_RegularContext *ctx);
 	antlrcpp::Any visitFlingExpr_CallSubprog_PseudoOper
 		(Parser::FlingExpr_CallSubprog_PseudoOperContext *ctx);
 };

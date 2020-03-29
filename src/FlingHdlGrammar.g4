@@ -133,7 +133,7 @@ flingDeclModule_Item:
 	flingInstModule
 
 	// This is a `proc` call
-	| flingExpr_CallSubprog
+	| flingExpr ';'
 	| flingGen
 	| flingContAssign
 	| flingImportList
@@ -242,7 +242,7 @@ flingBehav_Item:
 	| flingBehav_Item_While
 
 	// Call a `func` or a `task`
-	| flingExpr_CallSubprog
+	| flingExpr ';'
 	;
 
 
@@ -416,7 +416,8 @@ flingDeclFunc_Scope:
 	'}'
 	;
 flingDeclFunc_Item:
-	KwReturn flingExpr ';'
+	// Return statement or call a `func`
+	KwReturn? flingExpr ';'
 	| flingDeclFunc_Scope
 	| flingDeclAlias
 	| flingDeclVar
@@ -429,9 +430,6 @@ flingDeclFunc_Item:
 	| flingDeclFunc_Item_SwitchOrSwitchz
 	| flingDeclFunc_Item_For
 	| flingDeclFunc_Item_While
-
-	// Call a `func`
-	| flingExpr_CallSubprog
 	;
 
 flingDeclFunc_Item_If:
@@ -501,7 +499,7 @@ flingDeclTask_Item:
 	| flingDeclTask_Item_While
 
 	// Call a `func` or a `task`
-	| flingExpr_CallSubprog
+	| flingExpr ';'
 
 	;
 
@@ -722,7 +720,6 @@ flingExpr_Mul_Or_Div_Or_Mod:
 flingExpr_Unary:
 	flingExpr_Unary_ItemFromMajority
 	| flingExpr_Range
-	| flingExpr_CallSubprog
 	;
 
 flingExpr_Unary_ItemFromMajority:
@@ -757,7 +754,7 @@ flingExpr_Range:
 flingExpr_Range_DotDot:
 	(
 		flingExpr_Unary_ItemFromMajority
-		| flingExpr_CallSubprog
+		| flingExpr_Range_CallFunc
 	)
 	PunctRangeSeparator flingExpr
 	;
@@ -802,26 +799,11 @@ flingExpr_IdentEtc_Item_End:
 	'[' flingExpr ']' | KwDollarFirstel | KwDollarLastel
 	;
 
-flingExpr_CallSubprog:
-	flingExpr_CallSubprog_Regular
-	| flingExpr_CallSubprog_PseudoOper
-	;
-
-flingExpr_CallSubprog_Regular:
-	(flingTypenameOrModname PunctScopeAccess)?
-	(
-		flingExpr_IdentEtc_Item
-		(PunctMemberAccess flingExpr_IdentEtc_Item)*
-	)?
-	flingIdent flingInstParamList? flingInstArgList
-	;
-
-// call a function via `a plus b` instead of `a.plus(b)`
+// Call a member function via `a plus b` instead of `a.plus(b)`
 flingExpr_CallSubprog_PseudoOper:
 	(
 		flingExpr_Unary_ItemFromMajority
 		| flingExpr_Range_CallFunc
-		| flingExpr_CallSubprog_Regular
 	)
 	flingIdent flingInstParamList? flingExpr
 	;

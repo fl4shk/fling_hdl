@@ -773,16 +773,6 @@ antlrcpp::Any PtVisitor::visitFlingExpr_IdentEtc_Item_End
 {
 	return nullptr;
 }
-antlrcpp::Any PtVisitor::visitFlingExpr_CallSubprog
-	(Parser::FlingExpr_CallSubprogContext *ctx)
-{
-	return nullptr;
-}
-antlrcpp::Any PtVisitor::visitFlingExpr_CallSubprog_Regular
-	(Parser::FlingExpr_CallSubprog_RegularContext *ctx)
-{
-	return nullptr;
-}
 antlrcpp::Any PtVisitor::visitFlingExpr_CallSubprog_PseudoOper
 	(Parser::FlingExpr_CallSubprog_PseudoOperContext *ctx)
 {

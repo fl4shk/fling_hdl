@@ -991,6 +991,16 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(ExprIdentEtc_ItemEnd, Base);
 };
 
+// Call a member function via `a plus b` instead of `a.plus(b)`
+class ExprCallSubprog_PseudoOper: public ExprBinopBase
+{
+public:		// variables
+	string ident;
+	BaseUptr opt_param_list; 
+public:		// functions
+	SHARED_FUNC_CONTENTS(ExprCallSubprog_PseudoOper, ExprBinopBase);
+};
+
 #undef SHARED_FUNC_CONTENTS
 
 } // namespace ast
