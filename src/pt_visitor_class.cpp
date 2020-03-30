@@ -3,6 +3,9 @@
 
 namespace fling_hdl
 {
+
+using namespace ast;
+
 #define RAW_APPEND_CHILD_IF(to_feed, type) \
 	if (child->id() == string(#type)) \
 	{ \
@@ -20,13 +23,58 @@ namespace fling_hdl
 	{ \
 		JUST_ACCEPT(pt_node); \
 	}
+#define MULTI_ACCEPT_IF(...) \
+	EVAL(MAP(ACCEPT_IF, ELSE, __VA_ARGS__))
+
+
+#define CHECK(pt_node) \
+	if (ctx->pt_node())
+
+#define JUST_ACCEPT_AND_POP_NUM(to_set, pt_node) \
+	JUST_ACCEPT(pt_node); \
+	to_set = _pop_num();
+#define ACCEPT_AND_POP_NUM_IF(to_set, pt_node) \
+	CHECK(pt_node) \
+	{ \
+		JUST_ACCEPT_AND_POP_NUM(to_set, pt_node); \
+	}
+
+#define JUST_ACCEPT_AND_POP_STR(to_set, pt_node) \
+	JUST_ACCEPT(pt_node); \
+	to_set = _pop_str();
+#define ACCEPT_AND_POP_STR_IF(to_set, pt_node) \
+	CHECK(pt_node) \
+	{ \
+		JUST_ACCEPT_AND_POP_STR(to_set, pt_node); \
+	}
+
+#define JUST_ACCEPT_AND_POP_AST(to_set, pt_node) \
+	JUST_ACCEPT(pt_node); \
+	to_set = _pop_ast();
+#define ACCEPT_AND_POP_AST_IF(to_set, pt_node) \
+	CHECK(pt_node) \
+	{ \
+		JUST_ACCEPT_AND_POP_AST(to_set, pt_node); \
+	}
+
+#define JUST_ACCEPT_AND_POP_AST_LIST(to_set, pt_node) \
+	JUST_ACCEPT(pt_node); \
+	to_set = move(_pop_ast_list())
+#define ACCEPT_AND_POP_AST_LIST_IF(to_set, pt_node) \
+	CHECK(pt_node) \
+	{ \
+		JUST_ACCEPT_AND_POP_AST_LIST(to_set, pt_node); \
+	}
 
 #define make_ast(type) \
-	new ast::type(FilePos(_filename, ctx))
+	new type(FilePos(_filename, ctx))
 
 #define DEFER_PUSH(name, type) \
 	auto name = make_ast(type); \
 	AstNodePusher ast_node_pusher_ ## name (this, name)
+
+#define internal_err(func) \
+	_internal_err(ctx, func)
 
 // More like, we need to feed *our* childrens
 #define DECL_TYPE_TO_FEED \
@@ -78,7 +126,7 @@ int PtVisitor::run()
 	for (auto& p: _ast_etc_map)
 	{
 		_filename = p.second.filename();
-		_ast = new ast::Program(FilePos(_filename,
+		_ast = new Program(FilePos(_filename,
 			p.second.program_ctx()));
 		p.second.ast().reset(_ast);
 		p.second.program_ctx()->accept(this);
@@ -104,7 +152,7 @@ antlrcpp::Any PtVisitor::visitFlingProgram
 		#undef APPEND_CHILD_IF
 		else
 		{
-			_internal_err(ctx, "visitFlingProgram");
+			internal_err("visitFlingProgram");
 		}
 	}
 	return nullptr;
@@ -112,26 +160,24 @@ antlrcpp::Any PtVisitor::visitFlingProgram
 antlrcpp::Any PtVisitor::visitFlingProgram_Item
 	(Parser::FlingProgram_ItemContext *ctx)
 {
-	EVAL(MAP(ACCEPT_IF, ELSE,
-		flingDeclPackage,
+	MULTI_ACCEPT_IF(flingDeclPackage,
 		flingDeclModule,
 		flingDeclType,
 		flingDeclSubprog,
 		flingDeclAlias,
-		flingDeclConst))
+		flingDeclConst)
 	else
 	{
-		_internal_err(ctx, "visitFlingProgram_Item");
+		internal_err("visitFlingProgram_Item");
 	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclPackage
 	(Parser::FlingDeclPackageContext *ctx)
 {
-	JUST_ACCEPT(flingIdent);
-
 	DEFER_PUSH(node, DeclPackage);
-	node->ident = _pop_str();
+
+	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
 
 	for (const auto& p: ctx->flingDeclPackage_Item())
 	{
@@ -148,7 +194,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclPackage
 		#undef APPEND_CHILD_IF
 		else
 		{
-			_internal_err(ctx, "visitFlingDeclPackage");
+			internal_err("visitFlingDeclPackage");
 		}
 	}
 
@@ -157,16 +203,71 @@ antlrcpp::Any PtVisitor::visitFlingDeclPackage
 antlrcpp::Any PtVisitor::visitFlingDeclPackage_Item
 	(Parser::FlingDeclPackage_ItemContext *ctx)
 {
+	MULTI_ACCEPT_IF(flingDeclPackage,
+		flingDeclModule,
+		flingDeclType,
+		flingDeclSubprog,
+		flingDeclAlias,
+		flingDeclConst)
+	else
+	{
+		internal_err("visitFlingDeclPackage_Item");
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclParamList
 	(Parser::FlingDeclParamListContext *ctx)
 {
+	DEFER_PUSH(node, DeclParamList);
+
+	for (const auto& p: ctx->flingDeclParamList_Item())
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclParamList_Item
 	(Parser::FlingDeclParamList_ItemContext *ctx)
 {
+	DEFER_PUSH(node, DeclParamList_Item);
+
+	JUST_ACCEPT_AND_POP_AST(node->ident_list, flingIdentList);
+
+	CHECK(flingTypenameOrModname)
+	{
+		DeclParamList_Item::LocalVar local_var;
+
+		JUST_ACCEPT_AND_POP_AST(local_var.typename_or_modname,
+			flingTypenameOrModname);
+		ACCEPT_AND_POP_AST_LIST_IF(local_var.opt_expr_list, flingExprList);
+
+		node->post_ident_list = move(local_var);
+	}
+	else CHECK(KwType)
+	{
+		DeclParamList_Item::LocalTypename local_typename;
+
+		ACCEPT_AND_POP_AST_LIST_IF(local_typename
+			.opt_typename_or_modname_list, flingTypenameOrModnameList);
+
+		node->post_ident_list = move(local_typename);
+	}
+	else CHECK(KwModule)
+	{
+		DeclParamList_Item::LocalModname local_modname;
+
+		ACCEPT_AND_POP_AST_LIST_IF(local_modname
+			.opt_typename_or_modname_list, flingTypenameOrModnameList);
+
+		node->post_ident_list = move(local_modname);
+	}
+	else
+	{
+		internal_err("visitFlingDeclParamList_Item");
+	}
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclArgList

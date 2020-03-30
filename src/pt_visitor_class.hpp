@@ -60,6 +60,7 @@ private:		// variables
 	stack<BigNum> _num_stack;
 	
 	stack<ast::BaseSptr> _ast_stack;
+	stack<ast::BaseSptrList> _ast_list_stack;
 public:		// misc functions
 	template<typename Type>
 	static inline Type* as(ast::BaseSptr& base_sptr)
@@ -109,6 +110,17 @@ private:		// misc functions
 	{
 		auto ret = _ast_stack.top();
 		_ast_stack.pop();
+		return ret;
+	}
+
+	inline void _push_ast_list(ast::BaseSptrList&& to_push)
+	{
+		_ast_list_stack.push(move(to_push));
+	}
+	inline auto&& _pop_ast_list()
+	{
+		auto&& ret = move(_ast_list_stack.top());
+		_ast_list_stack.pop();
 		return ret;
 	}
 
