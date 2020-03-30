@@ -102,17 +102,6 @@ inline bool _conv_pt_to_enum(EnumType& ret, bool cmp, EnumType check,
 #define FOR_PT(p, pt_node) \
 	for (const auto& p: ctx->pt_node())
 
-// More like, we need to feed *our* childrens
-#define DECL_TYPE_TO_FEED \
-	DeclEnum, DeclClass, DeclMixin
-
-#define DECL_SUBPROG_TO_FEED \
-	DeclFunc, DeclTask, DeclProc
-
-#define DECL_ALIAS_TO_FEED \
-	DeclAlias_Value, DeclAlias_Type, DeclAlias_Module
-
-
 PtVisitor::PtVisitor(int s_argc, char** s_argv)
 {
 	_argc = s_argc;
@@ -166,20 +155,7 @@ antlrcpp::Any PtVisitor::visitFlingProgram
 	FOR_PT(p, flingProgram_Item)
 	{
 		p->accept(this);
-
-		auto&& child = _pop_ast();
-		#define APPEND_CHILD_IF(type) \
-			RAW_APPEND_CHILD_IF(_ast->item_list, type)
-		MULTI_APPEND_CHILD_IF(DeclPackage, DeclModule,
-			DECL_TYPE_TO_FEED,
-			DECL_SUBPROG_TO_FEED,
-			DECL_ALIAS_TO_FEED,
-			DeclConst)
-		#undef APPEND_CHILD_IF
-		else
-		{
-			internal_err(visitFlingProgram);
-		}
+		_ast->item_list.push_back(_pop_ast());
 	}
 	return nullptr;
 }
@@ -208,20 +184,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclPackage
 	FOR_PT(p, flingDeclPackage_Item)
 	{
 		p->accept(this);
-
-		auto&& child = _pop_ast();
-		#define APPEND_CHILD_IF(type) \
-			RAW_APPEND_CHILD_IF(node->item_list, type)
-		MULTI_APPEND_CHILD_IF(DeclPackage, DeclModule,
-			DECL_TYPE_TO_FEED,
-			DECL_SUBPROG_TO_FEED,
-			DECL_ALIAS_TO_FEED,
-			DeclConst)
-		#undef APPEND_CHILD_IF
-		else
-		{
-			internal_err(visitFlingDeclPackage);
-		}
+		node->item_list.push_back(_pop_ast());
 	}
 
 	return nullptr;
@@ -426,21 +389,62 @@ antlrcpp::Any PtVisitor::visitFlingInstArgList_Named_Item
 antlrcpp::Any PtVisitor::visitFlingDeclModule
 	(Parser::FlingDeclModuleContext *ctx)
 {
+	DEFER_PUSH(node, DeclModule);
+
+	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
+	ACCEPT_AND_POP_AST_IF(node->opt_param_list, flingDeclParamList);
+	JUST_ACCEPT_AND_POP_AST(node->arg_list, flingDeclArgList);
+	ACCEPT_AND_POP_AST_IF(node->opt_import_list, flingImportList);
+	JUST_ACCEPT_AND_POP_AST_LIST(node->item_list, flingDeclModule_Scope);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclModule_Scope
 	(Parser::FlingDeclModule_ScopeContext *ctx)
 {
+	DEFER_PUSH_LIST(list);
+
+	FOR_PT(P, flingDeclModule_Item)
+	{
+		p->accept(this);
+		list.push_back(_pop_ast());
+	}
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclModule_Item
 	(Parser::FlingDeclModule_ItemContext *ctx)
 {
+	MULTI_ACCEPT_IF(flingInstModule,
+		flingExpr,
+		flingGen,
+		flingContAssign,
+		flingImportList,
+
+		flingBehav,
+		flingDeclWire,
+		flingDeclVar,
+		flingDeclConst,
+
+		flingDeclType,
+		flingDeclSubprog,
+		flingDeclAlias)
+	else
+	{
+		internal_err(visitFlingDeclModule_Item);
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingInstModule
 	(Parser::FlingInstModuleContext *ctx)
 {
+	DEFER_PUSH(node, InstModule);
+
+	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
+	EVAL(MAP_PAIRS(JUST_ACCEPT_AND_POP_AST, SEMICOLON,
+		node->typename_or_modname, flingTypenameOrModname,
+		node->arg_list, flingInstArgList));
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingGen
