@@ -352,36 +352,75 @@ antlrcpp::Any PtVisitor::visitFlingInstParamList_Pos
 antlrcpp::Any PtVisitor::visitFlingInstParamList_Pos_Item
 	(Parser::FlingInstParamList_Pos_ItemContext *ctx)
 {
+	MULTI_ACCEPT_IF(flingExpr,
+		flingTypenameOrModname)
+	else
+	{
+		internal_err(visitFlingInstParamList_Pos_Item);
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingInstParamList_Named
 	(Parser::FlingInstParamList_NamedContext *ctx)
 {
+	DEFER_PUSH_LIST(list);
+
+	FOR_PT(p, flingInstParamList_Named_Item)
+	{
+		p->accept(this);
+		list.push_back(_pop_ast());
+	}
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingInstParamList_Named_Item
 	(Parser::FlingInstParamList_Named_ItemContext *ctx)
 {
+	DEFER_PUSH(node, InstParamList_Named_Item);
+
+	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
+	JUST_ACCEPT_AND_POP_AST(node->item, flingInstParamList_Pos_Item);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingInstArgList
 	(Parser::FlingInstArgListContext *ctx)
 {
+	DEFER_PUSH(node, InstArgList);
+
+	ACCEPT_AND_POP_AST_LIST_IF(node->opt_item_list, flingInstArgList_Pos)
+	else ACCEPT_AND_POP_AST_LIST_IF(node->opt_item_list,
+		flingInstArgList_Named)
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingInstArgList_Pos
 	(Parser::FlingInstArgList_PosContext *ctx)
 {
+	JUST_ACCEPT(flingExprList);
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingInstArgList_Named
 	(Parser::FlingInstArgList_NamedContext *ctx)
 {
+	DEFER_PUSH_LIST(list);
+
+	FOR_PT(p, flingInstArgList_Named_Item)
+	{
+		p->accept(this);
+		list.push_back(_pop_ast());
+	}
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingInstArgList_Named_Item
 	(Parser::FlingInstArgList_Named_ItemContext *ctx)
 {
+	DEFER_PUSH(node, InstArgList_Named_Item);
+
+	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
+	JUST_ACCEPT_AND_POP_AST(node->expr, flingExpr);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclModule
