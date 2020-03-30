@@ -30,24 +30,6 @@ using namespace ast;
 #define CHECK(pt_node) \
 	if (ctx->pt_node())
 
-#define JUST_ACCEPT_AND_POP_NUM(to_set, pt_node) \
-	JUST_ACCEPT(pt_node); \
-	to_set = _pop_num();
-#define ACCEPT_AND_POP_NUM_IF(to_set, pt_node) \
-	CHECK(pt_node) \
-	{ \
-		JUST_ACCEPT_AND_POP_NUM(to_set, pt_node); \
-	}
-
-#define JUST_ACCEPT_AND_POP_STR(to_set, pt_node) \
-	JUST_ACCEPT(pt_node); \
-	to_set = _pop_str();
-#define ACCEPT_AND_POP_STR_IF(to_set, pt_node) \
-	CHECK(pt_node) \
-	{ \
-		JUST_ACCEPT_AND_POP_STR(to_set, pt_node); \
-	}
-
 #define JUST_ACCEPT_AND_POP_AST(to_set, pt_node) \
 	JUST_ACCEPT(pt_node); \
 	to_set = _pop_ast();
@@ -66,8 +48,43 @@ using namespace ast;
 		JUST_ACCEPT_AND_POP_AST_LIST(to_set, pt_node); \
 	}
 
+#define JUST_ACCEPT_AND_POP_NUM(to_set, pt_node) \
+	JUST_ACCEPT(pt_node); \
+	to_set = _pop_num();
+#define ACCEPT_AND_POP_NUM_IF(to_set, pt_node) \
+	CHECK(pt_node) \
+	{ \
+		JUST_ACCEPT_AND_POP_NUM(to_set, pt_node); \
+	}
+
+#define JUST_ACCEPT_AND_POP_STR(to_set, pt_node) \
+	JUST_ACCEPT(pt_node); \
+	to_set = _pop_str();
+#define ACCEPT_AND_POP_STR_IF(to_set, pt_node) \
+	CHECK(pt_node) \
+	{ \
+		JUST_ACCEPT_AND_POP_STR(to_set, pt_node); \
+	}
 
 
+template<typename EnumType, typename... RemArgTypes>
+inline bool _conv_pt_to_enum(EnumType& ret, bool cmp, EnumType check,
+	RemArgTypes&&... rem_args)
+{
+	if (cmp)
+	{
+		ret = check;
+		return true;
+	}
+	else if constexpr (sizeof...(rem_args) > 0)
+	{
+		return _conv_pt_to_enum(ret, rem_args...);
+	}
+	else
+	{
+		return false;
+	}
+}
 
 #define make_ast(type) \
 	new type(FilePos(_filename, ctx))
@@ -290,26 +307,18 @@ antlrcpp::Any PtVisitor::visitFlingDeclArgList_Item
 	JUST_ACCEPT_AND_POP_AST(node->ident_list, flingIdentList);
 
 	using Kind = DeclArgList_Item::Kind;
-	CHECK(KwInput)
-	{
-		node->kind = Kind::Input;
-	}
-	else CHECK(KwOutput)
-	{
-		node->kind = Kind::Output;
-	}
-	else CHECK(KwInout)
-	{
-		node->kind = Kind::Inout;
-	}
-	else CHECK(KwInterface)
-	{
-		node->kind = Kind::Interface;
-	}
-	else
+	if (!_conv_pt_to_enum(node->kind,
+		ctx->KwInput(), Kind::Input,
+		ctx->KwOutput(), Kind::Output,
+		ctx->KwInout(), Kind::Inout,
+		ctx->KwInterface(), Kind::Interface))
 	{
 		internal_err(visitFlingDeclArgList_Item);
 	}
+	JUST_ACCEPT_AND_POP_AST(node->typename_or_modname,
+		flingTypenameOrModname);
+
+	ACCEPT_AND_POP_AST_LIST_IF(node->opt_expr_list, flingExprList);
 
 	return nullptr;
 }
