@@ -67,6 +67,8 @@ using namespace ast;
 	}
 
 
+
+
 #define make_ast(type) \
 	new type(FilePos(_filename, ctx))
 
@@ -75,7 +77,7 @@ using namespace ast;
 	AstNodePusher ast_node_pusher_ ## name (this, name)
 
 #define internal_err(func) \
-	_internal_err(ctx, func)
+	_internal_err(ctx, #func)
 
 #define FOR_PT(p, pt_node) \
 	for (const auto& p: ctx->pt_node())
@@ -156,7 +158,7 @@ antlrcpp::Any PtVisitor::visitFlingProgram
 		#undef APPEND_CHILD_IF
 		else
 		{
-			internal_err("visitFlingProgram");
+			internal_err(visitFlingProgram);
 		}
 	}
 	return nullptr;
@@ -172,7 +174,7 @@ antlrcpp::Any PtVisitor::visitFlingProgram_Item
 		flingDeclConst)
 	else
 	{
-		internal_err("visitFlingProgram_Item");
+		internal_err(visitFlingProgram_Item);
 	}
 	return nullptr;
 }
@@ -198,7 +200,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclPackage
 		#undef APPEND_CHILD_IF
 		else
 		{
-			internal_err("visitFlingDeclPackage");
+			internal_err(visitFlingDeclPackage);
 		}
 	}
 
@@ -215,7 +217,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclPackage_Item
 		flingDeclConst)
 	else
 	{
-		internal_err("visitFlingDeclPackage_Item");
+		internal_err(visitFlingDeclPackage_Item);
 	}
 	return nullptr;
 }
@@ -262,7 +264,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclParamList_Item
 	}
 	else
 	{
-		internal_err("visitFlingDeclParamList_Item");
+		internal_err(visitFlingDeclParamList_Item);
 	}
 
 	return nullptr;
@@ -283,6 +285,32 @@ antlrcpp::Any PtVisitor::visitFlingDeclArgList
 antlrcpp::Any PtVisitor::visitFlingDeclArgList_Item
 	(Parser::FlingDeclArgList_ItemContext *ctx)
 {
+	DEFER_PUSH(node, DeclArgList_Item);
+
+	JUST_ACCEPT_AND_POP_AST(node->ident_list, flingIdentList);
+
+	using Kind = DeclArgList_Item::Kind;
+	CHECK(KwInput)
+	{
+		node->kind = Kind::Input;
+	}
+	else CHECK(KwOutput)
+	{
+		node->kind = Kind::Output;
+	}
+	else CHECK(KwInout)
+	{
+		node->kind = Kind::Inout;
+	}
+	else CHECK(KwInterface)
+	{
+		node->kind = Kind::Interface;
+	}
+	else
+	{
+		internal_err(visitFlingDeclArgList_Item);
+	}
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingInstParamList
