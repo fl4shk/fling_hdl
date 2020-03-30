@@ -92,6 +92,9 @@ inline bool _conv_pt_to_enum(EnumType& ret, bool cmp, EnumType check,
 #define DEFER_PUSH(name, type) \
 	auto name = make_ast(type); \
 	AstNodePusher ast_node_pusher_ ## name (this, name)
+#define DEFER_PUSH_LIST(name) \
+	BaseSptrList name; \
+	AstNodeListPusher ast_node_list_pusher_ ## name (this, &name)
 
 #define internal_err(func) \
 	_internal_err(ctx, #func)
@@ -325,11 +328,25 @@ antlrcpp::Any PtVisitor::visitFlingDeclArgList_Item
 antlrcpp::Any PtVisitor::visitFlingInstParamList
 	(Parser::FlingInstParamListContext *ctx)
 {
+	DEFER_PUSH(node, InstParamList);
+
+	ACCEPT_AND_POP_AST_LIST_IF(node->opt_item_list, flingInstParamList_Pos)
+	else ACCEPT_AND_POP_AST_LIST_IF(node->opt_item_list,
+		flingInstParamList_Named)
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingInstParamList_Pos
 	(Parser::FlingInstParamList_PosContext *ctx)
 {
+	DEFER_PUSH_LIST(list);
+
+	FOR_PT(p, flingInstParamList_Pos_Item)
+	{
+		p->accept(this);
+		list.push_back(_pop_ast());
+	}
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingInstParamList_Pos_Item

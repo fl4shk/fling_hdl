@@ -36,10 +36,12 @@ public:		// functions
 };
 
 class AstNodePusher;
+class AstNodeListPusher;
 
 class PtVisitor final: public FlingHdlGrammarVisitor
 {
 	friend class AstNodePusher;
+	friend class AstNodeListPusher;
 public:		// typedefs
 	using ParserRuleContext = antlr4::ParserRuleContext;
 
@@ -462,6 +464,24 @@ public:		// functions
 	inline ~AstNodePusher()
 	{
 		_pt_visitor->_push_ast(_node);
+	}
+};
+
+class AstNodeListPusher final
+{
+private:		// variables
+	PtVisitor* _pt_visitor = nullptr;
+	ast::BaseSptrList* _node_list = nullptr;
+public:		// functions
+	inline AstNodeListPusher(PtVisitor* s_pt_visitor,
+		ast::BaseSptrList* s_node_list)
+		: _pt_visitor(s_pt_visitor), _node_list(s_node_list)
+	{
+	}
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AstNodeListPusher);
+	inline ~AstNodeListPusher()
+	{
+		_pt_visitor->_push_ast_list(move(*_node_list));
 	}
 };
 
