@@ -38,6 +38,10 @@ using namespace ast;
 	{ \
 		JUST_ACCEPT_AND_POP_AST(to_set, pt_node); \
 	}
+#define MULTI_JUST_ACCEPT_AND_POP_AST(...) \
+	EVAL(MAP_PAIRS(JUST_ACCEPT_AND_POP_AST, SEMICOLON, __VA_ARGS__))
+#define MULTI_ACCEPT_AND_POP_AST_IF(...) \
+	EVAL(MAP_PAIRS(ACCEPT_AND_POP_AST_IF, SEMICOLON, __VA_ARGS__))
 
 #define JUST_ACCEPT_AND_POP_AST_LIST(to_set, pt_node) \
 	JUST_ACCEPT(pt_node); \
@@ -404,7 +408,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclModule_Scope
 {
 	DEFER_PUSH_LIST(list);
 
-	FOR_PT(P, flingDeclModule_Item)
+	FOR_PT(p, flingDeclModule_Item)
 	{
 		p->accept(this);
 		list.push_back(_pop_ast());
@@ -441,9 +445,9 @@ antlrcpp::Any PtVisitor::visitFlingInstModule
 	DEFER_PUSH(node, InstModule);
 
 	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
-	EVAL(MAP_PAIRS(JUST_ACCEPT_AND_POP_AST, SEMICOLON,
-		node->typename_or_modname, flingTypenameOrModname,
-		node->arg_list, flingInstArgList));
+	MULTI_JUST_ACCEPT_AND_POP_AST
+		(node->typename_or_modname, flingTypenameOrModname,
+		node->arg_list, flingInstArgList);
 
 	return nullptr;
 }
