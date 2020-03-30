@@ -66,6 +66,7 @@ using namespace ast;
 		JUST_ACCEPT_AND_POP_AST_LIST(to_set, pt_node); \
 	}
 
+
 #define make_ast(type) \
 	new type(FilePos(_filename, ctx))
 
@@ -75,6 +76,9 @@ using namespace ast;
 
 #define internal_err(func) \
 	_internal_err(ctx, func)
+
+#define FOR_PT(p, pt_node) \
+	for (const auto& p: ctx->pt_node())
 
 // More like, we need to feed *our* childrens
 #define DECL_TYPE_TO_FEED \
@@ -137,7 +141,7 @@ int PtVisitor::run()
 antlrcpp::Any PtVisitor::visitFlingProgram
 	(Parser::FlingProgramContext *ctx)
 {
-	for (const auto& p: ctx->flingProgram_Item())
+	FOR_PT(p, flingProgram_Item)
 	{
 		p->accept(this);
 
@@ -179,7 +183,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclPackage
 
 	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
 
-	for (const auto& p: ctx->flingDeclPackage_Item())
+	FOR_PT(p, flingDeclPackage_Item)
 	{
 		p->accept(this);
 
@@ -220,7 +224,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclParamList
 {
 	DEFER_PUSH(node, DeclParamList);
 
-	for (const auto& p: ctx->flingDeclParamList_Item())
+	FOR_PT(p, flingDeclParamList_Item)
 	{
 		p->accept(this);
 		node->item_list.push_back(_pop_ast());
@@ -234,34 +238,27 @@ antlrcpp::Any PtVisitor::visitFlingDeclParamList_Item
 	DEFER_PUSH(node, DeclParamList_Item);
 
 	JUST_ACCEPT_AND_POP_AST(node->ident_list, flingIdentList);
+	using Kind = DeclParamList_Item::Kind;
 
 	CHECK(flingTypenameOrModname)
 	{
-		DeclParamList_Item::LocalVar local_var;
-
-		JUST_ACCEPT_AND_POP_AST(local_var.typename_or_modname,
+		node->kind = Kind::Var;
+		JUST_ACCEPT_AND_POP_AST(node->opt_typename_or_modname,
 			flingTypenameOrModname);
-		ACCEPT_AND_POP_AST_LIST_IF(local_var.opt_expr_list, flingExprList);
-
-		node->post_ident_list = move(local_var);
+		ACCEPT_AND_POP_AST_LIST_IF(node->opt_expr_list, flingExprList);
 	}
 	else CHECK(KwType)
 	{
-		DeclParamList_Item::LocalTypename local_typename;
+		node->kind = Kind::Typename;
 
-		ACCEPT_AND_POP_AST_LIST_IF(local_typename
-			.opt_typename_or_modname_list, flingTypenameOrModnameList);
-
-		node->post_ident_list = move(local_typename);
+		ACCEPT_AND_POP_AST_LIST_IF(node->opt_typename_or_modname_list,
+			flingTypenameOrModnameList);
 	}
 	else CHECK(KwModule)
 	{
-		DeclParamList_Item::LocalModname local_modname;
-
-		ACCEPT_AND_POP_AST_LIST_IF(local_modname
-			.opt_typename_or_modname_list, flingTypenameOrModnameList);
-
-		node->post_ident_list = move(local_modname);
+		node->kind = Kind::Modname;
+		ACCEPT_AND_POP_AST_LIST_IF(node->opt_typename_or_modname_list,
+			flingTypenameOrModnameList);
 	}
 	else
 	{
@@ -273,6 +270,14 @@ antlrcpp::Any PtVisitor::visitFlingDeclParamList_Item
 antlrcpp::Any PtVisitor::visitFlingDeclArgList
 	(Parser::FlingDeclArgListContext *ctx)
 {
+	DEFER_PUSH(node, DeclArgList);
+
+	FOR_PT(p, flingDeclArgList_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclArgList_Item

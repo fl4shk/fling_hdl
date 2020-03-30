@@ -97,37 +97,25 @@ public:		// functions
 class DeclParamList_Item: public Base
 {
 public:		// types
-	class LocalVar final
+	enum class Kind
 	{
-	public:		// variables
-		BaseSptr typename_or_modname;
-		BaseSptrList opt_expr_list;
-	public:		// functions
-		inline LocalVar() = default;
-		GEN_MOVE_ONLY_CONSTRUCTORS_AND_ASSIGN(LocalVar);
-		inline ~LocalVar() = default;
+		Var,
+		Typename,
+		Modname,
 	};
-
-	class LocalTypename
+	static string conv_kind(Kind to_conv)
 	{
-	public:		// variables
-		BaseSptrList opt_typename_or_modname_list;
-	public:		// functions
-		inline LocalTypename() = default;
-		GEN_MOVE_ONLY_CONSTRUCTORS_AND_ASSIGN(LocalTypename);
-		inline ~LocalTypename() = default;
-	};
-	class LocalModname final: public LocalTypename
-	{
-	public:		// functions
-		inline LocalModname() = default;
-		GEN_MOVE_ONLY_CONSTRUCTORS_AND_ASSIGN(LocalModname);
-		inline ~LocalModname() = default;
-	};
+		CONV_ENUM_SWITCH(CONV_KIND_CASE,
+			Var,
+			Typename,
+			Modname);
+	}
 
 public:		// variables
 	BaseSptr ident_list;
-	variant<LocalVar, LocalTypename, LocalModname> post_ident_list;
+	Kind kind;
+	BaseSptr opt_typename_or_modname;
+	BaseSptrList opt_expr_list, opt_typename_or_modname_list;
 
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclParamList_Item, Base);

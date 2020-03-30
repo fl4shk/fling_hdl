@@ -33,7 +33,8 @@ inline bool _inner_idcmp(Base* node)
 using namespace fling_hdl;
 using namespace fling_hdl::ast;
 
-#define idcmp(...) if (_inner_idcmp<__VA_ARGS__>(node))
+#define idcmp(...) \
+	if (_inner_idcmp<__VA_ARGS__>(node))
 
 // "Node as"
 #define ndas \
@@ -79,42 +80,9 @@ std::ostream& operator << (std::ostream& os, Base* node)
 		{
 			#undef TYPE
 			#define TYPE DeclParamList_Item
-			osprintout(os, wrap(ident_list), ",");
-
-			if (std::holds_alternative<DeclParamList_Item::LocalVar>
-				(ndas->post_ident_list))
-			{
-				auto& local_var = std::get<DeclParamList_Item::LocalVar>
-					(ndas->post_ident_list);
-
-				osprintout(os, strappcom2("kind(local_var)",
-					sconcat("typename_or_modname(", 
-						local_var.typename_or_modname, ")"),
-					sconcat("opt_expr_list(",
-						local_var.opt_expr_list, ")")));
-			}
-			else if (std::holds_alternative<DeclParamList_Item
-				::LocalTypename>(ndas->post_ident_list))
-			{
-				auto& local_typename = std::get<DeclParamList_Item
-					::LocalTypename>(ndas->post_ident_list);
-
-				osprintout(os, strappcom2("kind(typename)",
-					sconcat("opt_typename_or_modname_list(",
-						local_typename.opt_typename_or_modname_list,
-						")")));
-			}
-			else if (std::holds_alternative<DeclParamList_Item
-				::LocalModname>(ndas->post_ident_list))
-			{
-				auto& local_modname = std::get<DeclParamList_Item
-					::LocalModname>(ndas->post_ident_list);
-
-				osprintout(os, strappcom2("kind(modname)",
-					sconcat("opt_typename_or_modname_list(",
-						local_modname.opt_typename_or_modname_list,
-						")")));
-			}
+			osprintout(os, strappcom2(wrap(ident_list), wrap_conv(kind),
+				wrap(opt_typename_or_modname), wrap(opt_expr_list),
+				wrap(opt_typename_or_modname_list)));
 		}
 		else idcmp(DeclArgList)
 		{
