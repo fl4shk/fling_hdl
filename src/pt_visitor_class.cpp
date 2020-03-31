@@ -525,7 +525,7 @@ antlrcpp::Any PtVisitor::visitFlingGen_Switch
 	FOR_PT(p, flingGen_Switch_Case)
 	{
 		p->accept(this);
-		node->case_list.push_back(_pop_ast());
+		node->opt_case_list.push_back(_pop_ast());
 	}
 
 	ACCEPT_AND_POP_AST_IF(node->opt_default, flingGen_Switch_Default);
@@ -709,56 +709,126 @@ antlrcpp::Any PtVisitor::visitFlingBehav_Item_SwitchOrSwitchz
 
 	JUST_ACCEPT_AND_POP_AST(node->cond, flingExpr);
 
+	FOR_PT(p, flingBehav_Item_SwitchOrSwitchz_Case)
+	{
+		p->accept(this);
+		node->opt_case_list.push_back(_pop_ast());
+	}
+
+	ACCEPT_AND_POP_AST_IF(node->opt_default,
+		flingBehav_Item_SwitchOrSwitchz_Default);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingBehav_Item_SwitchOrSwitchz_Default
 	(Parser::FlingBehav_Item_SwitchOrSwitchz_DefaultContext *ctx)
 {
+	DEFER_PUSH(node, SwitchOrSwitchz_Default);
+
+	JUST_ACCEPT_AND_POP_AST(node->scope, flingBehav_Scope);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingBehav_Item_SwitchOrSwitchz_Case
 	(Parser::FlingBehav_Item_SwitchOrSwitchz_CaseContext *ctx)
 {
+	DEFER_PUSH(node, SwitchOrSwitchz_Case);
+
+	JUST_ACCEPT_AND_POP_AST_LIST(node->expr_list, flingExprList);
+	JUST_ACCEPT_AND_POP_AST(node->scope, flingBehav_Scope);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingBehav_Item_For
 	(Parser::FlingBehav_Item_ForContext *ctx)
 {
+	DEFER_PUSH(node, For);
+
+	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
+	JUST_ACCEPT_AND_POP_AST
+		(node->expr, flingExpr,
+		node->scope, flingBehav_Scope);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingBehav_Item_While
 	(Parser::FlingBehav_Item_WhileContext *ctx)
 {
+	DEFER_PUSH(node, While);
+
+	JUST_ACCEPT_AND_POP_AST
+		(node->expr, flingExpr,
+		node->scope, flingBehav_Scope);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingBehav_Item_NonBlkAssign
 	(Parser::FlingBehav_Item_NonBlkAssignContext *ctx)
 {
+	DEFER_PUSH(node, NonBlkAssign);
+
+	_vec_just_accept_and_pop_ast(ctx->flingExpr(), node->left,
+		node->right);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingBehav_Item_BlkAssign
 	(Parser::FlingBehav_Item_BlkAssignContext *ctx)
 {
+	DEFER_PUSH(node, BlkAssign);
+
+	_vec_just_accept_and_pop_ast(ctx->flingExpr(), node->left,
+		node->right);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclWire
 	(Parser::FlingDeclWireContext *ctx)
 {
+	DEFER_PUSH(node, DeclWire);
+
+	JUST_ACCEPT_AND_POP_AST
+		(node->ident_list, flingIdentList,
+		node->typename_or_modname, flingTypenameOrModname);
+	ACCEPT_AND_POP_AST_LIST_IF(node->opt_expr_list, flingExprList);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclVar
 	(Parser::FlingDeclVarContext *ctx)
 {
+	DEFER_PUSH(node, DeclVar);
+
+	JUST_ACCEPT_AND_POP_AST
+		(node->ident_list, flingIdentList,
+		node->typename_or_modname, flingTypenameOrModname);
+	ACCEPT_AND_POP_AST_LIST_IF(node->opt_expr_list, flingExprList);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclConst
 	(Parser::FlingDeclConstContext *ctx)
 {
+	DEFER_PUSH(node, DeclConst);
+
+	JUST_ACCEPT_AND_POP_AST
+		(node->ident_list, flingIdentList,
+		node->typename_or_modname, flingTypenameOrModname);
+	JUST_ACCEPT_AND_POP_AST_LIST(node->expr_list, flingExprList);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclType
 	(Parser::FlingDeclTypeContext *ctx)
 {
+	ACCEPT_IF
+		(flingDeclEnum,
+		flingDeclClass,
+		flingDeclMixin)
+	else
+	{
+		internal_err(visitFlingDeclType);
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclEnum

@@ -158,7 +158,7 @@ std::ostream& operator << (std::ostream& os, Base* node)
 		{
 			#undef TYPE
 			#define TYPE GenSwitch
-			osprintout(os, strappcom2(wrap(cond), wrap(case_list),
+			osprintout(os, strappcom2(wrap(cond), wrap(opt_case_list),
 				wrap(opt_default)));
 		}
 		else idcmp(GenSwitch_Case)
@@ -227,7 +227,7 @@ std::ostream& operator << (std::ostream& os, Base* node)
 		{
 			#undef TYPE
 			#define TYPE Switch
-			osprintout(os, strappcom2(wrap(cond), wrap(case_list),
+			osprintout(os, strappcom2(wrap(cond), wrap(opt_case_list),
 				wrap(opt_default)));
 		}
 		else idcmp(SwitchOrSwitchz_Case)

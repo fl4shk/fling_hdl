@@ -237,7 +237,7 @@ class GenSwitch: public Base
 {
 public:		// variables
 	BaseSptr cond;
-	BaseSptrList case_list;
+	BaseSptrList opt_case_list;
 	BaseSptr opt_default;
 public:		// functions
 	SHARED_FUNC_CONTENTS(GenSwitch, Base);
