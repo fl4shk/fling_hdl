@@ -133,6 +133,30 @@ private:		// misc functions
 			"Internal error."));
 	}
 
+	template<typename PtNodeVecType, typename OutputType,
+		typename...  RemOutputTypes>
+	void _inner_vec_just_accept_and_pop_ast(size_t i,
+		PtNodeVecType&& pt_node_vec, OutputType& first_output,
+		RemOutputTypes&&... rem_outputs)
+	{
+		pt_node_vec.at(i)->accept(this);
+		first_output = _pop_ast();
+
+		if constexpr (sizeof...(rem_outputs) > 0)
+		{
+			_inner_vec_just_accept_and_pop_ast(i + 1, move(pt_node_vec),
+				rem_outputs...);
+		}
+	}
+	template<typename PtNodeVecType, typename OutputType,
+		typename...  RemOutputTypes>
+	void _vec_just_accept_and_pop_ast(PtNodeVecType&& pt_node_vec,
+		OutputType& first_output, RemOutputTypes&&... rem_outputs)
+	{
+		_inner_vec_just_accept_and_pop_ast(0, move(pt_node_vec),
+			first_output, rem_outputs...);
+	}
+
 public:		// functions
 	PtVisitor(int s_argc, char** s_argv);
 	virtual ~PtVisitor();

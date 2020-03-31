@@ -165,7 +165,7 @@ std::ostream& operator << (std::ostream& os, Base* node)
 		{
 			#undef TYPE
 			#define TYPE GenSwitch_Case
-			osprintout(os, strappcom2(wrap(expr), wrap(item_list)));
+			osprintout(os, strappcom2(wrap(expr_list), wrap(item_list)));
 		}
 		else idcmp(GenSwitch_Default)
 		{
@@ -189,19 +189,13 @@ std::ostream& operator << (std::ostream& os, Base* node)
 		{
 			#undef TYPE
 			#define TYPE Behav
-			osprintout(os, strappcom2(wrap_conv(kind),
-				wrap(behav_seq_edge_list), wrap(scope)));
+			osprintout(os, strappcom2(wrap_conv(kind), wrap(opt_edge_list),
+				wrap(scope)));
 		}
-		else idcmp(Behav_SeqEdgeList)
+		else idcmp(Behav_SeqEdgeListItem)
 		{
 			#undef TYPE
-			#define TYPE Behav_SeqEdgeList
-			osprintout(os, wrap(item_list));
-		}
-		else idcmp(Behav_SeqEdgeList_Item)
-		{
-			#undef TYPE
-			#define TYPE Behav_SeqEdgeList_Item
+			#define TYPE Behav_SeqEdgeListItem
 			osprintout(os, strappcom2(wrap_conv(kind), wrap(expr)));
 		}
 		else idcmp(Behav_Scope)
@@ -240,7 +234,7 @@ std::ostream& operator << (std::ostream& os, Base* node)
 		{
 			#undef TYPE
 			#define TYPE SwitchOrSwitchz_Case
-			osprintout(os, strappcom2(wrap(expr), wrap(scope)));
+			osprintout(os, strappcom2(wrap(expr_list), wrap(scope)));
 		}
 		else idcmp(SwitchOrSwitchz_Default)
 		{

@@ -245,8 +245,7 @@ public:		// functions
 class GenSwitch_Case: public Base
 {
 public:		// variables
-	BaseSptr expr;
-	BaseSptrList item_list;
+	BaseSptrList expr_list, item_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(GenSwitch_Case, Base);
 };
@@ -294,21 +293,13 @@ public:		// types
 	}
 public:		// variables
 	Kind kind;
-	BaseSptr behav_seq_edge_list, scope;
+	BaseSptrList opt_edge_list;
+	BaseSptr scope;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Behav, Base);
 };
 
-
-class Behav_SeqEdgeList: public Base
-{
-public:		// variables
-	BaseSptrList item_list;
-public:		// functions
-	SHARED_FUNC_CONTENTS(Behav_SeqEdgeList, Base);
-};
-
-class Behav_SeqEdgeList_Item: public Base
+class Behav_SeqEdgeListItem: public Base
 {
 public:		// types
 	enum class Kind
@@ -326,9 +317,10 @@ public:		// variables
 	Kind kind;
 	BaseSptr expr;
 public:		// functions
-	SHARED_FUNC_CONTENTS(Behav_SeqEdgeList_Item, Base);
+	SHARED_FUNC_CONTENTS(Behav_SeqEdgeListItem, Base);
 };
 
+// This is used for behavioral blocks, functions, and tasks
 class Behav_Scope: public Base
 {
 public:		// variables
@@ -374,7 +366,8 @@ public:		// functions
 class SwitchOrSwitchz_Case: public Base
 {
 public:		// variables
-	BaseSptr expr, scope;
+	BaseSptrList expr_list;
+	BaseSptr scope;
 public:		// functions
 	SHARED_FUNC_CONTENTS(SwitchOrSwitchz_Case, Base);
 };
