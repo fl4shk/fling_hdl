@@ -35,13 +35,13 @@ public:		// functions
 	GEN_GETTERS_BY_CON_REF_AND_REF(ast);
 };
 
-class AstNodePusher;
-class AstNodeListPusher;
+class AstNodeDeferredPusher;
+class AstNodeListDeferredPusher;
 
 class PtVisitor final: public FlingHdlGrammarVisitor
 {
-	friend class AstNodePusher;
-	friend class AstNodeListPusher;
+	friend class AstNodeDeferredPusher;
+	friend class AstNodeListDeferredPusher;
 public:		// typedefs
 	using ParserRuleContext = antlr4::ParserRuleContext;
 
@@ -474,36 +474,36 @@ private:		// visitor functions
 		(Parser::FlingExpr_CallSubprog_PseudoOperContext *ctx);
 };
 
-class AstNodePusher final
+class AstNodeDeferredPusher final
 {
 private:		// variables
 	PtVisitor* _pt_visitor = nullptr;
 	ast::Base* _node = nullptr;
 public:		// functions
-	inline AstNodePusher(PtVisitor* s_pt_visitor, ast::Base* s_node)
+	inline AstNodeDeferredPusher(PtVisitor* s_pt_visitor, ast::Base* s_node)
 		: _pt_visitor(s_pt_visitor), _node(s_node)
 	{
 	}
-	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AstNodePusher);
-	inline ~AstNodePusher()
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AstNodeDeferredPusher);
+	inline ~AstNodeDeferredPusher()
 	{
 		_pt_visitor->_push_ast(_node);
 	}
 };
 
-class AstNodeListPusher final
+class AstNodeListDeferredPusher final
 {
 private:		// variables
 	PtVisitor* _pt_visitor = nullptr;
 	ast::BaseSptrList* _node_list = nullptr;
 public:		// functions
-	inline AstNodeListPusher(PtVisitor* s_pt_visitor,
+	inline AstNodeListDeferredPusher(PtVisitor* s_pt_visitor,
 		ast::BaseSptrList* s_node_list)
 		: _pt_visitor(s_pt_visitor), _node_list(s_node_list)
 	{
 	}
-	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AstNodeListPusher);
-	inline ~AstNodeListPusher()
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AstNodeListDeferredPusher);
+	inline ~AstNodeListDeferredPusher()
 	{
 		_pt_visitor->_push_ast_list(move(*_node_list));
 	}

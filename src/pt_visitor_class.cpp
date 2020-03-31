@@ -18,57 +18,71 @@ using namespace ast;
 #define JUST_ACCEPT(pt_node) \
 	ctx->pt_node()->accept(this)
 
-#define ACCEPT_IF(pt_node) \
+#define _INNER_ACCEPT_IF(pt_node) \
 	if (ctx->pt_node()) \
 	{ \
 		JUST_ACCEPT(pt_node); \
 	}
-#define MULTI_ACCEPT_IF(...) \
-	EVAL(MAP(ACCEPT_IF, ELSE, __VA_ARGS__))
+#define ACCEPT_IF(...) \
+	EVAL(MAP(_INNER_ACCEPT_IF, ELSE, __VA_ARGS__))
 
 
 #define CHECK(pt_node) \
 	if (ctx->pt_node())
 
-#define JUST_ACCEPT_AND_POP_AST(to_set, pt_node) \
+#define _INNER_JUST_ACCEPT_AND_POP_AST(to_set, pt_node) \
 	JUST_ACCEPT(pt_node); \
 	to_set = _pop_ast();
-#define ACCEPT_AND_POP_AST_IF(to_set, pt_node) \
+#define _INNER_ACCEPT_AND_POP_AST_IF(to_set, pt_node) \
 	CHECK(pt_node) \
 	{ \
-		JUST_ACCEPT_AND_POP_AST(to_set, pt_node); \
+		_INNER_JUST_ACCEPT_AND_POP_AST(to_set, pt_node); \
 	}
-#define MULTI_JUST_ACCEPT_AND_POP_AST(...) \
-	EVAL(MAP_PAIRS(JUST_ACCEPT_AND_POP_AST, SEMICOLON, __VA_ARGS__))
-#define MULTI_ACCEPT_AND_POP_AST_IF(...) \
-	EVAL(MAP_PAIRS(ACCEPT_AND_POP_AST_IF, SEMICOLON, __VA_ARGS__))
+#define JUST_ACCEPT_AND_POP_AST(...) \
+	EVAL(MAP_PAIRS(_INNER_JUST_ACCEPT_AND_POP_AST, SEMICOLON, __VA_ARGS__))
+#define ACCEPT_AND_POP_AST_IF(...) \
+	EVAL(MAP_PAIRS(_INNER_ACCEPT_AND_POP_AST_IF, SEMICOLON, __VA_ARGS__))
 
-#define JUST_ACCEPT_AND_POP_AST_LIST(to_set, pt_node) \
+#define _INNER_JUST_ACCEPT_AND_POP_AST_LIST(to_set, pt_node) \
 	JUST_ACCEPT(pt_node); \
 	to_set = move(_pop_ast_list())
-#define ACCEPT_AND_POP_AST_LIST_IF(to_set, pt_node) \
+#define _INNER_ACCEPT_AND_POP_AST_LIST_IF(to_set, pt_node) \
 	CHECK(pt_node) \
 	{ \
-		JUST_ACCEPT_AND_POP_AST_LIST(to_set, pt_node); \
+		_INNER_JUST_ACCEPT_AND_POP_AST_LIST(to_set, pt_node); \
 	}
+#define JUST_ACCEPT_AND_POP_AST_LIST(...) \
+	EVAL(MAP_PAIRS(_INNER_JUST_ACCEPT_AND_POP_AST_LIST, SEMICOLON, \
+		__VA_ARGS__))
+#define ACCEPT_AND_POP_AST_LIST_IF(...) \
+	EVAL(MAP_PAIRS(_INNER_ACCEPT_AND_POP_AST_LIST_IF, SEMICOLON, \
+		__VA_ARGS__))
 
-#define JUST_ACCEPT_AND_POP_NUM(to_set, pt_node) \
+#define _INNER_JUST_ACCEPT_AND_POP_NUM(to_set, pt_node) \
 	JUST_ACCEPT(pt_node); \
 	to_set = _pop_num();
-#define ACCEPT_AND_POP_NUM_IF(to_set, pt_node) \
+#define _INNER_ACCEPT_AND_POP_NUM_IF(to_set, pt_node) \
 	CHECK(pt_node) \
 	{ \
-		JUST_ACCEPT_AND_POP_NUM(to_set, pt_node); \
+		_INNER_JUST_ACCEPT_AND_POP_NUM(to_set, pt_node); \
 	}
+#define JUST_ACCEPT_AND_POP_NUM(...) \
+	EVAL(MAP_PAIRS(_INNER_JUST_ACCEPT_AND_POP_NUM, SEMICOLON, __VA_ARGS__))
+#define ACCEPT_AND_POP_NUM_IF(...) \
+	EVAL(MAP_PAIRS(_INNER_ACCEPT_AND_POP_NUM_IF, SEMICOLON, __VA_ARGS__))
 
-#define JUST_ACCEPT_AND_POP_STR(to_set, pt_node) \
+#define _INNER_JUST_ACCEPT_AND_POP_STR(to_set, pt_node) \
 	JUST_ACCEPT(pt_node); \
 	to_set = _pop_str();
-#define ACCEPT_AND_POP_STR_IF(to_set, pt_node) \
+#define _INNER_ACCEPT_AND_POP_STR_IF(to_set, pt_node) \
 	CHECK(pt_node) \
 	{ \
-		JUST_ACCEPT_AND_POP_STR(to_set, pt_node); \
+		_INNER_JUST_ACCEPT_AND_POP_STR(to_set, pt_node); \
 	}
+#define JUST_ACCEPT_AND_POP_STR(...) \
+	EVAL(MAP_PAIRS(_INNER_JUST_ACCEPT_AND_POP_STR, SEMICOLON, __VA_ARGS__))
+#define ACCEPT_AND_POP_STR_IF(...) \
+	EVAL(MAP_PAIRS(_INNER_ACCEPT_AND_POP_STR_IF, SEMICOLON, __VA_ARGS__))
 
 
 template<typename EnumType, typename... RemArgTypes>
@@ -95,10 +109,10 @@ inline bool _conv_pt_to_enum(EnumType& ret, bool cmp, EnumType check,
 
 #define DEFER_PUSH(name, type) \
 	auto name = make_ast(type); \
-	AstNodePusher ast_node_pusher_ ## name (this, name)
+	AstNodeDeferredPusher deferred_pusher_ ## name (this, name)
 #define DEFER_PUSH_LIST(name) \
 	BaseSptrList name; \
-	AstNodeListPusher ast_node_list_pusher_ ## name (this, &name)
+	AstNodeListDeferredPusher deferred_pusher_ ## name (this, &name)
 
 #define internal_err(func) \
 	_internal_err(ctx, #func)
@@ -166,7 +180,8 @@ antlrcpp::Any PtVisitor::visitFlingProgram
 antlrcpp::Any PtVisitor::visitFlingProgram_Item
 	(Parser::FlingProgram_ItemContext *ctx)
 {
-	MULTI_ACCEPT_IF(flingDeclPackage,
+	ACCEPT_IF
+		(flingDeclPackage,
 		flingDeclModule,
 		flingDeclType,
 		flingDeclSubprog,
@@ -196,7 +211,8 @@ antlrcpp::Any PtVisitor::visitFlingDeclPackage
 antlrcpp::Any PtVisitor::visitFlingDeclPackage_Item
 	(Parser::FlingDeclPackage_ItemContext *ctx)
 {
-	MULTI_ACCEPT_IF(flingDeclPackage,
+	ACCEPT_IF
+		(flingDeclPackage,
 		flingDeclModule,
 		flingDeclType,
 		flingDeclSubprog,
@@ -319,7 +335,8 @@ antlrcpp::Any PtVisitor::visitFlingInstParamList_Pos
 antlrcpp::Any PtVisitor::visitFlingInstParamList_Pos_Item
 	(Parser::FlingInstParamList_Pos_ItemContext *ctx)
 {
-	MULTI_ACCEPT_IF(flingExpr,
+	ACCEPT_IF
+		(flingExpr,
 		flingTypenameOrModname)
 	else
 	{
@@ -419,7 +436,8 @@ antlrcpp::Any PtVisitor::visitFlingDeclModule_Scope
 antlrcpp::Any PtVisitor::visitFlingDeclModule_Item
 	(Parser::FlingDeclModule_ItemContext *ctx)
 {
-	MULTI_ACCEPT_IF(flingInstModule,
+	ACCEPT_IF
+		(flingInstModule,
 		flingExpr,
 		flingGen,
 		flingContAssign,
@@ -445,7 +463,7 @@ antlrcpp::Any PtVisitor::visitFlingInstModule
 	DEFER_PUSH(node, InstModule);
 
 	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
-	MULTI_JUST_ACCEPT_AND_POP_AST
+	JUST_ACCEPT_AND_POP_AST
 		(node->typename_or_modname, flingTypenameOrModname,
 		node->arg_list, flingInstArgList);
 
@@ -454,7 +472,8 @@ antlrcpp::Any PtVisitor::visitFlingInstModule
 antlrcpp::Any PtVisitor::visitFlingGen
 	(Parser::FlingGenContext *ctx)
 {
-	MULTI_ACCEPT_IF(flingGen_If,
+	ACCEPT_IF
+		(flingGen_If,
 		flingGen_Switch,
 		flingGen_For)
 	else
@@ -524,18 +543,15 @@ antlrcpp::Any PtVisitor::visitFlingGen_Switch_Case
 	(Parser::FlingGen_Switch_CaseContext *ctx)
 {
 	DEFER_PUSH(node, GenSwitch_Case);
-	EVAL(MAP_PAIRS(JUST_ACCEPT_AND_POP_AST_LIST, SEMICOLON,
-		node->expr_list, flingExprList,
-		node->item_list, flingDeclModule_Scope));
+	JUST_ACCEPT_AND_POP_AST_LIST
+		(node->expr_list, flingExprList,
+		node->item_list, flingDeclModule_Scope);
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingGen_For
 	(Parser::FlingGen_ForContext *ctx)
 {
 	DEFER_PUSH(node, GenFor);
-	//EVAL(MAP_PAIRS(JUST_ACCEPT_AND_POP_STR, SEMICOLON,
-	//	node->label, flingIdent,
-	//	node->ident, flingIdent));
 	ctx->flingIdent().at(0)->accept(this);
 	node->label = _pop_str();
 
@@ -617,7 +633,8 @@ antlrcpp::Any PtVisitor::visitFlingBehav_Scope
 antlrcpp::Any PtVisitor::visitFlingBehav_Item
 	(Parser::FlingBehav_ItemContext *ctx)
 {
-	MULTI_ACCEPT_IF(flingBehav_Scope,
+	ACCEPT_IF
+		(flingBehav_Scope,
 		flingDeclAlias,
 		flingDeclVar,
 		flingDeclConst,
@@ -659,16 +676,39 @@ antlrcpp::Any PtVisitor::visitFlingBehav_Item_If
 antlrcpp::Any PtVisitor::visitFlingBehav_Item_If_Elif
 	(Parser::FlingBehav_Item_If_ElifContext *ctx)
 {
+	DEFER_PUSH(node, If_Elif);
+
+	JUST_ACCEPT_AND_POP_AST
+		(node->cond, flingExpr,
+		node->scope, flingBehav_Scope);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingBehav_Item_If_Else
 	(Parser::FlingBehav_Item_If_ElseContext *ctx)
 {
+	DEFER_PUSH(node, If_Else);
+
+	JUST_ACCEPT_AND_POP_AST(node->scope, flingBehav_Scope);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingBehav_Item_SwitchOrSwitchz
 	(Parser::FlingBehav_Item_SwitchOrSwitchzContext *ctx)
 {
+	Switch* node;
+	CHECK(KwSwitch)
+	{
+		node = make_ast(Switch);
+	}
+	else // CHECK(KwSwitchz)
+	{
+		node = make_ast(Switchz);
+	}
+	AstNodeDeferredPusher deferred_pusher(this, node);
+
+	JUST_ACCEPT_AND_POP_AST(node->cond, flingExpr);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingBehav_Item_SwitchOrSwitchz_Default
