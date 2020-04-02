@@ -287,47 +287,42 @@ std::ostream& operator << (std::ostream& os, Base* node)
 			#undef TYPE
 			#define TYPE DeclMixin
 			osprintout(os, strappcom2(wrap(is_base), wrap(ident),
-				wrap(param_list), wrap(opt_extends), wrap(item_list)));
+				wrap(opt_param_list), wrap(opt_extends), wrap(item_list)));
 		}
 		else idcmp(DeclClass)
 		{
 			#undef TYPE
 			#define TYPE DeclClass
 			osprintout(os, strappcom2(wrap(is_base), wrap(ident),
-				wrap(param_list), wrap(opt_extends), wrap(item_list),
+				wrap(opt_param_list), wrap(opt_extends), wrap(item_list),
 				wrap(is_signed), wrap(is_packed)));
+		}
+		else idcmp(DeclClsOrMxn_ItemBase)
+		{
+			#undef TYPE
+			#define TYPE DeclClsOrMxn_ItemBase
+			osprintout(os, strappcom2(wrap_conv_2(acc_spec)));
 		}
 		else idcmp(DeclClass_DeclVar)
 		{
 			#undef TYPE
 			#define TYPE DeclClass_DeclVar
-			osprintout(os, strappcom2(wrap(ident_list),
-				wrap(typename_or_modname), wrap(opt_expr_list),
-				wrap_conv_2(acc_spec), wrap(is_static)));
+			osprintout(os, strappcom2(wrap_conv_2(acc_spec),
+				wrap(is_static), wrap(decl_var)));
 		}
-		else idcmp(DeclClsOrMxn_DeclEnum)
+		else idcmp(DeclClsOrMxn_DeclType)
 		{
 			#undef TYPE
-			#define TYPE DeclClsOrMxn_DeclEnum
-			osprintout(os, strappcom2(wrap(ident),
-				wrap(opt_typename_or_modname), wrap(ident_list),
-				wrap_conv_2(acc_spec)));
+			#define TYPE DeclClsOrMxn_DeclType
+			osprintout(os, strappcom2(wrap_conv_2(acc_spec),
+				wrap(decl_type)));
 		}
-		else idcmp(DeclClsOrMxn_DeclClass)
+		else idcmp(DeclClsOrMxn_DeclAliasOrConst)
 		{
 			#undef TYPE
-			#define TYPE DeclClsOrMxn_DeclClass
-			osprintout(os, strappcom2(wrap(is_base), wrap(ident),
-				wrap(param_list), wrap(opt_extends), wrap(item_list),
-				wrap(is_signed), wrap(is_packed), wrap_conv_2(acc_spec)));
-		}
-		else idcmp(DeclClsOrMxn_DeclMixin)
-		{
-			#undef TYPE
-			#define TYPE DeclClsOrMxn_DeclMixin
-			osprintout(os, strappcom2(wrap(is_base), wrap(ident),
-				wrap(param_list), wrap(opt_extends), wrap(item_list),
-				wrap_conv_2(acc_spec)));
+			#define TYPE DeclClsOrMxn_DeclAliasOrConst
+			osprintout(os, strappcom2(wrap_conv_2(acc_spec),
+				wrap(is_static), wrap(decl_alias_or_const)));
 		}
 		else idcmp(DeclClsOrMxn_DeclSubprogFullDefn)
 		{
@@ -357,7 +352,7 @@ std::ostream& operator << (std::ostream& os, Base* node)
 			osprintout(os, strappcom2(wrap(ident), wrap(opt_param_list),
 				wrap(arg_list), wrap(return_typename)));
 		}
-		else idcmp(DeclFunc_Return, DeclFunc_Expr)
+		else idcmp(DeclFunc_Return)
 		{
 			#undef TYPE
 			#define TYPE DeclFunc_Return

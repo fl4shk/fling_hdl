@@ -442,8 +442,8 @@ class DeclMixin: public Base
 public:		// variables
 	bool is_base = false;
 	string ident;
-	BaseSptr param_list, opt_extends;
-	BaseSptrList item_list;
+	BaseSptr opt_param_list;
+	BaseSptrList opt_extends, item_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclMixin, Base);
 };
@@ -472,39 +472,43 @@ inline string conv_acc_spec(AccSpec to_conv)
 	#undef CONV_ACC_SPEC_CASE
 }
 
-class DeclClass_DeclVar: public DeclVar
+class DeclClsOrMxn_ItemBase: public Base
 {
 public:		// variables
 	AccSpec acc_spec = AccSpec::Pub;
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclClsOrMxn_ItemBase, Base);
+};
+
+class DeclClass_DeclVar: public DeclClsOrMxn_ItemBase
+{
+public:		// variables
 	bool is_static = false;
+	BaseSptr decl_var;
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclClass_DeclVar, DeclVar);
+	SHARED_FUNC_CONTENTS(DeclClass_DeclVar, DeclClsOrMxn_ItemBase);
 };
 
 
-class DeclClsOrMxn_DeclEnum: public DeclEnum
+class DeclClsOrMxn_DeclType: public DeclClsOrMxn_ItemBase
 {
 public:		// variables
-	AccSpec acc_spec = AccSpec::Pub;
+	BaseSptr decl_type;
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclClsOrMxn_DeclEnum, DeclEnum);
-};
-class DeclClsOrMxn_DeclClass: public DeclClass
-{
-public:		// variables
-	AccSpec acc_spec = AccSpec::Pub;
-public:		// functions
-	SHARED_FUNC_CONTENTS(DeclClsOrMxn_DeclClass, DeclClass);
-};
-class DeclClsOrMxn_DeclMixin: public DeclMixin
-{
-public:		// variables
-	AccSpec acc_spec = AccSpec::Pub;
-public:		// functions
-	SHARED_FUNC_CONTENTS(DeclClsOrMxn_DeclMixin, DeclMixin);
+	SHARED_FUNC_CONTENTS(DeclClsOrMxn_DeclType, DeclClsOrMxn_ItemBase);
 };
 
-class DeclClsOrMxn_DeclSubprogFullDefn: public Base
+class DeclClsOrMxn_DeclAliasOrConst: public DeclClsOrMxn_ItemBase
+{
+public:		// variables
+	bool is_static = false;
+	BaseSptr decl_alias_or_const;
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclClsOrMxn_DeclAliasOrConst,
+		DeclClsOrMxn_ItemBase);
+};
+
+class DeclClsOrMxn_DeclSubprogFullDefn: public DeclClsOrMxn_ItemBase
 {
 public:		// types
 	enum class Kind
@@ -521,15 +525,15 @@ public:		// types
 			Proc);
 	}
 public:		// variables
-	AccSpec acc_spec = AccSpec::Pub;
 	Kind kind;
 	bool is_virtual = false, is_static = false, is_const = false;
 	BaseSptr subprog;
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclClsOrMxn_DeclSubprogFullDefn, Base);
+	SHARED_FUNC_CONTENTS(DeclClsOrMxn_DeclSubprogFullDefn,
+		DeclClsOrMxn_ItemBase);
 };
 
-class DeclClsOrMxn_DeclSubprogAbstract: public Base
+class DeclClsOrMxn_DeclSubprogAbstract: public DeclClsOrMxn_ItemBase
 {
 public:		// types
 	using Kind = typename DeclClsOrMxn_DeclSubprogFullDefn::Kind;
@@ -538,12 +542,12 @@ public:		// types
 		return DeclClsOrMxn_DeclSubprogFullDefn::conv_kind(to_conv);
 	}
 public:		// variables
-	AccSpec acc_spec = AccSpec::Pub;
 	Kind kind;
 	bool is_const = false;
 	BaseSptr header;
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclClsOrMxn_DeclSubprogAbstract, Base);
+	SHARED_FUNC_CONTENTS(DeclClsOrMxn_DeclSubprogAbstract,
+		DeclClsOrMxn_ItemBase);
 };
 
 class DeclFunc: public Base
@@ -570,12 +574,6 @@ public:		// variables
 	BaseSptr expr;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclFunc_Return, Base);
-};
-
-class DeclFunc_Expr: public DeclFunc_Return
-{
-public:		// functions
-	SHARED_FUNC_CONTENTS(DeclFunc_Expr, DeclFunc_Return);
 };
 
 class DeclTask: public DeclFunc

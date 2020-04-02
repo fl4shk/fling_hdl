@@ -6,8 +6,11 @@
 #include "misc_includes.hpp"
 #include "ast_node_classes.hpp"
 
+#include "list_of_ast_node_classes_define.hpp"
+
 namespace fling_hdl
 {
+
 
 class AstVisitor
 {
@@ -15,6 +18,12 @@ public:		// functions
 	inline AstVisitor() = default;
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AstVisitor);
 	virtual inline ~AstVisitor() = default;
+
+	#define GEN_VISIT_FUNC(name) \
+		virtual void visit##name(ast::name* node) = 0;
+	LIST_OF_AST_NODE_CLASSES(GEN_VISIT_FUNC)
+	#undef GEN_VISIT_FUNC
+
 
 };
 

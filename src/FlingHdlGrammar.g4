@@ -327,7 +327,7 @@ flingDeclEnum:
 
 //--------
 flingDeclClass:
-	KwBase? KwClass (KwSigned? KwPacked)? flingIdent flingDeclParamList
+	KwBase? KwClass (KwSigned? KwPacked)? flingIdent flingDeclParamList?
 		flingDeclClsOrMxn_Extends?
 	'{'
 		flingDeclClass_Item*
@@ -387,7 +387,7 @@ flingDeclClsOrMxn_Item_DeclSubprog_Abstract:
 	;
 
 flingDeclMixin:
-	KwBase? KwMixin flingIdent flingDeclParamList
+	KwBase? KwMixin flingIdent flingDeclParamList?
 		flingDeclClsOrMxn_Extends?
 	'{'
 		flingDeclClsOrMxn_Item*
@@ -720,6 +720,7 @@ flingExpr_Mul_Or_Div_Or_Mod:
 flingExpr_Unary:
 	flingExpr_Unary_ItemFromMajority
 	| flingExpr_Range
+	| flingExpr_CallSubprog_PseudoOper
 	;
 
 flingExpr_Unary_ItemFromMajority:

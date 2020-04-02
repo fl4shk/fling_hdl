@@ -834,51 +834,160 @@ antlrcpp::Any PtVisitor::visitFlingDeclType
 antlrcpp::Any PtVisitor::visitFlingDeclEnum
 	(Parser::FlingDeclEnumContext *ctx)
 {
+	DEFER_PUSH(node, DeclEnum);
+
+	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
+	ACCEPT_AND_POP_AST_IF(node->opt_typename_or_modname,
+		flingTypenameOrModname);
+	JUST_ACCEPT_AND_POP_AST(node->ident_list, flingIdentList);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclClass
 	(Parser::FlingDeclClassContext *ctx)
 {
+	DEFER_PUSH(node, DeclClass);
+
+	node->is_base = ctx->KwBase();
+	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
+	ACCEPT_AND_POP_AST_IF(node->opt_param_list, flingDeclParamList);
+	ACCEPT_AND_POP_AST_LIST_IF
+		(node->opt_extends, flingDeclClsOrMxn_Extends);
+
+	FOR_PT(p, flingDeclClass_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+
+	node->is_signed = ctx->KwSigned();
+	node->is_packed = ctx->KwPacked();
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Extends
 	(Parser::FlingDeclClsOrMxn_ExtendsContext *ctx)
 {
+	JUST_ACCEPT(flingTypenameOrModnameList);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclClass_Item
 	(Parser::FlingDeclClass_ItemContext *ctx)
 {
+	ACCEPT_IF
+		(flingDeclClass_Item_DeclVar,
+		flingDeclClsOrMxn_Item)
+	else
+	{
+		internal_err(visitFlingDeclClass_Item);
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclClass_Item_DeclVar
 	(Parser::FlingDeclClass_Item_DeclVarContext *ctx)
 {
+	DEFER_PUSH(node, DeclClass_DeclVar);
+
+	CHECK(flingDeclClsOrMxn_AccessSpecifier)
+	{
+		JUST_ACCEPT(flingDeclClsOrMxn_AccessSpecifier);
+		const size_t acc_spec = _pop_num();
+		node->acc_spec = static_cast<AccSpec>(acc_spec);
+	}
+	node->is_static = ctx->KwStatic();
+	JUST_ACCEPT_AND_POP_AST(node->decl_var, flingDeclVar);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item
 	(Parser::FlingDeclClsOrMxn_ItemContext *ctx)
 {
+	ACCEPT_IF
+		(flingDeclClsOrMxn_Item_DeclType,
+		flingDeclClsOrMxn_Item_DeclAliasOrConst,
+		flingDeclClsOrMxn_Item_DeclSubprog,
+
+		flingImportList)
+	else
+	{
+		internal_err(visitFlingDeclClsOrMxn_Item);
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item_DeclType
 	(Parser::FlingDeclClsOrMxn_Item_DeclTypeContext *ctx)
 {
+	DEFER_PUSH(node, DeclClsOrMxn_DeclType);
+
+	CHECK(flingDeclClsOrMxn_AccessSpecifier)
+	{
+		JUST_ACCEPT(flingDeclClsOrMxn_AccessSpecifier);
+		size_t acc_spec;
+		stringstream sstm;
+		sstm << _pop_num;
+		sstm >> acc_spec;
+		node->acc_spec = static_cast<AccSpec>();
+	}
+	JUST_ACCEPT_AND_POP_AST(node->decl_type, flingDeclType);
+	convert_bignum_to_str
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item_DeclAliasOrConst
 	(Parser::FlingDeclClsOrMxn_Item_DeclAliasOrConstContext *ctx)
 {
+	DEFER_PUSH(node, DeclClsOrMxn_DeclAliasOrConst);
+
+	CHECK(flingDeclClsOrMxn_AccessSpecifier)
+	{
+		JUST_ACCEPT(flingDeclClsOrMxn_AccessSpecifier);
+		const size_t acc_spec = _pop_num();
+		node->acc_spec = static_cast<AccSpec>(acc_spec);
+	}
+
+	node->is_static = ctx->KwStatic();
+	ACCEPT_AND_POP_AST_IF
+		(node->decl_alias_or_const, flingDeclAlias,
+		node->decl_alias_or_const, flingDeclConst)
+	else
+	{
+		internal_err(visitFlingDeclClsOrMxn_Item_DeclAliasOrConst);
+	}
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_AccessSpecifier
 	(Parser::FlingDeclClsOrMxn_AccessSpecifierContext *ctx)
 {
+	CHECK(KwPub)
+	{
+		_push_num(static_cast<size_t>(AccSpec::Pub));
+	}
+	else CHECK(KwProt)
+	{
+		_push_num(static_cast<size_t>(AccSpec::Prot));
+	}
+	else CHECK(KwPriv)
+	{
+		_push_num(static_cast<size_t>(AccSpec::Priv));
+	}
+	else
+	{
+		internal_err(visitFlingDeclClsOrMxn_AccessSpecifier);
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item_DeclSubprog
 	(Parser::FlingDeclClsOrMxn_Item_DeclSubprogContext *ctx)
 {
+	ACCEPT_IF
+		(flingDeclClsOrMxn_Item_DeclSubprog_FullDefn,
+		flingDeclClsOrMxn_Item_DeclSubprog_Abstract)
+	else
+	{
+		internal_err(visitFlingDeclClsOrMxn_Item_DeclSubprog);
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item_DeclSubprog_FullDefn

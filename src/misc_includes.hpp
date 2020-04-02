@@ -46,5 +46,6 @@ using std::make_shared;
 using std::hash;
 using std::move;
 using std::map;
+using std::stringstream;
 
 #endif		// src_misc_includes_hpp
