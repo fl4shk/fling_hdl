@@ -892,7 +892,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclClass_Item_DeclVar
 	CHECK(flingDeclClsOrMxn_AccessSpecifier)
 	{
 		JUST_ACCEPT(flingDeclClsOrMxn_AccessSpecifier);
-		node->acc_spec = static_cast<AccSpec>(convert_bignum_to<size_t>
+		node->acc_spec = static_cast<AccSpec>(conv_bignum_to<size_t>
 			(_pop_num()));
 	}
 	node->is_static = ctx->KwStatic();
@@ -923,11 +923,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item_DeclType
 	CHECK(flingDeclClsOrMxn_AccessSpecifier)
 	{
 		JUST_ACCEPT(flingDeclClsOrMxn_AccessSpecifier);
-		node->acc_spec = static_cast<AccSpec>(convert_bignum_to<size_t>
+		node->acc_spec = static_cast<AccSpec>(conv_bignum_to<size_t>
 			(_pop_num()));
 	}
 	JUST_ACCEPT_AND_POP_AST(node->decl_type, flingDeclType);
-	convert_bignum_to_str
 
 	return nullptr;
 }
@@ -939,7 +938,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item_DeclAliasOrConst
 	CHECK(flingDeclClsOrMxn_AccessSpecifier)
 	{
 		JUST_ACCEPT(flingDeclClsOrMxn_AccessSpecifier);
-		node->acc_spec = static_cast<AccSpec>(convert_bignum_to<size_t>
+		node->acc_spec = static_cast<AccSpec>(conv_bignum_to<size_t>
 			(_pop_num()));
 	}
 

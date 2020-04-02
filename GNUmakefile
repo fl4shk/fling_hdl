@@ -41,7 +41,7 @@ LD:=$(CXX)
 # Initial linker flags
 LD_FLAGS:=$(LD_FLAGS) -lm \
 	-lantlr4-runtime \
-	-lgmp
+	-lgmp -lgmpxx
 
 
 
