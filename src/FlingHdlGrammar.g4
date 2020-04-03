@@ -556,7 +556,8 @@ flingDeclProc_ArgList:
 	')'
 	;
 flingDeclProc_ArgList_Item:
-	flingIdentList ':' (KwInput | KwInout)? flingTypenameOrModname 
+	flingIdentList ':' (KwInput | KwInout) flingTypenameOrModname
+		('=' flingExprList)?
 	;
 //--------
 

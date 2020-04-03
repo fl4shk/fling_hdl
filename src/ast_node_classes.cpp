@@ -343,7 +343,7 @@ std::ostream& operator << (std::ostream& os, Base* node)
 		{
 			#undef TYPE
 			#define TYPE DeclFunc
-			osprintout(os, strappcom2(wrap(header), wrap(item_list)));
+			osprintout(os, strappcom2(wrap(header), wrap(scope)));
 		}
 		else idcmp(DeclFunc_Header)
 		{
@@ -362,7 +362,7 @@ std::ostream& operator << (std::ostream& os, Base* node)
 		{
 			#undef TYPE
 			#define TYPE DeclTask
-			osprintout(os, strappcom2(wrap(header), wrap(item_list)));
+			osprintout(os, strappcom2(wrap(header), wrap(scope)));
 		}
 		else idcmp(DeclTask_Header)
 		{

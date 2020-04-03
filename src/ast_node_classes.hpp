@@ -531,8 +531,7 @@ public:		// functions
 class DeclFunc: public Base
 {
 public:		// variables
-	BaseSptr header;
-	BaseSptrList item_list;
+	BaseSptr header, scope;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclFunc, Base);
 };
@@ -569,10 +568,13 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(DeclTask_Header, Base);
 };
 
-class DeclProc: public DeclFunc
+class DeclProc: public Base
 {
+public:		// variables
+	BaseSptr header;
+	BaseSptrList item_list;
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclProc, DeclFunc);
+	SHARED_FUNC_CONTENTS(DeclProc, Base);
 };
 
 class DeclProc_Header: public DeclTask_Header
