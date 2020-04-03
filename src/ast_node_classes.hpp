@@ -626,32 +626,26 @@ public:		// variables
 public:		// functions
 	SHARED_FUNC_CONTENTS(ImportList, Base);
 };
-class TypenameOrModname: public Base
+class TypenameOrModname_Special: public Base
 {
 public:		// types
 	enum class Kind
 	{
-		Cstm,
 		SelfT,
 		RetT,
-		Typeof,
-		Builtin,
 	};
 	static string conv_kind(Kind to_conv)
 	{
 		CONV_ENUM_SWITCH(CONV_KIND_CASE,
-			Cstm,
 			SelfT,
-			RetT,
-			Typeof,
-			Builtin);
+			RetT)
 	}
 public:		// variables
 	Kind kind;
-	BaseSptr opt_child;
 public:		// variables
-	SHARED_FUNC_CONTENTS(TypenameOrModname, Base);
+	SHARED_FUNC_CONTENTS(TypenameOrModname_Special, Base);
 };
+
 
 class TypenameOrModname_Cstm: public Base
 {
@@ -659,6 +653,14 @@ public:		// variables
 	BaseSptrList item_list, arr_dim_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(TypenameOrModname_Cstm, Base);
+};
+
+class TypenameOrModname_Typeof: public TypenameOrModname_Cstm
+{
+public:		// variables
+	BaseSptr expr;
+public:		// functions
+	SHARED_FUNC_CONTENTS(TypenameOrModname_Typeof, TypenameOrModname_Cstm);
 };
 
 class TypenameOrModname_Cstm_Item: public Base

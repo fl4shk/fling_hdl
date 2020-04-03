@@ -95,9 +95,10 @@
 	X(IdentList) \
 	X(ScopedIdent) \
 	X(ImportList) \
-	X(TypenameOrModname) \
 	\
+	X(TypenameOrModname_Special) \
 	X(TypenameOrModname_Cstm) \
+	X(TypenameOrModname_Typeof) \
 	X(TypenameOrModname_Cstm_Item) \
 	X(TypenameOrModname_Builtin) \
 	\

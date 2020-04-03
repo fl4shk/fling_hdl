@@ -1529,42 +1529,134 @@ antlrcpp::Any PtVisitor::visitFlingDeclAlias_Module
 antlrcpp::Any PtVisitor::visitFlingIdent
 	(Parser::FlingIdentContext *ctx)
 {
+	// Not sure if this is correct
 	_push_str(ctx->getStart()->getText());
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingIdentList
 	(Parser::FlingIdentListContext *ctx)
 {
+	DEFER_PUSH(node, IdentList);
+
+	FOR_PT(p, flingIdent)
+	{
+		p->accept(this);
+		node->data.push_back(_pop_str());
+	}
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingScopedIdent
 	(Parser::FlingScopedIdentContext *ctx)
 {
+	DEFER_PUSH(node, ScopedIdent);
+
+	FOR_PT(p, flingIdent)
+	{
+		p->accept(this);
+		node->data.push_back(_pop_str());
+	}
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExprList
 	(Parser::FlingExprListContext *ctx)
 {
+	DEFER_PUSH_LIST(list);
+
+	FOR_PT(p, flingExpr)
+	{
+		p->accept(this);
+		list.push_back(_pop_ast());
+	}
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingTypenameOrModnameList
 	(Parser::FlingTypenameOrModnameListContext *ctx)
 {
+	DEFER_PUSH_LIST(list);
+
+	FOR_PT(p, flingTypenameOrModname)
+	{
+		p->accept(this);
+		list.push_back(_pop_ast());
+	}
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingImportList
 	(Parser::FlingImportListContext *ctx)
 {
+	DEFER_PUSH(node, ImportList);
+
+	FOR_PT(p, flingScopedIdent)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingTypenameOrModname
 	(Parser::FlingTypenameOrModnameContext *ctx)
 {
+	ACCEPT_IF
+		(flingTypenameOrModname_Typeof,
+		flingTypenameOrModname_Cstm,
+		flingTypenameOrModname_Builtin)
+	else
+	{
+		DEFER_PUSH(node, TypenameOrModname_Special);
+		using Kind = TypenameOrModname_Special::Kind;
+		if (!_conv_pt_to_enum(node->kind,
+			ctx->KwSelfT(), Kind::SelfT,
+			ctx->KwRetT(), Kind::RetT))
+		{
+			internal_err(visitFlingTypenameOrModname);
+		}
+	}
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingTypenameOrModname_Cstm
 	(Parser::FlingTypenameOrModname_CstmContext *ctx)
 {
+	DEFER_PUSH(node, TypenameOrModname_Cstm);
+
+	FOR_PT(p, flingTypenameOrModname_Cstm_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+
+	FOR_PT(p, flingTypenameOrModname_ArrDim)
+	{
+		p->accept(this);
+		node->arr_dim_list.push_back(_pop_ast());
+	}
+
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingTypenameOrModname_Typeof
+	(Parser::FlingTypenameOrModname_TypeofContext *ctx)
+{
+	DEFER_PUSH(node, TypenameOrModname_Typeof);
+
+	JUST_ACCEPT_AND_POP_AST(node->expr, flingExpr);
+
+	FOR_PT(p, flingTypenameOrModname_Cstm_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+
+	FOR_PT(p, flingTypenameOrModname_ArrDim)
+	{
+		p->accept(this);
+		node->arr_dim_list.push_back(_pop_ast());
+	}
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingTypenameOrModname_Cstm_Item

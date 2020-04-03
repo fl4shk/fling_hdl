@@ -410,11 +410,11 @@ std::ostream& operator << (std::ostream& os, Base* node)
 			#define TYPE ImportList
 			osprintout(os, wrap(item_list));
 		}
-		else idcmp(TypenameOrModname)
+		else idcmp(TypenameOrModname_Special)
 		{
 			#undef TYPE
-			#define TYPE TypenameOrModname
-			osprintout(os, strappcom2(wrap_conv(kind), wrap(opt_child)));
+			#define TYPE TypenameOrModname_Special
+			osprintout(os, strappcom2(wrap_conv(kind)));
 		}
 		else idcmp(TypenameOrModname_Cstm)
 		{
@@ -422,6 +422,13 @@ std::ostream& operator << (std::ostream& os, Base* node)
 			#define TYPE TypenameOrModname_Cstm
 			osprintout(os, strappcom2(wrap(item_list),
 				wrap(arr_dim_list)));
+		}
+		else idcmp(TypenameOrModname_Typeof)
+		{
+			#undef TYPE
+			#define TYPE TypenameOrModname_Typeof
+			osprintout(os, strappcom2(wrap(item_list), wrap(arr_dim_list),
+				wrap(expr)));
 		}
 		else idcmp(TypenameOrModname_Cstm_Item)
 		{

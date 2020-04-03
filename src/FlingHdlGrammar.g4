@@ -606,15 +606,20 @@ flingImportList:
 //--------
 flingTypenameOrModname:
 	flingTypenameOrModname_Cstm
+	| flingTypenameOrModname_Typeof
+	| flingTypenameOrModname_Builtin
+
 	| KwSelfT
 	| KwRetT
-
-	| KwTypeof '(' flingExpr ')'
-	| flingTypenameOrModname_Builtin
 	;
 
 flingTypenameOrModname_Cstm:
 	flingTypenameOrModname_Cstm_Item
+	(PunctScopeAccess flingTypenameOrModname_Cstm_Item)*
+		flingTypenameOrModname_ArrDim*
+	;
+flingTypenameOrModname_Typeof:
+	KwTypeof '(' flingExpr ')'
 	(PunctScopeAccess flingTypenameOrModname_Cstm_Item)*
 		flingTypenameOrModname_ArrDim*
 	;
