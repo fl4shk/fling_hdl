@@ -1662,46 +1662,160 @@ antlrcpp::Any PtVisitor::visitFlingTypenameOrModname_Typeof
 antlrcpp::Any PtVisitor::visitFlingTypenameOrModname_Cstm_Item
 	(Parser::FlingTypenameOrModname_Cstm_ItemContext *ctx)
 {
+	DEFER_PUSH(node, TypenameOrModname_Cstm_Item);
+
+	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
+	ACCEPT_AND_POP_AST_IF(node->opt_param_list, flingInstParamList);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingTypenameOrModname_ArrDim
 	(Parser::FlingTypenameOrModname_ArrDimContext *ctx)
 {
+	ACCEPT_IF
+		(flingExpr,
+		flingTypenameOrModname)
+	else
+	{
+		internal_err(visitFlingTypenameOrModname_ArrDim);
+	}
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingTypenameOrModname_Builtin
 	(Parser::FlingTypenameOrModname_BuiltinContext *ctx)
 {
+	DEFER_PUSH(node, TypenameOrModname_Builtin);
+
+	using Kind = TypenameOrModname_Builtin::Kind;
+
+	if (!_conv_pt_to_enum(node->kind,
+		ctx->KwSigned(), Kind::SignedLogic,
+		ctx->KwLogic(), Kind::Logic,
+
+		ctx->KwInteger(), Kind::Integer,
+		ctx->KwSizeT(), Kind::SizeT,
+		ctx->KwRange(), Kind::Range,
+		ctx->KwString(), Kind::String,
+
+		ctx->KwU8(), Kind::U8,
+		ctx->KwI8(), Kind::I8,
+		ctx->KwU16(), Kind::U16,
+		ctx->KwI16(), Kind::I16,
+		ctx->KwU32(), Kind::U32,
+		ctx->KwI32(), Kind::I32,
+		ctx->KwU64(), Kind::U64,
+		ctx->KwI64(), Kind::I64,
+		ctx->KwU128(), Kind::U128,
+		ctx->KwI128(), Kind::I128,
+
+		ctx->KwAuto(), Kind::Auto,
+		ctx->KwVoid(), Kind::Void))
+	{
+		internal_err(visitFlingTypenameOrModname_Builtin);
+	}
+
+	ACCEPT_AND_POP_AST_IF(node->opt_param_list, flingInstParamList);
+
+	FOR_PT(p, flingTypenameOrModname_ArrDim)
+	{
+		p->accept(this);
+		node->arr_dim_list.push_back(_pop_ast());
+	}
+
 	return nullptr;
 }
+#define VISIT_BINOP(punct, type, pt_node) \
+	CHECK(punct) \
+	{ \
+		DEFER_PUSH(node, type); \
+	\
+		JUST_ACCEPT(pt_node); \
+		node->left = _pop_ast(); \
+		\
+		JUST_ACCEPT(flingExpr); \
+		node->right = _pop_ast(); \
+	}
+
 antlrcpp::Any PtVisitor::visitFlingExpr
 	(Parser::FlingExprContext *ctx)
 {
+	CHECK(KwMux)
+	{
+		DEFER_PUSH(node, ExprMux);
+
+		_vec_just_accept_and_pop_ast(ctx->flingExpr(), 
+			node->cond, node->when_true, node->when_false);
+	}
+	else
+	{
+		JUST_ACCEPT(flingExpr_Mux);
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_Mux
 	(Parser::FlingExpr_MuxContext *ctx)
 {
+	VISIT_BINOP(PunctLogOr, ExprLogOr, flingExpr_LogOr)
+	else
+	{
+		JUST_ACCEPT(flingExpr_LogOr);
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_LogOr
 	(Parser::FlingExpr_LogOrContext *ctx)
 {
+	VISIT_BINOP(PunctLogAnd, ExprLogAnd, flingExpr_LogAnd)
+	else
+	{
+		JUST_ACCEPT(flingExpr_LogAnd);
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_LogAnd
 	(Parser::FlingExpr_LogAndContext *ctx)
 {
+	#define X(punct, type) \
+		VISIT_BINOP(punct, type, flingExpr_BitOr_Or_BitNor)
+	EVAL(MAP_PAIRS(X, ELSE,
+		PunctBitOr, ExprBinopBitOr,
+		PunctBitNor, ExprBinopBitNor))
+	#undef X
+	else
+	{
+		JUST_ACCEPT(flingExpr_BitOr_Or_BitNor);
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_BitOr_Or_BitNor
 	(Parser::FlingExpr_BitOr_Or_BitNorContext *ctx)
 {
+	#define X(punct, type) \
+		VISIT_BINOP(punct, type, flingExpr_BitAnd_Or_BitNand)
+	EVAL(MAP_PAIRS(X, ELSE,
+		PunctBitAnd, ExprBinopBitAnd,
+		PunctBitNand, ExprBinopBitNand))
+	#undef X
+	else
+	{
+		JUST_ACCEPT(flingExpr_BitAnd_Or_BitNand);
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_BitAnd_Or_BitNand
 	(Parser::FlingExpr_BitAnd_Or_BitNandContext *ctx)
 {
+	#define X(punct, type) \
+		VISIT_BINOP(punct, type, flingExpr_BitXor_Or_BitXnor)
+	EVAL(MAP_PAIRS(X, ELSE,
+		PunctBitXor, ExprBinopBitXor,
+		PunctBitXnor, ExprBinopBitXnor))
+	#undef X
+	else
+	{
+		JUST_ACCEPT(flingExpr_BitXor_Or_BitXnor);
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_BitXor_Or_BitXnor
