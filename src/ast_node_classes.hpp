@@ -510,22 +510,7 @@ public:		// functions
 
 class DeclClsOrMxn_DeclSubprogFullDefn: public DeclClsOrMxn_ItemBase
 {
-public:		// types
-	enum class Kind
-	{
-		Func,
-		Task,
-		Proc,
-	};
-	static string conv_kind(Kind to_conv)
-	{
-		CONV_ENUM_SWITCH(CONV_KIND_CASE,
-			Func,
-			Task,
-			Proc);
-	}
 public:		// variables
-	Kind kind;
 	bool is_virtual = false, is_static = false, is_const = false;
 	BaseSptr subprog;
 public:		// functions
@@ -535,14 +520,7 @@ public:		// functions
 
 class DeclClsOrMxn_DeclSubprogAbstract: public DeclClsOrMxn_ItemBase
 {
-public:		// types
-	using Kind = typename DeclClsOrMxn_DeclSubprogFullDefn::Kind;
-	static inline string conv_kind(Kind to_conv)
-	{
-		return DeclClsOrMxn_DeclSubprogFullDefn::conv_kind(to_conv);
-	}
 public:		// variables
-	Kind kind;
 	bool is_const = false;
 	BaseSptr header;
 public:		// functions

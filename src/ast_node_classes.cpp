@@ -329,15 +329,15 @@ std::ostream& operator << (std::ostream& os, Base* node)
 			#undef TYPE
 			#define TYPE DeclClsOrMxn_DeclSubprogFullDefn
 			osprintout(os, strappcom2(wrap_conv_2(acc_spec),
-				wrap_conv(kind), wrap(is_virtual), wrap(is_static),
-				wrap(is_const), wrap(subprog)));
+				wrap(is_virtual), wrap(is_static), wrap(is_const),
+				wrap(subprog)));
 		}
 		else idcmp(DeclClsOrMxn_DeclSubprogAbstract)
 		{
 			#undef TYPE
 			#define TYPE DeclClsOrMxn_DeclSubprogAbstract
 			osprintout(os, strappcom2(wrap_conv_2(acc_spec),
-				wrap_conv(kind), wrap(is_const), wrap(header)));
+				wrap(is_const), wrap(header)));
 		}
 		else idcmp(DeclFunc)
 		{

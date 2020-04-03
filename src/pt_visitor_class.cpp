@@ -943,9 +943,14 @@ antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item_DeclAliasOrConst
 	}
 
 	node->is_static = ctx->KwStatic();
-	ACCEPT_AND_POP_AST_IF
-		(node->decl_alias_or_const, flingDeclAlias,
-		node->decl_alias_or_const, flingDeclConst)
+	CHECK(flingDeclAlias)
+	{
+		JUST_ACCEPT_AND_POP_AST(node->decl_alias_or_const, flingDeclAlias);
+	}
+	else CHECK(flingDeclConst)
+	{
+		JUST_ACCEPT_AND_POP_AST(node->decl_alias_or_const, flingDeclConst);
+	}
 	else
 	{
 		internal_err(visitFlingDeclClsOrMxn_Item_DeclAliasOrConst);
@@ -989,16 +994,74 @@ antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item_DeclSubprog
 antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item_DeclSubprog_FullDefn
 	(Parser::FlingDeclClsOrMxn_Item_DeclSubprog_FullDefnContext *ctx)
 {
+	DEFER_PUSH(node, DeclClsOrMxn_DeclSubprogFullDefn);
+
+	CHECK(flingDeclClsOrMxn_AccessSpecifier)
+	{
+		JUST_ACCEPT(flingDeclClsOrMxn_AccessSpecifier);
+		node->acc_spec = static_cast<AccSpec>(conv_bignum_to<size_t>
+			(_pop_num()));
+	}
+
+	node->is_virtual = ctx->KwVirtual();
+	node->is_static = ctx->KwStatic();
+	node->is_const = ctx->KwConst();
+
+	JUST_ACCEPT_AND_POP_AST(node->subprog, flingDeclSubprog);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item_DeclSubprog_Abstract
 	(Parser::FlingDeclClsOrMxn_Item_DeclSubprog_AbstractContext *ctx)
 {
+	DEFER_PUSH(node, DeclClsOrMxn_DeclSubprogAbstract);
+
+	CHECK(flingDeclClsOrMxn_AccessSpecifier)
+	{
+		JUST_ACCEPT(flingDeclClsOrMxn_AccessSpecifier);
+		node->acc_spec = static_cast<AccSpec>(conv_bignum_to<size_t>
+			(_pop_num()));
+	}
+
+	node->is_const = ctx->KwConst();
+
+	CHECK(flingDeclFunc_Header)
+	{
+		JUST_ACCEPT_AND_POP_AST(node->header, flingDeclFunc_Header);
+	}
+	else CHECK(flingDeclTask_Header)
+	{
+		JUST_ACCEPT_AND_POP_AST(node->header, flingDeclTask_Header);
+	}
+	else CHECK(flingDeclProc_Header)
+	{
+		JUST_ACCEPT_AND_POP_AST(node->header, flingDeclProc_Header);
+	}
+	else
+	{
+		internal_err(visitFlingDeclClsOrMxn_Item_DeclSubprog_Abstract);
+	}
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclMixin
 	(Parser::FlingDeclMixinContext *ctx)
 {
+	DEFER_PUSH(node, DeclMixin);
+
+	node->is_base = ctx->KwBase();
+	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
+
+	ACCEPT_AND_POP_AST_IF(node->opt_param_list, flingDeclParamList);
+	ACCEPT_AND_POP_AST_LIST_IF(node->opt_extends,
+		flingDeclClsOrMxn_Extends);
+
+	FOR_PT(p, flingDeclClsOrMxn_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingDeclSubprog
