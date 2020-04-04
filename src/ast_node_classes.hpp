@@ -1127,7 +1127,7 @@ public:		// types
 			MinusColon);
 	}
 public:		// variables
-	Kind kind;
+	Kind kind = Kind::Single;
 	BaseSptr left, opt_right;
 public:		// functions
 	SHARED_FUNC_CONTENTS(ExprIdentEtc_ItemEndIndex, Base);

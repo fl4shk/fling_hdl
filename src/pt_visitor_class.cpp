@@ -2062,41 +2062,167 @@ antlrcpp::Any PtVisitor::visitFlingExpr_KwDollarFuncOf
 antlrcpp::Any PtVisitor::visitFlingExpr_KwDollarFuncOf_NonPow
 	(Parser::FlingExpr_KwDollarFuncOf_NonPowContext *ctx)
 {
+	CHECK(KwDollarSigned)
+	{
+		DEFER_PUSH(node, ExprDollarSigned);
+		JUST_ACCEPT_AND_POP_AST(node->to_feed, flingExpr);
+	}
+	else CHECK(KwDollarUnsigned)
+	{
+		DEFER_PUSH(node, ExprDollarUnsigned);
+		JUST_ACCEPT_AND_POP_AST(node->to_feed, flingExpr);
+	}
+	else CHECK(KwDollarClog2)
+	{
+		DEFER_PUSH(node, ExprDollarClog2);
+		JUST_ACCEPT_AND_POP_AST(node->to_feed, flingExpr);
+	}
+	else CHECK(KwDollarIsvtype)
+	{
+		DEFER_PUSH(node, ExprDollarIsvtype);
+		JUST_ACCEPT_AND_POP_AST(node->to_feed, flingExpr);
+	}
+	else
+	{
+		internal_err(visitFlingExpr_KwDollarFuncOf_NonPow);
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_KwDollarFuncOf_Pow
 	(Parser::FlingExpr_KwDollarFuncOf_PowContext *ctx)
 {
+	DEFER_PUSH(node, ExprDollarPow);
+
+	_vec_just_accept_and_pop_ast(ctx->flingExpr(),
+		node->left, node->right);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_IdentEtc
 	(Parser::FlingExpr_IdentEtcContext *ctx)
 {
+	DEFER_PUSH(node, ExprIdentEtc);
+
+	using SuffKind = ExprIdentEtc::SuffKind;
+	ACCEPT_AND_POP_AST_IF
+		(node->opt_typename_or_modname, flingTypenameOrModname);
+	JUST_ACCEPT_AND_POP_AST
+		(node->first_item, flingExpr_IdentEtc_FirstItem);
+
+	FOR_PT(p, flingExpr_IdentEtc_NonSelfItem)
+	{
+		p->accept(this);
+		node->opt_later_item_list.push_back(_pop_ast());
+	}
+	if (!_conv_pt_to_enum(node->suff_kind,
+		ctx->KwDollarSize(), SuffKind::DollarSize,
+		ctx->KwDollarRange(), SuffKind::DollarRange,
+		ctx->KwDollarHigh(), SuffKind::DollarHigh,
+		ctx->KwDollarLow(), SuffKind::DollarLow))
+	{
+		internal_err(visitFlingExpr_IdentEtc);
+	}
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_IdentEtc_FirstItem
 	(Parser::FlingExpr_IdentEtc_FirstItemContext *ctx)
 {
+	DEFER_PUSH(node, ExprIdentEtc_FirstItem);
+
+	using Kind = ExprIdentEtc_FirstItem::Kind;
+
+	if (!_conv_pt_to_enum(node->kind,
+		ctx->KwSelf(), Kind::Self,
+		ctx->flingExpr_IdentEtc_NonSelfItem(), Kind::NonSelf))
+	{
+		internal_err(visitFlingExpr_IdentEtc_FirstItem);
+	}
+
+	ACCEPT_AND_POP_AST_IF
+		(node->opt_non_self_item, flingExpr_IdentEtc_NonSelfItem);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_IdentEtc_NonSelfItem
 	(Parser::FlingExpr_IdentEtc_NonSelfItemContext *ctx)
 {
+	DEFER_PUSH(node, ExprIdentEtc_NonSelfItem);
+
+	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
+	ACCEPT_AND_POP_AST_IF
+		(node->opt_param_list, flingInstParamList,
+		node->opt_arg_list, flingInstArgList);
+
+	FOR_PT(p, flingExpr_IdentEtc_Item_End)
+	{
+		p->accept(this);
+		node->end_item_list.push_back(_pop_ast());
+	}
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_IdentEtc_Item_End
 	(Parser::FlingExpr_IdentEtc_Item_EndContext *ctx)
 {
+	DEFER_PUSH(node, ExprIdentEtc_ItemEnd);
+
+	using Kind = ExprIdentEtc_ItemEnd::Kind;
+	if (!_conv_pt_to_enum(node->kind,
+		ctx->flingExpr_IdentEtc_Item_End_Index(), Kind::ArrIndex,
+		ctx->KwDollarFirstel(), Kind::DollarFirstel,
+		ctx->KwDollarLastel(), Kind::DollarLastel))
+	{
+		internal_err(visitFlingExpr_IdentEtc_Item_End);
+	}
+
+	ACCEPT_AND_POP_AST_IF
+		(node->opt_index, flingExpr_IdentEtc_Item_End_Index);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_IdentEtc_Item_End_Index
 	(Parser::FlingExpr_IdentEtc_Item_End_IndexContext *ctx)
 {
+	DEFER_PUSH(node, ExprIdentEtc_ItemEndIndex);
+
+	using Kind = ExprIdentEtc_ItemEndIndex::Kind;
+
+	auto&& expr = ctx->flingExpr();
+
+	_conv_pt_to_enum(node->kind,
+		ctx->PunctPlusColon(), Kind::PlusColon,
+		ctx->PunctMinusColon(), Kind::MinusColon);
+
+	expr.at(0)->accept(this);
+	node->left = _pop_ast();
+
+	if (node->kind != Kind::Single)
+	{
+		expr.at(1)->accept(this);
+		node->opt_right = _pop_ast();
+	}
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_CallSubprog_PseudoOper
 	(Parser::FlingExpr_CallSubprog_PseudoOperContext *ctx)
 {
+	DEFER_PUSH(node, ExprCallSubprog_PseudoOper);
+
+	ACCEPT_IF
+		(flingExpr_Unary_ItemFromMajority,
+		flingExpr_Range_CallFunc)
+	else
+	{
+		internal_err(visitFlingExpr_CallSubprog_PseudoOper);
+	}
+	node->left = _pop_ast();
+
+	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
+	ACCEPT_AND_POP_AST_IF(node->opt_param_list, flingInstParamList);
+	JUST_ACCEPT_AND_POP_AST(node->right, flingExpr);
+
 	return nullptr;
 }
 
