@@ -711,16 +711,14 @@ flingExpr_BinaryPlus_Or_BinaryMinus:
 
 flingExpr_Mul_Or_Div_Or_Mod:
 	(
-		(
-			PunctPlus | PunctMinus | PunctLogNot | PunctBitNot
+		PunctPlus | PunctMinus | PunctLogNot | PunctBitNot
 
-			// Reduction operators
-			| PunctBitOr | PunctBitNor | PunctBitAnd | PunctBitNand
-			| PunctBitXor | PunctBitXnor
-		) flingExpr
+		// Reduction operators
+		| PunctBitOr | PunctBitNor | PunctBitAnd | PunctBitNand
+		| PunctBitXor | PunctBitXnor
+	) flingExpr
 
-		| flingExpr_Unary
-	)
+	| flingExpr_Unary
 	;
 
 flingExpr_Unary:
@@ -734,7 +732,7 @@ flingExpr_Unary_ItemFromMajority:
 	| flingExpr_Sized
 	| flingExpr_Cat
 	| flingExpr_Repl
-	| flingExpr_KwDollarFuncOf 
+	| flingExpr_KwDollarFuncOf
 	| flingExpr_IdentEtc
 	| '(' flingExpr ')'
 	;
@@ -759,11 +757,7 @@ flingExpr_Range:
 	;
 
 flingExpr_Range_DotDot:
-	(
-		flingExpr_Unary_ItemFromMajority
-		| flingExpr_Range_CallFunc
-	)
-	PunctColon flingExpr
+	flingExpr_Unary_ItemFromMajority PunctColon flingExpr
 	;
 flingExpr_Range_CallFunc:
 	KwRange '(' flingExpr ',' flingExpr ')'

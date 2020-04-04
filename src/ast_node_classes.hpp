@@ -948,7 +948,21 @@ public:		// types
 		HighZ,
 		UnkX,
 	};
+	static string conv_kind(Kind to_conv)
+	{
+		CONV_ENUM_SWITCH(CONV_KIND_CASE,
+			DecNum,
+			HexNum,
+			OctNum,
+			BinNum,
+			//Float,
+			String,
+			HighZ,
+			UnkX)
+	}
+
 public:		// variables
+	Kind kind;
 	string text;
 	BaseSptr opt_size;
 public:		// functions

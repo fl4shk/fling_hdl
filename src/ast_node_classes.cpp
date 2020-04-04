@@ -485,7 +485,8 @@ std::ostream& operator << (std::ostream& os, Base* node)
 		{
 			#undef TYPE
 			#define TYPE ExprLiteral
-			osprintout(os, strappcom2(wrap(text), wrap(opt_size)));
+			osprintout(os, strappcom2(wrap_conv(kind), wrap(text),
+				wrap(opt_size)));
 		}
 		else idcmp(ExprSized)
 		{

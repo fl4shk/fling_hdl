@@ -1729,7 +1729,7 @@ antlrcpp::Any PtVisitor::visitFlingTypenameOrModname_Builtin
 	CHECK(punct) \
 	{ \
 		DEFER_PUSH(node, type); \
-	\
+		\
 		JUST_ACCEPT(pt_node); \
 		node->left = _pop_ast(); \
 		\
@@ -1821,81 +1821,242 @@ antlrcpp::Any PtVisitor::visitFlingExpr_BitAnd_Or_BitNand
 antlrcpp::Any PtVisitor::visitFlingExpr_BitXor_Or_BitXnor
 	(Parser::FlingExpr_BitXor_Or_BitXnorContext *ctx)
 {
+	#define X(punct, type) \
+		VISIT_BINOP(punct, type, flingExpr_CmpEqEtc)
+	EVAL(MAP_PAIRS(X, ELSE,
+		PunctCmpEq, ExprCmpEq,
+		PunctCmpNe, ExprCmpNe,
+		PunctCaseCmpEq, ExprCaseCmpEq,
+		PunctCaseCmpNe, ExprCaseCmpNe))
+	#undef X
+	else
+	{
+		JUST_ACCEPT(flingExpr_CmpEqEtc);
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_CmpEqEtc
 	(Parser::FlingExpr_CmpEqEtcContext *ctx)
 {
+	#define X(punct, type) \
+		VISIT_BINOP(punct, type, flingExpr_CmpLtEtc)
+	EVAL(MAP_PAIRS(X, ELSE,
+		PunctCmpLt, ExprCmpLt,
+		PunctCmpLe, ExprCmpLe,
+		PunctCmpGt, ExprCmpGt,
+		PunctCmpGe, ExprCmpGe))
+	#undef X
+	else
+	{
+		JUST_ACCEPT(flingExpr_CmpLtEtc);
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_CmpLtEtc
 	(Parser::FlingExpr_CmpLtEtcContext *ctx)
 {
+	#define X(punct, type) \
+		VISIT_BINOP(punct, type, flingExpr_BitShift)
+	EVAL(MAP_PAIRS(X, ELSE,
+		KwLsl, ExprBitLsl,
+		KwLsr, ExprBitLsr,
+		KwAsr, ExprBitAsr))
+	#undef X
+	else
+	{
+		JUST_ACCEPT(flingExpr_BitShift);
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_BitShift
 	(Parser::FlingExpr_BitShiftContext *ctx)
 {
+	#define X(punct, type) \
+		VISIT_BINOP(punct, type, flingExpr_BinaryPlus_Or_BinaryMinus)
+	EVAL(MAP_PAIRS(X, ELSE,
+		PunctPlus, ExprBinopPlus,
+		PunctMinus, ExprBinopMinus))
+	#undef X
+	else
+	{
+		JUST_ACCEPT(flingExpr_BinaryPlus_Or_BinaryMinus);
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_BinaryPlus_Or_BinaryMinus
 	(Parser::FlingExpr_BinaryPlus_Or_BinaryMinusContext *ctx)
 {
+	#define X(punct, type) \
+		VISIT_BINOP(punct, type, flingExpr_Mul_Or_Div_Or_Mod)
+	EVAL(MAP_PAIRS(X, ELSE,
+		PunctMul, ExprMul,
+		PunctDiv, ExprDiv,
+		PunctMod, ExprMod))
+	#undef X
+	else
+	{
+		JUST_ACCEPT(flingExpr_Mul_Or_Div_Or_Mod);
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_Mul_Or_Div_Or_Mod
 	(Parser::FlingExpr_Mul_Or_Div_Or_ModContext *ctx)
 {
+	#define X(punct, type) \
+		CHECK(punct) \
+		{ \
+			DEFER_PUSH(node, type); \
+			\
+			JUST_ACCEPT(flingExpr); \
+			node->to_feed = _pop_ast(); \
+		}
+	EVAL(MAP_PAIRS(X, ELSE,
+		PunctPlus, ExprUnopPlus,
+		PunctMinus, ExprUnopMinus,
+		PunctLogNot, ExprLogNot,
+		PunctBitNot, ExprBitNot,
+
+		PunctBitOr, ExprUnopBitOr,
+		PunctBitNor, ExprUnopBitNor,
+
+		PunctBitAnd, ExprUnopBitAnd,
+		PunctBitNand, ExprUnopBitNand,
+
+		PunctBitXor, ExprUnopBitXor,
+		PunctBitXnor, ExprUnopBitXnor))
+	#undef X
+	else
+	{
+		JUST_ACCEPT(flingExpr_Unary);
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_Unary
 	(Parser::FlingExpr_UnaryContext *ctx)
 {
+	ACCEPT_IF
+		(flingExpr_Unary_ItemFromMajority,
+		flingExpr_Range,
+		flingExpr_CallSubprog_PseudoOper)
+	else
+	{
+		internal_err(visitFlingExpr_Unary);
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_Unary_ItemFromMajority
 	(Parser::FlingExpr_Unary_ItemFromMajorityContext *ctx)
 {
+	ACCEPT_IF
+		(flingExpr_Literal,
+		flingExpr_Sized,
+		flingExpr_Cat,
+		flingExpr_Repl,
+		flingExpr_KwDollarFuncOf,
+		flingExpr_IdentEtc,
+		flingExpr)
+	else
+	{
+		internal_err(visitFlingExpr_Unary_ItemFromMajority);
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_Literal
 	(Parser::FlingExpr_LiteralContext *ctx)
 {
+	DEFER_PUSH(node, ExprLiteral);
+
+	using Kind = ExprLiteral::Kind;
+
+	if (!_conv_pt_to_enum(node->kind,
+		ctx->LitDecNum(), Kind::DecNum,
+		ctx->LitHexNum(), Kind::HexNum,
+		ctx->LitOctNum(), Kind::OctNum,
+		ctx->LitBinNum(), Kind::BinNum,
+		ctx->LitString(), Kind::String,
+		ctx->KwHighZ(), Kind::HighZ,
+		ctx->KwUnkX(), Kind::UnkX))
+	{
+		internal_err(visitFlingExpr_Literal);
+	}
+
+	node->text = ctx->getStart()->getText();
+
+	ACCEPT_AND_POP_AST_IF(node->opt_size, flingExpr);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_Sized
 	(Parser::FlingExpr_SizedContext *ctx)
 {
+	DEFER_PUSH(node, ExprSized);
+
+	_vec_just_accept_and_pop_ast(ctx->flingExpr(),
+		node->dst_size, node->src);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_Range
 	(Parser::FlingExpr_RangeContext *ctx)
 {
+	ACCEPT_IF
+		(flingExpr_Range_DotDot,
+		flingExpr_Range_CallFunc)
+	else
+	{
+		internal_err(visitFlingExpr_Range);
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_Range_DotDot
 	(Parser::FlingExpr_Range_DotDotContext *ctx)
 {
+	DEFER_PUSH(node, ExprRange);
+
+	JUST_ACCEPT_AND_POP_AST
+		(node->left, flingExpr_Unary_ItemFromMajority,
+		node->right, flingExpr);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_Range_CallFunc
 	(Parser::FlingExpr_Range_CallFuncContext *ctx)
 {
+	DEFER_PUSH(node, ExprRange);
+
+	_vec_just_accept_and_pop_ast(ctx->flingExpr(),
+		node->left, node->right);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_Cat
 	(Parser::FlingExpr_CatContext *ctx)
 {
+	DEFER_PUSH(node, ExprCat);
+
+	JUST_ACCEPT_AND_POP_AST_LIST(node->item_list, flingExprList);
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_Repl
 	(Parser::FlingExpr_ReplContext *ctx)
 {
+	DEFER_PUSH(node, ExprRepl);
+
+	_vec_just_accept_and_pop_ast(ctx->flingExpr(),
+		node->amount, node->to_repl);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_KwDollarFuncOf
 	(Parser::FlingExpr_KwDollarFuncOfContext *ctx)
 {
+	ACCEPT_IF
+		(flingExpr_KwDollarFuncOf_NonPow,
+		flingExpr_KwDollarFuncOf_Pow)
+	else
+	{
+		internal_err(visitFlingExpr_KwDollarFuncOf);
+	}
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingExpr_KwDollarFuncOf_NonPow
