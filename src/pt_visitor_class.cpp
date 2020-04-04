@@ -6,15 +6,6 @@ namespace fling_hdl
 
 using namespace ast;
 
-#define RAW_APPEND_CHILD_IF(to_feed, type) \
-	if (child->id() == string(#type)) \
-	{ \
-		/* More like, we need to feed *our* childrens */ \
-		to_feed.push_back(move(child)); \
-	}
-#define MULTI_APPEND_CHILD_IF(...) \
-	EVAL(MAP(APPEND_CHILD_IF, ELSE, __VA_ARGS__))
-
 #define JUST_ACCEPT(pt_node) \
 	ctx->pt_node()->accept(this)
 
