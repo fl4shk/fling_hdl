@@ -70,10 +70,10 @@ std::ostream& operator << (std::ostream& os, Base* node)
 			#define TYPE DeclPackage
 			osprintout(os, strappcom2(wrap(ident), wrap(item_list)));
 		}
-		else idcmp(DeclParamList)
+		else idcmp(ParamOrArgList)
 		{
 			#undef TYPE
-			#define TYPE DeclParamList
+			#define TYPE ParamOrArgList
 			osprintout(os, wrap(item_list));
 		}
 		else idcmp(DeclParamList_Item)
@@ -84,12 +84,6 @@ std::ostream& operator << (std::ostream& os, Base* node)
 				wrap(opt_typename_or_modname), wrap(opt_expr_list),
 				wrap(opt_typename_or_modname_list)));
 		}
-		else idcmp(DeclArgList)
-		{
-			#undef TYPE
-			#define TYPE DeclArgList
-			osprintout(os, wrap(item_list));
-		}
 		else idcmp(DeclArgList_Item)
 		{
 			#undef TYPE
@@ -97,23 +91,11 @@ std::ostream& operator << (std::ostream& os, Base* node)
 			osprintout(os, strappcom2(wrap(ident_list), wrap_conv(kind),
 				wrap(typename_or_modname), wrap(opt_expr_list)));
 		}
-		else idcmp(InstParamList)
-		{
-			#undef TYPE
-			#define TYPE InstParamList
-			osprintout(os, wrap(opt_item_list));
-		}
 		else idcmp(InstParamList_Named_Item)
 		{
 			#undef TYPE
 			#define TYPE InstParamList_Named_Item
 			osprintout(os, strappcom2(wrap(ident), wrap(item)));
-		}
-		else idcmp(InstArgList)
-		{
-			#undef TYPE
-			#define TYPE InstArgList
-			osprintout(os, wrap(opt_item_list));
 		}
 		else idcmp(InstArgList_Named_Item)
 		{

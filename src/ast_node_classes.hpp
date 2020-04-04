@@ -86,12 +86,12 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(DeclPackage, Base);
 };
 
-class DeclParamList: public Base
+class ParamOrArgList: public Base
 {
 public:		// variables
 	BaseSptrList item_list;
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclParamList, Base);
+	SHARED_FUNC_CONTENTS(ParamOrArgList, Base);
 };
 
 class DeclParamList_Item: public Base
@@ -119,14 +119,6 @@ public:		// variables
 
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclParamList_Item, Base);
-};
-
-class DeclArgList: public Base
-{
-public:		// variables
-	BaseSptrList item_list;
-public:		// functions
-	SHARED_FUNC_CONTENTS(DeclArgList, Base);
 };
 
 // This covers both regular argument lists and those for `proc`s
@@ -157,13 +149,6 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(DeclArgList_Item, Base);
 };
 
-class InstParamList: public Base
-{
-public:		// variables
-	BaseSptrList opt_item_list;
-public:		// functions
-	SHARED_FUNC_CONTENTS(InstParamList, Base);
-};
 class InstParamList_Named_Item: public Base
 {
 public:		// variables
@@ -174,11 +159,6 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(InstParamList_Named_Item, Base);
 };
 
-class InstArgList: public InstParamList
-{
-public:		// functions
-	SHARED_FUNC_CONTENTS(InstArgList, InstParamList);
-};
 
 class InstArgList_Named_Item: public Base
 {

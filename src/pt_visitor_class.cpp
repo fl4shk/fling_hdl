@@ -218,7 +218,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclPackage_Item
 antlrcpp::Any PtVisitor::visitFlingDeclParamList
 	(Parser::FlingDeclParamListContext *ctx)
 {
-	DEFER_PUSH(node, DeclParamList);
+	DEFER_PUSH(node, ParamOrArgList);
 
 	FOR_PT(p, flingDeclParamList_Item)
 	{
@@ -266,7 +266,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclParamList_Item
 antlrcpp::Any PtVisitor::visitFlingDeclArgList
 	(Parser::FlingDeclArgListContext *ctx)
 {
-	DEFER_PUSH(node, DeclArgList);
+	DEFER_PUSH(node, ParamOrArgList);
 
 	FOR_PT(p, flingDeclArgList_Item)
 	{
@@ -302,11 +302,11 @@ antlrcpp::Any PtVisitor::visitFlingDeclArgList_Item
 antlrcpp::Any PtVisitor::visitFlingInstParamList
 	(Parser::FlingInstParamListContext *ctx)
 {
-	DEFER_PUSH(node, InstParamList);
+	DEFER_PUSH(node, ParamOrArgList);
 
-	ACCEPT_AND_POP_AST_LIST_IF(node->opt_item_list, flingInstParamList_Pos)
-	else ACCEPT_AND_POP_AST_LIST_IF(node->opt_item_list,
-		flingInstParamList_Named)
+	ACCEPT_AND_POP_AST_LIST_IF(node->item_list, flingInstParamList_Pos)
+	else ACCEPT_AND_POP_AST_LIST_IF
+		(node->item_list, flingInstParamList_Named)
 
 	return nullptr;
 }
@@ -361,11 +361,11 @@ antlrcpp::Any PtVisitor::visitFlingInstParamList_Named_Item
 antlrcpp::Any PtVisitor::visitFlingInstArgList
 	(Parser::FlingInstArgListContext *ctx)
 {
-	DEFER_PUSH(node, InstArgList);
+	DEFER_PUSH(node, ParamOrArgList);
 
-	ACCEPT_AND_POP_AST_LIST_IF(node->opt_item_list, flingInstArgList_Pos)
-	else ACCEPT_AND_POP_AST_LIST_IF(node->opt_item_list,
-		flingInstArgList_Named)
+	ACCEPT_AND_POP_AST_LIST_IF(node->item_list, flingInstArgList_Pos)
+	else ACCEPT_AND_POP_AST_LIST_IF
+		(node->item_list, flingInstArgList_Named)
 
 	return nullptr;
 }
@@ -1440,7 +1440,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclProc_Header
 antlrcpp::Any PtVisitor::visitFlingDeclProc_ArgList
 	(Parser::FlingDeclProc_ArgListContext *ctx)
 {
-	DEFER_PUSH(node, DeclArgList);
+	DEFER_PUSH(node, ParamOrArgList);
 
 	FOR_PT(p, flingDeclProc_ArgList_Item)
 	{

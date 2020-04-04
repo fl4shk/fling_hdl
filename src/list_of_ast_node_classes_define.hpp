@@ -10,20 +10,11 @@
 	\
 	X(DeclPackage) \
 	\
-	X(DeclParamList) \
-	\
+	X(ParamOrArgList) \
 	X(DeclParamList_Item) \
-	\
-	X(DeclArgList) \
-	\
 	/* This covers both regular argument lists and those for `proc`s */ \
 	X(DeclArgList_Item) \
-	\
-	X(InstParamList) \
 	X(InstParamList_Named_Item) \
-	\
-	X(InstArgList) \
-	\
 	X(InstArgList_Named_Item) \
 	\
 	X(DeclModule) \
