@@ -27,8 +27,10 @@ public:		// functions
 	#undef GEN_VISIT_FUNC
 
 protected:		// functions
-	virtual void _print_node(const string& node, const string& lab);
-	virtual void _print_connect();
+
+
+	//virtual void _print_node(const string& node, const string& lab);
+	//virtual void _print_connect();
 };
 
 } // namespace fling_hdl
