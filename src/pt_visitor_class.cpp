@@ -96,7 +96,7 @@ inline bool _conv_pt_to_enum(EnumType& ret, bool cmp, EnumType check,
 }
 
 #define make_ast(type) \
-	new type(FilePos(_filename, ctx))
+	new type(_curr_ast_parent, FilePos(_filename, ctx));
 
 #define DEFER_PUSH(name, type) \
 	auto name = make_ast(type); \
@@ -150,8 +150,9 @@ int PtVisitor::run()
 	for (auto& p: _ast_etc_map)
 	{
 		_filename = p.second.filename();
-		_ast = new Program(FilePos(_filename,
+		_ast = new Program(nullptr, FilePos(_filename,
 			p.second.program_ctx()));
+		_curr_ast_parent = _ast;
 		p.second.ast().reset(_ast);
 		p.second.program_ctx()->accept(this);
 	}

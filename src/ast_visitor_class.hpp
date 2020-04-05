@@ -4,13 +4,21 @@
 // src/ast_visitor_class.hpp
 
 #include "misc_includes.hpp"
-#include "ast_node_classes.hpp"
 
 #include "list_of_ast_node_classes_define.hpp"
 
 namespace fling_hdl
 {
 
+namespace ast
+{
+
+#define X(name) \
+	class name;
+LIST_OF_AST_NODE_CLASSES(X)
+#undef X
+
+};
 
 class AstVisitor
 {

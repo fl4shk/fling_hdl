@@ -8,6 +8,7 @@
 
 #include "file_pos_class.hpp"
 #include "liborangepower_src/cpp_magic.hpp"
+#include "ast_visitor_class.hpp"
 
 namespace fling_hdl
 {
@@ -15,10 +16,10 @@ namespace fling_hdl
 namespace ast
 {
 
-#define SHARED_FUNC_CONTENTS(name, base_name) \
+#define SHARED_FUNC_CONTENTS_2(name, base_name) \
 	inline name() = default; \
-	inline name(const FilePos& s_fp) \
-		: base_name(s_fp) \
+	inline name(Base* s_parent, const FilePos& s_fp) \
+		: base_name(s_parent, s_fp) \
 	{ \
 	} \
 	GEN_MOVE_ONLY_CONSTRUCTORS_AND_ASSIGN(name); \
@@ -26,6 +27,12 @@ namespace ast
 	virtual inline string id() const \
 	{ \
 		return string(#name); \
+	}
+#define SHARED_FUNC_CONTENTS(name, base_name) \
+	SHARED_FUNC_CONTENTS_2(name, base_name) \
+	virtual void accept(AstVisitor* visitor) \
+	{ \
+		visitor->visit##name(this); \
 	}
 
 #define CONV_ENUM_CASE(type, which) \
@@ -50,12 +57,14 @@ using BaseSptrList = IndCircLinkList<BaseSptr>;
 class Base
 {
 protected:		// variables
+	Base* _parent = nullptr;
 	FilePos _fp;
+	size_t _level = 0;
 
 public:		// functions
 	inline Base() = default;
-	inline Base(const FilePos& s_fp)
-		: _fp(s_fp)
+	inline Base(Base* s_parent, const FilePos& s_fp)
+		: _parent(s_parent), _fp(s_fp)
 	{
 	}
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(Base);
@@ -457,7 +466,7 @@ class DeclClsOrMxn_ItemBase: public Base
 public:		// variables
 	AccSpec acc_spec = AccSpec::Pub;
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclClsOrMxn_ItemBase, Base);
+	SHARED_FUNC_CONTENTS_2(DeclClsOrMxn_ItemBase, Base);
 };
 
 class DeclClass_DeclVar: public DeclClsOrMxn_ItemBase
@@ -728,7 +737,7 @@ public:		// variables
 	// More like, we need to feed *our* childrens
 	BaseSptr to_feed;
 public:		// functions
-	SHARED_FUNC_CONTENTS(ExprUnopBase, Base);
+	SHARED_FUNC_CONTENTS_2(ExprUnopBase, Base);
 };
 
 class ExprBinopBase: public Base
@@ -736,7 +745,7 @@ class ExprBinopBase: public Base
 public:		// variables
 	BaseSptr left, right;
 public:		// functions
-	SHARED_FUNC_CONTENTS(ExprBinopBase, Base);
+	SHARED_FUNC_CONTENTS_2(ExprBinopBase, Base);
 };
 
 class ExprLogOr: public ExprBinopBase

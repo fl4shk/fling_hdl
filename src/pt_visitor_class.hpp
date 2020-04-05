@@ -57,6 +57,7 @@ private:		// variables
 	// The current filename
 	string _filename;
 	ast::Program* _ast = nullptr;
+	ast::Base* _curr_ast_parent = nullptr;
 
 	stack<string> _str_stack;
 	stack<BigNum> _num_stack;
@@ -480,16 +481,20 @@ class AstNodeDeferredPusher final
 {
 private:		// variables
 	PtVisitor* _pt_visitor = nullptr;
-	ast::Base* _node = nullptr;
+	ast::Base * _node = nullptr,
+		* _prev_ast_parent = nullptr;
 public:		// functions
 	inline AstNodeDeferredPusher(PtVisitor* s_pt_visitor, ast::Base* s_node)
 		: _pt_visitor(s_pt_visitor), _node(s_node)
 	{
+		_prev_ast_parent = _pt_visitor->_curr_ast_parent;
+		_pt_visitor->_curr_ast_parent = _node;
 	}
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AstNodeDeferredPusher);
 	inline ~AstNodeDeferredPusher()
 	{
 		_pt_visitor->_push_ast(_node);
+		_pt_visitor->_curr_ast_parent = _prev_ast_parent;
 	}
 };
 
