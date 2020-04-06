@@ -18,19 +18,41 @@ namespace ast
 LIST_OF_AST_NODE_CLASSES(X)
 #undef X
 
+class Base;
+using BaseSptr = shared_ptr<Base>;
+using BaseSptrList = IndCircLinkList<BaseSptr>;
+
 };
 
 class AstVisitor
 {
+protected:		// variables
+	string _memb_name;
+
 public:		// functions
 	inline AstVisitor() = default;
-	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AstVisitor);
 	virtual inline ~AstVisitor() = default;
+
+	GEN_GETTER_BY_CON_REF(memb_name);
 
 	#define GEN_VISIT_FUNC(name) \
 		virtual void visit##name(ast::name* node) = 0;
 	LIST_OF_AST_NODE_CLASSES(GEN_VISIT_FUNC)
 	#undef GEN_VISIT_FUNC
+
+private:		// functions
+
+	void _inner_accept_children(const string& memb_name, 
+		const ast::BaseSptr& node);
+
+	void _inner_accept_children(const string& memb_name,
+		const ast::BaseSptrList& node_list);
+
+protected:		// children acceptor functions
+	#define GEN_ACCEPT_CHILDREN(name) \
+		void _accept_children(ast::name* n);
+	LIST_OF_AST_NODE_CLASSES(GEN_ACCEPT_CHILDREN)
+	#undef GEN_ACCEPT_CHILDREN
 
 
 };

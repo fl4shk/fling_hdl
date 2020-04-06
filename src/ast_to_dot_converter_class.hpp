@@ -57,18 +57,17 @@ protected:		// visitor functions
 			/* -------- */ \
 			case State::BuildNodeVec: \
 				_update_node_vec_size(n); \
-				_build_node_vec_##name(n); \
+				_build_node_vec(n); \
 				break; \
 			case State::Print: \
-				_print_##name(n); \
+				_print(n); \
 				break; \
 			/* -------- */ \
 			} \
-			_accept_children_##name(n); \
+			_accept_children(n); \
 		} \
-		virtual void _build_node_vec_##name(ast::name* n); \
-		virtual void _print_##name(ast::name* n); \
-		virtual void _accept_children_##name(ast::name* n);
+		virtual void _build_node_vec(ast::name* n); \
+		virtual void _print(ast::name* n);
 	LIST_OF_AST_NODE_CLASSES(GEN_VISIT_FUNCS)
 	#undef GEN_VISIT_FUNCS
 };
