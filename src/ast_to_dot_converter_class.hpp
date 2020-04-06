@@ -56,20 +56,25 @@ protected:		// visitor functions
 			{ \
 			/* -------- */ \
 			case State::BuildNodeVec: \
-				_update_node_vec_size(n); \
 				_build_node_vec(n); \
 				break; \
 			case State::Print: \
 				_print(n); \
+				_accept_children(n); \
 				break; \
 			/* -------- */ \
 			} \
+		} \
+		virtual inline void _build_node_vec(ast::name* n) \
+		{ \
+			_update_node_vec_size(n); \
+			_node_vec.at(n->level()).insert(n); \
 			_accept_children(n); \
 		} \
-		virtual void _build_node_vec(ast::name* n); \
 		virtual void _print(ast::name* n);
 	LIST_OF_AST_NODE_CLASSES(GEN_VISIT_FUNCS)
 	#undef GEN_VISIT_FUNCS
+
 };
 
 } // namespace fling_hdl
