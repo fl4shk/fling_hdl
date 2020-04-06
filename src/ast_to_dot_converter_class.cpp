@@ -44,1156 +44,1717 @@ void AstToDotConverter::_print_conn(Base* parent, const string& child)
 {
 }
 
+#define AL(p, list) \
+	for (const auto& p: list) \
+	{ \
+		p->accept(this); \
+	}
+
 void AstToDotConverter
-	::visitProgram_build_node_vec
-	(Program* node)
+	::_build_node_vec_Program
+	(Program* n)
 {
 }
 void AstToDotConverter
-	::visitProgram_print
-	(Program* node)
+	::_print_Program
+	(Program* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_Program
+	(Program* n)
 {
 }
 
 void AstToDotConverter
-	::visitDeclPackage_build_node_vec
-	(DeclPackage* node)
+	::_build_node_vec_DeclPackage
+	(DeclPackage* n)
 {
 }
 void AstToDotConverter
-	::visitDeclPackage_print
-	(DeclPackage* node)
+	::_print_DeclPackage
+	(DeclPackage* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_DeclPackage
+	(DeclPackage* n)
 {
 }
 
 void AstToDotConverter
-	::visitParamOrArgList_build_node_vec
-	(ParamOrArgList* node)
+	::_build_node_vec_ParamOrArgList
+	(ParamOrArgList* n)
 {
 }
 void AstToDotConverter
-	::visitParamOrArgList_print
-	(ParamOrArgList* node)
+	::_print_ParamOrArgList
+	(ParamOrArgList* n)
 {
 }
 void AstToDotConverter
-	::visitDeclParamList_Item_build_node_vec
-	(DeclParamList_Item* node)
+	::_accept_children_ParamOrArgList
+	(ParamOrArgList* n)
 {
 }
 void AstToDotConverter
-	::visitDeclParamList_Item_print
-	(DeclParamList_Item* node)
+	::_build_node_vec_DeclParamList_Item
+	(DeclParamList_Item* n)
+{
+}
+void AstToDotConverter
+	::_print_DeclParamList_Item
+	(DeclParamList_Item* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_DeclParamList_Item
+	(DeclParamList_Item* n)
 {
 }
 // This covers both regular argument lists and those for `proc`s
 void AstToDotConverter
-	::visitDeclArgList_Item_build_node_vec
-	(DeclArgList_Item* node)
+	::_build_node_vec_DeclArgList_Item
+	(DeclArgList_Item* n)
 {
 }
 void AstToDotConverter
-	::visitDeclArgList_Item_print
-	(DeclArgList_Item* node)
+	::_print_DeclArgList_Item
+	(DeclArgList_Item* n)
 {
 }
 void AstToDotConverter
-	::visitInstParamList_Named_Item_build_node_vec
-	(InstParamList_Named_Item* node)
+	::_accept_children_DeclArgList_Item
+	(DeclArgList_Item* n)
 {
 }
 void AstToDotConverter
-	::visitInstParamList_Named_Item_print
-	(InstParamList_Named_Item* node)
+	::_build_node_vec_InstParamList_Named_Item
+	(InstParamList_Named_Item* n)
 {
 }
 void AstToDotConverter
-	::visitInstArgList_Named_Item_build_node_vec
-	(InstArgList_Named_Item* node)
+	::_print_InstParamList_Named_Item
+	(InstParamList_Named_Item* n)
 {
 }
 void AstToDotConverter
-	::visitInstArgList_Named_Item_print
-	(InstArgList_Named_Item* node)
-{
-}
-
-void AstToDotConverter
-	::visitDeclModule_build_node_vec
-	(DeclModule* node)
+	::_accept_children_InstParamList_Named_Item
+	(InstParamList_Named_Item* n)
 {
 }
 void AstToDotConverter
-	::visitDeclModule_print
-	(DeclModule* node)
-{
-}
-
-void AstToDotConverter
-	::visitInstModule_build_node_vec
-	(InstModule* node)
+	::_build_node_vec_InstArgList_Named_Item
+	(InstArgList_Named_Item* n)
 {
 }
 void AstToDotConverter
-	::visitInstModule_print
-	(InstModule* node)
+	::_print_InstArgList_Named_Item
+	(InstArgList_Named_Item* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_InstArgList_Named_Item
+	(InstArgList_Named_Item* n)
 {
 }
 
 void AstToDotConverter
-	::visitGenIf_build_node_vec
-	(GenIf* node)
+	::_build_node_vec_DeclModule
+	(DeclModule* n)
 {
 }
 void AstToDotConverter
-	::visitGenIf_print
-	(GenIf* node)
+	::_print_DeclModule
+	(DeclModule* n)
 {
 }
 void AstToDotConverter
-	::visitGenIf_Elif_build_node_vec
-	(GenIf_Elif* node)
-{
-}
-void AstToDotConverter
-	::visitGenIf_Elif_print
-	(GenIf_Elif* node)
-{
-}
-void AstToDotConverter
-	::visitGenIf_Else_build_node_vec
-	(GenIf_Else* node)
-{
-}
-void AstToDotConverter
-	::visitGenIf_Else_print
-	(GenIf_Else* node)
+	::_accept_children_DeclModule
+	(DeclModule* n)
 {
 }
 
 void AstToDotConverter
-	::visitGenSwitch_build_node_vec
-	(GenSwitch* node)
+	::_build_node_vec_InstModule
+	(InstModule* n)
 {
 }
 void AstToDotConverter
-	::visitGenSwitch_print
-	(GenSwitch* node)
+	::_print_InstModule
+	(InstModule* n)
 {
 }
 void AstToDotConverter
-	::visitGenSwitch_Case_build_node_vec
-	(GenSwitch_Case* node)
-{
-}
-void AstToDotConverter
-	::visitGenSwitch_Case_print
-	(GenSwitch_Case* node)
-{
-}
-void AstToDotConverter
-	::visitGenSwitch_Default_build_node_vec
-	(GenSwitch_Default* node)
-{
-}
-void AstToDotConverter
-	::visitGenSwitch_Default_print
-	(GenSwitch_Default* node)
+	::_accept_children_InstModule
+	(InstModule* n)
 {
 }
 
 void AstToDotConverter
-	::visitGenFor_build_node_vec
-	(GenFor* node)
+	::_build_node_vec_GenIf
+	(GenIf* n)
 {
 }
 void AstToDotConverter
-	::visitGenFor_print
-	(GenFor* node)
+	::_print_GenIf
+	(GenIf* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_GenIf
+	(GenIf* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_GenIf_Elif
+	(GenIf_Elif* n)
+{
+}
+void AstToDotConverter
+	::_print_GenIf_Elif
+	(GenIf_Elif* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_GenIf_Elif
+	(GenIf_Elif* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_GenIf_Else
+	(GenIf_Else* n)
+{
+}
+void AstToDotConverter
+	::_print_GenIf_Else
+	(GenIf_Else* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_GenIf_Else
+	(GenIf_Else* n)
 {
 }
 
 void AstToDotConverter
-	::visitContAssign_build_node_vec
-	(ContAssign* node)
+	::_build_node_vec_GenSwitch
+	(GenSwitch* n)
 {
 }
 void AstToDotConverter
-	::visitContAssign_print
-	(ContAssign* node)
+	::_print_GenSwitch
+	(GenSwitch* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_GenSwitch
+	(GenSwitch* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_GenSwitch_Case
+	(GenSwitch_Case* n)
+{
+}
+void AstToDotConverter
+	::_print_GenSwitch_Case
+	(GenSwitch_Case* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_GenSwitch_Case
+	(GenSwitch_Case* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_GenSwitch_Default
+	(GenSwitch_Default* n)
+{
+}
+void AstToDotConverter
+	::_print_GenSwitch_Default
+	(GenSwitch_Default* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_GenSwitch_Default
+	(GenSwitch_Default* n)
 {
 }
 
 void AstToDotConverter
-	::visitBehav_build_node_vec
-	(Behav* node)
+	::_build_node_vec_GenFor
+	(GenFor* n)
 {
 }
 void AstToDotConverter
-	::visitBehav_print
-	(Behav* node)
+	::_print_GenFor
+	(GenFor* n)
 {
 }
 void AstToDotConverter
-	::visitBehav_SeqEdgeListItem_build_node_vec
-	(Behav_SeqEdgeListItem* node)
+	::_accept_children_GenFor
+	(GenFor* n)
+{
+}
+
+void AstToDotConverter
+	::_build_node_vec_ContAssign
+	(ContAssign* n)
 {
 }
 void AstToDotConverter
-	::visitBehav_SeqEdgeListItem_print
-	(Behav_SeqEdgeListItem* node)
+	::_print_ContAssign
+	(ContAssign* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ContAssign
+	(ContAssign* n)
+{
+}
+
+void AstToDotConverter
+	::_build_node_vec_Behav
+	(Behav* n)
+{
+}
+void AstToDotConverter
+	::_print_Behav
+	(Behav* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_Behav
+	(Behav* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_Behav_SeqEdgeListItem
+	(Behav_SeqEdgeListItem* n)
+{
+}
+void AstToDotConverter
+	::_print_Behav_SeqEdgeListItem
+	(Behav_SeqEdgeListItem* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_Behav_SeqEdgeListItem
+	(Behav_SeqEdgeListItem* n)
 {
 }
 // This is used for behavioral blocks, functions, and tasks
 void AstToDotConverter
-	::visitBehav_Scope_build_node_vec
-	(Behav_Scope* node)
+	::_build_node_vec_Behav_Scope
+	(Behav_Scope* n)
 {
 }
 void AstToDotConverter
-	::visitBehav_Scope_print
-	(Behav_Scope* node)
-{
-}
-
-void AstToDotConverter
-	::visitIf_build_node_vec
-	(If* node)
+	::_print_Behav_Scope
+	(Behav_Scope* n)
 {
 }
 void AstToDotConverter
-	::visitIf_print
-	(If* node)
-{
-}
-void AstToDotConverter
-	::visitIf_Elif_build_node_vec
-	(If_Elif* node)
-{
-}
-void AstToDotConverter
-	::visitIf_Elif_print
-	(If_Elif* node)
-{
-}
-void AstToDotConverter
-	::visitIf_Else_build_node_vec
-	(If_Else* node)
-{
-}
-void AstToDotConverter
-	::visitIf_Else_print
-	(If_Else* node)
+	::_accept_children_Behav_Scope
+	(Behav_Scope* n)
 {
 }
 
 void AstToDotConverter
-	::visitSwitch_build_node_vec
-	(Switch* node)
+	::_build_node_vec_If
+	(If* n)
 {
 }
 void AstToDotConverter
-	::visitSwitch_print
-	(Switch* node)
+	::_print_If
+	(If* n)
 {
 }
 void AstToDotConverter
-	::visitSwitchz_build_node_vec
-	(Switchz* node)
+	::_accept_children_If
+	(If* n)
 {
 }
 void AstToDotConverter
-	::visitSwitchz_print
-	(Switchz* node)
+	::_build_node_vec_If_Elif
+	(If_Elif* n)
 {
 }
 void AstToDotConverter
-	::visitSwitchOrSwitchz_Case_build_node_vec
-	(SwitchOrSwitchz_Case* node)
+	::_print_If_Elif
+	(If_Elif* n)
 {
 }
 void AstToDotConverter
-	::visitSwitchOrSwitchz_Case_print
-	(SwitchOrSwitchz_Case* node)
+	::_accept_children_If_Elif
+	(If_Elif* n)
 {
 }
 void AstToDotConverter
-	::visitSwitchOrSwitchz_Default_build_node_vec
-	(SwitchOrSwitchz_Default* node)
+	::_build_node_vec_If_Else
+	(If_Else* n)
 {
 }
 void AstToDotConverter
-	::visitSwitchOrSwitchz_Default_print
-	(SwitchOrSwitchz_Default* node)
-{
-}
-
-void AstToDotConverter
-	::visitFor_build_node_vec
-	(For* node)
+	::_print_If_Else
+	(If_Else* n)
 {
 }
 void AstToDotConverter
-	::visitFor_print
-	(For* node)
-{
-}
-void AstToDotConverter
-	::visitWhile_build_node_vec
-	(While* node)
-{
-}
-void AstToDotConverter
-	::visitWhile_print
-	(While* node)
+	::_accept_children_If_Else
+	(If_Else* n)
 {
 }
 
 void AstToDotConverter
-	::visitNonBlkAssign_build_node_vec
-	(NonBlkAssign* node)
+	::_build_node_vec_Switch
+	(Switch* n)
 {
 }
 void AstToDotConverter
-	::visitNonBlkAssign_print
-	(NonBlkAssign* node)
+	::_print_Switch
+	(Switch* n)
 {
 }
 void AstToDotConverter
-	::visitBlkAssign_build_node_vec
-	(BlkAssign* node)
+	::_accept_children_Switch
+	(Switch* n)
 {
 }
 void AstToDotConverter
-	::visitBlkAssign_print
-	(BlkAssign* node)
-{
-}
-
-void AstToDotConverter
-	::visitDeclWire_build_node_vec
-	(DeclWire* node)
+	::_build_node_vec_Switchz
+	(Switchz* n)
 {
 }
 void AstToDotConverter
-	::visitDeclWire_print
-	(DeclWire* node)
+	::_print_Switchz
+	(Switchz* n)
 {
 }
 void AstToDotConverter
-	::visitDeclVar_build_node_vec
-	(DeclVar* node)
+	::_accept_children_Switchz
+	(Switchz* n)
 {
 }
 void AstToDotConverter
-	::visitDeclVar_print
-	(DeclVar* node)
+	::_build_node_vec_SwitchOrSwitchz_Case
+	(SwitchOrSwitchz_Case* n)
 {
 }
 void AstToDotConverter
-	::visitDeclConst_build_node_vec
-	(DeclConst* node)
+	::_print_SwitchOrSwitchz_Case
+	(SwitchOrSwitchz_Case* n)
 {
 }
 void AstToDotConverter
-	::visitDeclConst_print
-	(DeclConst* node)
-{
-}
-
-void AstToDotConverter
-	::visitDeclEnum_build_node_vec
-	(DeclEnum* node)
+	::_accept_children_SwitchOrSwitchz_Case
+	(SwitchOrSwitchz_Case* n)
 {
 }
 void AstToDotConverter
-	::visitDeclEnum_print
-	(DeclEnum* node)
-{
-}
-
-void AstToDotConverter
-	::visitDeclMixin_build_node_vec
-	(DeclMixin* node)
+	::_build_node_vec_SwitchOrSwitchz_Default
+	(SwitchOrSwitchz_Default* n)
 {
 }
 void AstToDotConverter
-	::visitDeclMixin_print
-	(DeclMixin* node)
+	::_print_SwitchOrSwitchz_Default
+	(SwitchOrSwitchz_Default* n)
 {
 }
 void AstToDotConverter
-	::visitDeclClass_build_node_vec
-	(DeclClass* node)
-{
-}
-void AstToDotConverter
-	::visitDeclClass_print
-	(DeclClass* node)
+	::_accept_children_SwitchOrSwitchz_Default
+	(SwitchOrSwitchz_Default* n)
 {
 }
 
 void AstToDotConverter
-	::visitDeclClass_DeclVar_build_node_vec
-	(DeclClass_DeclVar* node)
+	::_build_node_vec_For
+	(For* n)
 {
 }
 void AstToDotConverter
-	::visitDeclClass_DeclVar_print
-	(DeclClass_DeclVar* node)
+	::_print_For
+	(For* n)
 {
 }
 void AstToDotConverter
-	::visitDeclClsOrMxn_DeclType_build_node_vec
-	(DeclClsOrMxn_DeclType* node)
+	::_accept_children_For
+	(For* n)
 {
 }
 void AstToDotConverter
-	::visitDeclClsOrMxn_DeclType_print
-	(DeclClsOrMxn_DeclType* node)
+	::_build_node_vec_While
+	(While* n)
 {
 }
 void AstToDotConverter
-	::visitDeclClsOrMxn_DeclAliasOrConst_build_node_vec
-	(DeclClsOrMxn_DeclAliasOrConst* node)
+	::_print_While
+	(While* n)
 {
 }
 void AstToDotConverter
-	::visitDeclClsOrMxn_DeclAliasOrConst_print
-	(DeclClsOrMxn_DeclAliasOrConst* node)
-{
-}
-
-void AstToDotConverter
-	::visitDeclClsOrMxn_DeclSubprogFullDefn_build_node_vec
-	(DeclClsOrMxn_DeclSubprogFullDefn* node)
-{
-}
-void AstToDotConverter
-	::visitDeclClsOrMxn_DeclSubprogFullDefn_print
-	(DeclClsOrMxn_DeclSubprogFullDefn* node)
-{
-}
-void AstToDotConverter
-	::visitDeclClsOrMxn_DeclSubprogAbstract_build_node_vec
-	(DeclClsOrMxn_DeclSubprogAbstract* node)
-{
-}
-void AstToDotConverter
-	::visitDeclClsOrMxn_DeclSubprogAbstract_print
-	(DeclClsOrMxn_DeclSubprogAbstract* node)
+	::_accept_children_While
+	(While* n)
 {
 }
 
 void AstToDotConverter
-	::visitDeclFunc_build_node_vec
-	(DeclFunc* node)
+	::_build_node_vec_NonBlkAssign
+	(NonBlkAssign* n)
 {
 }
 void AstToDotConverter
-	::visitDeclFunc_print
-	(DeclFunc* node)
+	::_print_NonBlkAssign
+	(NonBlkAssign* n)
 {
 }
 void AstToDotConverter
-	::visitDeclFunc_Header_build_node_vec
-	(DeclFunc_Header* node)
+	::_accept_children_NonBlkAssign
+	(NonBlkAssign* n)
 {
 }
 void AstToDotConverter
-	::visitDeclFunc_Header_print
-	(DeclFunc_Header* node)
+	::_build_node_vec_BlkAssign
+	(BlkAssign* n)
 {
 }
 void AstToDotConverter
-	::visitDeclFunc_Return_build_node_vec
-	(DeclFunc_Return* node)
+	::_print_BlkAssign
+	(BlkAssign* n)
 {
 }
 void AstToDotConverter
-	::visitDeclFunc_Return_print
-	(DeclFunc_Return* node)
-{
-}
-
-void AstToDotConverter
-	::visitDeclTask_build_node_vec
-	(DeclTask* node)
-{
-}
-void AstToDotConverter
-	::visitDeclTask_print
-	(DeclTask* node)
-{
-}
-void AstToDotConverter
-	::visitDeclTask_Header_build_node_vec
-	(DeclTask_Header* node)
-{
-}
-void AstToDotConverter
-	::visitDeclTask_Header_print
-	(DeclTask_Header* node)
+	::_accept_children_BlkAssign
+	(BlkAssign* n)
 {
 }
 
 void AstToDotConverter
-	::visitDeclProc_build_node_vec
-	(DeclProc* node)
+	::_build_node_vec_DeclWire
+	(DeclWire* n)
 {
 }
 void AstToDotConverter
-	::visitDeclProc_print
-	(DeclProc* node)
+	::_print_DeclWire
+	(DeclWire* n)
 {
 }
 void AstToDotConverter
-	::visitDeclProc_Header_build_node_vec
-	(DeclProc_Header* node)
+	::_accept_children_DeclWire
+	(DeclWire* n)
 {
 }
 void AstToDotConverter
-	::visitDeclProc_Header_print
-	(DeclProc_Header* node)
-{
-}
-
-void AstToDotConverter
-	::visitDeclAlias_Value_build_node_vec
-	(DeclAlias_Value* node)
+	::_build_node_vec_DeclVar
+	(DeclVar* n)
 {
 }
 void AstToDotConverter
-	::visitDeclAlias_Value_print
-	(DeclAlias_Value* node)
+	::_print_DeclVar
+	(DeclVar* n)
 {
 }
 void AstToDotConverter
-	::visitDeclAlias_Type_build_node_vec
-	(DeclAlias_Type* node)
+	::_accept_children_DeclVar
+	(DeclVar* n)
 {
 }
 void AstToDotConverter
-	::visitDeclAlias_Type_print
-	(DeclAlias_Type* node)
+	::_build_node_vec_DeclConst
+	(DeclConst* n)
 {
 }
 void AstToDotConverter
-	::visitDeclAlias_Module_build_node_vec
-	(DeclAlias_Module* node)
+	::_print_DeclConst
+	(DeclConst* n)
 {
 }
 void AstToDotConverter
-	::visitDeclAlias_Module_print
-	(DeclAlias_Module* node)
+	::_accept_children_DeclConst
+	(DeclConst* n)
 {
 }
 
 void AstToDotConverter
-	::visitIdentList_build_node_vec
-	(IdentList* node)
+	::_build_node_vec_DeclEnum
+	(DeclEnum* n)
 {
 }
 void AstToDotConverter
-	::visitIdentList_print
-	(IdentList* node)
+	::_print_DeclEnum
+	(DeclEnum* n)
 {
 }
 void AstToDotConverter
-	::visitScopedIdent_build_node_vec
-	(ScopedIdent* node)
-{
-}
-void AstToDotConverter
-	::visitScopedIdent_print
-	(ScopedIdent* node)
-{
-}
-void AstToDotConverter
-	::visitImportList_build_node_vec
-	(ImportList* node)
-{
-}
-void AstToDotConverter
-	::visitImportList_print
-	(ImportList* node)
+	::_accept_children_DeclEnum
+	(DeclEnum* n)
 {
 }
 
 void AstToDotConverter
-	::visitTypenameOrModname_Special_build_node_vec
-	(TypenameOrModname_Special* node)
+	::_build_node_vec_DeclMixin
+	(DeclMixin* n)
 {
 }
 void AstToDotConverter
-	::visitTypenameOrModname_Special_print
-	(TypenameOrModname_Special* node)
+	::_print_DeclMixin
+	(DeclMixin* n)
 {
 }
 void AstToDotConverter
-	::visitTypenameOrModname_Cstm_build_node_vec
-	(TypenameOrModname_Cstm* node)
+	::_accept_children_DeclMixin
+	(DeclMixin* n)
 {
 }
 void AstToDotConverter
-	::visitTypenameOrModname_Cstm_print
-	(TypenameOrModname_Cstm* node)
+	::_build_node_vec_DeclClass
+	(DeclClass* n)
 {
 }
 void AstToDotConverter
-	::visitTypenameOrModname_Typeof_build_node_vec
-	(TypenameOrModname_Typeof* node)
+	::_print_DeclClass
+	(DeclClass* n)
 {
 }
 void AstToDotConverter
-	::visitTypenameOrModname_Typeof_print
-	(TypenameOrModname_Typeof* node)
-{
-}
-void AstToDotConverter
-	::visitTypenameOrModname_Cstm_Item_build_node_vec
-	(TypenameOrModname_Cstm_Item* node)
-{
-}
-void AstToDotConverter
-	::visitTypenameOrModname_Cstm_Item_print
-	(TypenameOrModname_Cstm_Item* node)
-{
-}
-void AstToDotConverter
-	::visitTypenameOrModname_Builtin_build_node_vec
-	(TypenameOrModname_Builtin* node)
-{
-}
-void AstToDotConverter
-	::visitTypenameOrModname_Builtin_print
-	(TypenameOrModname_Builtin* node)
+	::_accept_children_DeclClass
+	(DeclClass* n)
 {
 }
 
 void AstToDotConverter
-	::visitExprMux_build_node_vec
-	(ExprMux* node)
+	::_build_node_vec_DeclClass_DeclVar
+	(DeclClass_DeclVar* n)
 {
 }
 void AstToDotConverter
-	::visitExprMux_print
-	(ExprMux* node)
-{
-}
-
-void AstToDotConverter
-	::visitExprLogOr_build_node_vec
-	(ExprLogOr* node)
+	::_print_DeclClass_DeclVar
+	(DeclClass_DeclVar* n)
 {
 }
 void AstToDotConverter
-	::visitExprLogOr_print
-	(ExprLogOr* node)
+	::_accept_children_DeclClass_DeclVar
+	(DeclClass_DeclVar* n)
 {
 }
 void AstToDotConverter
-	::visitExprLogAnd_build_node_vec
-	(ExprLogAnd* node)
+	::_build_node_vec_DeclClsOrMxn_DeclType
+	(DeclClsOrMxn_DeclType* n)
 {
 }
 void AstToDotConverter
-	::visitExprLogAnd_print
-	(ExprLogAnd* node)
-{
-}
-
-void AstToDotConverter
-	::visitExprBinopBitOr_build_node_vec
-	(ExprBinopBitOr* node)
+	::_print_DeclClsOrMxn_DeclType
+	(DeclClsOrMxn_DeclType* n)
 {
 }
 void AstToDotConverter
-	::visitExprBinopBitOr_print
-	(ExprBinopBitOr* node)
+	::_accept_children_DeclClsOrMxn_DeclType
+	(DeclClsOrMxn_DeclType* n)
 {
 }
 void AstToDotConverter
-	::visitExprBinopBitNor_build_node_vec
-	(ExprBinopBitNor* node)
+	::_build_node_vec_DeclClsOrMxn_DeclAliasOrConst
+	(DeclClsOrMxn_DeclAliasOrConst* n)
 {
 }
 void AstToDotConverter
-	::visitExprBinopBitNor_print
-	(ExprBinopBitNor* node)
+	::_print_DeclClsOrMxn_DeclAliasOrConst
+	(DeclClsOrMxn_DeclAliasOrConst* n)
 {
 }
 void AstToDotConverter
-	::visitExprBinopBitAnd_build_node_vec
-	(ExprBinopBitAnd* node)
-{
-}
-void AstToDotConverter
-	::visitExprBinopBitAnd_print
-	(ExprBinopBitAnd* node)
-{
-}
-void AstToDotConverter
-	::visitExprBinopBitNand_build_node_vec
-	(ExprBinopBitNand* node)
-{
-}
-void AstToDotConverter
-	::visitExprBinopBitNand_print
-	(ExprBinopBitNand* node)
-{
-}
-void AstToDotConverter
-	::visitExprBinopBitXor_build_node_vec
-	(ExprBinopBitXor* node)
-{
-}
-void AstToDotConverter
-	::visitExprBinopBitXor_print
-	(ExprBinopBitXor* node)
-{
-}
-void AstToDotConverter
-	::visitExprBinopBitXnor_build_node_vec
-	(ExprBinopBitXnor* node)
-{
-}
-void AstToDotConverter
-	::visitExprBinopBitXnor_print
-	(ExprBinopBitXnor* node)
+	::_accept_children_DeclClsOrMxn_DeclAliasOrConst
+	(DeclClsOrMxn_DeclAliasOrConst* n)
 {
 }
 
 void AstToDotConverter
-	::visitExprCmpEq_build_node_vec
-	(ExprCmpEq* node)
+	::_build_node_vec_DeclClsOrMxn_DeclSubprogFullDefn
+	(DeclClsOrMxn_DeclSubprogFullDefn* n)
 {
 }
 void AstToDotConverter
-	::visitExprCmpEq_print
-	(ExprCmpEq* node)
+	::_print_DeclClsOrMxn_DeclSubprogFullDefn
+	(DeclClsOrMxn_DeclSubprogFullDefn* n)
 {
 }
 void AstToDotConverter
-	::visitExprCmpNe_build_node_vec
-	(ExprCmpNe* node)
+	::_accept_children_DeclClsOrMxn_DeclSubprogFullDefn
+	(DeclClsOrMxn_DeclSubprogFullDefn* n)
 {
 }
 void AstToDotConverter
-	::visitExprCmpNe_print
-	(ExprCmpNe* node)
+	::_build_node_vec_DeclClsOrMxn_DeclSubprogAbstract
+	(DeclClsOrMxn_DeclSubprogAbstract* n)
 {
 }
 void AstToDotConverter
-	::visitExprCaseCmpEq_build_node_vec
-	(ExprCaseCmpEq* node)
+	::_print_DeclClsOrMxn_DeclSubprogAbstract
+	(DeclClsOrMxn_DeclSubprogAbstract* n)
 {
 }
 void AstToDotConverter
-	::visitExprCaseCmpEq_print
-	(ExprCaseCmpEq* node)
-{
-}
-void AstToDotConverter
-	::visitExprCaseCmpNe_build_node_vec
-	(ExprCaseCmpNe* node)
-{
-}
-void AstToDotConverter
-	::visitExprCaseCmpNe_print
-	(ExprCaseCmpNe* node)
-{
-}
-void AstToDotConverter
-	::visitExprCmpLt_build_node_vec
-	(ExprCmpLt* node)
-{
-}
-void AstToDotConverter
-	::visitExprCmpLt_print
-	(ExprCmpLt* node)
-{
-}
-void AstToDotConverter
-	::visitExprCmpLe_build_node_vec
-	(ExprCmpLe* node)
-{
-}
-void AstToDotConverter
-	::visitExprCmpLe_print
-	(ExprCmpLe* node)
-{
-}
-void AstToDotConverter
-	::visitExprCmpGt_build_node_vec
-	(ExprCmpGt* node)
-{
-}
-void AstToDotConverter
-	::visitExprCmpGt_print
-	(ExprCmpGt* node)
-{
-}
-void AstToDotConverter
-	::visitExprCmpGe_build_node_vec
-	(ExprCmpGe* node)
-{
-}
-void AstToDotConverter
-	::visitExprCmpGe_print
-	(ExprCmpGe* node)
+	::_accept_children_DeclClsOrMxn_DeclSubprogAbstract
+	(DeclClsOrMxn_DeclSubprogAbstract* n)
 {
 }
 
 void AstToDotConverter
-	::visitExprBitLsl_build_node_vec
-	(ExprBitLsl* node)
+	::_build_node_vec_DeclFunc
+	(DeclFunc* n)
 {
 }
 void AstToDotConverter
-	::visitExprBitLsl_print
-	(ExprBitLsl* node)
+	::_print_DeclFunc
+	(DeclFunc* n)
 {
 }
 void AstToDotConverter
-	::visitExprBitLsr_build_node_vec
-	(ExprBitLsr* node)
+	::_accept_children_DeclFunc
+	(DeclFunc* n)
 {
 }
 void AstToDotConverter
-	::visitExprBitLsr_print
-	(ExprBitLsr* node)
+	::_build_node_vec_DeclFunc_Header
+	(DeclFunc_Header* n)
 {
 }
 void AstToDotConverter
-	::visitExprBitAsr_build_node_vec
-	(ExprBitAsr* node)
+	::_print_DeclFunc_Header
+	(DeclFunc_Header* n)
 {
 }
 void AstToDotConverter
-	::visitExprBitAsr_print
-	(ExprBitAsr* node)
-{
-}
-
-void AstToDotConverter
-	::visitExprBinopPlus_build_node_vec
-	(ExprBinopPlus* node)
+	::_accept_children_DeclFunc_Header
+	(DeclFunc_Header* n)
 {
 }
 void AstToDotConverter
-	::visitExprBinopPlus_print
-	(ExprBinopPlus* node)
+	::_build_node_vec_DeclFunc_Return
+	(DeclFunc_Return* n)
 {
 }
 void AstToDotConverter
-	::visitExprBinopMinus_build_node_vec
-	(ExprBinopMinus* node)
+	::_print_DeclFunc_Return
+	(DeclFunc_Return* n)
 {
 }
 void AstToDotConverter
-	::visitExprBinopMinus_print
-	(ExprBinopMinus* node)
+	::_accept_children_DeclFunc_Return
+	(DeclFunc_Return* n)
 {
 }
 
 void AstToDotConverter
-	::visitExprMul_build_node_vec
-	(ExprMul* node)
+	::_build_node_vec_DeclTask
+	(DeclTask* n)
 {
 }
 void AstToDotConverter
-	::visitExprMul_print
-	(ExprMul* node)
+	::_print_DeclTask
+	(DeclTask* n)
 {
 }
 void AstToDotConverter
-	::visitExprDiv_build_node_vec
-	(ExprDiv* node)
+	::_accept_children_DeclTask
+	(DeclTask* n)
 {
 }
 void AstToDotConverter
-	::visitExprDiv_print
-	(ExprDiv* node)
+	::_build_node_vec_DeclTask_Header
+	(DeclTask_Header* n)
 {
 }
 void AstToDotConverter
-	::visitExprMod_build_node_vec
-	(ExprMod* node)
+	::_print_DeclTask_Header
+	(DeclTask_Header* n)
 {
 }
 void AstToDotConverter
-	::visitExprMod_print
-	(ExprMod* node)
-{
-}
-
-void AstToDotConverter
-	::visitExprUnopPlus_build_node_vec
-	(ExprUnopPlus* node)
-{
-}
-void AstToDotConverter
-	::visitExprUnopPlus_print
-	(ExprUnopPlus* node)
-{
-}
-void AstToDotConverter
-	::visitExprUnopMinus_build_node_vec
-	(ExprUnopMinus* node)
-{
-}
-void AstToDotConverter
-	::visitExprUnopMinus_print
-	(ExprUnopMinus* node)
-{
-}
-void AstToDotConverter
-	::visitExprLogNot_build_node_vec
-	(ExprLogNot* node)
-{
-}
-void AstToDotConverter
-	::visitExprLogNot_print
-	(ExprLogNot* node)
-{
-}
-void AstToDotConverter
-	::visitExprBitNot_build_node_vec
-	(ExprBitNot* node)
-{
-}
-void AstToDotConverter
-	::visitExprBitNot_print
-	(ExprBitNot* node)
+	::_accept_children_DeclTask_Header
+	(DeclTask_Header* n)
 {
 }
 
 void AstToDotConverter
-	::visitExprUnopBitOr_build_node_vec
-	(ExprUnopBitOr* node)
+	::_build_node_vec_DeclProc
+	(DeclProc* n)
 {
 }
 void AstToDotConverter
-	::visitExprUnopBitOr_print
-	(ExprUnopBitOr* node)
+	::_print_DeclProc
+	(DeclProc* n)
 {
 }
 void AstToDotConverter
-	::visitExprUnopBitNor_build_node_vec
-	(ExprUnopBitNor* node)
+	::_accept_children_DeclProc
+	(DeclProc* n)
 {
 }
 void AstToDotConverter
-	::visitExprUnopBitNor_print
-	(ExprUnopBitNor* node)
+	::_build_node_vec_DeclProc_Header
+	(DeclProc_Header* n)
 {
 }
 void AstToDotConverter
-	::visitExprUnopBitAnd_build_node_vec
-	(ExprUnopBitAnd* node)
+	::_print_DeclProc_Header
+	(DeclProc_Header* n)
 {
 }
 void AstToDotConverter
-	::visitExprUnopBitAnd_print
-	(ExprUnopBitAnd* node)
-{
-}
-void AstToDotConverter
-	::visitExprUnopBitNand_build_node_vec
-	(ExprUnopBitNand* node)
-{
-}
-void AstToDotConverter
-	::visitExprUnopBitNand_print
-	(ExprUnopBitNand* node)
-{
-}
-void AstToDotConverter
-	::visitExprUnopBitXor_build_node_vec
-	(ExprUnopBitXor* node)
-{
-}
-void AstToDotConverter
-	::visitExprUnopBitXor_print
-	(ExprUnopBitXor* node)
-{
-}
-void AstToDotConverter
-	::visitExprUnopBitXnor_build_node_vec
-	(ExprUnopBitXnor* node)
-{
-}
-void AstToDotConverter
-	::visitExprUnopBitXnor_print
-	(ExprUnopBitXnor* node)
+	::_accept_children_DeclProc_Header
+	(DeclProc_Header* n)
 {
 }
 
 void AstToDotConverter
-	::visitExprLiteral_build_node_vec
-	(ExprLiteral* node)
+	::_build_node_vec_DeclAlias_Value
+	(DeclAlias_Value* n)
 {
 }
 void AstToDotConverter
-	::visitExprLiteral_print
-	(ExprLiteral* node)
+	::_print_DeclAlias_Value
+	(DeclAlias_Value* n)
 {
 }
 void AstToDotConverter
-	::visitExprSized_build_node_vec
-	(ExprSized* node)
+	::_accept_children_DeclAlias_Value
+	(DeclAlias_Value* n)
 {
 }
 void AstToDotConverter
-	::visitExprSized_print
-	(ExprSized* node)
-{
-}
-
-void AstToDotConverter
-	::visitExprRange_build_node_vec
-	(ExprRange* node)
+	::_build_node_vec_DeclAlias_Type
+	(DeclAlias_Type* n)
 {
 }
 void AstToDotConverter
-	::visitExprRange_print
-	(ExprRange* node)
-{
-}
-
-void AstToDotConverter
-	::visitExprCat_build_node_vec
-	(ExprCat* node)
+	::_print_DeclAlias_Type
+	(DeclAlias_Type* n)
 {
 }
 void AstToDotConverter
-	::visitExprCat_print
-	(ExprCat* node)
+	::_accept_children_DeclAlias_Type
+	(DeclAlias_Type* n)
 {
 }
 void AstToDotConverter
-	::visitExprRepl_build_node_vec
-	(ExprRepl* node)
+	::_build_node_vec_DeclAlias_Module
+	(DeclAlias_Module* n)
 {
 }
 void AstToDotConverter
-	::visitExprRepl_print
-	(ExprRepl* node)
+	::_print_DeclAlias_Module
+	(DeclAlias_Module* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_DeclAlias_Module
+	(DeclAlias_Module* n)
 {
 }
 
 void AstToDotConverter
-	::visitExprDollarSigned_build_node_vec
-	(ExprDollarSigned* node)
+	::_build_node_vec_IdentList
+	(IdentList* n)
 {
 }
 void AstToDotConverter
-	::visitExprDollarSigned_print
-	(ExprDollarSigned* node)
+	::_print_IdentList
+	(IdentList* n)
 {
 }
 void AstToDotConverter
-	::visitExprDollarUnsigned_build_node_vec
-	(ExprDollarUnsigned* node)
+	::_accept_children_IdentList
+	(IdentList* n)
 {
 }
 void AstToDotConverter
-	::visitExprDollarUnsigned_print
-	(ExprDollarUnsigned* node)
+	::_build_node_vec_ScopedIdent
+	(ScopedIdent* n)
 {
 }
 void AstToDotConverter
-	::visitExprDollarClog2_build_node_vec
-	(ExprDollarClog2* node)
+	::_print_ScopedIdent
+	(ScopedIdent* n)
 {
 }
 void AstToDotConverter
-	::visitExprDollarClog2_print
-	(ExprDollarClog2* node)
+	::_accept_children_ScopedIdent
+	(ScopedIdent* n)
 {
 }
 void AstToDotConverter
-	::visitExprDollarIsvtype_build_node_vec
-	(ExprDollarIsvtype* node)
+	::_build_node_vec_ImportList
+	(ImportList* n)
 {
 }
 void AstToDotConverter
-	::visitExprDollarIsvtype_print
-	(ExprDollarIsvtype* node)
+	::_print_ImportList
+	(ImportList* n)
 {
 }
 void AstToDotConverter
-	::visitExprDollarPow_build_node_vec
-	(ExprDollarPow* node)
-{
-}
-void AstToDotConverter
-	::visitExprDollarPow_print
-	(ExprDollarPow* node)
+	::_accept_children_ImportList
+	(ImportList* n)
 {
 }
 
 void AstToDotConverter
-	::visitExprIdentEtc_build_node_vec
-	(ExprIdentEtc* node)
+	::_build_node_vec_TypenameOrModname_Special
+	(TypenameOrModname_Special* n)
 {
 }
 void AstToDotConverter
-	::visitExprIdentEtc_print
-	(ExprIdentEtc* node)
+	::_print_TypenameOrModname_Special
+	(TypenameOrModname_Special* n)
 {
 }
 void AstToDotConverter
-	::visitExprIdentEtc_FirstItem_build_node_vec
-	(ExprIdentEtc_FirstItem* node)
+	::_accept_children_TypenameOrModname_Special
+	(TypenameOrModname_Special* n)
 {
 }
 void AstToDotConverter
-	::visitExprIdentEtc_FirstItem_print
-	(ExprIdentEtc_FirstItem* node)
+	::_build_node_vec_TypenameOrModname_Cstm
+	(TypenameOrModname_Cstm* n)
 {
 }
 void AstToDotConverter
-	::visitExprIdentEtc_NonSelfItem_build_node_vec
-	(ExprIdentEtc_NonSelfItem* node)
+	::_print_TypenameOrModname_Cstm
+	(TypenameOrModname_Cstm* n)
 {
 }
 void AstToDotConverter
-	::visitExprIdentEtc_NonSelfItem_print
-	(ExprIdentEtc_NonSelfItem* node)
+	::_accept_children_TypenameOrModname_Cstm
+	(TypenameOrModname_Cstm* n)
 {
 }
 void AstToDotConverter
-	::visitExprIdentEtc_ItemEnd_build_node_vec
-	(ExprIdentEtc_ItemEnd* node)
+	::_build_node_vec_TypenameOrModname_Typeof
+	(TypenameOrModname_Typeof* n)
 {
 }
 void AstToDotConverter
-	::visitExprIdentEtc_ItemEnd_print
-	(ExprIdentEtc_ItemEnd* node)
+	::_print_TypenameOrModname_Typeof
+	(TypenameOrModname_Typeof* n)
 {
 }
 void AstToDotConverter
-	::visitExprIdentEtc_ItemEndIndex_build_node_vec
-	(ExprIdentEtc_ItemEndIndex* node)
+	::_accept_children_TypenameOrModname_Typeof
+	(TypenameOrModname_Typeof* n)
 {
 }
 void AstToDotConverter
-	::visitExprIdentEtc_ItemEndIndex_print
-	(ExprIdentEtc_ItemEndIndex* node)
+	::_build_node_vec_TypenameOrModname_Cstm_Item
+	(TypenameOrModname_Cstm_Item* n)
+{
+}
+void AstToDotConverter
+	::_print_TypenameOrModname_Cstm_Item
+	(TypenameOrModname_Cstm_Item* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_TypenameOrModname_Cstm_Item
+	(TypenameOrModname_Cstm_Item* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_TypenameOrModname_Builtin
+	(TypenameOrModname_Builtin* n)
+{
+}
+void AstToDotConverter
+	::_print_TypenameOrModname_Builtin
+	(TypenameOrModname_Builtin* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_TypenameOrModname_Builtin
+	(TypenameOrModname_Builtin* n)
+{
+}
+
+void AstToDotConverter
+	::_build_node_vec_ExprMux
+	(ExprMux* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprMux
+	(ExprMux* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprMux
+	(ExprMux* n)
+{
+}
+
+void AstToDotConverter
+	::_build_node_vec_ExprLogOr
+	(ExprLogOr* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprLogOr
+	(ExprLogOr* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprLogOr
+	(ExprLogOr* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprLogAnd
+	(ExprLogAnd* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprLogAnd
+	(ExprLogAnd* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprLogAnd
+	(ExprLogAnd* n)
+{
+}
+
+void AstToDotConverter
+	::_build_node_vec_ExprBinopBitOr
+	(ExprBinopBitOr* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprBinopBitOr
+	(ExprBinopBitOr* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprBinopBitOr
+	(ExprBinopBitOr* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprBinopBitNor
+	(ExprBinopBitNor* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprBinopBitNor
+	(ExprBinopBitNor* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprBinopBitNor
+	(ExprBinopBitNor* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprBinopBitAnd
+	(ExprBinopBitAnd* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprBinopBitAnd
+	(ExprBinopBitAnd* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprBinopBitAnd
+	(ExprBinopBitAnd* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprBinopBitNand
+	(ExprBinopBitNand* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprBinopBitNand
+	(ExprBinopBitNand* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprBinopBitNand
+	(ExprBinopBitNand* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprBinopBitXor
+	(ExprBinopBitXor* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprBinopBitXor
+	(ExprBinopBitXor* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprBinopBitXor
+	(ExprBinopBitXor* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprBinopBitXnor
+	(ExprBinopBitXnor* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprBinopBitXnor
+	(ExprBinopBitXnor* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprBinopBitXnor
+	(ExprBinopBitXnor* n)
+{
+}
+
+void AstToDotConverter
+	::_build_node_vec_ExprCmpEq
+	(ExprCmpEq* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprCmpEq
+	(ExprCmpEq* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprCmpEq
+	(ExprCmpEq* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprCmpNe
+	(ExprCmpNe* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprCmpNe
+	(ExprCmpNe* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprCmpNe
+	(ExprCmpNe* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprCaseCmpEq
+	(ExprCaseCmpEq* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprCaseCmpEq
+	(ExprCaseCmpEq* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprCaseCmpEq
+	(ExprCaseCmpEq* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprCaseCmpNe
+	(ExprCaseCmpNe* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprCaseCmpNe
+	(ExprCaseCmpNe* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprCaseCmpNe
+	(ExprCaseCmpNe* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprCmpLt
+	(ExprCmpLt* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprCmpLt
+	(ExprCmpLt* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprCmpLt
+	(ExprCmpLt* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprCmpLe
+	(ExprCmpLe* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprCmpLe
+	(ExprCmpLe* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprCmpLe
+	(ExprCmpLe* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprCmpGt
+	(ExprCmpGt* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprCmpGt
+	(ExprCmpGt* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprCmpGt
+	(ExprCmpGt* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprCmpGe
+	(ExprCmpGe* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprCmpGe
+	(ExprCmpGe* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprCmpGe
+	(ExprCmpGe* n)
+{
+}
+
+void AstToDotConverter
+	::_build_node_vec_ExprBitLsl
+	(ExprBitLsl* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprBitLsl
+	(ExprBitLsl* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprBitLsl
+	(ExprBitLsl* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprBitLsr
+	(ExprBitLsr* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprBitLsr
+	(ExprBitLsr* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprBitLsr
+	(ExprBitLsr* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprBitAsr
+	(ExprBitAsr* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprBitAsr
+	(ExprBitAsr* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprBitAsr
+	(ExprBitAsr* n)
+{
+}
+
+void AstToDotConverter
+	::_build_node_vec_ExprBinopPlus
+	(ExprBinopPlus* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprBinopPlus
+	(ExprBinopPlus* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprBinopPlus
+	(ExprBinopPlus* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprBinopMinus
+	(ExprBinopMinus* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprBinopMinus
+	(ExprBinopMinus* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprBinopMinus
+	(ExprBinopMinus* n)
+{
+}
+
+void AstToDotConverter
+	::_build_node_vec_ExprMul
+	(ExprMul* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprMul
+	(ExprMul* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprMul
+	(ExprMul* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprDiv
+	(ExprDiv* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprDiv
+	(ExprDiv* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprDiv
+	(ExprDiv* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprMod
+	(ExprMod* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprMod
+	(ExprMod* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprMod
+	(ExprMod* n)
+{
+}
+
+void AstToDotConverter
+	::_build_node_vec_ExprUnopPlus
+	(ExprUnopPlus* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprUnopPlus
+	(ExprUnopPlus* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprUnopPlus
+	(ExprUnopPlus* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprUnopMinus
+	(ExprUnopMinus* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprUnopMinus
+	(ExprUnopMinus* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprUnopMinus
+	(ExprUnopMinus* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprLogNot
+	(ExprLogNot* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprLogNot
+	(ExprLogNot* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprLogNot
+	(ExprLogNot* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprBitNot
+	(ExprBitNot* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprBitNot
+	(ExprBitNot* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprBitNot
+	(ExprBitNot* n)
+{
+}
+
+void AstToDotConverter
+	::_build_node_vec_ExprUnopBitOr
+	(ExprUnopBitOr* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprUnopBitOr
+	(ExprUnopBitOr* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprUnopBitOr
+	(ExprUnopBitOr* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprUnopBitNor
+	(ExprUnopBitNor* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprUnopBitNor
+	(ExprUnopBitNor* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprUnopBitNor
+	(ExprUnopBitNor* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprUnopBitAnd
+	(ExprUnopBitAnd* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprUnopBitAnd
+	(ExprUnopBitAnd* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprUnopBitAnd
+	(ExprUnopBitAnd* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprUnopBitNand
+	(ExprUnopBitNand* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprUnopBitNand
+	(ExprUnopBitNand* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprUnopBitNand
+	(ExprUnopBitNand* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprUnopBitXor
+	(ExprUnopBitXor* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprUnopBitXor
+	(ExprUnopBitXor* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprUnopBitXor
+	(ExprUnopBitXor* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprUnopBitXnor
+	(ExprUnopBitXnor* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprUnopBitXnor
+	(ExprUnopBitXnor* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprUnopBitXnor
+	(ExprUnopBitXnor* n)
+{
+}
+
+void AstToDotConverter
+	::_build_node_vec_ExprLiteral
+	(ExprLiteral* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprLiteral
+	(ExprLiteral* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprLiteral
+	(ExprLiteral* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprSized
+	(ExprSized* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprSized
+	(ExprSized* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprSized
+	(ExprSized* n)
+{
+}
+
+void AstToDotConverter
+	::_build_node_vec_ExprRange
+	(ExprRange* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprRange
+	(ExprRange* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprRange
+	(ExprRange* n)
+{
+}
+
+void AstToDotConverter
+	::_build_node_vec_ExprCat
+	(ExprCat* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprCat
+	(ExprCat* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprCat
+	(ExprCat* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprRepl
+	(ExprRepl* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprRepl
+	(ExprRepl* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprRepl
+	(ExprRepl* n)
+{
+}
+
+void AstToDotConverter
+	::_build_node_vec_ExprDollarSigned
+	(ExprDollarSigned* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprDollarSigned
+	(ExprDollarSigned* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprDollarSigned
+	(ExprDollarSigned* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprDollarUnsigned
+	(ExprDollarUnsigned* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprDollarUnsigned
+	(ExprDollarUnsigned* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprDollarUnsigned
+	(ExprDollarUnsigned* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprDollarClog2
+	(ExprDollarClog2* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprDollarClog2
+	(ExprDollarClog2* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprDollarClog2
+	(ExprDollarClog2* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprDollarIsvtype
+	(ExprDollarIsvtype* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprDollarIsvtype
+	(ExprDollarIsvtype* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprDollarIsvtype
+	(ExprDollarIsvtype* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprDollarPow
+	(ExprDollarPow* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprDollarPow
+	(ExprDollarPow* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprDollarPow
+	(ExprDollarPow* n)
+{
+}
+
+void AstToDotConverter
+	::_build_node_vec_ExprIdentEtc
+	(ExprIdentEtc* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprIdentEtc
+	(ExprIdentEtc* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprIdentEtc
+	(ExprIdentEtc* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprIdentEtc_FirstItem
+	(ExprIdentEtc_FirstItem* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprIdentEtc_FirstItem
+	(ExprIdentEtc_FirstItem* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprIdentEtc_FirstItem
+	(ExprIdentEtc_FirstItem* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprIdentEtc_NonSelfItem
+	(ExprIdentEtc_NonSelfItem* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprIdentEtc_NonSelfItem
+	(ExprIdentEtc_NonSelfItem* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprIdentEtc_NonSelfItem
+	(ExprIdentEtc_NonSelfItem* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprIdentEtc_ItemEnd
+	(ExprIdentEtc_ItemEnd* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprIdentEtc_ItemEnd
+	(ExprIdentEtc_ItemEnd* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprIdentEtc_ItemEnd
+	(ExprIdentEtc_ItemEnd* n)
+{
+}
+void AstToDotConverter
+	::_build_node_vec_ExprIdentEtc_ItemEndIndex
+	(ExprIdentEtc_ItemEndIndex* n)
+{
+}
+void AstToDotConverter
+	::_print_ExprIdentEtc_ItemEndIndex
+	(ExprIdentEtc_ItemEndIndex* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprIdentEtc_ItemEndIndex
+	(ExprIdentEtc_ItemEndIndex* n)
 {
 }
 
 // Call a member function via `a plus b` instead of `a.plus(b)`
 void AstToDotConverter
-	::visitExprCallSubprog_PseudoOper_build_node_vec
-	(ExprCallSubprog_PseudoOper* node)
+	::_build_node_vec_ExprCallSubprog_PseudoOper
+	(ExprCallSubprog_PseudoOper* n)
 {
 }
 void AstToDotConverter
-	::visitExprCallSubprog_PseudoOper_print
-	(ExprCallSubprog_PseudoOper* node)
+	::_print_ExprCallSubprog_PseudoOper
+	(ExprCallSubprog_PseudoOper* n)
+{
+}
+void AstToDotConverter
+	::_accept_children_ExprCallSubprog_PseudoOper
+	(ExprCallSubprog_PseudoOper* n)
 {
 }
 

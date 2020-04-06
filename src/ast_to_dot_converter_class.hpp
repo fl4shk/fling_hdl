@@ -42,7 +42,7 @@ protected:		// misc. functions
 	virtual void _print_conn(Base* parent, const string& child);
 	inline void _update_node_vec_size(Base* some_ast)
 	{
-		while (some_ast->level() >= _node_vec.size())
+		while (_node_vec.size() <= some_ast->level())
 		{
 			_node_vec.push_back(set<Base*>());
 		}
@@ -50,25 +50,25 @@ protected:		// misc. functions
 
 protected:		// visitor functions
 	#define GEN_VISIT_FUNCS(name) \
-		virtual inline void visit##name(ast::name* node) \
+		virtual inline void visit##name(ast::name* n) \
 		{ \
 			switch (_state) \
 			{ \
 			/* -------- */ \
 			case State::BuildNodeVec: \
-				{ \
-					_update_node_vec_size(node); \
-					visit##name##_build_node_vec(node); \
-				} \
+				_update_node_vec_size(n); \
+				_build_node_vec_##name(n); \
 				break; \
 			case State::Print: \
-				visit##name##_print(node); \
+				_print_##name(n); \
 				break; \
 			/* -------- */ \
 			} \
+			_accept_children_##name(n); \
 		} \
-		virtual void visit##name##_build_node_vec(ast::name* node); \
-		virtual void visit##name##_print(ast::name* node);
+		virtual void _build_node_vec_##name(ast::name* n); \
+		virtual void _print_##name(ast::name* n); \
+		virtual void _accept_children_##name(ast::name* n);
 	LIST_OF_AST_NODE_CLASSES(GEN_VISIT_FUNCS)
 	#undef GEN_VISIT_FUNCS
 };
