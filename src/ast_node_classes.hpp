@@ -21,6 +21,7 @@ namespace ast
 	inline name(Base* s_parent, const FilePos& s_fp) \
 		: base_name(s_parent, s_fp) \
 	{ \
+		_level = _parent->level() + static_cast<size_t>(1); \
 	} \
 	GEN_MOVE_ONLY_CONSTRUCTORS_AND_ASSIGN(name); \
 	virtual inline ~name() = default; \
@@ -73,8 +74,14 @@ public:		// functions
 	{
 		return string("Base");
 	}
+	virtual inline void accept(AstVisitor* visitor)
+	{
+		// Derived classes should fill this in
+	}
 
+	GEN_GETTER_BY_VAL(parent);
 	GEN_GETTER_AND_SETTER_BY_VAL(fp);
+	GEN_GETTER_BY_VAL(level);
 
 };
 

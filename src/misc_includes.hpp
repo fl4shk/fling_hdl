@@ -34,6 +34,7 @@ using namespace liborangepower::bignum;
 #include <type_traits>
 #include <memory>
 #include <map>
+#include <set>
 
 using std::stack;
 using std::vector;
@@ -46,6 +47,7 @@ using std::make_shared;
 using std::hash;
 using std::move;
 using std::map;
+using std::set;
 using std::stringstream;
 using std::fstream;
 

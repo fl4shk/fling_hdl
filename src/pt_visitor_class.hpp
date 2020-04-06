@@ -58,6 +58,7 @@ private:		// variables
 	string _filename;
 	ast::Program* _ast = nullptr;
 	ast::Base* _curr_ast_parent = nullptr;
+	size_t _max_ast_level;
 
 	stack<string> _str_stack;
 	stack<BigNum> _num_stack;
@@ -489,6 +490,10 @@ public:		// functions
 	{
 		_prev_ast_parent = _pt_visitor->_curr_ast_parent;
 		_pt_visitor->_curr_ast_parent = _node;
+		if (_prev_ast_parent->level() > _pt_visitor->_max_ast_level)
+		{
+			_pt_visitor->_max_ast_level = _prev_ast_parent->level();
+		}
 	}
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AstNodeDeferredPusher);
 	inline ~AstNodeDeferredPusher()
