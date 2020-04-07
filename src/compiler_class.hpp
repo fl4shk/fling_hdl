@@ -22,9 +22,10 @@ private:		// variables
 
 	struct
 	{
-		bool dot = false;
-		OptArg out_dir; 
+		bool dot;
+		string outdir;
 	} _opt;
+
 
 public:		// functions
 	Compiler(int s_argc, char** s_argv);

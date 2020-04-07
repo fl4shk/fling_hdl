@@ -15,6 +15,7 @@
 #include "liborangepower_src/linked_list_classes.hpp"
 #include "liborangepower_src/gmp_stuff.hpp"
 #include "liborangepower_src/arg_parsing_stuff.hpp"
+#include "liborangepower_src/string_extra_stuff.hpp"
 
 using namespace liborangepower::misc_output;
 using namespace liborangepower::misc_input;

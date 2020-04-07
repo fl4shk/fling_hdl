@@ -17,20 +17,35 @@ Compiler::Compiler(int s_argc, char** s_argv)
 		usage();
 	}
 
-	// Handle options
-	OptArg oa;
-	bool first = true;
-	for (char** arg=argv;
-		first || oa.valid();
-		++arg)
-	{
-		const string s_arg(arg);
+	// Skip the first argument.  We don't need the process name from
+	// this point forward.
+	char** arg = _argv + 1;
 
-		if (auto s == "--dot")
+	// Handle options
+	_opt.dot = false;
+
+
+	OptArg oa;
+	do
+	{
+		oa = OptArg(string(*arg), 2, "--");
+
+		if (oa.valid())
 		{
-			_opt.dot = 1;
+			if (oa.opt() == "--dot")
+			{
+				_opt.dot = true;
+			}
+			else if (oa.opt() == "--outdir")
+			{
+				_opt.outdir = oa.val();
+			}
+			else
+			{
+				usage();
+			}
 		}
-	}
+	} while (oa.valid());
 }
 Compiler::~Compiler()
 {
