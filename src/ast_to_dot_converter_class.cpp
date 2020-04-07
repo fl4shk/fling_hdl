@@ -80,10 +80,6 @@ void AstToDotConverter::_print_dot_subgraph_cluster(size_t level)
 #define wrap_conv_2(...) \
 	EVAL(MAP(_INNER_WRAP_CONV_2, COMMA, __VA_ARGS__))
 
-string strappcom2()
-{
-	return "";
-}
 
 #define build(type, ...) \
 	void AstToDotConverter::_build_label_map(type* n) \
@@ -96,100 +92,100 @@ string strappcom2()
 
 build(Program)
 
-//build(DeclPackage, wrap(ident))
-//
-//build(ParamOrArgList)
-//build(DeclParamList_Item, wrap_conv(kind))
-//build(DeclArgList_Item, wrap_conv(kind))
-//build(InstParamList_Named_Item, wrap(ident))
-//build(InstArgList_Named_Item, wrap(ident))
-//
-//build(DeclModule, wrap(ident))
-//build(InstModule, wrap(ident))
-//
-//build(GenIf)
-//build(GenIf_Elif)
-//build(GenIf_Else)
-//
-//build(GenSwitch)
-//build(GenSwitch_Case)
-//build(GenSwitch_Default)
-//
-//build(GenFor, wrap(label, ident))
-//
-//build(ContAssign)
-//
-//build(Behav, wrap_conv(kind))
-//build(Behav_SeqEdgeListItem, wrap(kind))
-//build(Behav_Scope)
-//
-//build(If)
-//build(If_Elif)
-//build(If_Else)
-//
-//build(Switch)
-//build(Switchz)
-//build(SwitchOrSwitchz_Case)
-//build(SwitchOrSwitchz_Default)
-//
-//build(For, wrap(ident))
-//build(While)
-//
-//build(NonBlkAssign)
-//build(BlkAssign)
-//
-//build(DeclWire)
-//build(DeclVar)
-//build(DeclConst)
-//
-//build(DeclEnum, wrap(ident))
-//
-//build(DeclMixin, wrap(is_base, ident))
-//
-//build(DeclClass, wrap(is_base, ident, is_signed, is_packed))
-//
-//build(DeclClass_DeclVar, wrap_conv_2(acc_spec), wrap(is_static))
-//build(DeclClsOrMxn_DeclType, wrap_conv_2(acc_spec))
-//build(DeclClsOrMxn_DeclAliasOrConst, wrap_conv_2(acc_spec),
-//	wrap(is_static))
-//
-//build(DeclClsOrMxn_DeclSubprogFullDefn, wrap_conv_2(acc_spec),
-//	wrap(is_virtual, is_static, is_const))
-//build(DeclClsOrMxn_DeclSubprogAbstract, wrap_conv_2(acc_spec),
-//	wrap(is_const))
-//
-//build(DeclFunc)
-//build(DeclFunc_Header, wrap(ident))
-//build(DeclFunc_Return)
-//
-//build(DeclTask)
-//build(DeclTask_Header, wrap(ident))
-//
-//build(DeclProc)
-//build(DeclProc_Header, wrap(ident))
-//
-//build(DeclAlias_Value)
-//build(DeclAlias_Type)
-//build(DeclAlias_Module)
-//
-//void AstToDotConverter::_build_label_map(IdentList* n)
-//{
-//	string to_insert = "data(";
-//
-//	for (auto iter=n->data.begin(); iter!=n->data.end(); ++iter)
-//	{
-//		to_insert += iter->data;
-//
-//		auto temp = iter;
-//		++temp;
-//		if (temp != n->data.end())
-//		{
-//			to_insert += ", ";
-//		}
-//	}
-//	to_insert += ")";
-//	_label_map[n] = move(to_insert);
-//}
+build(DeclPackage, wrap(ident))
+
+build(ParamOrArgList)
+build(DeclParamList_Item, wrap_conv(kind))
+build(DeclArgList_Item, wrap_conv(kind))
+build(InstParamList_Named_Item, wrap(ident))
+build(InstArgList_Named_Item, wrap(ident))
+
+build(DeclModule, wrap(ident))
+build(InstModule, wrap(ident))
+
+build(GenIf)
+build(GenIf_Elif)
+build(GenIf_Else)
+
+build(GenSwitch)
+build(GenSwitch_Case)
+build(GenSwitch_Default)
+
+build(GenFor, wrap(label, ident))
+
+build(ContAssign)
+
+build(Behav, wrap_conv(kind))
+build(Behav_SeqEdgeListItem, wrap(kind))
+build(Behav_Scope)
+
+build(If)
+build(If_Elif)
+build(If_Else)
+
+build(Switch)
+build(Switchz)
+build(SwitchOrSwitchz_Case)
+build(SwitchOrSwitchz_Default)
+
+build(For, wrap(ident))
+build(While)
+
+build(NonBlkAssign)
+build(BlkAssign)
+
+build(DeclWire)
+build(DeclVar)
+build(DeclConst)
+
+build(DeclEnum, wrap(ident))
+
+build(DeclMixin, wrap(is_base, ident))
+
+build(DeclClass, wrap(is_base, ident, is_signed, is_packed))
+
+build(DeclClass_DeclVar, wrap_conv_2(acc_spec), wrap(is_static))
+build(DeclClsOrMxn_DeclType, wrap_conv_2(acc_spec))
+build(DeclClsOrMxn_DeclAliasOrConst, wrap_conv_2(acc_spec),
+	wrap(is_static))
+
+build(DeclClsOrMxn_DeclSubprogFullDefn, wrap_conv_2(acc_spec),
+	wrap(is_virtual, is_static, is_const))
+build(DeclClsOrMxn_DeclSubprogAbstract, wrap_conv_2(acc_spec),
+	wrap(is_const))
+
+build(DeclFunc)
+build(DeclFunc_Header, wrap(ident))
+build(DeclFunc_Return)
+
+build(DeclTask)
+build(DeclTask_Header, wrap(ident))
+
+build(DeclProc)
+build(DeclProc_Header, wrap(ident))
+
+build(DeclAlias_Value)
+build(DeclAlias_Type)
+build(DeclAlias_Module)
+
+void AstToDotConverter::_build_label_map(IdentList* n)
+{
+	string to_insert = "data(";
+
+	for (auto iter=n->data.begin(); iter!=n->data.end(); ++iter)
+	{
+		to_insert += iter->data;
+
+		auto temp = iter;
+		++temp;
+		if (temp != n->data.end())
+		{
+			to_insert += ", ";
+		}
+	}
+	to_insert += ")";
+	_label_map[n] = move(to_insert);
+}
 
 
 
