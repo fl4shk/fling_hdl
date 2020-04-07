@@ -47,9 +47,7 @@ public:		// typedefs
 
 	using Parser = FlingHdlGrammarParser;
 private:		// variables
-
-	int _argc;
-	char** _argv;
+	set<string>* _filename_set = nullptr;
 
 	// This maps a filename to an `AstEtc`.
 	map<string, AstEtc> _ast_etc_map;
@@ -160,9 +158,11 @@ private:		// misc functions
 	}
 
 public:		// functions
-	PtVisitor(int s_argc, char** s_argv);
+	PtVisitor(set<string>* s_filename_set);
 	virtual ~PtVisitor();
 	int run();
+
+	GEN_GETTER_BY_REF(ast_etc_map);
 
 private:		// error/warning functions
 	inline void _err(ParserRuleContext* ctx, const std::string& msg)

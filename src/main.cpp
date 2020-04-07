@@ -1,7 +1,6 @@
-#include "pt_visitor_class.hpp"
+#include "compiler_class.hpp"
 
 int main(int argc, char** argv)
 {
-	fling_hdl::PtVisitor visitor(argc, argv);
-	return visitor.run();
+	return fling_hdl::Compiler(argc, argv).run();
 }

@@ -111,21 +111,14 @@ inline bool _conv_pt_to_enum(EnumType& ret, bool cmp, EnumType check,
 #define FOR_PT(p, pt_node) \
 	for (const auto& p: ctx->pt_node())
 
-PtVisitor::PtVisitor(int s_argc, char** s_argv)
+PtVisitor::PtVisitor(set<string>* s_filename_set)
 {
-	_argc = s_argc;
-	_argv = s_argv;
+	_filename_set = s_filename_set;
 	//_program_ctx = parser.flingProgram();
 
-	if (_argc < 2)
-	{
-		_err(sconcat("Usage:  ", _argv[0], " output_file_name",
-			" source_files..."));
-	}
 
-	for (int i=2; i<_argc; ++i)
+	for (const auto& s_filename: *_filename_set)
 	{
-		const string s_filename = _argv[i];
 		antlr4::ANTLRInputStream input(get_istream_as_str(std::ifstream
 			(s_filename, std::ios_base::in)));
 		FlingHdlGrammarLexer lexer(&input);
