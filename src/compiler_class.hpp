@@ -31,6 +31,8 @@ public:		// functions
 	Compiler(int s_argc, char** s_argv);
 	~Compiler();
 	int run();
+
+	GEN_GETTER_BY_CON_REF(filename_set);
 };
 
 } // namespace fling_hdl

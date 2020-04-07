@@ -19,16 +19,17 @@ Compiler::Compiler(int s_argc, char** s_argv)
 
 	// Skip the first argument.  We don't need the process name from
 	// this point forward.
-	char** arg = _argv + 1;
+	int i = 1;
 
 	// Handle options
 	_opt.dot = false;
 
 
 	OptArg oa;
+
 	do
 	{
-		oa = OptArg(string(*arg), 2, '-');
+		oa = OptArg(string(_argv[i]), 2, '-');
 
 		if (oa.valid())
 		{
@@ -42,10 +43,33 @@ Compiler::Compiler(int s_argc, char** s_argv)
 			}
 			else
 			{
+				printerr("Error:  invalid option \"", _argv[i], "\".\n");
 				usage();
 			}
 		}
-	} while (oa.valid());
+
+		++i;
+	} while ((i < _argc) && (oa.valid()));
+
+	// If all of the arguments were options
+	if (i == _argc)
+	{
+		usage();
+	}
+
+	for (; i<_argc; ++i)
+	{
+		const string arg(_argv[i]);
+		if (filename_set().count(arg) > 0)
+		{
+			printerr("Warning:  duplicate source filename \"", arg,
+				"\".\n");
+		}
+		else
+		{
+			_filename_set.insert(arg);
+		}
+	}
 }
 Compiler::~Compiler()
 {
