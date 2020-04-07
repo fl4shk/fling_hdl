@@ -20,15 +20,20 @@ public:		// types
 	enum class State
 	{
 		BuildNodeVec,
-		Print,
+		BuildLabelMap,
+		BuildConnMap,
 	};
 
 protected:		// variables
 	fstream _file;
 	string _name;
-	size_t _k, _max_ast_level;
+	size_t _max_ast_level;
 	State _state;
 	vector<set<Base*>> _node_vec;
+	map<Base*, string> _label_map;
+
+	// For easy iteration
+	map<Base*, Base*> _conn_map;
 public:		// functions
 	inline AstToDotConverter() = default;
 	virtual ~AstToDotConverter() = default;
@@ -37,9 +42,12 @@ public:		// functions
 		const string& src_filename, Base* root);
 
 protected:		// misc. functions
-	virtual void _print_node(Base* to_print, const string& lab);
-	virtual void _print_conn(Base* parent, Base* child);
-	virtual void _print_conn(Base* parent, const string& child);
+	void _print_dot_subgraph_cluster(size_t level);
+	void _print_dot_wires(size_t level);
+	inline double _color(size_t level) const
+	{
+		return (static_cast<double>(level) / (_max_ast_level + 2.0));
+	}
 	inline void _update_node_vec_size(Base* some_ast)
 	{
 		while (_node_vec.size() <= some_ast->level())
@@ -56,22 +64,23 @@ protected:		// visitor functions
 			{ \
 			/* -------- */ \
 			case State::BuildNodeVec: \
-				_build_node_vec(n); \
+				_update_node_vec_size(n); \
+				_node_vec.at(n->level()).insert(n); \
 				break; \
-			case State::Print: \
-				_print(n); \
-				_accept_children(n); \
+			case State::BuildLabelMap: \
+				_build_label_map(n); \
+				break; \
+			case State::BuildConnMap: \
+				if (n->parent() != nullptr) \
+				{ \
+					_conn_map[n->parent()] = n; \
+				} \
 				break; \
 			/* -------- */ \
 			} \
-		} \
-		virtual inline void _build_node_vec(ast::name* n) \
-		{ \
-			_update_node_vec_size(n); \
-			_node_vec.at(n->level()).insert(n); \
 			_accept_children(n); \
 		} \
-		virtual void _print(ast::name* n);
+		virtual void _build_label_map(ast::name* n);
 	LIST_OF_AST_NODE_CLASSES(GEN_VISIT_FUNCS)
 	#undef GEN_VISIT_FUNCS
 

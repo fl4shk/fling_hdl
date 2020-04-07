@@ -102,6 +102,8 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(DeclPackage, Base);
 };
 
+// This covers both declarations of parameter/argument lists and
+// instantions of parameter/argument lists
 class ParamOrArgList: public Base
 {
 public:		// variables

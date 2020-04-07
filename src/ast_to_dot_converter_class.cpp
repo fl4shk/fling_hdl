@@ -26,620 +26,171 @@ void AstToDotConverter::convert(size_t max_ast_level,
 	_state = State::BuildNodeVec;
 	root->accept(this);
 
-	_state = State::Print;
+	_state = State::BuildLabelMap;
 	root->accept(this);
+
+	_state = State::BuildConnMap;
+	root->accept(this);
+
+	for (size_t level=0; level<_max_ast_level; ++level)
+	{
+		_print_dot_subgraph_cluster(level);
+	}
 
 	osprintout(_file,
 		"}\n");
 
 	_file.close();
 }
-void AstToDotConverter::_print_node(Base* to_print, const string& lab)
-{
-}
-void AstToDotConverter::_print_conn(Base* parent, Base* child)
-{
-}
-void AstToDotConverter::_print_conn(Base* parent, const string& child)
-{
-}
-
-
-
-void AstToDotConverter::_print
-	(Program* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(DeclPackage* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(ParamOrArgList* n)
-{
-}
-
-void AstToDotConverter::_print
-	(DeclParamList_Item* n)
-{
-}
-// This covers both regular argument lists and those for `proc`s
-
-void AstToDotConverter::_print
-	(DeclArgList_Item* n)
-{
-}
-
-void AstToDotConverter::_print
-	(InstParamList_Named_Item* n)
-{
-}
-
-void AstToDotConverter::_print
-	(InstArgList_Named_Item* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(DeclModule* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(InstModule* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(GenIf* n)
-{
-}
-
-void AstToDotConverter::_print
-	(GenIf_Elif* n)
-{
-}
-
-void AstToDotConverter::_print
-	(GenIf_Else* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(GenSwitch* n)
-{
-}
-
-void AstToDotConverter::_print
-	(GenSwitch_Case* n)
-{
-}
-
-void AstToDotConverter::_print
-	(GenSwitch_Default* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(GenFor* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(ContAssign* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(Behav* n)
-{
-}
-
-void AstToDotConverter::_print
-	(Behav_SeqEdgeListItem* n)
-{
-}
-// This is used for behavioral blocks, functions, and tasks
-
-void AstToDotConverter::_print
-	(Behav_Scope* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(If* n)
-{
-}
-
-void AstToDotConverter::_print
-	(If_Elif* n)
-{
-}
-
-void AstToDotConverter::_print
-	(If_Else* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(Switch* n)
-{
-}
-
-void AstToDotConverter::_print
-	(Switchz* n)
-{
-}
-
-void AstToDotConverter::_print
-	(SwitchOrSwitchz_Case* n)
-{
-}
-
-void AstToDotConverter::_print
-	(SwitchOrSwitchz_Default* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(For* n)
-{
-}
-
-void AstToDotConverter::_print
-	(While* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(NonBlkAssign* n)
-{
-}
-
-void AstToDotConverter::_print
-	(BlkAssign* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(DeclWire* n)
-{
-}
-
-void AstToDotConverter::_print
-	(DeclVar* n)
-{
-}
-
-void AstToDotConverter::_print
-	(DeclConst* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(DeclEnum* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(DeclMixin* n)
-{
-}
-
-void AstToDotConverter::_print
-	(DeclClass* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(DeclClass_DeclVar* n)
-{
-}
-
-void AstToDotConverter::_print
-	(DeclClsOrMxn_DeclType* n)
-{
-}
-
-void AstToDotConverter::_print
-	(DeclClsOrMxn_DeclAliasOrConst* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(DeclClsOrMxn_DeclSubprogFullDefn* n)
-{
-}
-
-void AstToDotConverter::_print
-	(DeclClsOrMxn_DeclSubprogAbstract* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(DeclFunc* n)
-{
-}
-
-void AstToDotConverter::_print
-	(DeclFunc_Header* n)
-{
-}
-
-void AstToDotConverter::_print
-	(DeclFunc_Return* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(DeclTask* n)
-{
-}
-
-void AstToDotConverter::_print
-	(DeclTask_Header* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(DeclProc* n)
-{
-}
-
-void AstToDotConverter::_print
-	(DeclProc_Header* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(DeclAlias_Value* n)
-{
-}
-
-void AstToDotConverter::_print
-	(DeclAlias_Type* n)
-{
-}
-
-void AstToDotConverter::_print
-	(DeclAlias_Module* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(IdentList* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ScopedIdent* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ImportList* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(TypenameOrModname_Special* n)
-{
-}
-
-void AstToDotConverter::_print
-	(TypenameOrModname_Cstm* n)
-{
-}
-
-void AstToDotConverter::_print
-	(TypenameOrModname_Typeof* n)
-{
-}
-
-void AstToDotConverter::_print
-	(TypenameOrModname_Cstm_Item* n)
-{
-}
-
-void AstToDotConverter::_print
-	(TypenameOrModname_Builtin* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(ExprMux* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(ExprLogOr* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprLogAnd* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(ExprBinopBitOr* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprBinopBitNor* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprBinopBitAnd* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprBinopBitNand* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprBinopBitXor* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprBinopBitXnor* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(ExprCmpEq* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprCmpNe* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprCaseCmpEq* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprCaseCmpNe* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprCmpLt* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprCmpLe* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprCmpGt* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprCmpGe* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(ExprBitLsl* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprBitLsr* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprBitAsr* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(ExprBinopPlus* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprBinopMinus* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(ExprMul* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprDiv* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprMod* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(ExprUnopPlus* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprUnopMinus* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprLogNot* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprBitNot* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(ExprUnopBitOr* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprUnopBitNor* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprUnopBitAnd* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprUnopBitNand* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprUnopBitXor* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprUnopBitXnor* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(ExprLiteral* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprSized* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(ExprRange* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(ExprCat* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprRepl* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(ExprDollarSigned* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprDollarUnsigned* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprDollarClog2* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprDollarIsvtype* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprDollarPow* n)
-{
-}
-
-
-void AstToDotConverter::_print
-	(ExprIdentEtc* n)
-{
-}
 
-void AstToDotConverter::_print
-	(ExprIdentEtc_FirstItem* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprIdentEtc_NonSelfItem* n)
-{
-}
-
-void AstToDotConverter::_print
-	(ExprIdentEtc_ItemEnd* n)
-{
-}
+void AstToDotConverter::_print_dot_subgraph_cluster(size_t level)
+{
+	osprintout(_file,
+		"node [color=\"", _color(level), ",1.0,1.0\"];\n",
+		"subgraph cluster_", level, "\n",
+		"{\n",
+		"\trank=same;\n");
+
+	for (const auto& p: _node_vec.at(level))
+	{
+		const auto p_uint = (std::uintptr_t)p;
+		const auto label = _label_map.at(p);
+		osprintout(_file,
+			"\t", p->id(), "_", p_uint, "[label=\"", label, "\"];\n");
+	}
+
+	osprintout(_file,
+		"}\n");
+}
+
+
+#define _INNER_WRAP(item) \
+	sconcat(#item, "(", n->item, ")")
+#define wrap(...) \
+	EVAL(MAP(_INNER_WRAP, COMMA, __VA_ARGS__))
+
+
+#define _INNER_WRAP_CONV(item) \
+	sconcat(#item, "(", n->conv_##item(n->item), ")")
+#define wrap_conv(...) \
+	EVAL(MAP(_INNER_WRAP_CONV, COMMA, __VA_ARGS__))
+
+#define _INNER_WRAP_CONV_2(item, ...) \
+	sconcat(#item, "(", conv_##item(n->item), ")")
+#define wrap_conv_2(...) \
+	EVAL(MAP(_INNER_WRAP_CONV_2, COMMA, __VA_ARGS__))
+
+string strappcom2()
+{
+	return "";
+}
+
+#define build(type, ...) \
+	void AstToDotConverter::_build_label_map(type* n) \
+	{ \
+		string temp = #type; \
+		temp += strappcom2(__VA_ARGS__); \
+		_label_map[n] = move(temp); \
+	}
+
+
+build(Program)
+
+//build(DeclPackage, wrap(ident))
+//
+//build(ParamOrArgList)
+//build(DeclParamList_Item, wrap_conv(kind))
+//build(DeclArgList_Item, wrap_conv(kind))
+//build(InstParamList_Named_Item, wrap(ident))
+//build(InstArgList_Named_Item, wrap(ident))
+//
+//build(DeclModule, wrap(ident))
+//build(InstModule, wrap(ident))
+//
+//build(GenIf)
+//build(GenIf_Elif)
+//build(GenIf_Else)
+//
+//build(GenSwitch)
+//build(GenSwitch_Case)
+//build(GenSwitch_Default)
+//
+//build(GenFor, wrap(label, ident))
+//
+//build(ContAssign)
+//
+//build(Behav, wrap_conv(kind))
+//build(Behav_SeqEdgeListItem, wrap(kind))
+//build(Behav_Scope)
+//
+//build(If)
+//build(If_Elif)
+//build(If_Else)
+//
+//build(Switch)
+//build(Switchz)
+//build(SwitchOrSwitchz_Case)
+//build(SwitchOrSwitchz_Default)
+//
+//build(For, wrap(ident))
+//build(While)
+//
+//build(NonBlkAssign)
+//build(BlkAssign)
+//
+//build(DeclWire)
+//build(DeclVar)
+//build(DeclConst)
+//
+//build(DeclEnum, wrap(ident))
+//
+//build(DeclMixin, wrap(is_base, ident))
+//
+//build(DeclClass, wrap(is_base, ident, is_signed, is_packed))
+//
+//build(DeclClass_DeclVar, wrap_conv_2(acc_spec), wrap(is_static))
+//build(DeclClsOrMxn_DeclType, wrap_conv_2(acc_spec))
+//build(DeclClsOrMxn_DeclAliasOrConst, wrap_conv_2(acc_spec),
+//	wrap(is_static))
+//
+//build(DeclClsOrMxn_DeclSubprogFullDefn, wrap_conv_2(acc_spec),
+//	wrap(is_virtual, is_static, is_const))
+//build(DeclClsOrMxn_DeclSubprogAbstract, wrap_conv_2(acc_spec),
+//	wrap(is_const))
+//
+//build(DeclFunc)
+//build(DeclFunc_Header, wrap(ident))
+//build(DeclFunc_Return)
+//
+//build(DeclTask)
+//build(DeclTask_Header, wrap(ident))
+//
+//build(DeclProc)
+//build(DeclProc_Header, wrap(ident))
+//
+//build(DeclAlias_Value)
+//build(DeclAlias_Type)
+//build(DeclAlias_Module)
+//
+//void AstToDotConverter::_build_label_map(IdentList* n)
+//{
+//	string to_insert = "data(";
+//
+//	for (auto iter=n->data.begin(); iter!=n->data.end(); ++iter)
+//	{
+//		to_insert += iter->data;
+//
+//		auto temp = iter;
+//		++temp;
+//		if (temp != n->data.end())
+//		{
+//			to_insert += ", ";
+//		}
+//	}
+//	to_insert += ")";
+//	_label_map[n] = move(to_insert);
+//}
 
-void AstToDotConverter::_print
-	(ExprIdentEtc_ItemEndIndex* n)
-{
-}
 
-// Call a member function via `a plus b` instead of `a.plus(b)`
-void AstToDotConverter::_print
-	(ExprCallSubprog_PseudoOper* n)
-{
-}
 
 } // namespace fling_hdl

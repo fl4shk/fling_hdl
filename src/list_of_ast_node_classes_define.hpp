@@ -5,6 +5,7 @@
 
 //#include "misc_includes.hpp"
 
+// List of AST node classes that are intended to actually be instantiated
 #define LIST_OF_AST_NODE_CLASSES(X) \
 	X(Program) \
 	\
