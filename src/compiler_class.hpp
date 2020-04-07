@@ -18,6 +18,14 @@ private:		// variables
 	unique_ptr<PtVisitor> _pt_visitor;
 	unique_ptr<AstToDotConverter> _ast_to_dot_converter;
 	map<string, AstEtc>* _ast_etc_map = nullptr;
+	set<string> _filename_set;
+
+
+	struct
+	{
+		bool dot = false;
+		string out_dir; 
+	} _opt;
 
 public:		// functions
 	Compiler(int s_argc, char** s_argv);
