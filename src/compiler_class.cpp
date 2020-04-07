@@ -17,7 +17,6 @@ Compiler::Compiler(int s_argc, char** s_argv)
 		usage();
 	}
 
-
 	auto check_substr = [&](const string& s, const string& substr)
 		-> string
 	{
