@@ -14,6 +14,7 @@
 #include "liborangepower_src/string_conversion_stuff.hpp"
 #include "liborangepower_src/linked_list_classes.hpp"
 #include "liborangepower_src/gmp_stuff.hpp"
+#include "liborangepower_src/arg_parsing_stuff.hpp"
 
 using namespace liborangepower::misc_output;
 using namespace liborangepower::misc_input;
@@ -23,6 +24,7 @@ using namespace liborangepower::bitwise;
 using namespace liborangepower::strings;
 using namespace liborangepower::containers;
 using namespace liborangepower::bignum;
+using namespace liborangepower::arg_parse;
 
 #include <stack>
 #include <vector>
@@ -37,6 +39,7 @@ using namespace liborangepower::bignum;
 #include <set>
 #include <array>
 #include <string.h>
+#include <libgen.h>
 
 using std::stack;
 using std::vector;

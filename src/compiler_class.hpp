@@ -20,11 +20,10 @@ private:		// variables
 	map<string, AstEtc>* _ast_etc_map = nullptr;
 	set<string> _filename_set;
 
-
 	struct
 	{
 		bool dot = false;
-		string out_dir; 
+		OptArg out_dir; 
 	} _opt;
 
 public:		// functions
