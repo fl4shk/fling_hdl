@@ -53,10 +53,11 @@ void AstToDotConverter::_print_dot_subgraph_cluster(size_t level)
 
 	for (const auto& p: _node_vec.at(level))
 	{
-		const auto p_uint = (std::uintptr_t)p;
+		std::uintptr_t p_uint;
+		memcpy(&p_uint, p, sizeof(p_uint));
 		const auto label = _label_map.at(p);
 		osprintout(_file,
-			"\t", p->id(), "_", p_uint, "[label=\"", label, "\"];\n");
+			"\t", p->id(), "_", p_uint, " [label=\"", label, "\"];\n");
 	}
 
 	osprintout(_file,

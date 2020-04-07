@@ -35,6 +35,8 @@ using namespace liborangepower::bignum;
 #include <memory>
 #include <map>
 #include <set>
+#include <array>
+#include <string.h>
 
 using std::stack;
 using std::vector;
