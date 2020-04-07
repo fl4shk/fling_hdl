@@ -12,7 +12,7 @@ Compiler::Compiler(int s_argc, char** s_argv)
 		exit(1);
 	};
 
-	if (argc < 2)
+	if (_argc < 2)
 	{
 		usage();
 	}
@@ -28,7 +28,7 @@ Compiler::Compiler(int s_argc, char** s_argv)
 	OptArg oa;
 	do
 	{
-		oa = OptArg(string(*arg), 2, "--");
+		oa = OptArg(string(*arg), 2, '-');
 
 		if (oa.valid())
 		{
