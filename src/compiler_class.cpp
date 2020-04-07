@@ -17,14 +17,11 @@ Compiler::Compiler(int s_argc, char** s_argv)
 		usage();
 	}
 
-	auto check_substr = [&](const string& s, const string& substr)
-		-> string
-	{
-	}
-
 	// Handle options
+	OptArg oa;
+	bool first = true;
 	for (char** arg=argv;
-		(arg[0]=='-') && (arg[1]=='-');
+		first || oa.valid();
 		++arg)
 	{
 		const string s_arg(arg);
