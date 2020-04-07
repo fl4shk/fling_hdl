@@ -116,7 +116,7 @@ build(GenFor, wrap(label, ident))
 build(ContAssign)
 
 build(Behav, wrap_conv(kind))
-build(Behav_SeqEdgeListItem, wrap(kind))
+build(Behav_SeqEdgeListItem, wrap_conv(kind))
 build(Behav_Scope)
 
 build(If)
@@ -168,7 +168,8 @@ build(DeclAlias_Value)
 build(DeclAlias_Type)
 build(DeclAlias_Module)
 
-void AstToDotConverter::_build_label_map(IdentList* n)
+void AstToDotConverter::_build_label_map
+	(IdentList* n)
 {
 	string to_insert = "data(";
 
@@ -187,6 +188,62 @@ void AstToDotConverter::_build_label_map(IdentList* n)
 	_label_map[n] = move(to_insert);
 }
 
+void AstToDotConverter::_build_label_map
+	(ScopedIdent* n)
+{
+	_build_label_map(static_cast<IdentList*>(n));
+}
+
+build(ImportList)
+
+build(TypenameOrModname_Special, wrap_conv(kind))
+build(TypenameOrModname_Cstm)
+build(TypenameOrModname_Typeof)
+build(TypenameOrModname_Cstm_Item, wrap(ident))
+build(TypenameOrModname_Builtin, wrap_conv(kind))
+
+#define X(basic_label) \
+	build(basic_label)
+EVAL(MAP(X, EMPTY,
+	ExprMux,
+
+	ExprLogOr,
+	ExprLogAnd,
+	ExprBinopBitOr, ExprBinopBitNor,
+	ExprBinopBitAnd, ExprBinopBitNand,
+	ExprBinopBitXor, ExprBinopBitXnor,
+	ExprCmpEq, ExprCmpNe, ExprCaseCmpEq, ExprCaseCmpNe,
+	ExprCmpLt, ExprCmpLe, ExprCmpGt, ExprCmpGe,
+	ExprBitLsl, ExprBitLsr, ExprBitAsr,
+	ExprBinopPlus, ExprBinopMinus,
+	ExprMul, ExprDiv, ExprMod,
+
+	ExprUnopPlus, ExprUnopMinus,
+	ExprLogNot, ExprBitNot,
+	ExprUnopBitOr, ExprUnopBitNor,
+	ExprUnopBitAnd, ExprUnopBitNand,
+	ExprUnopBitXor, ExprUnopBitXnor))
+
+build(ExprLiteral, wrap_conv(kind), wrap(text))
+
+EVAL(MAP(X, EMPTY,
+	ExprSized,
+	ExprRange,
+	ExprCat,
+	ExprRepl,
+	ExprDollarSigned,
+	ExprDollarUnsigned,
+	ExprDollarClog2,
+	ExprDollarIsvtype,
+	ExprDollarPow))
+#undef X
+
+build(ExprIdentEtc, wrap_conv(suff_kind))
+build(ExprIdentEtc_FirstItem, wrap_conv(kind))
+build(ExprIdentEtc_NonSelfItem, wrap(ident))
+build(ExprIdentEtc_ItemEnd, wrap_conv(kind))
+build(ExprIdentEtc_ItemEndIndex, wrap_conv(kind))
+build(ExprCallSubprog_PseudoOper, wrap(ident))
 
 
 } // namespace fling_hdl
