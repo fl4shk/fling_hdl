@@ -55,6 +55,16 @@ protected:		// misc. functions
 			_node_vec.push_back(set<Base*>());
 		}
 	}
+	static std::uintptr_t _ast_to_uintptr(Base* some_ast)
+	{
+		std::uintptr_t ret;
+		memcpy(&ret, some_ast, sizeof(std::uintptr_t));
+		return ret;
+	}
+	static inline string _node_name(Base* p)
+	{
+		return sconcat(p->id(), "_", _ast_to_uintptr(p));
+	}
 
 protected:		// visitor functions
 	#define GEN_VISIT_FUNCS(name) \
