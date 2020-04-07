@@ -21,6 +21,7 @@ private:		// variables
 	string _filename;
 	ProgramContext* _program_ctx = nullptr;
 	ast::BaseSptr _ast;
+	size_t _max_ast_level;
 public:		// functions
 	inline AstEtc() = default;
 	inline AstEtc(const string& s_filename, ProgramContext* s_program_ctx)
@@ -33,6 +34,7 @@ public:		// functions
 	GEN_GETTER_BY_CON_REF(filename);
 	GEN_GETTER_BY_VAL(program_ctx);
 	GEN_GETTERS_BY_CON_REF_AND_REF(ast);
+	GEN_GETTER_AND_SETTER_BY_VAL(max_ast_level);
 };
 
 class AstNodeDeferredPusher;
@@ -56,7 +58,6 @@ private:		// variables
 	string _filename;
 	ast::Program* _ast = nullptr;
 	ast::Base* _curr_ast_parent = nullptr;
-	size_t _max_ast_level;
 
 	stack<string> _str_stack;
 	stack<BigNum> _num_stack;
@@ -490,9 +491,13 @@ public:		// functions
 	{
 		_prev_ast_parent = _pt_visitor->_curr_ast_parent;
 		_pt_visitor->_curr_ast_parent = _node;
-		if (_prev_ast_parent->level() > _pt_visitor->_max_ast_level)
+
+		auto& ast_etc = _pt_visitor->_ast_etc_map.at
+			(_pt_visitor->_filename);
+
+		if (_prev_ast_parent->level() > ast_etc.max_ast_level())
 		{
-			_pt_visitor->_max_ast_level = _prev_ast_parent->level();
+			ast_etc.set_max_ast_level(_prev_ast_parent->level());
 		}
 	}
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AstNodeDeferredPusher);

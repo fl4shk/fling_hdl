@@ -10,6 +10,7 @@
 namespace fling_hdl
 {
 
+class AstEtc;
 
 class AstToDotConverter: public AstVisitor
 {
@@ -38,8 +39,8 @@ public:		// functions
 	inline AstToDotConverter() = default;
 	virtual ~AstToDotConverter() = default;
 
-	virtual void convert(size_t max_ast_level, const string& dst_filename,
-		const string& src_filename, Base* root);
+	virtual void convert(const string& dst_filename,
+		const string& src_filename, const AstEtc& ast_etc);
 
 protected:		// misc. functions
 	void _print_dot_subgraph_cluster(size_t level);

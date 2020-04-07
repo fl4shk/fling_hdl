@@ -22,34 +22,34 @@ Compiler::Compiler(int s_argc, char** s_argv)
 	int i = 1;
 
 	// Handle options
-	_opt.dot = false;
-
-
-	OptArg oa;
-
-	do
 	{
-		oa = OptArg(string(_argv[i]), 2, '-');
+		OptArg oa;
 
-		if (oa.valid())
+		do
 		{
-			if (oa.opt() == "--dot")
-			{
-				_opt.dot = true;
-			}
-			else if (oa.opt() == "--outdir")
-			{
-				_opt.outdir = oa.val();
-			}
-			else
-			{
-				printerr("Error:  invalid option \"", _argv[i], "\".\n");
-				usage();
-			}
-		}
+			const string arg(_argv[i]);
+			oa = OptArg(arg, 2, '-');
 
-		++i;
-	} while ((i < _argc) && (oa.valid()));
+			if (oa.valid())
+			{
+				if (oa.opt() == "--dot")
+				{
+					_opt.dot = true;
+				}
+				else if (oa.opt() == "--od")
+				{
+					_opt.outdir = oa.val();
+				}
+				else
+				{
+					printerr("Error:  invalid option \"", arg, "\".\n");
+					usage();
+				}
+			}
+
+			++i;
+		} while ((i < _argc) && (oa.valid()));
+	}
 
 	// If all of the arguments were options
 	if (i == _argc)
@@ -76,6 +76,20 @@ Compiler::~Compiler()
 }
 int Compiler::run()
 {
+	PtVisitor pt_visitor(&_filename_set);
+	pt_visitor.run();
+
+	if (opt().dot)
+	{
+		//for ()
+		//{
+		//	AstToDotConverter converter
+		//}
+	}
+	else // if (!opt().dot)
+	{
+	}
+
 	return 0;
 }
 

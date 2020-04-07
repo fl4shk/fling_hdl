@@ -15,15 +15,18 @@ private:		// variables
 	int _argc;
 	char** _argv;
 
-	unique_ptr<PtVisitor> _pt_visitor;
-	unique_ptr<AstToDotConverter> _ast_to_dot_converter;
 	map<string, AstEtc>* _ast_etc_map = nullptr;
 	set<string> _filename_set;
 
-	struct
+	class Opt final
 	{
-		bool dot;
-		string outdir;
+	public:		// variables
+		bool dot = false;
+		string outdir = ".";
+	public:		// functions
+		inline Opt() = default;
+		GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(Opt);
+		inline ~Opt() = default;
 	} _opt;
 
 
@@ -33,6 +36,7 @@ public:		// functions
 	int run();
 
 	GEN_GETTER_BY_CON_REF(filename_set);
+	GEN_GETTER_BY_CON_REF(opt);
 };
 
 } // namespace fling_hdl

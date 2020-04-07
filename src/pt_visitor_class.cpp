@@ -146,8 +146,8 @@ int PtVisitor::run()
 		_ast = new Program(nullptr, FilePos(_filename,
 			p.second.program_ctx()));
 		_curr_ast_parent = _ast;
-		_max_ast_level = 0;
 		p.second.ast().reset(_ast);
+		p.second.set_max_ast_level(0);
 		p.second.program_ctx()->accept(this);
 	}
 	return 0;

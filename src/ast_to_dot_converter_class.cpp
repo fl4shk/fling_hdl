@@ -1,14 +1,16 @@
 #include "ast_to_dot_converter_class.hpp"
+#include "pt_visitor_class.hpp"
 
 namespace fling_hdl
 {
 
 using namespace ast;
 
-void AstToDotConverter::convert(size_t max_ast_level,
-	const string& dst_filename, const string& src_filename, Base* root)
+void AstToDotConverter::convert(const string& dst_filename,
+	const string& src_filename, const AstEtc& ast_etc)
 {
-	_max_ast_level = max_ast_level;
+	_max_ast_level = ast_etc.max_ast_level();
+	const auto& root = ast_etc.ast();
 	_file.open(dst_filename, std::ios_base::out | std::ios_base::trunc);
 
 	osprintout(_file,
