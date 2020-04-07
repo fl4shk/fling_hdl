@@ -18,43 +18,55 @@ private:		// variables
 	std::string _opt, _val;
 	bool _valid = true;
 public:		// functions
-	inline OptArg(const string& to_parse)
+	inline OptArg(const string& to_parse, size_t num_prefixes=2,
+		char prefix='-')
 	{
-		bool old_left, left = true;
+		bool left = true;
 
 		for (const auto& c: to_parse)
 		{
 			if (left)
 			{
-				if (isalnum(c) || (c == '_'))
+				if (_opt.size() < num_prefixes)
 				{
-					_opt += c;
-				}
-				else
-				{
-					old_left = left;
-					left = false;
-				}
-			}
-			else // if (!left)
-			{
-				if (old_left)
-				{
-					if (c != '=')
+					if (c == prefix)
+					{
+						_opt += c;
+					}
+					else // if (c != prefix)
 					{
 						_valid = false;
 						break;
 					}
 				}
-				else // if (!old_left)
+				else // if (_opt.size() >= num_prefixes)
 				{
-					_val += c;
+					if (isalnum(c) || (c == '_'))
+					{
+						_opt += c;
+					}
+					else
+					{
+						if ((_opt.size() < (num_prefixes + 1))
+							|| (c != '='))
+						{
+							_valid = false;
+							break;
+						}
+						else
+						{
+							left = false;
+						}
+					}
 				}
-				old_left = left;
+			}
+			else // if (!left)
+			{
+				_val += c;
 			}
 		}
 
-		if (_opt.size() == 0)
+		if (_opt.size() < (num_prefixes + 1))
 		{
 			_valid = false;
 		}
