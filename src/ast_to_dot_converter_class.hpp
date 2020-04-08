@@ -15,7 +15,6 @@ class AstEtc;
 class AstToDotConverter: public AstVisitor
 {
 public:		// types
-	using Uptr = std::uintptr_t;
 	using Base = ast::Base;
 
 	enum class State

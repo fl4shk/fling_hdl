@@ -1,9 +1,9 @@
-#include "compiler_class.hpp"
+#include "master_class.hpp"
 
 namespace fling_hdl
 {
 
-Compiler::Compiler(int s_argc, char** s_argv)
+Master::Master(int s_argc, char** s_argv)
 	: _argc(s_argc), _argv(s_argv)
 {
 	auto usage = [&]() -> void
@@ -36,9 +36,9 @@ Compiler::Compiler(int s_argc, char** s_argv)
 				{
 					_opt.dot = true;
 				}
-				else if (oa.opt() == "--od")
+				else if (oa.opt() == "--odir")
 				{
-					_opt.outdir = oa.val();
+					_opt.odir = oa.val();
 				}
 				else
 				{
@@ -54,16 +54,25 @@ Compiler::Compiler(int s_argc, char** s_argv)
 	// If all of the arguments were options
 	if (i == _argc)
 	{
+		printerr("Error:  no source files provided.\n");
+		usage();
+	}
+	// If there was no output directory provided.
+	else if (opt().odir.size() == 0)
+	{
+		printerr("Error:  no output directory provided",
+			"(--odir=<directory>).\n");
 		usage();
 	}
 
 	for (; i<_argc; ++i)
 	{
 		const string arg(_argv[i]);
+
 		if (filename_set().count(arg) > 0)
 		{
 			printerr("Warning:  duplicate source filename \"", arg,
-				"\".\n");
+				"\" provided.\n");
 		}
 		else
 		{
@@ -71,23 +80,31 @@ Compiler::Compiler(int s_argc, char** s_argv)
 		}
 	}
 }
-Compiler::~Compiler()
+Master::~Master()
 {
 }
-int Compiler::run()
+int Master::run()
 {
 	PtVisitor pt_visitor(&_filename_set);
 	pt_visitor.run();
 
 	if (opt().dot)
 	{
-		//for ()
-		//{
-		//	AstToDotConverter converter
-		//}
+		for (const auto& p: pt_visitor.ast_etc_map())
+		{
+			const fs::path ofile_path = sconcat(opt().odir, "/", p.first,
+				".dot");
+			fs::path full_odir_path = ofile_path;
+			full_odir_path.remove_filename();
+			fs::create_directory(full_odir_path);
+			AstToDotConverter().convert(ofile_path, p.first, p.second);
+		}
 	}
 	else // if (!opt().dot)
 	{
+		// Still need to plan out what to do with the initial ASTs.
+		printerr("Error:  Unimplemented non-dot output.\n");
+		exit(1);
 	}
 
 	return 0;

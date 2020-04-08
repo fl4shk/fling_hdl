@@ -1,6 +1,6 @@
-#include "compiler_class.hpp"
+#include "master_class.hpp"
 
 int main(int argc, char** argv)
 {
-	return fling_hdl::Compiler(argc, argv).run();
+	return fling_hdl::Master(argc, argv).run();
 }

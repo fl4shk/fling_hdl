@@ -1,7 +1,7 @@
-#ifndef src_compiler_class_hpp
-#define src_compiler_class_hpp
+#ifndef src_master_class_hpp
+#define src_master_class_hpp
 
-// src/compiler_class.hpp
+// src/master_class.hpp
 
 #include "pt_visitor_class.hpp"
 #include "ast_to_dot_converter_class.hpp"
@@ -9,20 +9,21 @@
 namespace fling_hdl
 {
 
-class Compiler final
+// This is a glorified command-line argument parser and simple driver for
+// the *main* classes.
+class Master final
 {
 private:		// variables
 	int _argc;
 	char** _argv;
 
-	map<string, AstEtc>* _ast_etc_map = nullptr;
 	set<string> _filename_set;
 
 	class Opt final
 	{
 	public:		// variables
 		bool dot = false;
-		string outdir = ".";
+		string odir;
 	public:		// functions
 		inline Opt() = default;
 		GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(Opt);
@@ -31,8 +32,8 @@ private:		// variables
 
 
 public:		// functions
-	Compiler(int s_argc, char** s_argv);
-	~Compiler();
+	Master(int s_argc, char** s_argv);
+	~Master();
 	int run();
 
 	GEN_GETTER_BY_CON_REF(filename_set);
@@ -41,4 +42,4 @@ public:		// functions
 
 } // namespace fling_hdl
 
-#endif		// src_compiler_class_hpp
+#endif		// src_master_class_hpp
