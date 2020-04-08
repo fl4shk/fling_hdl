@@ -25,7 +25,7 @@ public:		// functions
 private:		// functions
 	inline const auto& _ast_etc_map() const
 	{
-		return _pt_visitor->ast_etc_map()
+		return _pt_visitor->ast_etc_map();
 	}
 };
 

@@ -1,4 +1,5 @@
 #include "master_class.hpp"
+#include "interpreter_class.hpp"
 
 namespace fling_hdl
 {
@@ -144,17 +145,17 @@ int Master::run()
 			fs::path idir_path = p.first;
 			idir_path.remove_filename();
 
-			const fs::path ofile_path = sconcat(opt().odir, "/", p.first,
-				".dot");
+			const fs::path ofile_path = sconcat(opt().out_dir, "/",
+				p.first, ".dot");
 			fs::path full_odir_path = ofile_path;
 			full_odir_path.remove_filename();
 			fs::create_directory(full_odir_path, idir_path);
 			AstToDotConverter().convert(ofile_path, p.first, p.second);
 		}
 	}
-	else if (opt().run_type == RunType::Interpreter)
+	else if (opt().run_type == RunType::Interpret)
 	{
-		return Interpreter(&pt_visitor).run();
+		//return Interpreter(&pt_visitor).run();
 	}
 	else // if (opt().run_type == RunType::OutVerilog)
 	{
