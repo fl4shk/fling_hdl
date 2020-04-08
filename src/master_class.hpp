@@ -29,8 +29,8 @@ private:		// variables
 			Interpret,
 		};
 	public:		// variables
-		RunType run_type;
-		string out_dir;
+		RunType run_type = RunType::OutVerilog;
+		string out_dir, interp_func_ident;
 	public:		// functions
 		inline Opt() = default;
 		GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(Opt);

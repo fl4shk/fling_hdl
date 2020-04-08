@@ -213,6 +213,7 @@ void AstToDotConverter::_build_label_map
 }
 
 build(ImportList)
+build(ImportList_Item, wrap(has_all))
 
 build(TypenameOrModname_Special, wrap_conv(kind))
 build(TypenameOrModname_Cstm)

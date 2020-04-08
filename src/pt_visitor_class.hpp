@@ -405,6 +405,8 @@ private:		// visitor functions
 		(Parser::FlingTypenameOrModnameListContext *ctx);
 	antlrcpp::Any visitFlingImportList
 		(Parser::FlingImportListContext *ctx);
+	antlrcpp::Any visitFlingImportList_Item
+		(Parser::FlingImportList_ItemContext *ctx);
 	antlrcpp::Any visitFlingTypenameOrModname
 		(Parser::FlingTypenameOrModnameContext *ctx);
 	antlrcpp::Any visitFlingTypenameOrModname_Cstm

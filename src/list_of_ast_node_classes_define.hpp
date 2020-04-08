@@ -87,6 +87,7 @@
 	X(IdentList) \
 	X(ScopedIdent) \
 	X(ImportList) \
+	X(ImportList_Item) \
 	\
 	X(TypenameOrModname_Special) \
 	X(TypenameOrModname_Cstm) \

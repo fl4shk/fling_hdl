@@ -1576,11 +1576,21 @@ antlrcpp::Any PtVisitor::visitFlingImportList
 {
 	DEFER_PUSH(node, ImportList);
 
-	FOR_PT(p, flingScopedIdent)
+	FOR_PT(p, flingImportList_Item)
 	{
 		p->accept(this);
 		node->item_list.push_back(_pop_ast());
 	}
+
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingImportList_Item
+	(Parser::FlingImportList_ItemContext *ctx)
+{
+	DEFER_PUSH(node, ImportList_Item);
+
+	JUST_ACCEPT_AND_POP_AST(node->scoped_ident, flingScopedIdent);
+	node->has_all = ctx->KwAll();
 
 	return nullptr;
 }

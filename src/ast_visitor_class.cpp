@@ -309,6 +309,11 @@ void AstVisitor::_accept_children
 	ACCEPT(item_list);
 }
 void AstVisitor::_accept_children
+	(ImportList_Item* n)
+{
+	ACCEPT(scoped_ident);
+}
+void AstVisitor::_accept_children
 	(TypenameOrModname_Special* n)
 {
 }

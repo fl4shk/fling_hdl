@@ -25,6 +25,41 @@ Master::Master(int s_argc, char** s_argv)
 	{
 		OptArg oa;
 
+		_opt = Opt();
+
+		using RunType = Opt::RunType;
+
+		auto handle_run_type_opt = [&](const RunType& run_type,
+			int need_val) -> void
+		{
+			if (opt().run_type != RunType::OutVerilog)
+			{
+				if (opt().run_type == run_type)
+				{
+					printerr("Error:  ", oa.errwarn_msg_dup(),
+						"\n");
+				}
+				else
+				{
+					printerr("Error:  run type is already set.\n");
+				}
+				usage();
+			}
+
+			if ((need_val > 0) && (oa.val().size() == 0))
+			{
+				printerr("Error:  ", oa.errwarn_msg_no_val(), "\n");
+				usage();
+			}
+			else if ((need_val < 0) && (oa.val().size() != 0))
+			{
+				printerr("Error:  ", oa.errwarn_msg_has_val(), "\n");
+				usage();
+			}
+
+			_opt.run_type = run_type;
+		};
+
 		do
 		{
 			const string arg(_argv[i]);
@@ -34,26 +69,20 @@ Master::Master(int s_argc, char** s_argv)
 			{
 				if (oa.opt() == "--dot")
 				{
-					if (opt().dot)
-					{
-						printerr("Warning:  ", oa.errwarn_msg_dup(), "\n");
-					}
-					_opt.dot = true;
+					handle_run_type_opt(RunType::OutDot, -1);
 				}
 				else if (oa.opt() == "--int")
 				{
-					if (opt().interpret)
-					{
-						printerr("Warning:  ", oa.errwarn_msg_dup(), "\n");
-					}
-					_opt.interpret = true;
+					handle_run_type_opt(RunType::Interpret, 1);
+
+					_opt.interp_func_ident = oa.val();
 				}
 				else if (oa.opt() == "--odir")
 				{
 					if (opt().out_dir.size() != 0)
 					{
-						printerr("Warning:  ", oa.errwarn_msg_no_val(),
-							"\n");
+						printerr("Error:  ", oa.errwarn_msg_dup(), "\n");
+						usage();
 					}
 					_opt.out_dir = oa.val();
 				}

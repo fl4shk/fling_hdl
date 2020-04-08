@@ -624,6 +624,14 @@ public:		// variables
 public:		// functions
 	SHARED_FUNC_CONTENTS(ImportList, Base);
 };
+class ImportList_Item: public Base
+{
+public:		// variables
+	BaseSptr scoped_ident;
+	bool has_all = false;
+public:		// functions
+	SHARED_FUNC_CONTENTS(ImportList_Item, Base);
+};
 class TypenameOrModname_Special: public Base
 {
 public:		// types

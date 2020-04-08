@@ -600,7 +600,10 @@ flingTypenameOrModnameList:
 	;
 
 flingImportList:
-	KwImport flingScopedIdent (',' flingScopedIdent)*
+	KwImport flingImportList_Item (',' flingImportList_Item)*
+	;
+flingImportList_Item:
+	flingScopedIdent (PunctScopeAccess KwAll)?
 	;
 //--------
 
