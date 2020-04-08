@@ -21,9 +21,15 @@ private:		// variables
 
 	class Opt final
 	{
+	public:		// types
+		enum class RunType
+		{
+			OutVerilog,
+			OutDot,
+			Interpret,
+		};
 	public:		// variables
-		bool dot = false;
-		bool interpret = false;
+		RunType run_type;
 		string out_dir;
 	public:		// functions
 		inline Opt() = default;

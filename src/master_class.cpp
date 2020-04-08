@@ -36,7 +36,7 @@ Master::Master(int s_argc, char** s_argv)
 				{
 					if (opt().dot)
 					{
-						oa.warn_dup();
+						printerr("Warning:  ", oa.errwarn_msg_dup(), "\n");
 					}
 					_opt.dot = true;
 				}
@@ -44,14 +44,16 @@ Master::Master(int s_argc, char** s_argv)
 				{
 					if (opt().interpret)
 					{
-						oa.warn_dup
+						printerr("Warning:  ", oa.errwarn_msg_dup(), "\n");
 					}
+					_opt.interpret = true;
 				}
 				else if (oa.opt() == "--odir")
 				{
 					if (opt().out_dir.size() != 0)
 					{
-						oa.warn_dup();
+						printerr("Warning:  ", oa.errwarn_msg_no_val(),
+							"\n");
 					}
 					_opt.out_dir = oa.val();
 				}
@@ -104,7 +106,9 @@ int Master::run()
 	pt_visitor.run();
 	const auto& ast_etc_map = pt_visitor.ast_etc_map();
 
-	if (opt().dot)
+	using RunType = Opt::RunType;
+
+	if (opt().run_type == RunType::OutDot)
 	{
 		for (const auto& p: ast_etc_map)
 		{
@@ -119,14 +123,14 @@ int Master::run()
 			AstToDotConverter().convert(ofile_path, p.first, p.second);
 		}
 	}
-	else if (opt().interpret)
+	else if (opt().run_type == RunType::Interpreter)
 	{
-		return Interpreter().run(ast_etc_map);
+		return Interpreter(&pt_visitor).run();
 	}
-	else
+	else // if (opt().run_type == RunType::OutVerilog)
 	{
 		// Still need to plan out what to do with the initial ASTs.
-		printerr("Error:  Unimplemented non-dot output.\n");
+		printerr("Error:  Unimplemented Verilog output.\n");
 		exit(1);
 	}
 

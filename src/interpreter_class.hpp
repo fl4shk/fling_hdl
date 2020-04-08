@@ -12,12 +12,21 @@ namespace fling_hdl
 class Interpreter final
 {
 private:		// variables
-	map<string, AstEtc>* _ast_etc_map;
+	PtVisitor* _pt_visitor = nullptr;
 
 public:		// functions
-	inline Interpreter() = default;
+	inline Interpreter(PtVisitor* s_pt_visitor)
+		: _pt_visitor(s_pt_visitor)
+	{
+	}
 	inline ~Interpreter() = default;
-	int run(const map<string, AstEtc>& ast_etc_map);
+	int run();
+
+private:		// functions
+	inline const auto& _ast_etc_map() const
+	{
+		return _pt_visitor->ast_etc_map()
+	}
 };
 
 }
