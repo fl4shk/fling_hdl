@@ -3,19 +3,19 @@
 
 // src/misc_includes.hpp
 
-#include "liborangepower_src/misc_includes.hpp"
-#include "liborangepower_src/misc_output_classes.hpp"
-#include "liborangepower_src/misc_input_classes.hpp"
-#include "liborangepower_src/misc_types.hpp"
-#include "liborangepower_src/misc_utility_funcs.hpp"
-#include "liborangepower_src/misc_bitwise_funcs.hpp"
-#include "liborangepower_src/misc_defines.hpp"
+#include "liborangepower_src/misc/misc_includes.hpp"
+#include "liborangepower_src/misc/misc_output_classes.hpp"
+#include "liborangepower_src/misc/misc_input_classes.hpp"
+#include "liborangepower_src/misc/misc_types.hpp"
+#include "liborangepower_src/misc/misc_utility_funcs.hpp"
+#include "liborangepower_src/misc/misc_bitwise_funcs.hpp"
+#include "liborangepower_src/misc/misc_defines.hpp"
 #include "liborangepower_src/gen_class_innards_defines.hpp"
-#include "liborangepower_src/string_conversion_stuff.hpp"
-#include "liborangepower_src/linked_list_classes.hpp"
-#include "liborangepower_src/gmp_stuff.hpp"
+#include "liborangepower_src/strings/string_conversion_stuff.hpp"
+#include "liborangepower_src/strings/string_extra_stuff.hpp"
+#include "liborangepower_src/containers/linked_list_classes.hpp"
+#include "liborangepower_src/gmp_stuff/gmp_stuff.hpp"
 #include "liborangepower_src/arg_parsing_stuff.hpp"
-#include "liborangepower_src/string_extra_stuff.hpp"
 
 using namespace liborangepower::misc_output;
 using namespace liborangepower::misc_input;

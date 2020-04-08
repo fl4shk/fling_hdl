@@ -81,10 +81,10 @@ int Compiler::run()
 
 	if (opt().dot)
 	{
-		//for ()
-		//{
-		//	AstToDotConverter converter
-		//}
+		for ()
+		{
+			AstToDotConverter converter
+		}
 	}
 	else // if (!opt().dot)
 	{
