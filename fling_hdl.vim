@@ -1,13 +1,13 @@
 " Vim syntax file
-" Language: Fling
+" Language: Fling HDL
 " Maintainer: Andrew Clark (FL4SHK)
-" Latest Revision: Jan 3, 2020
+" Latest Revision: Apr 8, 2020
 
 if exists("b:current_syntax")
     finish
 endif
 
-let b:current_syntax = "fling"
+let b:current_syntax = "fling_hdl"
 
 
 syn match fling_hdl_line_comment "//.*$" 

@@ -1,0 +1,59 @@
+package small_cpu_pkg
+{
+	package alu_pkg
+	{
+		enum Opcode
+		{
+			Add,
+			Adc,
+			Sub,
+			Sbc,
+
+			Sltu,
+			Slts,
+			And,
+			Nor,
+		}
+
+		class Bus<WIDTH: size_t>
+		{
+			class In
+			{
+				data: logic<WIDTH>[2];
+				carry: logic;
+				op: Opcode
+			}
+			in: In;
+
+			class Out
+			{
+				result: logic<WIDTH>;
+				carry: logic;
+			}
+			out: Out;
+		}
+	}
+
+
+	enum BusReqType
+	{
+		None,
+		Read,
+		Write,
+	}
+
+	class subpkg<WIDTH: size_t>
+	{
+		class BusIn
+		{
+			data: logic<DATA_WIDTH>;
+			data_ready: logic;
+		}
+
+		class BusOut
+		{
+			data, addr: logic<WIDTH>;
+			req_type: BusReqType;
+		}
+	}
+}

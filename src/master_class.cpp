@@ -34,11 +34,26 @@ Master::Master(int s_argc, char** s_argv)
 			{
 				if (oa.opt() == "--dot")
 				{
+					if (opt().dot)
+					{
+						oa.warn_dup();
+					}
 					_opt.dot = true;
+				}
+				else if (oa.opt() == "--int")
+				{
+					if (opt().interpret)
+					{
+						oa.warn_dup
+					}
 				}
 				else if (oa.opt() == "--odir")
 				{
-					_opt.odir = oa.val();
+					if (opt().out_dir.size() != 0)
+					{
+						oa.warn_dup();
+					}
+					_opt.out_dir = oa.val();
 				}
 				else
 				{
@@ -58,7 +73,7 @@ Master::Master(int s_argc, char** s_argv)
 		usage();
 	}
 	// If there was no output directory provided.
-	else if (opt().odir.size() == 0)
+	else if (opt().out_dir.size() == 0)
 	{
 		printerr("Error:  no output directory provided",
 			"(--odir=<directory>).\n");
@@ -87,10 +102,11 @@ int Master::run()
 {
 	PtVisitor pt_visitor(&_filename_set);
 	pt_visitor.run();
+	const auto& ast_etc_map = pt_visitor.ast_etc_map();
 
 	if (opt().dot)
 	{
-		for (const auto& p: pt_visitor.ast_etc_map())
+		for (const auto& p: ast_etc_map)
 		{
 			fs::path idir_path = p.first;
 			idir_path.remove_filename();
@@ -103,7 +119,11 @@ int Master::run()
 			AstToDotConverter().convert(ofile_path, p.first, p.second);
 		}
 	}
-	else // if (!opt().dot)
+	else if (opt().interpret)
+	{
+		return Interpreter().run(ast_etc_map);
+	}
+	else
 	{
 		// Still need to plan out what to do with the initial ASTs.
 		printerr("Error:  Unimplemented non-dot output.\n");

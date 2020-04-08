@@ -23,7 +23,8 @@ private:		// variables
 	{
 	public:		// variables
 		bool dot = false;
-		string odir;
+		bool interpret = false;
+		string out_dir;
 	public:		// functions
 		inline Opt() = default;
 		GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(Opt);

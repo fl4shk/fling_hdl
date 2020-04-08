@@ -1,0 +1,13 @@
+module SmallCpu<WIDTH: size_t>
+(
+	bus: interface small_cpu_pkg::subpkg<WIDTH>::Bus
+)
+{
+	module Alu
+	(
+		bus: interface alu_pkg::Bus<WIDTH>
+	)
+		import small_cpu_pkg::all
+	{
+	}
+}

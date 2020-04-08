@@ -131,6 +131,7 @@ flingDeclModule_Scope:
 
 flingDeclModule_Item:
 	flingInstModule
+	| flingDeclModule
 
 	// This is a `proc` call
 	| flingExpr ';'
