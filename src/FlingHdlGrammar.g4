@@ -417,8 +417,8 @@ flingDeclFunc_Scope:
 	'}'
 	;
 flingDeclFunc_Item:
-	// Return statement or call a `func`
-	KwReturn? flingExpr ';'
+	// Return statement, defer statement, or call a `func`
+	(KwReturn | KwDefer)? flingExpr ';'
 	| flingDeclFunc_Scope
 	| flingDeclAlias
 	| flingDeclVar
@@ -644,6 +644,7 @@ flingTypenameOrModname_Builtin:
 		| KwSizeT
 		| KwRange
 		| KwString
+		| KwFile
 
 		| KwU8
 		| KwI8
@@ -1014,6 +1015,7 @@ KwI64: 'i64' ;
 KwU128: 'u128' ;
 KwI128: 'i128' ;
 
+KwDefer: 'defer' ;
 KwReturn: 'return' ;
 KwRetT: 'ret_t' ;
 
@@ -1105,8 +1107,8 @@ KwPriv: 'priv' ;
 KwString: 'string' ;
 
 KwFloat: 'float' ;
-//KwFile: 'file' ;
-//
+KwFile: 'file' ;
+
 //KwDelay: 'delay' ;
 //--------
 

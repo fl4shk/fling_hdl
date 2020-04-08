@@ -550,6 +550,11 @@ public:		// variables
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclFunc_Return, Base);
 };
+class DeclFunc_Defer: public DeclFunc_Return
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclFunc_Defer, DeclFunc_Return);
+};
 
 class DeclTask: public DeclFunc
 {
@@ -691,6 +696,7 @@ public:		// types
 		Range,
 		//Float,
 		String,
+		File,
 
 		U8,
 		I8,
@@ -717,6 +723,7 @@ public:		// types
 			Range,
 			//Float,
 			String,
+			File,
 
 			U8,
 			I8,

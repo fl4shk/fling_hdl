@@ -73,6 +73,7 @@
 	X(DeclFunc) \
 	X(DeclFunc_Header) \
 	X(DeclFunc_Return) \
+	X(DeclFunc_Defer) \
 	\
 	X(DeclTask) \
 	X(DeclTask_Header) \

@@ -261,6 +261,11 @@ void AstVisitor::_accept_children
 	ACCEPT(expr);
 }
 void AstVisitor::_accept_children
+	(DeclFunc_Defer* n)
+{
+	ACCEPT(expr);
+}
+void AstVisitor::_accept_children
 	(DeclTask* n)
 {
 	_accept_children(static_cast<DeclFunc*>(n));

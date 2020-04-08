@@ -75,7 +75,7 @@ syn keyword fling_hdl_type u8 i8 u16 i16 u32 i32 u64 i64 u128 i128
 "--------
 
 "--------
-syn keyword fling_hdl_stmt return
+syn keyword fling_hdl_stmt defer return
 syn keyword fling_hdl_type ret_t auto range
 "--------
 

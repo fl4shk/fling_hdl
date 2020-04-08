@@ -1111,6 +1111,12 @@ antlrcpp::Any PtVisitor::visitFlingDeclFunc_Item
 
 			JUST_ACCEPT_AND_POP_AST(node->expr, flingExpr);
 		}
+		else CHECK(KwDefer)
+		{
+			DEFER_PUSH(node, DeclFunc_Defer);
+
+			JUST_ACCEPT_AND_POP_AST(node->expr, flingExpr);
+		}
 		else
 		{
 			JUST_ACCEPT(flingExpr);

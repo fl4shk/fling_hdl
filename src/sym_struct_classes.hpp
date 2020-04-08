@@ -13,6 +13,10 @@ namespace sym
 
 class Base
 {
+protected:		// variables
+public:		// functions
+	inline Base() = default;
+	virtual inline ~Base() = default;
 };
 
 

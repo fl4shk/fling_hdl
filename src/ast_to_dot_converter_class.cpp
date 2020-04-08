@@ -175,6 +175,7 @@ build(DeclClsOrMxn_DeclSubprogAbstract, wrap_conv_2(acc_spec),
 build(DeclFunc)
 build(DeclFunc_Header, wrap(ident))
 build(DeclFunc_Return)
+build(DeclFunc_Defer)
 
 build(DeclTask)
 build(DeclTask_Header, wrap(ident))
