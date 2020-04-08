@@ -1036,6 +1036,9 @@ KwDollarUnsigned: '$unsigned' ;
 KwDollarPow: '$pow' ;
 KwDollarClog2: '$clog2' ;
 
+//KwDollarIsUnknown: '$is_unknown' ;
+//KwDollarIsHighImp: '$is_high_imp' ;
+
 //KwDollarDisplay: '$display' ;
 //KwDollarMonitor: '$monitor' ;
 //KwDollarFinish: '$finish' ;
@@ -1069,6 +1072,12 @@ KwExtends: 'extends' ;
 KwVirtual: 'virtual' ;
 KwAbstract: 'abstract' ;
 KwDollarIsvtype: '$isvtype' ;
+
+//KwDollarIsSigned: '$is_signed' ;
+//KwDollarIsUnsigned: '$is_unsigned' ;
+//KwDollarIsSame: '$is_same' ;
+//KwDollarIsBaseOf: '$is_base_of' ;
+//KwDollarIsStatic: '$is_static' ;
 
 KwBase: 'base' ;
 KwStatic: 'static' ;

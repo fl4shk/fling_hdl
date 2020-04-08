@@ -92,11 +92,14 @@ int Master::run()
 	{
 		for (const auto& p: pt_visitor.ast_etc_map())
 		{
+			fs::path idir_path = p.first;
+			idir_path.remove_filename();
+
 			const fs::path ofile_path = sconcat(opt().odir, "/", p.first,
 				".dot");
 			fs::path full_odir_path = ofile_path;
 			full_odir_path.remove_filename();
-			fs::create_directory(full_odir_path);
+			fs::create_directory(full_odir_path, idir_path);
 			AstToDotConverter().convert(ofile_path, p.first, p.second);
 		}
 	}
