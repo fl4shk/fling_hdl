@@ -1,13 +1,10 @@
-module SmallCpu<WIDTH: size_t>
+module small_cpu
+<
+	MAIN_WIDTH: MainWidth = MainWidth::W16
+>
 (
-	bus: interface small_cpu_pkg::subpkg<WIDTH>::Bus
+	bus: interface Bus<MAIN_WIDTH>
 )
+	import small_cpu_pkg::all
 {
-	module Alu
-	(
-		bus: interface alu_pkg::Bus<WIDTH>
-	)
-		import small_cpu_pkg::all
-	{
-	}
 }

@@ -158,9 +158,9 @@ build(DeclConst)
 
 build(DeclEnum, wrap(ident))
 
-build(DeclMixin, wrap(is_base, ident))
+build(DeclMixin, wrap(is_base, is_dyn, ident))
 
-build(DeclClass, wrap(is_base, ident, is_signed, is_packed))
+build(DeclClass, wrap(is_base, is_dyn, ident, is_signed, is_packed))
 
 build(DeclClass_DeclVar, wrap_conv_2(acc_spec), wrap(is_static))
 build(DeclClsOrMxn_DeclType, wrap_conv_2(acc_spec))
@@ -263,6 +263,7 @@ build(ExprIdentEtc_FirstItem, wrap_conv(kind))
 build(ExprIdentEtc_NonSelfItem, wrap(ident))
 build(ExprIdentEtc_ItemEnd, wrap_conv(kind))
 build(ExprIdentEtc_ItemEndIndex, wrap_conv(kind))
+build(ExprCast)
 build(ExprCallSubprog_PseudoOper, wrap(ident))
 
 

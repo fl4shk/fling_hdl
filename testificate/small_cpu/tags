@@ -1,0 +1,57 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	0.0.0	/a3c87ab5/
+Bus	small_cpu_package.fling_hdl	/^	class Bus$/;"	kind:i
+BusAccType	small_cpu_package.fling_hdl	/^	enum BusAccType$/;"	kind:e
+DecInstr	small_cpu_package.fling_hdl	/^		class packed DecInstr$/;"	kind:i
+EncInstr	small_cpu_package.fling_hdl	/^		class packed EncInstr$/;"	kind:i
+EncOrDecInstrSharedStuff	small_cpu_package.fling_hdl	/^		base class packed EncOrDecInstrSharedStuff$/;"	kind:i
+In	small_cpu_package.fling_hdl	/^		class In$/;"	kind:i
+MAIN_WIDTH	small_cpu_module.fling_hdl	/^	MAIN_WIDTH: MainWidth = MainWidth::W16$/;"	kind:j
+MAIN_WIDTH	small_cpu_module.fling_hdl	/^	MAIN_WIDTH: MainWidth = MainWidth::W16$/;"	kind:x
+MAIN_WIDTH	small_cpu_package.fling_hdl	/^			MAIN_WIDTH: MainWidth$/;"	kind:j
+MAIN_WIDTH	small_cpu_package.fling_hdl	/^			MAIN_WIDTH: MainWidth$/;"	kind:x
+MAIN_WIDTH	small_cpu_package.fling_hdl	/^		MAIN_WIDTH: MainWidth$/;"	kind:j
+MAIN_WIDTH	small_cpu_package.fling_hdl	/^		MAIN_WIDTH: MainWidth$/;"	kind:x
+MainData	small_cpu_package.fling_hdl	/^			alias MainData: type = logic<MAIN_WIDTH as size_t>;$/;"	kind:t
+MainData	small_cpu_package.fling_hdl	/^		static alias MainData: type = logic<MAIN_WIDTH as size_t>;$/;"	kind:t
+MainWidth	small_cpu_package.fling_hdl	/^	enum MainWidth$/;"	kind:e
+NON_SIMM_FIELD_WIDTH	small_cpu_package.fling_hdl	/^		NON_SIMM_FIELD_WIDTH: const size_t = 4;$/;"	kind:c
+Opcode	small_cpu_package.fling_hdl	/^		enum Opcode: logic<NON_SIMM_FIELD_WIDTH>$/;"	kind:e
+Out	small_cpu_package.fling_hdl	/^		class Out$/;"	kind:i
+RegInd	small_cpu_package.fling_hdl	/^		enum RegInd: logic<NON_SIMM_FIELD_WIDTH>$/;"	kind:e
+SIMM_FIELD_WIDTH	small_cpu_package.fling_hdl	/^			SIMM_FIELD_WIDTH: const size_t = (MAIN_WIDTH as size_t)$/;"	kind:c
+Simm	small_cpu_package.fling_hdl	/^			alias Simm: type = logic<SIMM_FIELD_WIDTH>;$/;"	kind:t
+__as__	small_cpu_package.fling_hdl	/^	func __as__$/;"	kind:f
+acc_type	small_cpu_package.fling_hdl	/^			acc_type: BusAccType;$/;"	kind:x
+addr	small_cpu_package.fling_hdl	/^				addr, data: input MainData$/;"	kind:p
+addr	small_cpu_package.fling_hdl	/^				addr: input MainData$/;"	kind:p
+addr	small_cpu_package.fling_hdl	/^			addr, write_data: MainData;$/;"	kind:x
+bus	small_cpu_module.fling_hdl	/^	bus: interface Bus<MAIN_WIDTH>$/;"	kind:p
+data	small_cpu_package.fling_hdl	/^				addr, data: input MainData$/;"	kind:p
+extend_simm	small_cpu_package.fling_hdl	/^			func extend_simm(): MainData$/;"	kind:f
+igt	small_cpu_package.fling_hdl	/^			igt: logic;$/;"	kind:x
+in	small_cpu_package.fling_hdl	/^		in: In;$/;"	kind:x
+instr_pkg	small_cpu_package.fling_hdl	/^	package instr_pkg$/;"	kind:P
+irq	small_cpu_package.fling_hdl	/^			irq: logic;$/;"	kind:x
+mw	small_cpu_package.fling_hdl	/^		mw: input MainWidth$/;"	kind:p
+mw	small_cpu_package.fling_hdl	/^		mw: input size_t$/;"	kind:p
+op	small_cpu_package.fling_hdl	/^			op: Opcode;$/;"	kind:x
+out	small_cpu_package.fling_hdl	/^		out: Out;$/;"	kind:x
+prep_bus_read	small_cpu_package.fling_hdl	/^			task prep_bus_read$/;"	kind:f
+prep_bus_write	small_cpu_package.fling_hdl	/^			task prep_bus_write$/;"	kind:f
+read_data	small_cpu_package.fling_hdl	/^			read_data: MainData;$/;"	kind:x
+read_ready	small_cpu_package.fling_hdl	/^			read_ready: logic;$/;"	kind:x
+reg_a	small_cpu_package.fling_hdl	/^			reg_a, reg_b: RegInd;$/;"	kind:x
+reg_b	small_cpu_package.fling_hdl	/^			reg_a, reg_b: RegInd;$/;"	kind:x
+signext_imm	small_cpu_package.fling_hdl	/^			signext_imm: MainData;$/;"	kind:x
+simm	small_cpu_package.fling_hdl	/^			simm: Simm;$/;"	kind:x
+small_cpu	small_cpu_module.fling_hdl	/^module small_cpu$/;"	kind:m
+small_cpu_pkg	small_cpu_package.fling_hdl	/^package small_cpu_pkg$/;"	kind:P
+stop_bus_acc	small_cpu_package.fling_hdl	/^			task stop_bus_acc()$/;"	kind:f
+write_data	small_cpu_package.fling_hdl	/^			addr, write_data: MainData;$/;"	kind:x

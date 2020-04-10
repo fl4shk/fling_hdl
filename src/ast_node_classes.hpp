@@ -438,7 +438,7 @@ public:		// functions
 class DeclMixin: public Base
 {
 public:		// variables
-	bool is_base = false;
+	bool is_base = false, is_dyn = false;
 	string ident;
 	BaseSptr opt_param_list;
 	BaseSptrList opt_extends, item_list;
@@ -1144,6 +1144,14 @@ public:		// variables
 	BaseSptr left, opt_right;
 public:		// functions
 	SHARED_FUNC_CONTENTS(ExprIdentEtc_ItemEndIndex, Base);
+};
+
+class ExprCast: public Base
+{
+public:		// variables
+	BaseSptr to_cast, typename_or_modname;
+public:		// functions
+	SHARED_FUNC_CONTENTS(ExprCast, Base);
 };
 
 // Call a member function via `a plus b` instead of `a.plus(b)`

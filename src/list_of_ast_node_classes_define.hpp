@@ -160,6 +160,8 @@
 	X(ExprIdentEtc_ItemEnd) \
 	X(ExprIdentEtc_ItemEndIndex) \
 	\
+	X(ExprCast) \
+	\
 	/* Call a member function via `a plus b` instead of `a.plus(b)` */ \
 	X(ExprCallSubprog_PseudoOper) \
 

@@ -1,59 +1,202 @@
 package small_cpu_pkg
 {
-	package alu_pkg
-	{
-		enum Opcode
-		{
-			Add,
-			Adc,
-			Sub,
-			Sbc,
-
-			Sltu,
-			Slts,
-			And,
-			Nor,
-		}
-
-		class Bus<WIDTH: size_t>
-		{
-			class In
-			{
-				data: logic<WIDTH>[2];
-				carry: logic;
-				op: Opcode
-			}
-			in: In;
-
-			class Out
-			{
-				result: logic<WIDTH>;
-				carry: logic;
-			}
-			out: Out;
-		}
-	}
-
-
-	enum BusReqType
+	enum BusAccType
 	{
 		None,
 		Read,
 		Write,
 	}
 
-	class subpkg<WIDTH: size_t>
+	enum MainWidth
 	{
-		class BusIn
+		W16,
+		W32,
+		W64,
+		Bad,
+	}
+	func __as__
+	(
+		mw: input MainWidth
+	): size_t
+	{
+		switch mw
 		{
-			data: logic<DATA_WIDTH>;
-			data_ready: logic;
+		//--------
+		MainWidth::W16 { return 16; }
+		MainWidth::W32 { return 32; }
+		MainWidth::W64 { return 64; }
+
+		// Error code
+		default { return 0; }
+		//--------
+		}
+	}
+	func __as__
+	(
+		mw: input size_t
+	): MainWidth
+	{
+		switch mw
+		{
+		//--------
+		16 { return MainWidth::W16; }
+		32 { return MainWidth::W32; }
+		64 { return MainWidth::W64; }
+		default { return MainWidth::Bad; }
+		//--------
+		}
+	}
+
+	class Bus
+	<
+		MAIN_WIDTH: MainWidth
+	>
+	{
+		static alias MainData: type = logic<MAIN_WIDTH as size_t>;
+
+		class In
+		{
+			//--------
+			read_data: MainData;
+			read_ready: logic;
+			//--------
+
+			//--------
+			// Request an interrupt
+			irq: logic;
+			//--------
+		}
+		in: In;
+
+		class Out
+		{
+			//--------
+			acc_type: BusAccType;
+			addr, write_data: MainData;
+			//--------
+
+			//--------
+			// Grant an interrupt
+			igt: logic;
+			//--------
+
+			//--------
+			task stop_bus_acc()
+			{
+				self.acc_type := BusAccType::None;
+			}
+
+			task prep_bus_read
+			(
+				addr: input MainData
+			)
+			{
+				self.acc_type := BusAccType::Read;
+				self.addr := addr;
+			}
+
+			task prep_bus_write
+			(
+				addr, data: input MainData
+			)
+			{
+				self.acc_type := BusAccType::Write;
+				self.addr := addr;
+				self.data := data;
+			}
+			//--------
+		}
+		out: Out;
+	}
+
+	package instr_pkg
+	{
+		NON_SIMM_FIELD_WIDTH: const size_t = 4;
+
+		enum Opcode: logic<NON_SIMM_FIELD_WIDTH>
+		{
+			Add,
+			Sub,
+			Sltu,
+			Slts,
+
+			Addi,
+			AddiPc,
+			Jmp,
+			Bzo,
+
+			Bnz,
+			And,
+			Or,
+			Xor,
+
+			Ldr,
+			Str,
+			Ei,
+			Di,
 		}
 
-		class BusOut
+		enum RegInd: logic<NON_SIMM_FIELD_WIDTH>
 		{
-			data, addr: logic<WIDTH>;
-			req_type: BusReqType;
+			U0,
+			U1,
+			U2,
+			U3,
+
+			U4,
+			U5,
+			U6,
+			U7,
+
+			U8,
+			U9,
+			U10,
+			Ida,
+
+			Ira,
+			Lr,
+			Fp,
+			Sp,
+		}
+
+		base class packed EncOrDecInstrSharedStuff
+		<
+			MAIN_WIDTH: MainWidth
+		>
+		{
+			alias MainData: type = logic<MAIN_WIDTH as size_t>;
+
+			op: Opcode;
+			reg_a, reg_b: RegInd;
+		}
+
+		class packed EncInstr
+		<
+			MAIN_WIDTH: MainWidth
+		>
+			extends EncOrDecInstrSharedStuff<MAIN_WIDTH>
+		{
+			//--------
+			SIMM_FIELD_WIDTH: const size_t = (MAIN_WIDTH as size_t)
+				- EncOrDecInstrSharedStuff<MAIN_WIDTH>$size;
+			alias Simm: type = logic<SIMM_FIELD_WIDTH>;
+			//--------
+
+			//--------
+			simm: Simm;
+
+			func extend_simm(): MainData
+			{
+			}
+			//--------
+		}
+		class packed DecInstr
+		<
+			MAIN_WIDTH: MainWidth
+		>
+			extends EncOrDecInstrSharedStuff<MAIN_WIDTH>
+		{
+			signext_imm: MainData;
 		}
 	}
 }

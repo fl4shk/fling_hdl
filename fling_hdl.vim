@@ -86,9 +86,10 @@ syn keyword fling_hdl_stmt as
 "--------
 
 "--------
-syn keyword fling_hdl_func $size $range $high $low $firstel $lastel
-syn keyword fling_hdl_func $signed $unsigned $pow $clog2
-"syn keyword fling_hdl_func $display $monitor $finish $stop
+syn match fling_hdl_func "$size\|$range\|$high\|$low"
+syn match fling_hdl_func "$firstel\|$lastel"
+syn match fling_hdl_func "$signed\|$unsigned\|$pow\|$clog2"
+"syn match fling_hdl_func "$display\|$monitor\|$finish\|$stop"
 "--------
 
 "--------
@@ -105,9 +106,9 @@ syn keyword fling_hdl_type enum class mixin
 syn keyword fling_hdl_stmt packed extends
 
 syn keyword fling_hdl_stmt virtual abstract
-syn keyword fling_hdl_func $isvtype
+syn match fling_hdl_func "$isvtype"
 
-syn keyword fling_hdl_stmt base static proc self
+syn keyword fling_hdl_stmt base dyn static proc self
 syn keyword fling_hdl_type self_t
 
 syn keyword fling_hdl_stmt pub prot priv

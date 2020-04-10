@@ -1,0 +1,9 @@
+syn keyword CTagsSignal read_ready op reg_a read_data reg_b igt out irq signext_imm in simm write_data acc_type
+syn keyword CTagsPort data addr mw bus
+syn keyword CTagsPackage small_cpu_pkg instr_pkg
+syn keyword CTagsInterface DecInstr EncInstr EncOrDecInstrSharedStuff Bus In Out
+syn keyword CTagsGlobalConstant MAIN_WIDTH SIMM_FIELD_WIDTH NON_SIMM_FIELD_WIDTH
+syn keyword CTagsFunction extend_simm __as__ stop_bus_acc prep_bus_write prep_bus_read
+syn keyword CTagsType RegInd BusAccType MainWidth MainData Simm Opcode
+syn keyword CTagsClass small_cpu
+

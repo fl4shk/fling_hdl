@@ -593,6 +593,11 @@ void AstVisitor::_accept_children
 	ACCEPT(left, opt_right);
 }
 void AstVisitor::_accept_children
+	(ExprCast* n)
+{
+	ACCEPT(to_cast, typename_or_modname);
+}
+void AstVisitor::_accept_children
 	(ExprCallSubprog_PseudoOper* n)
 {
 	ACCEPT(left, right, opt_param_list);

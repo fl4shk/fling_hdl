@@ -835,6 +835,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclClass
 	DEFER_PUSH(node, DeclClass);
 
 	node->is_base = ctx->KwBase();
+	node->is_dyn = ctx->KwDyn();
 	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
 	ACCEPT_AND_POP_AST_IF(node->opt_param_list, flingDeclParamList);
 	ACCEPT_AND_POP_AST_LIST_IF
@@ -1036,6 +1037,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclMixin
 	DEFER_PUSH(node, DeclMixin);
 
 	node->is_base = ctx->KwBase();
+	node->is_dyn = ctx->KwDyn();
 	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
 
 	ACCEPT_AND_POP_AST_IF(node->opt_param_list, flingDeclParamList);
@@ -1939,6 +1941,7 @@ antlrcpp::Any PtVisitor::visitFlingExpr_Unary
 	ACCEPT_IF
 		(flingExpr_Unary_ItemFromMajority,
 		flingExpr_Range,
+		flingExpr_Cast,
 		flingExpr_CallSubprog_PseudoOper)
 	else
 	{
@@ -1993,8 +1996,20 @@ antlrcpp::Any PtVisitor::visitFlingExpr_Sized
 {
 	DEFER_PUSH(node, ExprSized);
 
-	_vec_just_accept_and_pop_ast(ctx->flingExpr(),
-		node->dst_size, node->src);
+	if (ctx->flingExpr().size() == 1)
+	{
+		_vec_just_accept_and_pop_ast(ctx->flingExpr(),
+			node->src);
+	}
+	else if (ctx->flingExpr().size() == 2)
+	{
+		_vec_just_accept_and_pop_ast(ctx->flingExpr(),
+			node->dst_size, node->src);
+	}
+	else
+	{
+		internal_err(visitFlingExpr_Sized);
+	}
 
 	return nullptr;
 }
@@ -2026,8 +2041,20 @@ antlrcpp::Any PtVisitor::visitFlingExpr_Range_CallFunc
 {
 	DEFER_PUSH(node, ExprRange);
 
-	_vec_just_accept_and_pop_ast(ctx->flingExpr(),
-		node->left, node->right);
+	if (ctx->flingExpr().size() == 1)
+	{
+		_vec_just_accept_and_pop_ast(ctx->flingExpr(),
+			node->left);
+	}
+	else if (ctx->flingExpr().size() == 2)
+	{
+		_vec_just_accept_and_pop_ast(ctx->flingExpr(),
+			node->left, node->right);
+	}
+	else
+	{
+		internal_err(visitFlingExpr_Range_CallFunc);
+	}
 
 	return nullptr;
 }
@@ -2204,6 +2231,25 @@ antlrcpp::Any PtVisitor::visitFlingExpr_IdentEtc_Item_End_Index
 		expr.at(1)->accept(this);
 		node->opt_right = _pop_ast();
 	}
+
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingExpr_Cast
+	(Parser::FlingExpr_CastContext *ctx)
+{
+	DEFER_PUSH(node, ExprCast);
+
+	ACCEPT_IF
+		(flingExpr_Unary_ItemFromMajority,
+		flingExpr_Range_CallFunc,
+		flingExpr_CallSubprog_PseudoOper)
+	else
+	{
+		internal_err(visitFlingExpr_Cast);
+	}
+	node->to_cast = _pop_ast();
+	JUST_ACCEPT_AND_POP_AST
+		(node->typename_or_modname, flingTypenameOrModname);
 
 	return nullptr;
 }

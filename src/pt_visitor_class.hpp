@@ -477,6 +477,8 @@ private:		// visitor functions
 		(Parser::FlingExpr_IdentEtc_Item_EndContext *ctx);
 	antlrcpp::Any visitFlingExpr_IdentEtc_Item_End_Index
 		(Parser::FlingExpr_IdentEtc_Item_End_IndexContext *ctx);
+	antlrcpp::Any visitFlingExpr_Cast
+		(Parser::FlingExpr_CastContext *ctx);
 	antlrcpp::Any visitFlingExpr_CallSubprog_PseudoOper
 		(Parser::FlingExpr_CallSubprog_PseudoOperContext *ctx);
 };

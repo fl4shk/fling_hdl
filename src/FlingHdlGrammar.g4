@@ -328,7 +328,8 @@ flingDeclEnum:
 
 //--------
 flingDeclClass:
-	KwBase? KwClass (KwSigned? KwPacked)? flingIdent flingDeclParamList?
+	KwBase? KwDyn? KwClass (KwSigned? KwPacked)? flingIdent
+		flingDeclParamList?
 		flingDeclClsOrMxn_Extends?
 	'{'
 		flingDeclClass_Item*
@@ -388,7 +389,7 @@ flingDeclClsOrMxn_Item_DeclSubprog_Abstract:
 	;
 
 flingDeclMixin:
-	KwBase? KwMixin flingIdent flingDeclParamList?
+	KwBase? KwDyn? KwMixin flingIdent flingDeclParamList?
 		flingDeclClsOrMxn_Extends?
 	'{'
 		flingDeclClsOrMxn_Item*
@@ -729,6 +730,7 @@ flingExpr_Mul_Or_Div_Or_Mod:
 flingExpr_Unary:
 	flingExpr_Unary_ItemFromMajority
 	| flingExpr_Range
+	| flingExpr_Cast
 	| flingExpr_CallSubprog_PseudoOper
 	;
 
@@ -753,7 +755,7 @@ flingExpr_Literal:
 	| KwUnkX ('(' flingExpr ')')?
 	;
 flingExpr_Sized:
-	KwSized '(' flingExpr ',' flingExpr ')'
+	KwSized '(' flingExpr (',' flingExpr)? ')'
 	;
 
 flingExpr_Range:
@@ -762,10 +764,10 @@ flingExpr_Range:
 	;
 
 flingExpr_Range_DotDot:
-	flingExpr_Unary_ItemFromMajority PunctColon flingExpr
+	flingExpr_Unary_ItemFromMajority PunctRangeSeparator flingExpr
 	;
 flingExpr_Range_CallFunc:
-	KwRange '(' flingExpr ',' flingExpr ')'
+	KwRange '(' flingExpr (',' flingExpr)? ')'
 	;
 
 flingExpr_Cat:
@@ -813,6 +815,15 @@ flingExpr_IdentEtc_Item_End:
 	;
 flingExpr_IdentEtc_Item_End_Index:
 	'[' flingExpr ((PunctPlusColon | PunctMinusColon) flingExpr)? ']'
+	;
+
+flingExpr_Cast:
+	(
+		flingExpr_Unary_ItemFromMajority
+		| flingExpr_Range_CallFunc
+		| flingExpr_CallSubprog_PseudoOper
+	)
+	KwAs flingTypenameOrModname
 	;
 
 // Call a member function via `a plus b` instead of `a.plus(b)`
@@ -949,6 +960,7 @@ PunctColon: ':' ;
 PunctPlusColon: '+:' ;
 PunctMinusColon: '-:' ;
 PunctComma: ',' ;
+PunctRangeSeparator: '..' ;
 //PunctParamPack: '...' ;
 //--------
 
@@ -1086,6 +1098,7 @@ KwDollarIsvtype: '$isvtype' ;
 //KwDollarIsStatic: '$is_static' ;
 
 KwBase: 'base' ;
+KwDyn: 'dyn' ;
 KwStatic: 'static' ;
 KwProc: 'proc' ;
 KwSelf: 'self' ;
@@ -1113,17 +1126,17 @@ KwFile: 'file' ;
 //--------
 
 //--------
-// The non-post/pre underscore parts must start and end with an
-// alphanumeric character, and there must be at least two alphanumeric
-// characters.
-MiscReservedIdent:
-	'__' [A-Za-z] ([A-Za-z0-9_]* [A-Za-z0-9])? '__'
-	;
+//// The non-post/pre underscore parts must start and end with an
+//// alphanumeric character, and there must be at least two alphanumeric
+//// characters.
+//MiscReservedIdent:
+//	'__' [A-Za-z] ([A-Za-z0-9_]* [A-Za-z0-9])? '__'
+//	;
 //MiscMacroOrDefineIdent:
 //	'`' [A-Za-z_] [A-Za-z0-9_]*
 //	;
 
-fragment FragBasicIdent: '_'? [A-Za-z] ('_'? [A-Za-z0-9])* '_'?  ;
+fragment FragBasicIdent: '_'* [A-Za-z] ('_'? [A-Za-z0-9])* '_'*  ;
 fragment FragRawIdent: 'r#' [A-Za-z_0-9]+ ;
 
 MiscIdent: 
