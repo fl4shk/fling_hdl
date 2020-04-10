@@ -328,7 +328,7 @@ flingDeclEnum:
 
 //--------
 flingDeclClass:
-	KwBase? KwDyn? KwClass (KwSigned? KwPacked)? flingIdent
+	KwBase? KwClass (KwSigned? KwPacked)? flingIdent
 		flingDeclParamList?
 		flingDeclClsOrMxn_Extends?
 	'{'
@@ -389,7 +389,7 @@ flingDeclClsOrMxn_Item_DeclSubprog_Abstract:
 	;
 
 flingDeclMixin:
-	KwBase? KwDyn? KwMixin flingIdent flingDeclParamList?
+	KwBase? KwMixin flingIdent flingDeclParamList?
 		flingDeclClsOrMxn_Extends?
 	'{'
 		flingDeclClsOrMxn_Item*
@@ -614,12 +614,12 @@ flingTypenameOrModname:
 	| flingTypenameOrModname_Typeof
 	| flingTypenameOrModname_Builtin
 
-	| KwSelfT
-	| KwRetT
+	| KwDyn? KwSelfT
+	| KwDyn? KwRetT
 	;
 
 flingTypenameOrModname_Cstm:
-	flingTypenameOrModname_Cstm_Item
+	KwDyn? flingTypenameOrModname_Cstm_Item
 	(PunctScopeAccess flingTypenameOrModname_Cstm_Item)*
 		flingTypenameOrModname_ArrDim*
 	;
@@ -638,6 +638,7 @@ flingTypenameOrModname_ArrDim:
 	;
 
 flingTypenameOrModname_Builtin:
+	KwDyn?
 	(
 		KwSigned? KwLogic flingInstParamList?
 
@@ -753,6 +754,7 @@ flingExpr_Literal:
 	| LitString
 	| KwHighZ ('(' flingExpr ')')?
 	| KwUnkX ('(' flingExpr ')')?
+	| KwNull
 	;
 flingExpr_Sized:
 	KwSized '(' flingExpr (',' flingExpr)? ')'
@@ -1099,6 +1101,7 @@ KwDollarIsvtype: '$isvtype' ;
 
 KwBase: 'base' ;
 KwDyn: 'dyn' ;
+KwNull: 'null' ;
 KwStatic: 'static' ;
 KwProc: 'proc' ;
 KwSelf: 'self' ;

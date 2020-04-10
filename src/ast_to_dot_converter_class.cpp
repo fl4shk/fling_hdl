@@ -158,9 +158,9 @@ build(DeclConst)
 
 build(DeclEnum, wrap(ident))
 
-build(DeclMixin, wrap(is_base, is_dyn, ident))
+build(DeclMixin, wrap(is_base, ident))
 
-build(DeclClass, wrap(is_base, is_dyn, ident, is_signed, is_packed))
+build(DeclClass, wrap(is_base, ident, is_signed, is_packed))
 
 build(DeclClass_DeclVar, wrap_conv_2(acc_spec), wrap(is_static))
 build(DeclClsOrMxn_DeclType, wrap_conv_2(acc_spec))
@@ -216,11 +216,11 @@ void AstToDotConverter::_build_label_map
 build(ImportList)
 build(ImportList_Item, wrap(has_all))
 
-build(TypenameOrModname_Special, wrap_conv(kind))
-build(TypenameOrModname_Cstm)
+build(TypenameOrModname_Special, wrap(is_dyn), wrap_conv(kind))
+build(TypenameOrModname_Cstm, wrap(is_dyn))
 build(TypenameOrModname_Typeof)
-build(TypenameOrModname_Cstm_Item, wrap(ident))
-build(TypenameOrModname_Builtin, wrap_conv(kind))
+build(TypenameOrModname_Cstm_Item, wrap(is_dyn, ident))
+build(TypenameOrModname_Builtin, wrap(is_dyn), wrap_conv(kind))
 
 #define X(basic_label) \
 	build(basic_label)

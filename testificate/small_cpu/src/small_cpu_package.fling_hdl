@@ -177,16 +177,24 @@ package small_cpu_pkg
 			extends EncOrDecInstrSharedStuff<MAIN_WIDTH>
 		{
 			//--------
-			SIMM_FIELD_WIDTH: const size_t = (MAIN_WIDTH as size_t)
+			static SIMM_FIELD_WIDTH: const size_t 
+				= (MAIN_WIDTH as size_t)
 				- EncOrDecInstrSharedStuff<MAIN_WIDTH>$size;
-			alias Simm: type = logic<SIMM_FIELD_WIDTH>;
-			//--------
 
-			//--------
+			static alias Simm: type = logic<SIMM_FIELD_WIDTH>;
+			static EXT_AMOUNT: const size_t = MainData$size - Simm$size;
 			simm: Simm;
 
-			func extend_simm(): MainData
+			const func ext_simm(): MainData
 			{
+				if simm$lastel
+				{
+					return cat(sized(EXT_AMOUNT, $signed(-1)), simm);
+				}
+				else // if !simm$lastel
+				{
+					return simm;
+				}
 			}
 			//--------
 		}

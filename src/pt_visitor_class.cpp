@@ -835,7 +835,6 @@ antlrcpp::Any PtVisitor::visitFlingDeclClass
 	DEFER_PUSH(node, DeclClass);
 
 	node->is_base = ctx->KwBase();
-	node->is_dyn = ctx->KwDyn();
 	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
 	ACCEPT_AND_POP_AST_IF(node->opt_param_list, flingDeclParamList);
 	ACCEPT_AND_POP_AST_LIST_IF
@@ -1037,7 +1036,6 @@ antlrcpp::Any PtVisitor::visitFlingDeclMixin
 	DEFER_PUSH(node, DeclMixin);
 
 	node->is_base = ctx->KwBase();
-	node->is_dyn = ctx->KwDyn();
 	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
 
 	ACCEPT_AND_POP_AST_IF(node->opt_param_list, flingDeclParamList);
@@ -1612,6 +1610,8 @@ antlrcpp::Any PtVisitor::visitFlingTypenameOrModname
 	else
 	{
 		DEFER_PUSH(node, TypenameOrModname_Special);
+		node->is_dyn = ctx->KwDyn();
+
 		using Kind = TypenameOrModname_Special::Kind;
 		if (!_conv_pt_to_enum(node->kind,
 			ctx->KwSelfT(), Kind::SelfT,
@@ -1627,6 +1627,8 @@ antlrcpp::Any PtVisitor::visitFlingTypenameOrModname_Cstm
 	(Parser::FlingTypenameOrModname_CstmContext *ctx)
 {
 	DEFER_PUSH(node, TypenameOrModname_Cstm);
+
+	node->is_dyn = ctx->KwDyn();
 
 	FOR_PT(p, flingTypenameOrModname_Cstm_Item)
 	{
@@ -1690,6 +1692,8 @@ antlrcpp::Any PtVisitor::visitFlingTypenameOrModname_Builtin
 	(Parser::FlingTypenameOrModname_BuiltinContext *ctx)
 {
 	DEFER_PUSH(node, TypenameOrModname_Builtin);
+
+	node->is_dyn = ctx->KwDyn();
 
 	using Kind = TypenameOrModname_Builtin::Kind;
 
@@ -1980,7 +1984,8 @@ antlrcpp::Any PtVisitor::visitFlingExpr_Literal
 		ctx->LitBinNum(), Kind::BinNum,
 		ctx->LitString(), Kind::String,
 		ctx->KwHighZ(), Kind::HighZ,
-		ctx->KwUnkX(), Kind::UnkX))
+		ctx->KwUnkX(), Kind::UnkX,
+		ctx->KwNull(), Kind::Null))
 	{
 		internal_err(visitFlingExpr_Literal);
 	}

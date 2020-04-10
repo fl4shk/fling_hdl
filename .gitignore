@@ -39,9 +39,9 @@ disassembly*.armasm
 *.ss*
 *.gdb_history*
 *.sw[po]
-*/tags
-*/types_*.taghl
-*.txt.ignore
+tags
+types_*.taghl
+*.ignore
 fling_hdl
 fling_hdl_debug
 *.elf

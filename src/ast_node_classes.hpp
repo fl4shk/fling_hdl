@@ -438,7 +438,7 @@ public:		// functions
 class DeclMixin: public Base
 {
 public:		// variables
-	bool is_base = false, is_dyn = false;
+	bool is_base = false;
 	string ident;
 	BaseSptr opt_param_list;
 	BaseSptrList opt_extends, item_list;
@@ -652,6 +652,7 @@ public:		// types
 			RetT)
 	}
 public:		// variables
+	bool is_dyn = false;
 	Kind kind;
 public:		// variables
 	SHARED_FUNC_CONTENTS(TypenameOrModname_Special, Base);
@@ -661,6 +662,7 @@ public:		// variables
 class TypenameOrModname_Cstm: public Base
 {
 public:		// variables
+	bool is_dyn = false;
 	BaseSptrList item_list, arr_dim_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(TypenameOrModname_Cstm, Base);
@@ -677,6 +679,7 @@ public:		// functions
 class TypenameOrModname_Cstm_Item: public Base
 {
 public:		// variables
+	bool is_dyn = false;
 	string ident;
 	BaseSptr opt_param_list;
 public:		// functions
@@ -740,6 +743,7 @@ public:		// types
 			Void);
 	}
 public:		// variables
+	bool is_dyn = false;
 	Kind kind;
 	BaseSptr opt_param_list;
 	BaseSptrList arr_dim_list;
@@ -960,6 +964,7 @@ public:		// types
 		String,
 		HighZ,
 		UnkX,
+		Null,
 	};
 	static string conv_kind(Kind to_conv)
 	{
@@ -971,7 +976,8 @@ public:		// types
 			//Float,
 			String,
 			HighZ,
-			UnkX)
+			UnkX,
+			Null)
 	}
 
 public:		// variables
