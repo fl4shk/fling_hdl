@@ -61,14 +61,23 @@ void AstVisitor::_accept_children
 	ACCEPT(ident_list, typename_or_modname, opt_expr_list);
 }
 void AstVisitor::_accept_children
-	(InstParamList_Named_Item* n)
+	(InstParamOrArgList_PosItemParpk* n)
+{
+	ACCEPT(item_list);
+}
+void AstVisitor::_accept_children
+	(InstParamOrArgList_PosItemUnparpk* n)
+{
+}
+void AstVisitor::_accept_children
+	(InstParamList_NamedItem* n)
 {
 	ACCEPT(item);
 }
 void AstVisitor::_accept_children
-	(InstArgList_Named_Item* n)
+	(InstArgList_NamedItem* n)
 {
-	ACCEPT(expr);
+	ACCEPT(item);
 }
 void AstVisitor::_accept_children
 	(DeclModule* n)

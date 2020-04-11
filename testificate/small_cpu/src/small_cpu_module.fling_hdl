@@ -7,4 +7,80 @@ module small_cpu
 )
 	import small_cpu_pkg::all
 {
+	//--------
+	curr_enc_instr: wire instr_pkg::EncInstr<MAIN_WIDTH>
+		:= bus.in.read_data;
+
+	saved_enc_instr: typeof(curr_enc_instr);
+	//--------
+
+	//--------
+	alias MainData: type = logic<MAIN_WIDTH as size_t>;
+	//--------
+
+	//--------
+	class Regs
+	{
+		static REG_ARR_SIZE: const size_t
+			= (1 as size_t) lsl instr_pkg::NON_SIMM_FIELD_WIDTH;
+
+		reg_arr: MainData[0..REG_ARR_SIZE - 1];
+	}
+	regs: Regs;
+	//--------
+
+	//--------
+	seq posedge bus.in.clk
+	{
+		enum State
+		{
+			Fetch,
+			Decode,
+			Exec,
+			Mem,
+			WriteBack,
+		}
+		state: State;
+
+		if !bus.in.rst_n
+		{
+			state := State::Fetch;
+			bus.out.prep_bus_read();
+		}
+		else // if bus.in.rst_n
+		{
+			saved_enc_instr := curr_enc_instr;
+
+			switch state
+			{
+			//--------
+			State::Fetch
+			{
+				state := State::Decode;
+			}
+
+			State::Decode
+			{
+			}
+
+			State::Exec
+			{
+			}
+
+			State::Mem
+			{
+			}
+
+			State::WriteBack
+			{
+			}
+
+			default
+			{
+			}
+			//--------
+			}
+		}
+	}
+	//--------
 }

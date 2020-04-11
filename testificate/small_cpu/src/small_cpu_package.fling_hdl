@@ -1,12 +1,5 @@
 package small_cpu_pkg
 {
-	enum BusAccType
-	{
-		None,
-		Read,
-		Write,
-	}
-
 	enum MainWidth
 	{
 		W16,
@@ -47,6 +40,13 @@ package small_cpu_pkg
 		}
 	}
 
+	enum BusAccType
+	{
+		None,
+		Read,
+		Write,
+	}
+
 	class Bus
 	<
 		MAIN_WIDTH: MainWidth
@@ -56,6 +56,10 @@ package small_cpu_pkg
 
 		class In
 		{
+			//--------
+			clk, rst_n: logic;
+			//--------
+
 			//--------
 			read_data: MainData;
 			read_ready: logic;
@@ -97,12 +101,12 @@ package small_cpu_pkg
 
 			task prep_bus_write
 			(
-				addr, data: input MainData
+				addr, write_data: input MainData
 			)
 			{
 				self.acc_type := BusAccType::Write;
 				self.addr := addr;
-				self.data := data;
+				self.write_data := write_data;
 			}
 			//--------
 		}
@@ -187,14 +191,7 @@ package small_cpu_pkg
 
 			const func ext_simm(): MainData
 			{
-				if simm$lastel
-				{
-					return cat(sized(EXT_AMOUNT, $signed(-1)), simm);
-				}
-				else // if !simm$lastel
-				{
-					return simm;
-				}
+				return cat(sized(EXT_AMOUNT, simm$lastel), simm);
 			}
 			//--------
 		}

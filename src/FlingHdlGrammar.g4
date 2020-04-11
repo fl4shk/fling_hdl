@@ -48,6 +48,8 @@ flingDeclParamList_Item:
 		(
 			flingTypenameOrModname ('=' flingExprList)?
 			| (KwType | KwModule) ('=' flingTypenameOrModnameList)?
+			| KwParpk 
+				'<' (flingTypenameOrModname | KwType | KwModule) '>'
 		)
 	;
 
@@ -63,7 +65,10 @@ flingDeclArgList:
 flingDeclArgList_Item:
 	flingIdentList ':'
 		(KwInput | KwOutput | KwInout | KwInterface)
-		flingTypenameOrModname ('=' flingExprList)?
+		(
+			flingTypenameOrModname ('=' flingExprList)?
+			| KwParpk '<' flingTypenameOrModname '>'
+		)
 	;
 //--------
 
@@ -82,7 +87,18 @@ flingInstParamList_Pos:
 	(',' flingInstParamList_Pos_Item)*
 	;
 flingInstParamList_Pos_Item:
-	flingExpr | flingTypenameOrModname
+	flingExpr
+	| flingTypenameOrModname
+	| flingInstParamList_Pos_Item_Parpk
+	| flingInstParamList_Pos_Item_Unparpk
+	;
+
+
+flingInstParamList_Pos_Item_Parpk:
+	KwParpk '(' (flingExprList | flingTypenameOrModnameList) ','? ')'
+	;
+flingInstParamList_Pos_Item_Unparpk:
+	KwUnparpk '(' flingIdent ')'
 	;
 
 flingInstParamList_Named:
@@ -103,7 +119,22 @@ flingInstArgList:
 	;
 
 flingInstArgList_Pos:
-	flingExprList
+	flingInstArgList_Pos_Item
+	(',' flingInstArgList_Pos_Item)*
+	','?
+	;
+
+flingInstArgList_Pos_Item:
+	flingExpr
+	| flingInstArgList_Pos_Item_Parpk
+	| flingInstArgList_Pos_Item_Unparpk
+	;
+
+flingInstArgList_Pos_Item_Parpk:
+	KwParpk '(' flingExprList ','? ')'
+	;
+flingInstArgList_Pos_Item_Unparpk:
+	KwUnparpk '(' flingIdent ')'
 	;
 
 flingInstArgList_Named:
@@ -112,7 +143,7 @@ flingInstArgList_Named:
 	;
 
 flingInstArgList_Named_Item:
-	flingIdent PunctMapTo flingExpr
+	flingIdent PunctMapTo flingInstArgList_Pos_Item
 	;
 //--------
 
@@ -296,7 +327,8 @@ flingBehav_Item_BlkAssign:
 
 //--------
 flingDeclWire:
-	flingIdentList ':' KwWire flingTypenameOrModname ('=' flingExprList)?
+	flingIdentList ':' KwWire flingTypenameOrModname
+		(PunctNonBlkAssign flingExprList)?
 		';'
 	;
 
@@ -375,7 +407,11 @@ flingDeclClsOrMxn_Item_DeclSubprog:
 	;
 flingDeclClsOrMxn_Item_DeclSubprog_FullDefn:
 	flingDeclClsOrMxn_AccessSpecifier?
-	(KwVirtual | KwStatic)? KwConst? flingDeclSubprog
+	(
+		(KwVirtual | KwStatic)? KwConst? 
+			(flingDeclFunc | flingDeclTask)
+		| KwStatic? flingDeclProc
+	)
 	;
 flingDeclClsOrMxn_Item_DeclSubprog_Abstract:
 	flingDeclClsOrMxn_AccessSpecifier?
@@ -383,7 +419,6 @@ flingDeclClsOrMxn_Item_DeclSubprog_Abstract:
 	(
 		flingDeclFunc_Header
 		| flingDeclTask_Header
-		| flingDeclProc_Header
 	)
 	';'
 	;
@@ -558,8 +593,11 @@ flingDeclProc_ArgList:
 	')'
 	;
 flingDeclProc_ArgList_Item:
-	flingIdentList ':' (KwInput | KwInout) flingTypenameOrModname
-		('=' flingExprList)?
+	flingIdentList ':' (KwInput | KwInout)
+		(
+			flingTypenameOrModname ('=' flingExprList)?
+			| KwParpk '<' flingTypenameOrModname '>'
+		)
 	;
 //--------
 
@@ -614,12 +652,11 @@ flingTypenameOrModname:
 	| flingTypenameOrModname_Typeof
 	| flingTypenameOrModname_Builtin
 
-	| KwDyn? KwSelfT
-	| KwDyn? KwRetT
+	| (KwDyn | KwWeakRef)? (KwSelfT | KwRetT)
 	;
 
 flingTypenameOrModname_Cstm:
-	KwDyn? flingTypenameOrModname_Cstm_Item
+	(KwDyn | KwWeakRef)? flingTypenameOrModname_Cstm_Item
 	(PunctScopeAccess flingTypenameOrModname_Cstm_Item)*
 		flingTypenameOrModname_ArrDim*
 	;
@@ -638,7 +675,7 @@ flingTypenameOrModname_ArrDim:
 	;
 
 flingTypenameOrModname_Builtin:
-	KwDyn?
+	(KwDyn | KwWeakRef)?
 	(
 		KwSigned? KwLogic flingInstParamList?
 
@@ -1086,6 +1123,9 @@ KwEnum: 'enum' ;
 KwClass: 'class' ;
 KwPacked: 'packed' ;
 
+KwParpk: 'parpk' ;
+KwUnparpk: 'unparpk' ;
+
 KwMixin: 'mixin' ;
 KwExtends: 'extends' ;
 
@@ -1101,6 +1141,7 @@ KwDollarIsvtype: '$isvtype' ;
 
 KwBase: 'base' ;
 KwDyn: 'dyn' ;
+KwWeakRef: 'weak_ref' ;
 KwNull: 'null' ;
 KwStatic: 'static' ;
 KwProc: 'proc' ;

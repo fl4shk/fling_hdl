@@ -15,8 +15,10 @@
 	X(DeclParamList_Item) \
 	/* This covers both regular argument lists and those for `proc`s */ \
 	X(DeclArgList_Item) \
-	X(InstParamList_Named_Item) \
-	X(InstArgList_Named_Item) \
+	X(InstParamOrArgList_PosItemParpk) \
+	X(InstParamOrArgList_PosItemUnparpk) \
+	X(InstParamList_NamedItem) \
+	X(InstArgList_NamedItem) \
 	\
 	X(DeclModule) \
 	\

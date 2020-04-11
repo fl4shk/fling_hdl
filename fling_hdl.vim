@@ -105,10 +105,12 @@ syn keyword fling_hdl_stmt alias
 syn keyword fling_hdl_type enum class mixin
 syn keyword fling_hdl_stmt packed extends
 
+syn keyword fling_hdl_stmt parpk unparpk
+
 syn keyword fling_hdl_stmt virtual abstract
 syn match fling_hdl_func "$isvtype"
 
-syn keyword fling_hdl_stmt base dyn static proc self
+syn keyword fling_hdl_stmt base dyn ref static proc self
 syn keyword fling_hdl_type self_t
 
 syn keyword fling_hdl_stmt pub prot priv

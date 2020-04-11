@@ -118,15 +118,22 @@ public:		// types
 	enum class Kind
 	{
 		Var,
-		Typename,
-		Modname,
+		Type,
+		Module,
+		ParpkVar,
+		ParpkType,
+		ParpkModule
 	};
 	static string conv_kind(Kind to_conv)
 	{
 		CONV_ENUM_SWITCH(CONV_KIND_CASE,
 			Var,
-			Typename,
-			Modname);
+			Type,
+			Module,
+
+			ParpkVar,
+			ParpkType,
+			ParpkModule);
 	}
 
 public:		// variables
@@ -149,6 +156,11 @@ public:		// types
 		Output,
 		Inout,
 		Interface,
+
+		ParpkInput,
+		ParpkOutput,
+		ParpkInout,
+		ParpkInterface,
 	};
 	static inline string conv_kind(Kind to_conv)
 	{
@@ -156,7 +168,12 @@ public:		// types
 			Input,
 			Output,
 			Inout,
-			Interface)
+			Interface,
+
+			ParpkInput,
+			ParpkOutput,
+			ParpkInout,
+			ParpkInterface)
 	}
 public:		// variables
 	BaseSptr ident_list;
@@ -167,24 +184,41 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(DeclArgList_Item, Base);
 };
 
-class InstParamList_Named_Item: public Base
+
+class InstParamOrArgList_PosItemParpk: public Base
+{
+public:		// variables
+	BaseSptrList item_list;
+public:		// functions
+	SHARED_FUNC_CONTENTS(InstParamOrArgList_PosItemParpk, Base);
+};
+
+class InstParamOrArgList_PosItemUnparpk: public Base
+{
+public:		// variables
+	string ident;
+public:		// functions
+	SHARED_FUNC_CONTENTS(InstParamOrArgList_PosItemUnparpk, Base);
+};
+
+class InstParamList_NamedItem: public Base
 {
 public:		// variables
 	string ident;
 	// Expr or TypenameOrModname
 	BaseSptr item;
 public:		// functions
-	SHARED_FUNC_CONTENTS(InstParamList_Named_Item, Base);
+	SHARED_FUNC_CONTENTS(InstParamList_NamedItem, Base);
 };
 
 
-class InstArgList_Named_Item: public Base
+class InstArgList_NamedItem: public Base
 {
 public:		// variables
 	string ident;
-	BaseSptr expr;
+	BaseSptr item;
 public:		// functions
-	SHARED_FUNC_CONTENTS(InstArgList_Named_Item, Base);
+	SHARED_FUNC_CONTENTS(InstArgList_NamedItem, Base);
 };
 
 class DeclModule: public Base
@@ -652,7 +686,7 @@ public:		// types
 			RetT)
 	}
 public:		// variables
-	bool is_dyn = false;
+	bool is_dyn = false, is_weak_ref = false;
 	Kind kind;
 public:		// variables
 	SHARED_FUNC_CONTENTS(TypenameOrModname_Special, Base);
@@ -662,7 +696,7 @@ public:		// variables
 class TypenameOrModname_Cstm: public Base
 {
 public:		// variables
-	bool is_dyn = false;
+	bool is_dyn = false, is_weak_ref = false;
 	BaseSptrList item_list, arr_dim_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(TypenameOrModname_Cstm, Base);
@@ -679,7 +713,7 @@ public:		// functions
 class TypenameOrModname_Cstm_Item: public Base
 {
 public:		// variables
-	bool is_dyn = false;
+	bool is_dyn = false, is_weak_ref = false;
 	string ident;
 	BaseSptr opt_param_list;
 public:		// functions
@@ -743,7 +777,7 @@ public:		// types
 			Void);
 	}
 public:		// variables
-	bool is_dyn = false;
+	bool is_dyn = false, is_weak_ref = false;
 	Kind kind;
 	BaseSptr opt_param_list;
 	BaseSptrList arr_dim_list;

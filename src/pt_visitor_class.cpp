@@ -9,13 +9,13 @@ using namespace ast;
 #define JUST_ACCEPT(pt_node) \
 	ctx->pt_node()->accept(this)
 
-#define _INNER_ACCEPT_IF(pt_node) \
+#define _INNER_ACCEPT_IFELSE(pt_node) \
 	if (ctx->pt_node()) \
 	{ \
 		JUST_ACCEPT(pt_node); \
 	}
-#define ACCEPT_IF(...) \
-	EVAL(MAP(_INNER_ACCEPT_IF, ELSE, __VA_ARGS__))
+#define ACCEPT_IFELSE(...) \
+	EVAL(MAP(_INNER_ACCEPT_IFELSE, ELSE, __VA_ARGS__))
 
 
 #define CHECK(pt_node) \
@@ -31,8 +31,12 @@ using namespace ast;
 	}
 #define JUST_ACCEPT_AND_POP_AST(...) \
 	EVAL(MAP_PAIRS(_INNER_JUST_ACCEPT_AND_POP_AST, SEMICOLON, __VA_ARGS__))
+#define _MULTI_ACCEPT_AND_POP_AST_IF(sep, ...) \
+	EVAL(MAP_PAIRS(_INNER_ACCEPT_AND_POP_AST_IF, sep, __VA_ARGS__))
+#define ACCEPT_AND_POP_AST_IFELSE(...) \
+	_MULTI_ACCEPT_AND_POP_AST_IF(ELSE, __VA_ARGS__)
 #define ACCEPT_AND_POP_AST_IF(...) \
-	EVAL(MAP_PAIRS(_INNER_ACCEPT_AND_POP_AST_IF, SEMICOLON, __VA_ARGS__))
+	_MULTI_ACCEPT_AND_POP_AST_IF(SEMICOLON, __VA_ARGS__)
 
 #define _INNER_JUST_ACCEPT_AND_POP_AST_LIST(to_set, pt_node) \
 	JUST_ACCEPT(pt_node); \
@@ -45,9 +49,12 @@ using namespace ast;
 #define JUST_ACCEPT_AND_POP_AST_LIST(...) \
 	EVAL(MAP_PAIRS(_INNER_JUST_ACCEPT_AND_POP_AST_LIST, SEMICOLON, \
 		__VA_ARGS__))
+#define _MULTI_ACCEPT_AND_POP_AST_LIST_IF(sep, ...) \
+	EVAL(MAP_PAIRS(_INNER_ACCEPT_AND_POP_AST_LIST_IF, sep, __VA_ARGS__))
+#define ACCEPT_AND_POP_AST_LIST_IFELSE(...) \
+	_MULTI_ACCEPT_AND_POP_AST_LIST_IF(ELSE, __VA_ARGS__)
 #define ACCEPT_AND_POP_AST_LIST_IF(...) \
-	EVAL(MAP_PAIRS(_INNER_ACCEPT_AND_POP_AST_LIST_IF, SEMICOLON, \
-		__VA_ARGS__))
+	_MULTI_ACCEPT_AND_POP_AST_LIST_IF(SEMICOLON, __VA_ARGS__)
 
 #define _INNER_JUST_ACCEPT_AND_POP_NUM(to_set, pt_node) \
 	JUST_ACCEPT(pt_node); \
@@ -166,7 +173,7 @@ antlrcpp::Any PtVisitor::visitFlingProgram
 antlrcpp::Any PtVisitor::visitFlingProgram_Item
 	(Parser::FlingProgram_ItemContext *ctx)
 {
-	ACCEPT_IF
+	ACCEPT_IFELSE
 		(flingDeclPackage,
 		flingDeclModule,
 		flingDeclType,
@@ -197,7 +204,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclPackage
 antlrcpp::Any PtVisitor::visitFlingDeclPackage_Item
 	(Parser::FlingDeclPackage_ItemContext *ctx)
 {
-	ACCEPT_IF
+	ACCEPT_IFELSE
 		(flingDeclPackage,
 		flingDeclModule,
 		flingDeclType,
@@ -233,23 +240,44 @@ antlrcpp::Any PtVisitor::visitFlingDeclParamList_Item
 
 	CHECK(flingTypenameOrModname)
 	{
-		node->kind = Kind::Var;
-		JUST_ACCEPT_AND_POP_AST(node->opt_typename_or_modname,
-			flingTypenameOrModname);
-		ACCEPT_AND_POP_AST_LIST_IF(node->opt_expr_list, flingExprList);
+		CHECK(KwParpk)
+		{
+			node->kind = Kind::ParpkVar;
+		}
+		else
+		{
+			node->kind = Kind::Var;
+			JUST_ACCEPT_AND_POP_AST(node->opt_typename_or_modname,
+				flingTypenameOrModname);
+			ACCEPT_AND_POP_AST_LIST_IF(node->opt_expr_list, flingExprList);
+		}
 	}
 	else CHECK(KwType)
 	{
-		node->kind = Kind::Typename;
+		CHECK(KwParpk)
+		{
+			node->kind = Kind::ParpkType;
+		}
+		else
+		{
+			node->kind = Kind::Type;
 
-		ACCEPT_AND_POP_AST_LIST_IF(node->opt_typename_or_modname_list,
-			flingTypenameOrModnameList);
+			ACCEPT_AND_POP_AST_LIST_IF(node->opt_typename_or_modname_list,
+				flingTypenameOrModnameList);
+		}
 	}
 	else CHECK(KwModule)
 	{
-		node->kind = Kind::Modname;
-		ACCEPT_AND_POP_AST_LIST_IF(node->opt_typename_or_modname_list,
-			flingTypenameOrModnameList);
+		CHECK(KwParpk)
+		{
+			node->kind = Kind::ParpkModule;
+		}
+		else
+		{
+			node->kind = Kind::Module;
+			ACCEPT_AND_POP_AST_LIST_IF(node->opt_typename_or_modname_list,
+				flingTypenameOrModnameList);
+		}
 	}
 	else
 	{
@@ -279,13 +307,27 @@ antlrcpp::Any PtVisitor::visitFlingDeclArgList_Item
 	JUST_ACCEPT_AND_POP_AST(node->ident_list, flingIdentList);
 
 	using Kind = DeclArgList_Item::Kind;
-	if (!_conv_pt_to_enum(node->kind,
-		ctx->KwInput(), Kind::Input,
-		ctx->KwOutput(), Kind::Output,
-		ctx->KwInout(), Kind::Inout,
-		ctx->KwInterface(), Kind::Interface))
+	CHECK(KwParpk)
 	{
-		internal_err(visitFlingDeclArgList_Item);
+		if (!_conv_pt_to_enum(node->kind,
+			ctx->KwInput(), Kind::ParpkInput,
+			ctx->KwOutput(), Kind::ParpkOutput,
+			ctx->KwInout(), Kind::ParpkInout,
+			ctx->KwInterface(), Kind::ParpkInterface))
+		{
+			internal_err(visitFlingDeclArgList_Item);
+		}
+	}
+	else
+	{
+		if (!_conv_pt_to_enum(node->kind,
+			ctx->KwInput(), Kind::Input,
+			ctx->KwOutput(), Kind::Output,
+			ctx->KwInout(), Kind::Inout,
+			ctx->KwInterface(), Kind::Interface))
+		{
+			internal_err(visitFlingDeclArgList_Item);
+		}
 	}
 	JUST_ACCEPT_AND_POP_AST(node->typename_or_modname,
 		flingTypenameOrModname);
@@ -299,9 +341,13 @@ antlrcpp::Any PtVisitor::visitFlingInstParamList
 {
 	DEFER_PUSH(node, ParamOrArgList);
 
-	ACCEPT_AND_POP_AST_LIST_IF(node->item_list, flingInstParamList_Pos)
-	else ACCEPT_AND_POP_AST_LIST_IF
-		(node->item_list, flingInstParamList_Named)
+	ACCEPT_AND_POP_AST_LIST_IFELSE
+		(node->item_list, flingInstParamList_Pos,
+		node->item_list, flingInstParamList_Named)
+	else
+	{
+		internal_err(visitFlingInstParamList);
+	}
 
 	return nullptr;
 }
@@ -321,13 +367,37 @@ antlrcpp::Any PtVisitor::visitFlingInstParamList_Pos
 antlrcpp::Any PtVisitor::visitFlingInstParamList_Pos_Item
 	(Parser::FlingInstParamList_Pos_ItemContext *ctx)
 {
-	ACCEPT_IF
+	ACCEPT_IFELSE
 		(flingExpr,
-		flingTypenameOrModname)
+		flingTypenameOrModname,
+		flingInstParamList_Pos_Item_Parpk,
+		flingInstParamList_Pos_Item_Unparpk)
 	else
 	{
 		internal_err(visitFlingInstParamList_Pos_Item);
 	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingInstParamList_Pos_Item_Parpk
+	(Parser::FlingInstParamList_Pos_Item_ParpkContext *ctx)
+{
+	DEFER_PUSH(node, InstParamOrArgList_PosItemParpk);
+
+	ACCEPT_AND_POP_AST_LIST_IFELSE
+		(node->item_list, flingExprList,
+		node->item_list, flingTypenameOrModnameList)
+	else
+	{
+		internal_err(visitFlingInstParamList_Pos_Item_Parpk);
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingInstParamList_Pos_Item_Unparpk
+	(Parser::FlingInstParamList_Pos_Item_UnparpkContext *ctx)
+{
+	DEFER_PUSH(node, InstParamOrArgList_PosItemUnparpk);
+	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingInstParamList_Named
@@ -346,7 +416,7 @@ antlrcpp::Any PtVisitor::visitFlingInstParamList_Named
 antlrcpp::Any PtVisitor::visitFlingInstParamList_Named_Item
 	(Parser::FlingInstParamList_Named_ItemContext *ctx)
 {
-	DEFER_PUSH(node, InstParamList_Named_Item);
+	DEFER_PUSH(node, InstParamList_NamedItem);
 
 	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
 	JUST_ACCEPT_AND_POP_AST(node->item, flingInstParamList_Pos_Item);
@@ -358,16 +428,58 @@ antlrcpp::Any PtVisitor::visitFlingInstArgList
 {
 	DEFER_PUSH(node, ParamOrArgList);
 
-	ACCEPT_AND_POP_AST_LIST_IF(node->item_list, flingInstArgList_Pos)
-	else ACCEPT_AND_POP_AST_LIST_IF
-		(node->item_list, flingInstArgList_Named)
+	ACCEPT_AND_POP_AST_LIST_IFELSE
+		(node->item_list, flingInstArgList_Pos,
+		node->item_list, flingInstArgList_Named)
+	else
+	{
+		internal_err(visitFlingInstArgList);
+	}
 
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingInstArgList_Pos
 	(Parser::FlingInstArgList_PosContext *ctx)
 {
-	JUST_ACCEPT(flingExprList);
+	DEFER_PUSH_LIST(list);
+
+	FOR_PT(p, flingInstArgList_Pos_Item)
+	{
+		p->accept(this);
+		list.push_back(_pop_ast());
+	}
+
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingInstArgList_Pos_Item
+	(Parser::FlingInstArgList_Pos_ItemContext *ctx)
+{
+	ACCEPT_IFELSE
+		(flingExpr,
+		flingInstArgList_Pos_Item_Parpk,
+		flingInstArgList_Pos_Item_Unparpk)
+	else
+	{
+		internal_err(visitFlingInstArgList_Pos_Item);
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingInstArgList_Pos_Item_Parpk
+	(Parser::FlingInstArgList_Pos_Item_ParpkContext *ctx)
+{
+	DEFER_PUSH(node, InstParamOrArgList_PosItemParpk);
+
+	JUST_ACCEPT_AND_POP_AST_LIST(node->item_list, flingExprList);
+
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingInstArgList_Pos_Item_Unparpk
+	(Parser::FlingInstArgList_Pos_Item_UnparpkContext *ctx)
+{
+	DEFER_PUSH(node, InstParamOrArgList_PosItemUnparpk);
+
+	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
+
 	return nullptr;
 }
 antlrcpp::Any PtVisitor::visitFlingInstArgList_Named
@@ -386,10 +498,10 @@ antlrcpp::Any PtVisitor::visitFlingInstArgList_Named
 antlrcpp::Any PtVisitor::visitFlingInstArgList_Named_Item
 	(Parser::FlingInstArgList_Named_ItemContext *ctx)
 {
-	DEFER_PUSH(node, InstArgList_Named_Item);
+	DEFER_PUSH(node, InstArgList_NamedItem);
 
 	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
-	JUST_ACCEPT_AND_POP_AST(node->expr, flingExpr);
+	JUST_ACCEPT_AND_POP_AST(node->item, flingInstArgList_Pos_Item);
 
 	return nullptr;
 }
@@ -422,7 +534,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclModule_Scope
 antlrcpp::Any PtVisitor::visitFlingDeclModule_Item
 	(Parser::FlingDeclModule_ItemContext *ctx)
 {
-	ACCEPT_IF
+	ACCEPT_IFELSE
 		(flingInstModule,
 		flingExpr,
 		flingGen,
@@ -458,7 +570,7 @@ antlrcpp::Any PtVisitor::visitFlingInstModule
 antlrcpp::Any PtVisitor::visitFlingGen
 	(Parser::FlingGenContext *ctx)
 {
-	ACCEPT_IF
+	ACCEPT_IFELSE
 		(flingGen_If,
 		flingGen_Switch,
 		flingGen_For)
@@ -619,7 +731,7 @@ antlrcpp::Any PtVisitor::visitFlingBehav_Scope
 antlrcpp::Any PtVisitor::visitFlingBehav_Item
 	(Parser::FlingBehav_ItemContext *ctx)
 {
-	ACCEPT_IF
+	ACCEPT_IFELSE
 		(flingBehav_Scope,
 		flingDeclAlias,
 		flingDeclVar,
@@ -807,7 +919,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclConst
 antlrcpp::Any PtVisitor::visitFlingDeclType
 	(Parser::FlingDeclTypeContext *ctx)
 {
-	ACCEPT_IF
+	ACCEPT_IFELSE
 		(flingDeclEnum,
 		flingDeclClass,
 		flingDeclMixin)
@@ -861,7 +973,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Extends
 antlrcpp::Any PtVisitor::visitFlingDeclClass_Item
 	(Parser::FlingDeclClass_ItemContext *ctx)
 {
-	ACCEPT_IF
+	ACCEPT_IFELSE
 		(flingDeclClass_Item_DeclVar,
 		flingDeclClsOrMxn_Item)
 	else
@@ -889,7 +1001,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclClass_Item_DeclVar
 antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item
 	(Parser::FlingDeclClsOrMxn_ItemContext *ctx)
 {
-	ACCEPT_IF
+	ACCEPT_IFELSE
 		(flingDeclClsOrMxn_Item_DeclType,
 		flingDeclClsOrMxn_Item_DeclAliasOrConst,
 		flingDeclClsOrMxn_Item_DeclSubprog,
@@ -968,7 +1080,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_AccessSpecifier
 antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item_DeclSubprog
 	(Parser::FlingDeclClsOrMxn_Item_DeclSubprogContext *ctx)
 {
-	ACCEPT_IF
+	ACCEPT_IFELSE
 		(flingDeclClsOrMxn_Item_DeclSubprog_FullDefn,
 		flingDeclClsOrMxn_Item_DeclSubprog_Abstract)
 	else
@@ -993,7 +1105,14 @@ antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item_DeclSubprog_FullDefn
 	node->is_static = ctx->KwStatic();
 	node->is_const = ctx->KwConst();
 
-	JUST_ACCEPT_AND_POP_AST(node->subprog, flingDeclSubprog);
+	ACCEPT_AND_POP_AST_IFELSE
+		(node->subprog, flingDeclFunc,
+		node->subprog, flingDeclTask,
+		node->subprog, flingDeclProc)
+	else
+	{
+		internal_err(visitFlingDeclClsOrMxn_Item_DeclSubprog_FullDefn);
+	}
 
 	return nullptr;
 }
@@ -1011,18 +1130,9 @@ antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item_DeclSubprog_Abstract
 
 	node->is_const = ctx->KwConst();
 
-	CHECK(flingDeclFunc_Header)
-	{
-		JUST_ACCEPT_AND_POP_AST(node->header, flingDeclFunc_Header);
-	}
-	else CHECK(flingDeclTask_Header)
-	{
-		JUST_ACCEPT_AND_POP_AST(node->header, flingDeclTask_Header);
-	}
-	else CHECK(flingDeclProc_Header)
-	{
-		JUST_ACCEPT_AND_POP_AST(node->header, flingDeclProc_Header);
-	}
+	ACCEPT_AND_POP_AST_IFELSE
+		(node->header, flingDeclFunc_Header,
+		node->header, flingDeclTask_Header)
 	else
 	{
 		internal_err(visitFlingDeclClsOrMxn_Item_DeclSubprog_Abstract);
@@ -1053,7 +1163,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclMixin
 antlrcpp::Any PtVisitor::visitFlingDeclSubprog
 	(Parser::FlingDeclSubprogContext *ctx)
 {
-	ACCEPT_IF
+	ACCEPT_IFELSE
 		(flingDeclFunc,
 		flingDeclTask,
 		flingDeclProc)
@@ -1122,7 +1232,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclFunc_Item
 			JUST_ACCEPT(flingExpr);
 		}
 	}
-	else ACCEPT_IF
+	else ACCEPT_IFELSE
 		(flingDeclFunc_Scope,
 		flingDeclAlias,
 		flingDeclVar,
@@ -1286,7 +1396,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclTask_Scope
 antlrcpp::Any PtVisitor::visitFlingDeclTask_Item
 	(Parser::FlingDeclTask_ItemContext *ctx)
 {
-	ACCEPT_IF
+	ACCEPT_IFELSE
 		(flingDeclTask_Scope,
 		flingDeclAlias,
 
@@ -1458,11 +1568,24 @@ antlrcpp::Any PtVisitor::visitFlingDeclProc_ArgList_Item
 
 	JUST_ACCEPT_AND_POP_AST(node->ident_list, flingIdentList);
 	using Kind = DeclArgList_Item::Kind;
-	if (!_conv_pt_to_enum(node->kind,
-		ctx->KwInput(), Kind::Input,
-		ctx->KwInout(), Kind::Inout))
+
+	CHECK(KwParpk)
 	{
-		internal_err(visitFlingDeclProc_ArgList_Item);
+		if (!_conv_pt_to_enum(node->kind,
+			ctx->KwInput(), Kind::ParpkInput,
+			ctx->KwInout(), Kind::ParpkInout))
+		{
+			internal_err(visitFlingDeclProc_ArgList_Item);
+		}
+	}
+	else
+	{
+		if (!_conv_pt_to_enum(node->kind,
+			ctx->KwInput(), Kind::Input,
+			ctx->KwInout(), Kind::Inout))
+		{
+			internal_err(visitFlingDeclProc_ArgList_Item);
+		}
 	}
 	JUST_ACCEPT_AND_POP_AST(node->typename_or_modname,
 		flingTypenameOrModname);
@@ -1474,7 +1597,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclProc_ArgList_Item
 antlrcpp::Any PtVisitor::visitFlingDeclAlias
 	(Parser::FlingDeclAliasContext *ctx)
 {
-	ACCEPT_IF
+	ACCEPT_IFELSE
 		(flingDeclAlias_Value,
 		flingDeclAlias_Type,
 		flingDeclAlias_Module)
@@ -1603,7 +1726,7 @@ antlrcpp::Any PtVisitor::visitFlingImportList_Item
 antlrcpp::Any PtVisitor::visitFlingTypenameOrModname
 	(Parser::FlingTypenameOrModnameContext *ctx)
 {
-	ACCEPT_IF
+	ACCEPT_IFELSE
 		(flingTypenameOrModname_Typeof,
 		flingTypenameOrModname_Cstm,
 		flingTypenameOrModname_Builtin)
@@ -1611,6 +1734,7 @@ antlrcpp::Any PtVisitor::visitFlingTypenameOrModname
 	{
 		DEFER_PUSH(node, TypenameOrModname_Special);
 		node->is_dyn = ctx->KwDyn();
+		node->is_weak_ref = ctx->KwWeakRef();
 
 		using Kind = TypenameOrModname_Special::Kind;
 		if (!_conv_pt_to_enum(node->kind,
@@ -1629,6 +1753,7 @@ antlrcpp::Any PtVisitor::visitFlingTypenameOrModname_Cstm
 	DEFER_PUSH(node, TypenameOrModname_Cstm);
 
 	node->is_dyn = ctx->KwDyn();
+	node->is_weak_ref = ctx->KwWeakRef();
 
 	FOR_PT(p, flingTypenameOrModname_Cstm_Item)
 	{
@@ -1678,7 +1803,7 @@ antlrcpp::Any PtVisitor::visitFlingTypenameOrModname_Cstm_Item
 antlrcpp::Any PtVisitor::visitFlingTypenameOrModname_ArrDim
 	(Parser::FlingTypenameOrModname_ArrDimContext *ctx)
 {
-	ACCEPT_IF
+	ACCEPT_IFELSE
 		(flingExpr,
 		flingTypenameOrModname)
 	else
@@ -1694,6 +1819,7 @@ antlrcpp::Any PtVisitor::visitFlingTypenameOrModname_Builtin
 	DEFER_PUSH(node, TypenameOrModname_Builtin);
 
 	node->is_dyn = ctx->KwDyn();
+	node->is_weak_ref = ctx->KwWeakRef();
 
 	using Kind = TypenameOrModname_Builtin::Kind;
 
@@ -1942,7 +2068,7 @@ antlrcpp::Any PtVisitor::visitFlingExpr_Mul_Or_Div_Or_Mod
 antlrcpp::Any PtVisitor::visitFlingExpr_Unary
 	(Parser::FlingExpr_UnaryContext *ctx)
 {
-	ACCEPT_IF
+	ACCEPT_IFELSE
 		(flingExpr_Unary_ItemFromMajority,
 		flingExpr_Range,
 		flingExpr_Cast,
@@ -1956,7 +2082,7 @@ antlrcpp::Any PtVisitor::visitFlingExpr_Unary
 antlrcpp::Any PtVisitor::visitFlingExpr_Unary_ItemFromMajority
 	(Parser::FlingExpr_Unary_ItemFromMajorityContext *ctx)
 {
-	ACCEPT_IF
+	ACCEPT_IFELSE
 		(flingExpr_Literal,
 		flingExpr_Sized,
 		flingExpr_Cat,
@@ -2021,7 +2147,7 @@ antlrcpp::Any PtVisitor::visitFlingExpr_Sized
 antlrcpp::Any PtVisitor::visitFlingExpr_Range
 	(Parser::FlingExpr_RangeContext *ctx)
 {
-	ACCEPT_IF
+	ACCEPT_IFELSE
 		(flingExpr_Range_DotDot,
 		flingExpr_Range_CallFunc)
 	else
@@ -2084,7 +2210,7 @@ antlrcpp::Any PtVisitor::visitFlingExpr_Repl
 antlrcpp::Any PtVisitor::visitFlingExpr_KwDollarFuncOf
 	(Parser::FlingExpr_KwDollarFuncOfContext *ctx)
 {
-	ACCEPT_IF
+	ACCEPT_IFELSE
 		(flingExpr_KwDollarFuncOf_NonPow,
 		flingExpr_KwDollarFuncOf_Pow)
 	else
@@ -2244,7 +2370,7 @@ antlrcpp::Any PtVisitor::visitFlingExpr_Cast
 {
 	DEFER_PUSH(node, ExprCast);
 
-	ACCEPT_IF
+	ACCEPT_IFELSE
 		(flingExpr_Unary_ItemFromMajority,
 		flingExpr_Range_CallFunc,
 		flingExpr_CallSubprog_PseudoOper)
@@ -2263,7 +2389,7 @@ antlrcpp::Any PtVisitor::visitFlingExpr_CallSubprog_PseudoOper
 {
 	DEFER_PUSH(node, ExprCallSubprog_PseudoOper);
 
-	ACCEPT_IF
+	ACCEPT_IFELSE
 		(flingExpr_Unary_ItemFromMajority,
 		flingExpr_Range_CallFunc)
 	else

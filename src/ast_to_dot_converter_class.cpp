@@ -115,8 +115,10 @@ build(DeclPackage, wrap(ident))
 build(ParamOrArgList)
 build(DeclParamList_Item, wrap_conv(kind))
 build(DeclArgList_Item, wrap_conv(kind))
-build(InstParamList_Named_Item, wrap(ident))
-build(InstArgList_Named_Item, wrap(ident))
+build(InstParamOrArgList_PosItemParpk)
+build(InstParamOrArgList_PosItemUnparpk, wrap(ident))
+build(InstParamList_NamedItem, wrap(ident))
+build(InstArgList_NamedItem, wrap(ident))
 
 build(DeclModule, wrap(ident))
 build(InstModule, wrap(ident))
@@ -216,11 +218,13 @@ void AstToDotConverter::_build_label_map
 build(ImportList)
 build(ImportList_Item, wrap(has_all))
 
-build(TypenameOrModname_Special, wrap(is_dyn), wrap_conv(kind))
-build(TypenameOrModname_Cstm, wrap(is_dyn))
+build(TypenameOrModname_Special, wrap(is_dyn, is_weak_ref),
+	wrap_conv(kind))
+build(TypenameOrModname_Cstm, wrap(is_dyn, is_weak_ref))
 build(TypenameOrModname_Typeof)
-build(TypenameOrModname_Cstm_Item, wrap(is_dyn, ident))
-build(TypenameOrModname_Builtin, wrap(is_dyn), wrap_conv(kind))
+build(TypenameOrModname_Cstm_Item, wrap(is_dyn, is_weak_ref, ident))
+build(TypenameOrModname_Builtin, wrap(is_dyn, is_weak_ref),
+	wrap_conv(kind))
 
 #define X(basic_label) \
 	build(basic_label)
