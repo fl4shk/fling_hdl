@@ -160,6 +160,7 @@ int PtVisitor::run()
 	return 0;
 }
 
+//--------
 antlrcpp::Any PtVisitor::visitFlingProgram
 	(Parser::FlingProgramContext *ctx)
 {
@@ -186,6 +187,9 @@ antlrcpp::Any PtVisitor::visitFlingProgram_Item
 	}
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingDeclPackage
 	(Parser::FlingDeclPackageContext *ctx)
 {
@@ -217,6 +221,9 @@ antlrcpp::Any PtVisitor::visitFlingDeclPackage_Item
 	}
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingDeclParamList
 	(Parser::FlingDeclParamListContext *ctx)
 {
@@ -286,6 +293,9 @@ antlrcpp::Any PtVisitor::visitFlingDeclParamList_Item
 
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingDeclArgList
 	(Parser::FlingDeclArgListContext *ctx)
 {
@@ -336,6 +346,9 @@ antlrcpp::Any PtVisitor::visitFlingDeclArgList_Item
 
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingInstParamList
 	(Parser::FlingInstParamListContext *ctx)
 {
@@ -423,6 +436,9 @@ antlrcpp::Any PtVisitor::visitFlingInstParamList_Named_Item
 
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingInstArgList
 	(Parser::FlingInstArgListContext *ctx)
 {
@@ -505,6 +521,9 @@ antlrcpp::Any PtVisitor::visitFlingInstArgList_Named_Item
 
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingDeclModule
 	(Parser::FlingDeclModuleContext *ctx)
 {
@@ -537,7 +556,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclModule_Item
 	ACCEPT_IFELSE
 		(flingInstModule,
 		flingExpr,
-		flingGen,
+		flingDeclModule_Gen,
 		flingContAssign,
 		flingImportList,
 
@@ -555,6 +574,9 @@ antlrcpp::Any PtVisitor::visitFlingDeclModule_Item
 	}
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingInstModule
 	(Parser::FlingInstModuleContext *ctx)
 {
@@ -567,78 +589,82 @@ antlrcpp::Any PtVisitor::visitFlingInstModule
 
 	return nullptr;
 }
-antlrcpp::Any PtVisitor::visitFlingGen
-	(Parser::FlingGenContext *ctx)
+//--------
+
+//--------
+antlrcpp::Any PtVisitor::visitFlingDeclModule_Gen
+	(Parser::FlingDeclModule_GenContext *ctx)
 {
 	ACCEPT_IFELSE
-		(flingGen_If,
-		flingGen_Switch,
-		flingGen_For)
+		(flingDeclModule_Gen_If,
+		flingDeclModule_Gen_Switch,
+		flingDeclModule_Gen_For)
 	else
 	{
-		internal_err(visitFlingGen);
+		internal_err(visitFlingDeclModule_Gen);
 	}
 	return nullptr;
 }
-antlrcpp::Any PtVisitor::visitFlingGen_If
-	(Parser::FlingGen_IfContext *ctx)
+antlrcpp::Any PtVisitor::visitFlingDeclModule_Gen_If
+	(Parser::FlingDeclModule_Gen_IfContext *ctx)
 {
 	DEFER_PUSH(node, GenIf);
 
 	JUST_ACCEPT_AND_POP_AST(node->cond, flingExpr);
 	JUST_ACCEPT_AND_POP_AST_LIST(node->item_list, flingDeclModule_Scope);
 
-	FOR_PT(p, flingGen_If_Elif)
+	FOR_PT(p, flingDeclModule_Gen_If_Elif)
 	{
 		p->accept(this);
 		node->elif_list.push_back(_pop_ast());
 	}
 
-	ACCEPT_AND_POP_AST_IF(node->opt_else, flingGen_If_Else);
+	ACCEPT_AND_POP_AST_IF(node->opt_else, flingDeclModule_Gen_If_Else);
 
 	return nullptr;
 }
-antlrcpp::Any PtVisitor::visitFlingGen_If_Elif
-	(Parser::FlingGen_If_ElifContext *ctx)
+antlrcpp::Any PtVisitor::visitFlingDeclModule_Gen_If_Elif
+	(Parser::FlingDeclModule_Gen_If_ElifContext *ctx)
 {
 	DEFER_PUSH(node, GenIf_Elif);
 	JUST_ACCEPT_AND_POP_AST(node->cond, flingExpr);
 	JUST_ACCEPT_AND_POP_AST_LIST(node->item_list, flingDeclModule_Scope);
 	return nullptr;
 }
-antlrcpp::Any PtVisitor::visitFlingGen_If_Else
-	(Parser::FlingGen_If_ElseContext *ctx)
+antlrcpp::Any PtVisitor::visitFlingDeclModule_Gen_If_Else
+	(Parser::FlingDeclModule_Gen_If_ElseContext *ctx)
 {
 	DEFER_PUSH(node, GenIf_Else);
 	JUST_ACCEPT_AND_POP_AST_LIST(node->item_list, flingDeclModule_Scope);
 	return nullptr;
 }
-antlrcpp::Any PtVisitor::visitFlingGen_Switch
-	(Parser::FlingGen_SwitchContext *ctx)
+antlrcpp::Any PtVisitor::visitFlingDeclModule_Gen_Switch
+	(Parser::FlingDeclModule_Gen_SwitchContext *ctx)
 {
 	DEFER_PUSH(node, GenSwitch);
 
 	JUST_ACCEPT_AND_POP_AST(node->cond, flingExpr);
 
-	FOR_PT(p, flingGen_Switch_Case)
+	FOR_PT(p, flingDeclModule_Gen_Switch_Case)
 	{
 		p->accept(this);
 		node->opt_case_list.push_back(_pop_ast());
 	}
 
-	ACCEPT_AND_POP_AST_IF(node->opt_default, flingGen_Switch_Default);
+	ACCEPT_AND_POP_AST_IF
+		(node->opt_default, flingDeclModule_Gen_Switch_Default);
 
 	return nullptr;
 }
-antlrcpp::Any PtVisitor::visitFlingGen_Switch_Default
-	(Parser::FlingGen_Switch_DefaultContext *ctx)
+antlrcpp::Any PtVisitor::visitFlingDeclModule_Gen_Switch_Default
+	(Parser::FlingDeclModule_Gen_Switch_DefaultContext *ctx)
 {
 	DEFER_PUSH(node, GenSwitch_Default);
 	JUST_ACCEPT_AND_POP_AST_LIST(node->item_list, flingDeclModule_Scope);
 	return nullptr;
 }
-antlrcpp::Any PtVisitor::visitFlingGen_Switch_Case
-	(Parser::FlingGen_Switch_CaseContext *ctx)
+antlrcpp::Any PtVisitor::visitFlingDeclModule_Gen_Switch_Case
+	(Parser::FlingDeclModule_Gen_Switch_CaseContext *ctx)
 {
 	DEFER_PUSH(node, GenSwitch_Case);
 	JUST_ACCEPT_AND_POP_AST_LIST
@@ -646,8 +672,8 @@ antlrcpp::Any PtVisitor::visitFlingGen_Switch_Case
 		node->item_list, flingDeclModule_Scope);
 	return nullptr;
 }
-antlrcpp::Any PtVisitor::visitFlingGen_For
-	(Parser::FlingGen_ForContext *ctx)
+antlrcpp::Any PtVisitor::visitFlingDeclModule_Gen_For
+	(Parser::FlingDeclModule_Gen_ForContext *ctx)
 {
 	DEFER_PUSH(node, GenFor);
 	ctx->flingIdent().at(0)->accept(this);
@@ -660,6 +686,9 @@ antlrcpp::Any PtVisitor::visitFlingGen_For
 	JUST_ACCEPT_AND_POP_AST_LIST(node->item_list, flingDeclModule_Scope);
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingContAssign
 	(Parser::FlingContAssignContext *ctx)
 {
@@ -668,6 +697,9 @@ antlrcpp::Any PtVisitor::visitFlingContAssign
 		node->right);
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingBehav
 	(Parser::FlingBehavContext *ctx)
 {
@@ -685,6 +717,9 @@ antlrcpp::Any PtVisitor::visitFlingBehav
 	JUST_ACCEPT_AND_POP_AST(node->scope, flingBehav_Scope);
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingBehav_Seq_EdgeList
 	(Parser::FlingBehav_Seq_EdgeListContext *ctx)
 {
@@ -715,6 +750,9 @@ antlrcpp::Any PtVisitor::visitFlingBehav_Seq_EdgeList_Item
 
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingBehav_Scope
 	(Parser::FlingBehav_ScopeContext *ctx)
 {
@@ -741,6 +779,8 @@ antlrcpp::Any PtVisitor::visitFlingBehav_Item
 		flingBehav_Item_BlkAssign,
 		flingBehav_Item_NonBlkAssign,
 
+		flingBehav_Item_Gen,
+
 		flingBehav_Item_If,
 		flingBehav_Item_SwitchOrSwitchz,
 		flingBehav_Item_For,
@@ -753,6 +793,130 @@ antlrcpp::Any PtVisitor::visitFlingBehav_Item
 	}
 	return nullptr;
 }
+//--------
+
+//--------
+antlrcpp::Any PtVisitor::visitFlingBehav_Item_Gen
+	(Parser::FlingBehav_Item_GenContext *ctx)
+{
+	ACCEPT_IFELSE
+		(flingBehav_Item_Gen_If,
+		flingBehav_Item_Gen_Switch,
+		flingBehav_Item_Gen_For)
+	else
+	{
+		internal_err(visitFlingBehav_Item_Gen);
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingBehav_Item_Gen_If
+	(Parser::FlingBehav_Item_Gen_IfContext *ctx)
+{
+	DEFER_PUSH(node, GenIf);
+
+	JUST_ACCEPT_AND_POP_AST(node->cond, flingExpr);
+	FOR_PT(p, flingBehav_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+
+	FOR_PT(p, flingBehav_Item_Gen_If_Elif)
+	{
+		p->accept(this);
+		node->elif_list.push_back(_pop_ast());
+	}
+
+	ACCEPT_AND_POP_AST_IF(node->opt_else, flingBehav_Item_Gen_If_Else);
+
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingBehav_Item_Gen_If_Elif
+	(Parser::FlingBehav_Item_Gen_If_ElifContext *ctx)
+{
+	DEFER_PUSH(node, GenIf_Elif);
+	JUST_ACCEPT_AND_POP_AST(node->cond, flingExpr);
+	FOR_PT(p, flingBehav_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingBehav_Item_Gen_If_Else
+	(Parser::FlingBehav_Item_Gen_If_ElseContext *ctx)
+{
+	DEFER_PUSH(node, GenIf_Else);
+	FOR_PT(p, flingBehav_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingBehav_Item_Gen_Switch
+	(Parser::FlingBehav_Item_Gen_SwitchContext *ctx)
+{
+	DEFER_PUSH(node, GenSwitch);
+
+	JUST_ACCEPT_AND_POP_AST(node->cond, flingExpr);
+
+	FOR_PT(p, flingBehav_Item_Gen_Switch_Case)
+	{
+		p->accept(this);
+		node->opt_case_list.push_back(_pop_ast());
+	}
+
+	ACCEPT_AND_POP_AST_IF
+		(node->opt_default, flingBehav_Item_Gen_Switch_Default);
+
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingBehav_Item_Gen_Switch_Default
+	(Parser::FlingBehav_Item_Gen_Switch_DefaultContext *ctx)
+{
+	DEFER_PUSH(node, GenSwitch_Default);
+	FOR_PT(p, flingBehav_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingBehav_Item_Gen_Switch_Case
+	(Parser::FlingBehav_Item_Gen_Switch_CaseContext *ctx)
+{
+	DEFER_PUSH(node, GenSwitch_Case);
+	JUST_ACCEPT_AND_POP_AST_LIST
+		(node->expr_list, flingExprList);
+	FOR_PT(p, flingBehav_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingBehav_Item_Gen_For
+	(Parser::FlingBehav_Item_Gen_ForContext *ctx)
+{
+	DEFER_PUSH(node, GenFor);
+	ctx->flingIdent().at(0)->accept(this);
+	node->label = _pop_str();
+
+	ctx->flingIdent().at(1)->accept(this);
+	node->ident = _pop_str();
+
+	JUST_ACCEPT_AND_POP_AST(node->expr, flingExpr);
+	FOR_PT(p, flingBehav_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+	return nullptr;
+}
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingBehav_Item_If
 	(Parser::FlingBehav_Item_IfContext *ctx)
 {
@@ -791,6 +955,9 @@ antlrcpp::Any PtVisitor::visitFlingBehav_Item_If_Else
 
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingBehav_Item_SwitchOrSwitchz
 	(Parser::FlingBehav_Item_SwitchOrSwitchzContext *ctx)
 {
@@ -837,6 +1004,9 @@ antlrcpp::Any PtVisitor::visitFlingBehav_Item_SwitchOrSwitchz_Case
 
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingBehav_Item_For
 	(Parser::FlingBehav_Item_ForContext *ctx)
 {
@@ -860,6 +1030,9 @@ antlrcpp::Any PtVisitor::visitFlingBehav_Item_While
 
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingBehav_Item_NonBlkAssign
 	(Parser::FlingBehav_Item_NonBlkAssignContext *ctx)
 {
@@ -880,6 +1053,9 @@ antlrcpp::Any PtVisitor::visitFlingBehav_Item_BlkAssign
 
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingDeclWire
 	(Parser::FlingDeclWireContext *ctx)
 {
@@ -916,6 +1092,9 @@ antlrcpp::Any PtVisitor::visitFlingDeclConst
 
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingDeclType
 	(Parser::FlingDeclTypeContext *ctx)
 {
@@ -929,6 +1108,9 @@ antlrcpp::Any PtVisitor::visitFlingDeclType
 	}
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingDeclEnum
 	(Parser::FlingDeclEnumContext *ctx)
 {
@@ -941,6 +1123,9 @@ antlrcpp::Any PtVisitor::visitFlingDeclEnum
 
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingDeclClass
 	(Parser::FlingDeclClassContext *ctx)
 {
@@ -975,6 +1160,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclClass_Item
 {
 	ACCEPT_IFELSE
 		(flingDeclClass_Item_DeclVar,
+		flingDeclClass_Item_Gen,
 		flingDeclClsOrMxn_Item)
 	else
 	{
@@ -998,6 +1184,131 @@ antlrcpp::Any PtVisitor::visitFlingDeclClass_Item_DeclVar
 
 	return nullptr;
 }
+//--------
+
+
+//--------
+antlrcpp::Any PtVisitor::visitFlingDeclClass_Item_Gen
+	(Parser::FlingDeclClass_Item_GenContext *ctx)
+{
+	ACCEPT_IFELSE
+		(flingDeclClass_Item_Gen_If,
+		flingDeclClass_Item_Gen_Switch,
+		flingDeclClass_Item_Gen_For)
+	else
+	{
+		internal_err(visitFlingDeclClass_Item_Gen);
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclClass_Item_Gen_If
+	(Parser::FlingDeclClass_Item_Gen_IfContext *ctx)
+{
+	DEFER_PUSH(node, GenIf);
+
+	JUST_ACCEPT_AND_POP_AST(node->cond, flingExpr);
+	FOR_PT(p, flingDeclClass_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+
+	FOR_PT(p, flingDeclClass_Item_Gen_If_Elif)
+	{
+		p->accept(this);
+		node->elif_list.push_back(_pop_ast());
+	}
+
+	ACCEPT_AND_POP_AST_IF(node->opt_else, flingDeclClass_Item_Gen_If_Else);
+
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclClass_Item_Gen_If_Elif
+	(Parser::FlingDeclClass_Item_Gen_If_ElifContext *ctx)
+{
+	DEFER_PUSH(node, GenIf_Elif);
+	JUST_ACCEPT_AND_POP_AST(node->cond, flingExpr);
+	FOR_PT(p, flingDeclClass_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclClass_Item_Gen_If_Else
+	(Parser::FlingDeclClass_Item_Gen_If_ElseContext *ctx)
+{
+	DEFER_PUSH(node, GenIf_Else);
+	FOR_PT(p, flingDeclClass_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclClass_Item_Gen_Switch
+	(Parser::FlingDeclClass_Item_Gen_SwitchContext *ctx)
+{
+	DEFER_PUSH(node, GenSwitch);
+
+	JUST_ACCEPT_AND_POP_AST(node->cond, flingExpr);
+
+	FOR_PT(p, flingDeclClass_Item_Gen_Switch_Case)
+	{
+		p->accept(this);
+		node->opt_case_list.push_back(_pop_ast());
+	}
+
+	ACCEPT_AND_POP_AST_IF
+		(node->opt_default, flingDeclClass_Item_Gen_Switch_Default);
+
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclClass_Item_Gen_Switch_Default
+	(Parser::FlingDeclClass_Item_Gen_Switch_DefaultContext *ctx)
+{
+	DEFER_PUSH(node, GenSwitch_Default);
+	FOR_PT(p, flingDeclClass_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclClass_Item_Gen_Switch_Case
+	(Parser::FlingDeclClass_Item_Gen_Switch_CaseContext *ctx)
+{
+	DEFER_PUSH(node, GenSwitch_Case);
+	JUST_ACCEPT_AND_POP_AST_LIST
+		(node->expr_list, flingExprList);
+	FOR_PT(p, flingDeclClass_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclClass_Item_Gen_For
+	(Parser::FlingDeclClass_Item_Gen_ForContext *ctx)
+{
+	DEFER_PUSH(node, GenFor);
+	ctx->flingIdent().at(0)->accept(this);
+	node->label = _pop_str();
+
+	ctx->flingIdent().at(1)->accept(this);
+	node->ident = _pop_str();
+
+	JUST_ACCEPT_AND_POP_AST(node->expr, flingExpr);
+	FOR_PT(p, flingDeclClass_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+	return nullptr;
+}
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item
 	(Parser::FlingDeclClsOrMxn_ItemContext *ctx)
 {
@@ -1140,6 +1451,9 @@ antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item_DeclSubprog_Abstract
 
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingDeclMixin
 	(Parser::FlingDeclMixinContext *ctx)
 {
@@ -1152,7 +1466,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclMixin
 	ACCEPT_AND_POP_AST_LIST_IF(node->opt_extends,
 		flingDeclClsOrMxn_Extends);
 
-	FOR_PT(p, flingDeclClsOrMxn_Item)
+	FOR_PT(p, flingDeclMixin_Item)
 	{
 		p->accept(this);
 		node->item_list.push_back(_pop_ast());
@@ -1160,6 +1474,142 @@ antlrcpp::Any PtVisitor::visitFlingDeclMixin
 
 	return nullptr;
 }
+antlrcpp::Any PtVisitor::visitFlingDeclMixin_Item
+	(Parser::FlingDeclMixin_ItemContext *ctx)
+{
+	ACCEPT_IFELSE
+		(flingDeclMixin_Item_Gen,
+		flingDeclClsOrMxn_Item)
+	else
+	{
+		internal_err(visitFlingDeclMixin_Item);
+	}
+	return nullptr;
+}
+//--------
+
+//--------
+antlrcpp::Any PtVisitor::visitFlingDeclMixin_Item_Gen
+	(Parser::FlingDeclMixin_Item_GenContext *ctx)
+{
+	ACCEPT_IFELSE
+		(flingDeclMixin_Item_Gen_If,
+		flingDeclMixin_Item_Gen_Switch,
+		flingDeclMixin_Item_Gen_For)
+	else
+	{
+		internal_err(visitFlingDeclMixin_Item_Gen);
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclMixin_Item_Gen_If
+	(Parser::FlingDeclMixin_Item_Gen_IfContext *ctx)
+{
+	DEFER_PUSH(node, GenIf);
+
+	JUST_ACCEPT_AND_POP_AST(node->cond, flingExpr);
+	FOR_PT(p, flingDeclMixin_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+
+	FOR_PT(p, flingDeclMixin_Item_Gen_If_Elif)
+	{
+		p->accept(this);
+		node->elif_list.push_back(_pop_ast());
+	}
+
+	ACCEPT_AND_POP_AST_IF(node->opt_else, flingDeclMixin_Item_Gen_If_Else);
+
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclMixin_Item_Gen_If_Elif
+	(Parser::FlingDeclMixin_Item_Gen_If_ElifContext *ctx)
+{
+	DEFER_PUSH(node, GenIf_Elif);
+	JUST_ACCEPT_AND_POP_AST(node->cond, flingExpr);
+	FOR_PT(p, flingDeclMixin_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclMixin_Item_Gen_If_Else
+	(Parser::FlingDeclMixin_Item_Gen_If_ElseContext *ctx)
+{
+	DEFER_PUSH(node, GenIf_Else);
+	FOR_PT(p, flingDeclMixin_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclMixin_Item_Gen_Switch
+	(Parser::FlingDeclMixin_Item_Gen_SwitchContext *ctx)
+{
+	DEFER_PUSH(node, GenSwitch);
+
+	JUST_ACCEPT_AND_POP_AST(node->cond, flingExpr);
+
+	FOR_PT(p, flingDeclMixin_Item_Gen_Switch_Case)
+	{
+		p->accept(this);
+		node->opt_case_list.push_back(_pop_ast());
+	}
+
+	ACCEPT_AND_POP_AST_IF
+		(node->opt_default, flingDeclMixin_Item_Gen_Switch_Default);
+
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclMixin_Item_Gen_Switch_Default
+	(Parser::FlingDeclMixin_Item_Gen_Switch_DefaultContext *ctx)
+{
+	DEFER_PUSH(node, GenSwitch_Default);
+	FOR_PT(p, flingDeclMixin_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclMixin_Item_Gen_Switch_Case
+	(Parser::FlingDeclMixin_Item_Gen_Switch_CaseContext *ctx)
+{
+	DEFER_PUSH(node, GenSwitch_Case);
+	JUST_ACCEPT_AND_POP_AST_LIST
+		(node->expr_list, flingExprList);
+	FOR_PT(p, flingDeclMixin_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclMixin_Item_Gen_For
+	(Parser::FlingDeclMixin_Item_Gen_ForContext *ctx)
+{
+	DEFER_PUSH(node, GenFor);
+	ctx->flingIdent().at(0)->accept(this);
+	node->label = _pop_str();
+
+	ctx->flingIdent().at(1)->accept(this);
+	node->ident = _pop_str();
+
+	JUST_ACCEPT_AND_POP_AST(node->expr, flingExpr);
+	FOR_PT(p, flingDeclMixin_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+	return nullptr;
+}
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingDeclSubprog
 	(Parser::FlingDeclSubprogContext *ctx)
 {
@@ -1173,6 +1623,9 @@ antlrcpp::Any PtVisitor::visitFlingDeclSubprog
 	}
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingDeclFunc
 	(Parser::FlingDeclFuncContext *ctx)
 {
@@ -1241,6 +1694,8 @@ antlrcpp::Any PtVisitor::visitFlingDeclFunc_Item
 
 		flingBehav_Item_BlkAssign,
 
+		flingDeclFunc_Item_Gen,
+
 		flingDeclFunc_Item_If,
 		flingDeclFunc_Item_SwitchOrSwitchz,
 		flingDeclFunc_Item_For,
@@ -1251,6 +1706,130 @@ antlrcpp::Any PtVisitor::visitFlingDeclFunc_Item
 	}
 	return nullptr;
 }
+//--------
+
+//--------
+antlrcpp::Any PtVisitor::visitFlingDeclFunc_Item_Gen
+	(Parser::FlingDeclFunc_Item_GenContext *ctx)
+{
+	ACCEPT_IFELSE
+		(flingDeclFunc_Item_Gen_If,
+		flingDeclFunc_Item_Gen_Switch,
+		flingDeclFunc_Item_Gen_For)
+	else
+	{
+		internal_err(visitFlingDeclFunc_Item_Gen);
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclFunc_Item_Gen_If
+	(Parser::FlingDeclFunc_Item_Gen_IfContext *ctx)
+{
+	DEFER_PUSH(node, GenIf);
+
+	JUST_ACCEPT_AND_POP_AST(node->cond, flingExpr);
+	FOR_PT(p, flingDeclFunc_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+
+	FOR_PT(p, flingDeclFunc_Item_Gen_If_Elif)
+	{
+		p->accept(this);
+		node->elif_list.push_back(_pop_ast());
+	}
+
+	ACCEPT_AND_POP_AST_IF(node->opt_else, flingDeclFunc_Item_Gen_If_Else);
+
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclFunc_Item_Gen_If_Elif
+	(Parser::FlingDeclFunc_Item_Gen_If_ElifContext *ctx)
+{
+	DEFER_PUSH(node, GenIf_Elif);
+	JUST_ACCEPT_AND_POP_AST(node->cond, flingExpr);
+	FOR_PT(p, flingDeclFunc_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclFunc_Item_Gen_If_Else
+	(Parser::FlingDeclFunc_Item_Gen_If_ElseContext *ctx)
+{
+	DEFER_PUSH(node, GenIf_Else);
+	FOR_PT(p, flingDeclFunc_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclFunc_Item_Gen_Switch
+	(Parser::FlingDeclFunc_Item_Gen_SwitchContext *ctx)
+{
+	DEFER_PUSH(node, GenSwitch);
+
+	JUST_ACCEPT_AND_POP_AST(node->cond, flingExpr);
+
+	FOR_PT(p, flingDeclFunc_Item_Gen_Switch_Case)
+	{
+		p->accept(this);
+		node->opt_case_list.push_back(_pop_ast());
+	}
+
+	ACCEPT_AND_POP_AST_IF
+		(node->opt_default, flingDeclFunc_Item_Gen_Switch_Default);
+
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclFunc_Item_Gen_Switch_Default
+	(Parser::FlingDeclFunc_Item_Gen_Switch_DefaultContext *ctx)
+{
+	DEFER_PUSH(node, GenSwitch_Default);
+	FOR_PT(p, flingDeclFunc_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclFunc_Item_Gen_Switch_Case
+	(Parser::FlingDeclFunc_Item_Gen_Switch_CaseContext *ctx)
+{
+	DEFER_PUSH(node, GenSwitch_Case);
+	JUST_ACCEPT_AND_POP_AST_LIST
+		(node->expr_list, flingExprList);
+	FOR_PT(p, flingDeclFunc_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclFunc_Item_Gen_For
+	(Parser::FlingDeclFunc_Item_Gen_ForContext *ctx)
+{
+	DEFER_PUSH(node, GenFor);
+	ctx->flingIdent().at(0)->accept(this);
+	node->label = _pop_str();
+
+	ctx->flingIdent().at(1)->accept(this);
+	node->ident = _pop_str();
+
+	JUST_ACCEPT_AND_POP_AST(node->expr, flingExpr);
+	FOR_PT(p, flingDeclFunc_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+	return nullptr;
+}
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingDeclFunc_Item_If
 	(Parser::FlingDeclFunc_Item_IfContext *ctx)
 {
@@ -1358,6 +1937,9 @@ antlrcpp::Any PtVisitor::visitFlingDeclFunc_Item_While
 
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingDeclTask
 	(Parser::FlingDeclTaskContext *ctx)
 {
@@ -1407,6 +1989,8 @@ antlrcpp::Any PtVisitor::visitFlingDeclTask_Item
 		flingBehav_Item_BlkAssign,
 		flingBehav_Item_NonBlkAssign,
 
+		flingDeclTask_Item_Gen,
+
 		flingDeclTask_Item_If,
 		flingDeclTask_Item_SwitchOrSwitchz,
 		flingDeclTask_Item_For,
@@ -1420,6 +2004,130 @@ antlrcpp::Any PtVisitor::visitFlingDeclTask_Item
 	}
 	return nullptr;
 }
+//--------
+
+//--------
+antlrcpp::Any PtVisitor::visitFlingDeclTask_Item_Gen
+	(Parser::FlingDeclTask_Item_GenContext *ctx)
+{
+	ACCEPT_IFELSE
+		(flingDeclTask_Item_Gen_If,
+		flingDeclTask_Item_Gen_Switch,
+		flingDeclTask_Item_Gen_For)
+	else
+	{
+		internal_err(visitFlingDeclTask_Item_Gen);
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclTask_Item_Gen_If
+	(Parser::FlingDeclTask_Item_Gen_IfContext *ctx)
+{
+	DEFER_PUSH(node, GenIf);
+
+	JUST_ACCEPT_AND_POP_AST(node->cond, flingExpr);
+	FOR_PT(p, flingDeclTask_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+
+	FOR_PT(p, flingDeclTask_Item_Gen_If_Elif)
+	{
+		p->accept(this);
+		node->elif_list.push_back(_pop_ast());
+	}
+
+	ACCEPT_AND_POP_AST_IF(node->opt_else, flingDeclTask_Item_Gen_If_Else);
+
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclTask_Item_Gen_If_Elif
+	(Parser::FlingDeclTask_Item_Gen_If_ElifContext *ctx)
+{
+	DEFER_PUSH(node, GenIf_Elif);
+	JUST_ACCEPT_AND_POP_AST(node->cond, flingExpr);
+	FOR_PT(p, flingDeclTask_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclTask_Item_Gen_If_Else
+	(Parser::FlingDeclTask_Item_Gen_If_ElseContext *ctx)
+{
+	DEFER_PUSH(node, GenIf_Else);
+	FOR_PT(p, flingDeclTask_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclTask_Item_Gen_Switch
+	(Parser::FlingDeclTask_Item_Gen_SwitchContext *ctx)
+{
+	DEFER_PUSH(node, GenSwitch);
+
+	JUST_ACCEPT_AND_POP_AST(node->cond, flingExpr);
+
+	FOR_PT(p, flingDeclTask_Item_Gen_Switch_Case)
+	{
+		p->accept(this);
+		node->opt_case_list.push_back(_pop_ast());
+	}
+
+	ACCEPT_AND_POP_AST_IF
+		(node->opt_default, flingDeclTask_Item_Gen_Switch_Default);
+
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclTask_Item_Gen_Switch_Default
+	(Parser::FlingDeclTask_Item_Gen_Switch_DefaultContext *ctx)
+{
+	DEFER_PUSH(node, GenSwitch_Default);
+	FOR_PT(p, flingDeclTask_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclTask_Item_Gen_Switch_Case
+	(Parser::FlingDeclTask_Item_Gen_Switch_CaseContext *ctx)
+{
+	DEFER_PUSH(node, GenSwitch_Case);
+	JUST_ACCEPT_AND_POP_AST_LIST
+		(node->expr_list, flingExprList);
+	FOR_PT(p, flingDeclTask_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingDeclTask_Item_Gen_For
+	(Parser::FlingDeclTask_Item_Gen_ForContext *ctx)
+{
+	DEFER_PUSH(node, GenFor);
+	ctx->flingIdent().at(0)->accept(this);
+	node->label = _pop_str();
+
+	ctx->flingIdent().at(1)->accept(this);
+	node->ident = _pop_str();
+
+	JUST_ACCEPT_AND_POP_AST(node->expr, flingExpr);
+	FOR_PT(p, flingDeclTask_Item)
+	{
+		p->accept(this);
+		node->item_list.push_back(_pop_ast());
+	}
+	return nullptr;
+}
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingDeclTask_Item_If
 	(Parser::FlingDeclTask_Item_IfContext *ctx)
 {
@@ -1527,6 +2235,9 @@ antlrcpp::Any PtVisitor::visitFlingDeclTask_Item_While
 
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingDeclProc
 	(Parser::FlingDeclProcContext *ctx)
 {
@@ -1594,6 +2305,9 @@ antlrcpp::Any PtVisitor::visitFlingDeclProc_ArgList_Item
 
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingDeclAlias
 	(Parser::FlingDeclAliasContext *ctx)
 {
@@ -1641,6 +2355,9 @@ antlrcpp::Any PtVisitor::visitFlingDeclAlias_Module
 
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingIdent
 	(Parser::FlingIdentContext *ctx)
 {
@@ -1723,6 +2440,9 @@ antlrcpp::Any PtVisitor::visitFlingImportList_Item
 
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingTypenameOrModname
 	(Parser::FlingTypenameOrModnameContext *ctx)
 {
@@ -1859,6 +2579,9 @@ antlrcpp::Any PtVisitor::visitFlingTypenameOrModname_Builtin
 
 	return nullptr;
 }
+//--------
+
+//--------
 #define VISIT_BINOP(punct, type, pt_node) \
 	CHECK(punct) \
 	{ \
@@ -1887,6 +2610,9 @@ antlrcpp::Any PtVisitor::visitFlingExpr
 	}
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingExpr_Mux
 	(Parser::FlingExpr_MuxContext *ctx)
 {
@@ -1897,6 +2623,9 @@ antlrcpp::Any PtVisitor::visitFlingExpr_Mux
 	}
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingExpr_LogOr
 	(Parser::FlingExpr_LogOrContext *ctx)
 {
@@ -1922,6 +2651,9 @@ antlrcpp::Any PtVisitor::visitFlingExpr_LogAnd
 	}
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingExpr_BitOr_Or_BitNor
 	(Parser::FlingExpr_BitOr_Or_BitNorContext *ctx)
 {
@@ -1969,6 +2701,9 @@ antlrcpp::Any PtVisitor::visitFlingExpr_BitXor_Or_BitXnor
 	}
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingExpr_CmpEqEtc
 	(Parser::FlingExpr_CmpEqEtcContext *ctx)
 {
@@ -2002,6 +2737,9 @@ antlrcpp::Any PtVisitor::visitFlingExpr_CmpLtEtc
 	}
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingExpr_BitShift
 	(Parser::FlingExpr_BitShiftContext *ctx)
 {
@@ -2065,6 +2803,9 @@ antlrcpp::Any PtVisitor::visitFlingExpr_Mul_Or_Div_Or_Mod
 	}
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingExpr_Unary
 	(Parser::FlingExpr_UnaryContext *ctx)
 {
@@ -2207,6 +2948,9 @@ antlrcpp::Any PtVisitor::visitFlingExpr_Repl
 
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingExpr_KwDollarFuncOf
 	(Parser::FlingExpr_KwDollarFuncOfContext *ctx)
 {
@@ -2258,6 +3002,9 @@ antlrcpp::Any PtVisitor::visitFlingExpr_KwDollarFuncOf_Pow
 
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingExpr_IdentEtc
 	(Parser::FlingExpr_IdentEtcContext *ctx)
 {
@@ -2365,6 +3112,9 @@ antlrcpp::Any PtVisitor::visitFlingExpr_IdentEtc_Item_End_Index
 
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingExpr_Cast
 	(Parser::FlingExpr_CastContext *ctx)
 {
@@ -2384,6 +3134,9 @@ antlrcpp::Any PtVisitor::visitFlingExpr_Cast
 
 	return nullptr;
 }
+//--------
+
+//--------
 antlrcpp::Any PtVisitor::visitFlingExpr_CallSubprog_PseudoOper
 	(Parser::FlingExpr_CallSubprog_PseudoOperContext *ctx)
 {
@@ -2404,5 +3157,6 @@ antlrcpp::Any PtVisitor::visitFlingExpr_CallSubprog_PseudoOper
 
 	return nullptr;
 }
+//--------
 
 } // namespace fling_hdl

@@ -166,7 +166,7 @@ flingDeclModule_Item:
 
 	// This is a `proc` call
 	| flingExpr ';'
-	| flingGen
+	| flingDeclModule_Gen
 	| flingContAssign
 	| flingImportList
 
@@ -188,41 +188,43 @@ flingInstModule:
 //--------
 
 //--------
-flingGen:
-	flingGen_If
-	| flingGen_Switch
-	| flingGen_For
+flingDeclModule_Gen:
+	flingDeclModule_Gen_If
+	| flingDeclModule_Gen_Switch
+	| flingDeclModule_Gen_For
 	;
 
-flingGen_If:
+flingDeclModule_Gen_If:
 	KwGen KwIf flingExpr flingDeclModule_Scope
-	flingGen_If_Elif*
-	flingGen_If_Else?
+	flingDeclModule_Gen_If_Elif*
+	flingDeclModule_Gen_If_Else?
 	;
-flingGen_If_Elif:
+flingDeclModule_Gen_If_Elif:
 	KwGen KwElif flingExpr flingDeclModule_Scope
 	;
-flingGen_If_Else:
+flingDeclModule_Gen_If_Else:
 	KwGen KwElse flingDeclModule_Scope
 	;
 
-flingGen_Switch:
+flingDeclModule_Gen_Switch:
 	KwGen KwSwitch flingExpr
 	'{'
 		(
-			flingGen_Switch_Default? flingGen_Switch_Case*
-			| flingGen_Switch_Case+ flingGen_Switch_Default
+			flingDeclModule_Gen_Switch_Default?
+				flingDeclModule_Gen_Switch_Case*
+			| flingDeclModule_Gen_Switch_Case+
+				flingDeclModule_Gen_Switch_Default
 		)
 	'}'
 	;
-flingGen_Switch_Default:
+flingDeclModule_Gen_Switch_Default:
 	KwDefault flingDeclModule_Scope
 	;
-flingGen_Switch_Case:
+flingDeclModule_Gen_Switch_Case:
 	flingExprList flingDeclModule_Scope
 	;
 
-flingGen_For:
+flingDeclModule_Gen_For:
 	KwGen '[' flingIdent ']' KwFor flingIdent ':' flingExpr
 		flingDeclModule_Scope
 	;
@@ -268,6 +270,8 @@ flingBehav_Item:
 	| flingBehav_Item_BlkAssign
 	| flingBehav_Item_NonBlkAssign
 
+	| flingBehav_Item_Gen
+
 	| flingBehav_Item_If
 	| flingBehav_Item_SwitchOrSwitchz
 	| flingBehav_Item_For
@@ -276,8 +280,52 @@ flingBehav_Item:
 	// Call a `func` or a `task`
 	| flingExpr ';'
 	;
+//--------
 
+//--------
+flingBehav_Item_Gen:
+	flingBehav_Item_Gen_If
+	| flingBehav_Item_Gen_Switch
+	| flingBehav_Item_Gen_For
+	;
 
+flingBehav_Item_Gen_If:
+	KwGen KwIf flingExpr '{' flingBehav_Item* '}'
+	flingBehav_Item_Gen_If_Elif*
+	flingBehav_Item_Gen_If_Else?
+	;
+flingBehav_Item_Gen_If_Elif:
+	KwGen KwElif flingExpr '{' flingBehav_Item* '}'
+	;
+flingBehav_Item_Gen_If_Else:
+	KwGen KwElse '{' flingBehav_Item* '}'
+	;
+
+flingBehav_Item_Gen_Switch:
+	KwGen KwSwitch flingExpr
+	'{'
+		(
+			flingBehav_Item_Gen_Switch_Default?
+				flingBehav_Item_Gen_Switch_Case*
+			| flingBehav_Item_Gen_Switch_Case+
+				flingBehav_Item_Gen_Switch_Default
+		)
+	'}'
+	;
+flingBehav_Item_Gen_Switch_Default:
+	KwDefault '{' flingBehav_Item* '}'
+	;
+flingBehav_Item_Gen_Switch_Case:
+	flingExprList '{' flingBehav_Item* '}'
+	;
+
+flingBehav_Item_Gen_For:
+	KwGen '[' flingIdent ']' KwFor flingIdent ':' flingExpr
+		'{' flingBehav_Item* '}'
+	;
+//--------
+
+//--------
 flingBehav_Item_If:
 	KwIf flingExpr flingBehav_Scope
 	flingBehav_Item_If_Elif*
@@ -375,12 +423,58 @@ flingDeclClsOrMxn_Extends:
 
 flingDeclClass_Item:
 	flingDeclClass_Item_DeclVar
+	| flingDeclClass_Item_Gen
 	| flingDeclClsOrMxn_Item
 	;
 flingDeclClass_Item_DeclVar:
 	flingDeclClsOrMxn_AccessSpecifier? KwStatic? flingDeclVar
 	;
+//--------
 
+//--------
+flingDeclClass_Item_Gen:
+	flingDeclClass_Item_Gen_If
+	| flingDeclClass_Item_Gen_Switch
+	| flingDeclClass_Item_Gen_For
+	;
+
+flingDeclClass_Item_Gen_If:
+	KwGen KwIf flingExpr '{' flingDeclClass_Item* '}'
+	flingDeclClass_Item_Gen_If_Elif*
+	flingDeclClass_Item_Gen_If_Else?
+	;
+flingDeclClass_Item_Gen_If_Elif:
+	KwGen KwElif flingExpr '{' flingDeclClass_Item* '}'
+	;
+flingDeclClass_Item_Gen_If_Else:
+	KwGen KwElse '{' flingDeclClass_Item* '}'
+	;
+
+flingDeclClass_Item_Gen_Switch:
+	KwGen KwSwitch flingExpr
+	'{'
+		(
+			flingDeclClass_Item_Gen_Switch_Default?
+				flingDeclClass_Item_Gen_Switch_Case*
+			| flingDeclClass_Item_Gen_Switch_Case+
+				flingDeclClass_Item_Gen_Switch_Default
+		)
+	'}'
+	;
+flingDeclClass_Item_Gen_Switch_Default:
+	KwDefault '{' flingDeclClass_Item* '}'
+	;
+flingDeclClass_Item_Gen_Switch_Case:
+	flingExprList '{' flingDeclClass_Item* '}'
+	;
+
+flingDeclClass_Item_Gen_For:
+	KwGen '[' flingIdent ']' KwFor flingIdent ':' flingExpr
+		'{' flingDeclClass_Item* '}'
+	;
+//--------
+
+//--------
 flingDeclClsOrMxn_Item:
 	flingDeclClsOrMxn_Item_DeclType 
 	| flingDeclClsOrMxn_Item_DeclAliasOrConst
@@ -427,8 +521,55 @@ flingDeclMixin:
 	KwBase? KwMixin flingIdent flingDeclParamList?
 		flingDeclClsOrMxn_Extends?
 	'{'
-		flingDeclClsOrMxn_Item*
+		flingDeclMixin_Item*
 	'}'
+	;
+flingDeclMixin_Item:
+	flingDeclMixin_Item_Gen 
+	| flingDeclClsOrMxn_Item
+	;
+//--------
+
+//--------
+flingDeclMixin_Item_Gen:
+	flingDeclMixin_Item_Gen_If
+	| flingDeclMixin_Item_Gen_Switch
+	| flingDeclMixin_Item_Gen_For
+	;
+
+flingDeclMixin_Item_Gen_If:
+	KwGen KwIf flingExpr '{' flingDeclMixin_Item* '}'
+	flingDeclMixin_Item_Gen_If_Elif*
+	flingDeclMixin_Item_Gen_If_Else?
+	;
+flingDeclMixin_Item_Gen_If_Elif:
+	KwGen KwElif flingExpr '{' flingDeclMixin_Item* '}'
+	;
+flingDeclMixin_Item_Gen_If_Else:
+	KwGen KwElse '{' flingDeclMixin_Item* '}'
+	;
+
+flingDeclMixin_Item_Gen_Switch:
+	KwGen KwSwitch flingExpr
+	'{'
+		(
+			flingDeclMixin_Item_Gen_Switch_Default?
+				flingDeclMixin_Item_Gen_Switch_Case*
+			| flingDeclMixin_Item_Gen_Switch_Case+
+				flingDeclMixin_Item_Gen_Switch_Default
+		)
+	'}'
+	;
+flingDeclMixin_Item_Gen_Switch_Default:
+	KwDefault '{' flingDeclMixin_Item* '}'
+	;
+flingDeclMixin_Item_Gen_Switch_Case:
+	flingExprList '{' flingDeclMixin_Item* '}'
+	;
+
+flingDeclMixin_Item_Gen_For:
+	KwGen '[' flingIdent ']' KwFor flingIdent ':' flingExpr
+		'{' flingDeclMixin_Item* '}'
 	;
 //--------
 
@@ -438,7 +579,9 @@ flingDeclSubprog:
 	| flingDeclTask
 	| flingDeclProc
 	;
+//--------
 
+//--------
 flingDeclFunc:
 	flingDeclFunc_Header flingDeclFunc_Scope
 	;
@@ -463,12 +606,59 @@ flingDeclFunc_Item:
 
 	| flingBehav_Item_BlkAssign
 
+	| flingDeclFunc_Item_Gen
+
 	| flingDeclFunc_Item_If
 	| flingDeclFunc_Item_SwitchOrSwitchz
 	| flingDeclFunc_Item_For
 	| flingDeclFunc_Item_While
 	;
+//--------
 
+//--------
+flingDeclFunc_Item_Gen:
+	flingDeclFunc_Item_Gen_If
+	| flingDeclFunc_Item_Gen_Switch
+	| flingDeclFunc_Item_Gen_For
+	;
+
+flingDeclFunc_Item_Gen_If:
+	KwGen KwIf flingExpr '{' flingDeclFunc_Item* '}'
+	flingDeclFunc_Item_Gen_If_Elif*
+	flingDeclFunc_Item_Gen_If_Else?
+	;
+flingDeclFunc_Item_Gen_If_Elif:
+	KwGen KwElif flingExpr '{' flingDeclFunc_Item* '}'
+	;
+flingDeclFunc_Item_Gen_If_Else:
+	KwGen KwElse '{' flingDeclFunc_Item* '}'
+	;
+
+flingDeclFunc_Item_Gen_Switch:
+	KwGen KwSwitch flingExpr
+	'{'
+		(
+			flingDeclFunc_Item_Gen_Switch_Default?
+				flingDeclFunc_Item_Gen_Switch_Case*
+			| flingDeclFunc_Item_Gen_Switch_Case+
+				flingDeclFunc_Item_Gen_Switch_Default
+		)
+	'}'
+	;
+flingDeclFunc_Item_Gen_Switch_Default:
+	KwDefault '{' flingDeclFunc_Item* '}'
+	;
+flingDeclFunc_Item_Gen_Switch_Case:
+	flingExprList '{' flingDeclFunc_Item* '}'
+	;
+
+flingDeclFunc_Item_Gen_For:
+	KwGen '[' flingIdent ']' KwFor flingIdent ':' flingExpr
+		'{' flingDeclFunc_Item* '}'
+	;
+//--------
+
+//--------
 flingDeclFunc_Item_If:
 	KwIf flingExpr flingDeclFunc_Scope
 	flingDeclFunc_Item_If_Elif*
@@ -530,6 +720,8 @@ flingDeclTask_Item:
 	| flingBehav_Item_BlkAssign
 	| flingBehav_Item_NonBlkAssign
 
+	| flingDeclTask_Item_Gen
+
 	| flingDeclTask_Item_If
 	| flingDeclTask_Item_SwitchOrSwitchz
 	| flingDeclTask_Item_For
@@ -539,6 +731,52 @@ flingDeclTask_Item:
 	| flingExpr ';'
 
 	;
+//--------
+
+//--------
+flingDeclTask_Item_Gen:
+	flingDeclTask_Item_Gen_If
+	| flingDeclTask_Item_Gen_Switch
+	| flingDeclTask_Item_Gen_For
+	;
+
+flingDeclTask_Item_Gen_If:
+	KwGen KwIf flingExpr '{' flingDeclTask_Item* '}'
+	flingDeclTask_Item_Gen_If_Elif*
+	flingDeclTask_Item_Gen_If_Else?
+	;
+flingDeclTask_Item_Gen_If_Elif:
+	KwGen KwElif flingExpr '{' flingDeclTask_Item* '}'
+	;
+flingDeclTask_Item_Gen_If_Else:
+	KwGen KwElse '{' flingDeclTask_Item* '}'
+	;
+
+flingDeclTask_Item_Gen_Switch:
+	KwGen KwSwitch flingExpr
+	'{'
+		(
+			flingDeclTask_Item_Gen_Switch_Default?
+				flingDeclTask_Item_Gen_Switch_Case*
+			| flingDeclTask_Item_Gen_Switch_Case+
+				flingDeclTask_Item_Gen_Switch_Default
+		)
+	'}'
+	;
+flingDeclTask_Item_Gen_Switch_Default:
+	KwDefault '{' flingDeclTask_Item* '}'
+	;
+flingDeclTask_Item_Gen_Switch_Case:
+	flingExprList '{' flingDeclTask_Item* '}'
+	;
+
+flingDeclTask_Item_Gen_For:
+	KwGen '[' flingIdent ']' KwFor flingIdent ':' flingExpr
+		'{' flingDeclTask_Item* '}'
+	;
+//--------
+
+//--------
 
 flingDeclTask_Item_If:
 	KwIf flingExpr flingDeclTask_Scope
