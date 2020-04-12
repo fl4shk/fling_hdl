@@ -168,7 +168,7 @@ flingDeclModule_Item:
 	| flingExpr ';'
 	| flingDeclModule_Gen
 	| flingContAssign
-	| flingImportList
+	| flingImportList ';'
 
 	| flingBehav
 	| flingDeclWire

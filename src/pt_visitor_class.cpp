@@ -22,7 +22,7 @@ using namespace ast;
 
 #define _INNER_JUST_ACCEPT_AND_POP_AST(to_set, pt_node) \
 	JUST_ACCEPT(pt_node); \
-	to_set = _pop_ast();
+	_pop_ast(to_set);
 #define _INNER_ACCEPT_AND_POP_AST_IF(to_set, pt_node) \
 	CHECK(pt_node) \
 	{ \
@@ -39,7 +39,7 @@ using namespace ast;
 
 #define _INNER_JUST_ACCEPT_AND_POP_AST_LIST(to_set, pt_node) \
 	JUST_ACCEPT(pt_node); \
-	to_set = move(_pop_ast_list())
+	_pop_ast_list(to_set)
 #define _INNER_ACCEPT_AND_POP_AST_LIST_IF(to_set, pt_node) \
 	CHECK(pt_node) \
 	{ \
@@ -57,7 +57,7 @@ using namespace ast;
 
 #define _INNER_JUST_ACCEPT_AND_POP_NUM(to_set, pt_node) \
 	JUST_ACCEPT(pt_node); \
-	to_set = _pop_num();
+	_pop_num(to_set);
 #define _INNER_ACCEPT_AND_POP_NUM_IF(to_set, pt_node) \
 	CHECK(pt_node) \
 	{ \
@@ -70,7 +70,7 @@ using namespace ast;
 
 #define _INNER_JUST_ACCEPT_AND_POP_STR(to_set, pt_node) \
 	JUST_ACCEPT(pt_node); \
-	to_set = _pop_str();
+	_pop_str(to_set);
 #define _INNER_ACCEPT_AND_POP_STR_IF(to_set, pt_node) \
 	CHECK(pt_node) \
 	{ \
@@ -140,7 +140,7 @@ AstEtc::AstEtc(const string& s_filename)
 
 	_parser.reset(new Parser(_token_stream.get()));
 	_parser->removeErrorListeners();
-	_error_listener.reset(new PtVisitorErrorListener());
+	_error_listener.reset(new PtVisitorErrorListener(&_filename));
 	_parser->addErrorListener(_error_listener.get());
 	_program_ctx = _parser->flingProgram();
 }
@@ -181,7 +181,9 @@ antlrcpp::Any PtVisitor::visitFlingProgram
 	FOR_PT(p, flingProgram_Item)
 	{
 		p->accept(this);
-		_ast->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		_ast->item_list.push_back(move(to_push));
 	}
 	return nullptr;
 }
@@ -214,7 +216,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclPackage
 	FOR_PT(p, flingDeclPackage_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 
 	return nullptr;
@@ -246,7 +251,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclParamList
 	FOR_PT(p, flingDeclParamList_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 
 	return nullptr;
@@ -318,7 +326,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclArgList
 	FOR_PT(p, flingDeclArgList_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 
 	return nullptr;
@@ -371,10 +382,6 @@ antlrcpp::Any PtVisitor::visitFlingInstParamList
 	ACCEPT_AND_POP_AST_LIST_IFELSE
 		(node->item_list, flingInstParamList_Pos,
 		node->item_list, flingInstParamList_Named)
-	else
-	{
-		internal_err(visitFlingInstParamList);
-	}
 
 	return nullptr;
 }
@@ -386,7 +393,10 @@ antlrcpp::Any PtVisitor::visitFlingInstParamList_Pos
 	FOR_PT(p, flingInstParamList_Pos_Item)
 	{
 		p->accept(this);
-		list.push_back(_pop_ast());
+		//list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		list.push_back(move(to_push));
 	}
 
 	return nullptr;
@@ -435,7 +445,10 @@ antlrcpp::Any PtVisitor::visitFlingInstParamList_Named
 	FOR_PT(p, flingInstParamList_Named_Item)
 	{
 		p->accept(this);
-		list.push_back(_pop_ast());
+		//list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		list.push_back(move(to_push));
 	}
 
 	return nullptr;
@@ -461,10 +474,6 @@ antlrcpp::Any PtVisitor::visitFlingInstArgList
 	ACCEPT_AND_POP_AST_LIST_IFELSE
 		(node->item_list, flingInstArgList_Pos,
 		node->item_list, flingInstArgList_Named)
-	else
-	{
-		internal_err(visitFlingInstArgList);
-	}
 
 	return nullptr;
 }
@@ -476,7 +485,10 @@ antlrcpp::Any PtVisitor::visitFlingInstArgList_Pos
 	FOR_PT(p, flingInstArgList_Pos_Item)
 	{
 		p->accept(this);
-		list.push_back(_pop_ast());
+		//list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		list.push_back(move(to_push));
 	}
 
 	return nullptr;
@@ -520,7 +532,10 @@ antlrcpp::Any PtVisitor::visitFlingInstArgList_Named
 	FOR_PT(p, flingInstArgList_Named_Item)
 	{
 		p->accept(this);
-		list.push_back(_pop_ast());
+		//list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		list.push_back(move(to_push));
 	}
 
 	return nullptr;
@@ -544,8 +559,37 @@ antlrcpp::Any PtVisitor::visitFlingDeclModule
 	DEFER_PUSH(node, DeclModule);
 
 	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
+
 	ACCEPT_AND_POP_AST_IF(node->opt_param_list, flingDeclParamList);
+	uintptr_t opt_param_list = 0, arg_list = 0;
+	if (node->opt_param_list.get() != nullptr)
+	{
+		memcpy(&opt_param_list, node->opt_param_list.get(),
+			sizeof(opt_param_list));
+	}
+	if (node->arg_list.get() != nullptr)
+	{
+		memcpy(&arg_list, node->arg_list.get(), sizeof(arg_list));
+	}
+	printout("PtVisitor testificate:  ", strappcom2(opt_param_list,
+		arg_list), "\n");
+
 	JUST_ACCEPT_AND_POP_AST(node->arg_list, flingDeclArgList);
+	opt_param_list = 0;
+	arg_list = 0;
+	if (node->opt_param_list.get() != nullptr)
+	{
+		memcpy(&opt_param_list, node->opt_param_list.get(),
+			sizeof(opt_param_list));
+	}
+	if (node->arg_list.get() != nullptr)
+	{
+		memcpy(&arg_list, node->arg_list.get(), sizeof(arg_list));
+	}
+	printout("PtVisitor testificate:  ", strappcom2(opt_param_list,
+		arg_list), "\n");
+
+
 	ACCEPT_AND_POP_AST_IF(node->opt_import_list, flingImportList);
 	JUST_ACCEPT_AND_POP_AST_LIST(node->item_list, flingDeclModule_Scope);
 
@@ -559,7 +603,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclModule_Scope
 	FOR_PT(p, flingDeclModule_Item)
 	{
 		p->accept(this);
-		list.push_back(_pop_ast());
+		//list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		list.push_back(move(to_push));
 	}
 
 	return nullptr;
@@ -630,7 +677,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclModule_Gen_If
 	FOR_PT(p, flingDeclModule_Gen_If_Elif)
 	{
 		p->accept(this);
-		node->elif_list.push_back(_pop_ast());
+		//node->elif_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->elif_list.push_back(move(to_push));
 	}
 
 	ACCEPT_AND_POP_AST_IF(node->opt_else, flingDeclModule_Gen_If_Else);
@@ -662,7 +712,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclModule_Gen_Switch
 	FOR_PT(p, flingDeclModule_Gen_Switch_Case)
 	{
 		p->accept(this);
-		node->opt_case_list.push_back(_pop_ast());
+		//node->opt_case_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->opt_case_list.push_back(move(to_push));
 	}
 
 	ACCEPT_AND_POP_AST_IF
@@ -691,10 +744,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclModule_Gen_For
 {
 	DEFER_PUSH(node, GenFor);
 	ctx->flingIdent().at(0)->accept(this);
-	node->label = _pop_str();
+	_pop_str(node->label);
 
 	ctx->flingIdent().at(1)->accept(this);
-	node->ident = _pop_str();
+	_pop_str(node->ident);
 
 	JUST_ACCEPT_AND_POP_AST(node->expr, flingExpr);
 	JUST_ACCEPT_AND_POP_AST_LIST(node->item_list, flingDeclModule_Scope);
@@ -742,7 +795,10 @@ antlrcpp::Any PtVisitor::visitFlingBehav_Seq_EdgeList
 	FOR_PT(p, flingBehav_Seq_EdgeList_Item)
 	{
 		p->accept(this);
-		list.push_back(_pop_ast());
+		//list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		list.push_back(move(to_push));
 	}
 
 	return nullptr;
@@ -775,7 +831,10 @@ antlrcpp::Any PtVisitor::visitFlingBehav_Scope
 	FOR_PT(p, flingBehav_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 
 	return nullptr;
@@ -832,13 +891,19 @@ antlrcpp::Any PtVisitor::visitFlingBehav_Item_Gen_If
 	FOR_PT(p, flingBehav_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 
 	FOR_PT(p, flingBehav_Item_Gen_If_Elif)
 	{
 		p->accept(this);
-		node->elif_list.push_back(_pop_ast());
+		//node->elif_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->elif_list.push_back(move(to_push));
 	}
 
 	ACCEPT_AND_POP_AST_IF(node->opt_else, flingBehav_Item_Gen_If_Else);
@@ -853,7 +918,10 @@ antlrcpp::Any PtVisitor::visitFlingBehav_Item_Gen_If_Elif
 	FOR_PT(p, flingBehav_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 	return nullptr;
 }
@@ -864,7 +932,10 @@ antlrcpp::Any PtVisitor::visitFlingBehav_Item_Gen_If_Else
 	FOR_PT(p, flingBehav_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 	return nullptr;
 }
@@ -878,7 +949,10 @@ antlrcpp::Any PtVisitor::visitFlingBehav_Item_Gen_Switch
 	FOR_PT(p, flingBehav_Item_Gen_Switch_Case)
 	{
 		p->accept(this);
-		node->opt_case_list.push_back(_pop_ast());
+		//node->opt_case_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->opt_case_list.push_back(move(to_push));
 	}
 
 	ACCEPT_AND_POP_AST_IF
@@ -893,7 +967,10 @@ antlrcpp::Any PtVisitor::visitFlingBehav_Item_Gen_Switch_Default
 	FOR_PT(p, flingBehav_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 	return nullptr;
 }
@@ -906,7 +983,10 @@ antlrcpp::Any PtVisitor::visitFlingBehav_Item_Gen_Switch_Case
 	FOR_PT(p, flingBehav_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 	return nullptr;
 }
@@ -915,16 +995,19 @@ antlrcpp::Any PtVisitor::visitFlingBehav_Item_Gen_For
 {
 	DEFER_PUSH(node, GenFor);
 	ctx->flingIdent().at(0)->accept(this);
-	node->label = _pop_str();
+	_pop_str(node->label);
 
 	ctx->flingIdent().at(1)->accept(this);
-	node->ident = _pop_str();
+	_pop_str(node->ident);
 
 	JUST_ACCEPT_AND_POP_AST(node->expr, flingExpr);
 	FOR_PT(p, flingBehav_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 	return nullptr;
 }
@@ -942,7 +1025,10 @@ antlrcpp::Any PtVisitor::visitFlingBehav_Item_If
 	FOR_PT(p, flingBehav_Item_If_Elif)
 	{
 		p->accept(this);
-		node->elif_list.push_back(_pop_ast());
+		//node->elif_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->elif_list.push_back(move(to_push));
 	}
 
 	ACCEPT_AND_POP_AST_IF(node->opt_else, flingBehav_Item_If_Else);
@@ -991,7 +1077,10 @@ antlrcpp::Any PtVisitor::visitFlingBehav_Item_SwitchOrSwitchz
 	FOR_PT(p, flingBehav_Item_SwitchOrSwitchz_Case)
 	{
 		p->accept(this);
-		node->opt_case_list.push_back(_pop_ast());
+		//node->opt_case_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->opt_case_list.push_back(move(to_push));
 	}
 
 	ACCEPT_AND_POP_AST_IF(node->opt_default,
@@ -1154,7 +1243,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclClass
 	FOR_PT(p, flingDeclClass_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 
 	node->is_signed = ctx->KwSigned();
@@ -1190,8 +1282,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclClass_Item_DeclVar
 	CHECK(flingDeclClsOrMxn_AccessSpecifier)
 	{
 		JUST_ACCEPT(flingDeclClsOrMxn_AccessSpecifier);
+		BigNum temp;
+		_pop_num(temp);
 		node->acc_spec = static_cast<AccSpec>(conv_bignum_to<size_t>
-			(_pop_num()));
+			(temp));
 	}
 	node->is_static = ctx->KwStatic();
 	JUST_ACCEPT_AND_POP_AST(node->decl_var, flingDeclVar);
@@ -1224,13 +1318,19 @@ antlrcpp::Any PtVisitor::visitFlingDeclClass_Item_Gen_If
 	FOR_PT(p, flingDeclClass_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 
 	FOR_PT(p, flingDeclClass_Item_Gen_If_Elif)
 	{
 		p->accept(this);
-		node->elif_list.push_back(_pop_ast());
+		//node->elif_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->elif_list.push_back(move(to_push));
 	}
 
 	ACCEPT_AND_POP_AST_IF(node->opt_else, flingDeclClass_Item_Gen_If_Else);
@@ -1245,7 +1345,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclClass_Item_Gen_If_Elif
 	FOR_PT(p, flingDeclClass_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 	return nullptr;
 }
@@ -1256,7 +1359,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclClass_Item_Gen_If_Else
 	FOR_PT(p, flingDeclClass_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 	return nullptr;
 }
@@ -1270,7 +1376,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclClass_Item_Gen_Switch
 	FOR_PT(p, flingDeclClass_Item_Gen_Switch_Case)
 	{
 		p->accept(this);
-		node->opt_case_list.push_back(_pop_ast());
+		//node->opt_case_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->opt_case_list.push_back(move(to_push));
 	}
 
 	ACCEPT_AND_POP_AST_IF
@@ -1285,7 +1394,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclClass_Item_Gen_Switch_Default
 	FOR_PT(p, flingDeclClass_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 	return nullptr;
 }
@@ -1298,7 +1410,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclClass_Item_Gen_Switch_Case
 	FOR_PT(p, flingDeclClass_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 	return nullptr;
 }
@@ -1307,16 +1422,19 @@ antlrcpp::Any PtVisitor::visitFlingDeclClass_Item_Gen_For
 {
 	DEFER_PUSH(node, GenFor);
 	ctx->flingIdent().at(0)->accept(this);
-	node->label = _pop_str();
+	_pop_str(node->label);
 
 	ctx->flingIdent().at(1)->accept(this);
-	node->ident = _pop_str();
+	_pop_str(node->ident);
 
 	JUST_ACCEPT_AND_POP_AST(node->expr, flingExpr);
 	FOR_PT(p, flingDeclClass_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 	return nullptr;
 }
@@ -1346,8 +1464,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item_DeclType
 	CHECK(flingDeclClsOrMxn_AccessSpecifier)
 	{
 		JUST_ACCEPT(flingDeclClsOrMxn_AccessSpecifier);
+		BigNum temp;
+		_pop_num(temp);
 		node->acc_spec = static_cast<AccSpec>(conv_bignum_to<size_t>
-			(_pop_num()));
+			(temp));
 	}
 	JUST_ACCEPT_AND_POP_AST(node->decl_type, flingDeclType);
 
@@ -1361,8 +1481,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item_DeclAliasOrConst
 	CHECK(flingDeclClsOrMxn_AccessSpecifier)
 	{
 		JUST_ACCEPT(flingDeclClsOrMxn_AccessSpecifier);
+		BigNum temp;
+		_pop_num(temp);
 		node->acc_spec = static_cast<AccSpec>(conv_bignum_to<size_t>
-			(_pop_num()));
+			(temp));
 	}
 
 	node->is_static = ctx->KwStatic();
@@ -1422,8 +1544,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item_DeclSubprog_FullDefn
 	CHECK(flingDeclClsOrMxn_AccessSpecifier)
 	{
 		JUST_ACCEPT(flingDeclClsOrMxn_AccessSpecifier);
+		BigNum temp;
+		_pop_num(temp);
 		node->acc_spec = static_cast<AccSpec>(conv_bignum_to<size_t>
-			(_pop_num()));
+			(temp));
 	}
 
 	node->is_virtual = ctx->KwVirtual();
@@ -1449,8 +1573,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item_DeclSubprog_Abstract
 	CHECK(flingDeclClsOrMxn_AccessSpecifier)
 	{
 		JUST_ACCEPT(flingDeclClsOrMxn_AccessSpecifier);
+		BigNum temp;
+		_pop_num(temp);
 		node->acc_spec = static_cast<AccSpec>(conv_bignum_to<size_t>
-			(_pop_num()));
+			(temp));
 	}
 
 	node->is_const = ctx->KwConst();
@@ -1483,7 +1609,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclMixin
 	FOR_PT(p, flingDeclMixin_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 
 	return nullptr;
@@ -1525,13 +1654,19 @@ antlrcpp::Any PtVisitor::visitFlingDeclMixin_Item_Gen_If
 	FOR_PT(p, flingDeclMixin_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 
 	FOR_PT(p, flingDeclMixin_Item_Gen_If_Elif)
 	{
 		p->accept(this);
-		node->elif_list.push_back(_pop_ast());
+		//node->elif_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->elif_list.push_back(move(to_push));
 	}
 
 	ACCEPT_AND_POP_AST_IF(node->opt_else, flingDeclMixin_Item_Gen_If_Else);
@@ -1546,7 +1681,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclMixin_Item_Gen_If_Elif
 	FOR_PT(p, flingDeclMixin_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 	return nullptr;
 }
@@ -1557,7 +1695,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclMixin_Item_Gen_If_Else
 	FOR_PT(p, flingDeclMixin_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 	return nullptr;
 }
@@ -1571,7 +1712,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclMixin_Item_Gen_Switch
 	FOR_PT(p, flingDeclMixin_Item_Gen_Switch_Case)
 	{
 		p->accept(this);
-		node->opt_case_list.push_back(_pop_ast());
+		//node->opt_case_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->opt_case_list.push_back(move(to_push));
 	}
 
 	ACCEPT_AND_POP_AST_IF
@@ -1586,7 +1730,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclMixin_Item_Gen_Switch_Default
 	FOR_PT(p, flingDeclMixin_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 	return nullptr;
 }
@@ -1599,7 +1746,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclMixin_Item_Gen_Switch_Case
 	FOR_PT(p, flingDeclMixin_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 	return nullptr;
 }
@@ -1608,16 +1758,19 @@ antlrcpp::Any PtVisitor::visitFlingDeclMixin_Item_Gen_For
 {
 	DEFER_PUSH(node, GenFor);
 	ctx->flingIdent().at(0)->accept(this);
-	node->label = _pop_str();
+	_pop_str(node->label);
 
 	ctx->flingIdent().at(1)->accept(this);
-	node->ident = _pop_str();
+	_pop_str(node->ident);
 
 	JUST_ACCEPT_AND_POP_AST(node->expr, flingExpr);
 	FOR_PT(p, flingDeclMixin_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 	return nullptr;
 }
@@ -1672,7 +1825,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclFunc_Scope
 	FOR_PT(p, flingDeclFunc_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 
 	return nullptr;
@@ -1745,13 +1901,19 @@ antlrcpp::Any PtVisitor::visitFlingDeclFunc_Item_Gen_If
 	FOR_PT(p, flingDeclFunc_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 
 	FOR_PT(p, flingDeclFunc_Item_Gen_If_Elif)
 	{
 		p->accept(this);
-		node->elif_list.push_back(_pop_ast());
+		//node->elif_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->elif_list.push_back(move(to_push));
 	}
 
 	ACCEPT_AND_POP_AST_IF(node->opt_else, flingDeclFunc_Item_Gen_If_Else);
@@ -1766,7 +1928,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclFunc_Item_Gen_If_Elif
 	FOR_PT(p, flingDeclFunc_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 	return nullptr;
 }
@@ -1777,7 +1942,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclFunc_Item_Gen_If_Else
 	FOR_PT(p, flingDeclFunc_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 	return nullptr;
 }
@@ -1791,7 +1959,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclFunc_Item_Gen_Switch
 	FOR_PT(p, flingDeclFunc_Item_Gen_Switch_Case)
 	{
 		p->accept(this);
-		node->opt_case_list.push_back(_pop_ast());
+		//node->opt_case_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->opt_case_list.push_back(move(to_push));
 	}
 
 	ACCEPT_AND_POP_AST_IF
@@ -1806,7 +1977,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclFunc_Item_Gen_Switch_Default
 	FOR_PT(p, flingDeclFunc_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 	return nullptr;
 }
@@ -1819,7 +1993,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclFunc_Item_Gen_Switch_Case
 	FOR_PT(p, flingDeclFunc_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 	return nullptr;
 }
@@ -1828,16 +2005,19 @@ antlrcpp::Any PtVisitor::visitFlingDeclFunc_Item_Gen_For
 {
 	DEFER_PUSH(node, GenFor);
 	ctx->flingIdent().at(0)->accept(this);
-	node->label = _pop_str();
+	_pop_str(node->label);
 
 	ctx->flingIdent().at(1)->accept(this);
-	node->ident = _pop_str();
+	_pop_str(node->ident);
 
 	JUST_ACCEPT_AND_POP_AST(node->expr, flingExpr);
 	FOR_PT(p, flingDeclFunc_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 	return nullptr;
 }
@@ -1855,7 +2035,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclFunc_Item_If
 	FOR_PT(p, flingDeclFunc_Item_If_Elif)
 	{
 		p->accept(this);
-		node->elif_list.push_back(_pop_ast());
+		//node->elif_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->elif_list.push_back(move(to_push));
 	}
 
 	ACCEPT_AND_POP_AST_IF(node->opt_else, flingDeclFunc_Item_If_Else);
@@ -1901,7 +2084,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclFunc_Item_SwitchOrSwitchz
 	FOR_PT(p, flingDeclFunc_Item_SwitchOrSwitchz_Case)
 	{
 		p->accept(this);
-		node->opt_case_list.push_back(_pop_ast());
+		//node->opt_case_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->opt_case_list.push_back(move(to_push));
 	}
 
 	ACCEPT_AND_POP_AST_IF(node->opt_default,
@@ -1984,7 +2170,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclTask_Scope
 	FOR_PT(p, flingDeclTask_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 
 	return nullptr;
@@ -2043,13 +2232,19 @@ antlrcpp::Any PtVisitor::visitFlingDeclTask_Item_Gen_If
 	FOR_PT(p, flingDeclTask_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 
 	FOR_PT(p, flingDeclTask_Item_Gen_If_Elif)
 	{
 		p->accept(this);
-		node->elif_list.push_back(_pop_ast());
+		//node->elif_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->elif_list.push_back(move(to_push));
 	}
 
 	ACCEPT_AND_POP_AST_IF(node->opt_else, flingDeclTask_Item_Gen_If_Else);
@@ -2064,7 +2259,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclTask_Item_Gen_If_Elif
 	FOR_PT(p, flingDeclTask_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 	return nullptr;
 }
@@ -2075,7 +2273,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclTask_Item_Gen_If_Else
 	FOR_PT(p, flingDeclTask_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 	return nullptr;
 }
@@ -2089,7 +2290,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclTask_Item_Gen_Switch
 	FOR_PT(p, flingDeclTask_Item_Gen_Switch_Case)
 	{
 		p->accept(this);
-		node->opt_case_list.push_back(_pop_ast());
+		//node->opt_case_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->opt_case_list.push_back(move(to_push));
 	}
 
 	ACCEPT_AND_POP_AST_IF
@@ -2104,7 +2308,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclTask_Item_Gen_Switch_Default
 	FOR_PT(p, flingDeclTask_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 	return nullptr;
 }
@@ -2117,7 +2324,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclTask_Item_Gen_Switch_Case
 	FOR_PT(p, flingDeclTask_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 	return nullptr;
 }
@@ -2126,16 +2336,19 @@ antlrcpp::Any PtVisitor::visitFlingDeclTask_Item_Gen_For
 {
 	DEFER_PUSH(node, GenFor);
 	ctx->flingIdent().at(0)->accept(this);
-	node->label = _pop_str();
+	_pop_str(node->label);
 
 	ctx->flingIdent().at(1)->accept(this);
-	node->ident = _pop_str();
+	_pop_str(node->ident);
 
 	JUST_ACCEPT_AND_POP_AST(node->expr, flingExpr);
 	FOR_PT(p, flingDeclTask_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 	return nullptr;
 }
@@ -2153,7 +2366,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclTask_Item_If
 	FOR_PT(p, flingDeclTask_Item_If_Elif)
 	{
 		p->accept(this);
-		node->elif_list.push_back(_pop_ast());
+		//node->elif_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->elif_list.push_back(move(to_push));
 	}
 
 	ACCEPT_AND_POP_AST_IF(node->opt_else, flingDeclTask_Item_If_Else);
@@ -2199,7 +2415,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclTask_Item_SwitchOrSwitchz
 	FOR_PT(p, flingDeclTask_Item_SwitchOrSwitchz_Case)
 	{
 		p->accept(this);
-		node->opt_case_list.push_back(_pop_ast());
+		//node->opt_case_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->opt_case_list.push_back(move(to_push));
 	}
 
 	ACCEPT_AND_POP_AST_IF(node->opt_default,
@@ -2281,7 +2500,10 @@ antlrcpp::Any PtVisitor::visitFlingDeclProc_ArgList
 	FOR_PT(p, flingDeclProc_ArgList_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 
 	return nullptr;
@@ -2353,8 +2575,8 @@ antlrcpp::Any PtVisitor::visitFlingDeclAlias_Type
 	DEFER_PUSH(node, DeclAlias_Type);
 
 	JUST_ACCEPT_AND_POP_AST(node->ident_list, flingIdentList);
-	JUST_ACCEPT_AND_POP_AST_LIST(node->typename_or_modname_list,
-		flingTypenameOrModnameList);
+	JUST_ACCEPT_AND_POP_AST_LIST
+		(node->typename_or_modname_list, flingTypenameOrModnameList);
 
 	return nullptr;
 }
@@ -2387,7 +2609,10 @@ antlrcpp::Any PtVisitor::visitFlingIdentList
 	FOR_PT(p, flingIdent)
 	{
 		p->accept(this);
-		node->data.push_back(_pop_str());
+		//node->data.push_back(_pop_str());
+		string to_push;
+		_pop_str(to_push);
+		node->data.push_back(move(to_push));
 	}
 
 	return nullptr;
@@ -2400,7 +2625,10 @@ antlrcpp::Any PtVisitor::visitFlingScopedIdent
 	FOR_PT(p, flingIdent)
 	{
 		p->accept(this);
-		node->data.push_back(_pop_str());
+		//node->data.push_back(_pop_str());
+		string to_push;
+		_pop_str(to_push);
+		node->data.push_back(move(to_push));
 	}
 
 	return nullptr;
@@ -2413,7 +2641,10 @@ antlrcpp::Any PtVisitor::visitFlingExprList
 	FOR_PT(p, flingExpr)
 	{
 		p->accept(this);
-		list.push_back(_pop_ast());
+		//list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		list.push_back(move(to_push));
 	}
 
 	return nullptr;
@@ -2426,7 +2657,10 @@ antlrcpp::Any PtVisitor::visitFlingTypenameOrModnameList
 	FOR_PT(p, flingTypenameOrModname)
 	{
 		p->accept(this);
-		list.push_back(_pop_ast());
+		//list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		list.push_back(move(to_push));
 	}
 
 	return nullptr;
@@ -2439,7 +2673,10 @@ antlrcpp::Any PtVisitor::visitFlingImportList
 	FOR_PT(p, flingImportList_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 
 	return nullptr;
@@ -2492,13 +2729,19 @@ antlrcpp::Any PtVisitor::visitFlingTypenameOrModname_Cstm
 	FOR_PT(p, flingTypenameOrModname_Cstm_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 
 	FOR_PT(p, flingTypenameOrModname_ArrDim)
 	{
 		p->accept(this);
-		node->arr_dim_list.push_back(_pop_ast());
+		//node->arr_dim_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->arr_dim_list.push_back(move(to_push));
 	}
 
 	return nullptr;
@@ -2513,13 +2756,19 @@ antlrcpp::Any PtVisitor::visitFlingTypenameOrModname_Typeof
 	FOR_PT(p, flingTypenameOrModname_Cstm_Item)
 	{
 		p->accept(this);
-		node->item_list.push_back(_pop_ast());
+		//node->item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->item_list.push_back(move(to_push));
 	}
 
 	FOR_PT(p, flingTypenameOrModname_ArrDim)
 	{
 		p->accept(this);
-		node->arr_dim_list.push_back(_pop_ast());
+		//node->arr_dim_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->arr_dim_list.push_back(move(to_push));
 	}
 
 	return nullptr;
@@ -2588,7 +2837,10 @@ antlrcpp::Any PtVisitor::visitFlingTypenameOrModname_Builtin
 	FOR_PT(p, flingTypenameOrModname_ArrDim)
 	{
 		p->accept(this);
-		node->arr_dim_list.push_back(_pop_ast());
+		//node->arr_dim_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->arr_dim_list.push_back(move(to_push));
 	}
 
 	return nullptr;
@@ -2602,10 +2854,10 @@ antlrcpp::Any PtVisitor::visitFlingTypenameOrModname_Builtin
 		DEFER_PUSH(node, type); \
 		\
 		JUST_ACCEPT(pt_node); \
-		node->left = _pop_ast(); \
+		_pop_ast(node->left); \
 		\
 		JUST_ACCEPT(flingExpr); \
-		node->right = _pop_ast(); \
+		_pop_ast(node->right); \
 	}
 
 antlrcpp::Any PtVisitor::visitFlingExpr
@@ -2794,7 +3046,7 @@ antlrcpp::Any PtVisitor::visitFlingExpr_Mul_Or_Div_Or_Mod
 			DEFER_PUSH(node, type); \
 			\
 			JUST_ACCEPT(flingExpr); \
-			node->to_feed = _pop_ast(); \
+			_pop_ast(node->to_feed); \
 		}
 	EVAL(MAP_PAIRS(X, ELSE,
 		PunctPlus, ExprUnopPlus,
@@ -3036,7 +3288,10 @@ antlrcpp::Any PtVisitor::visitFlingExpr_IdentEtc
 		FOR_PT(p, flingExpr_IdentEtc_NonSelfItem)
 		{
 			p->accept(this);
-			node->opt_later_item_list.push_back(_pop_ast());
+			//node->opt_later_item_list.push_back(_pop_ast());
+			BaseSptr to_push;
+			_pop_ast(to_push);
+			node->opt_later_item_list.push_back(move(to_push));
 		}
 	}
 	CHECK(flingExpr_IdentEtc_DollarFuncSuffix)
@@ -3104,7 +3359,10 @@ antlrcpp::Any PtVisitor::visitFlingExpr_IdentEtc_NonSelfItem
 	FOR_PT(p, flingExpr_IdentEtc_Item_End)
 	{
 		p->accept(this);
-		node->end_item_list.push_back(_pop_ast());
+		//node->end_item_list.push_back(_pop_ast());
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		node->end_item_list.push_back(move(to_push));
 	}
 
 	return nullptr;
@@ -3142,12 +3400,12 @@ antlrcpp::Any PtVisitor::visitFlingExpr_IdentEtc_Item_End_Index
 		ctx->PunctMinusColon(), Kind::MinusColon);
 
 	expr.at(0)->accept(this);
-	node->left = _pop_ast();
+	_pop_ast(node->left);
 
 	if (node->kind != Kind::Single)
 	{
 		expr.at(1)->accept(this);
-		node->opt_right = _pop_ast();
+		_pop_ast(node->opt_right);
 	}
 
 	return nullptr;
@@ -3168,7 +3426,7 @@ antlrcpp::Any PtVisitor::visitFlingExpr_Cast
 	{
 		internal_err(visitFlingExpr_Cast);
 	}
-	node->to_cast = _pop_ast();
+	_pop_ast(node->to_cast);
 	JUST_ACCEPT_AND_POP_AST
 		(node->typename_or_modname, flingTypenameOrModname);
 
@@ -3189,7 +3447,7 @@ antlrcpp::Any PtVisitor::visitFlingExpr_CallSubprog_PseudoOper
 	{
 		internal_err(visitFlingExpr_CallSubprog_PseudoOper);
 	}
-	node->left = _pop_ast();
+	_pop_ast(node->left);
 
 	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
 	ACCEPT_AND_POP_AST_IF(node->opt_param_list, flingInstParamList);

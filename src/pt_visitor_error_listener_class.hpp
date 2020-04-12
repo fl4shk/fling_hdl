@@ -11,7 +11,13 @@ namespace fling_hdl
 
 class PtVisitorErrorListener : public antlr4::ANTLRErrorListener
 {
+private:		// variables
+	string* _filename = nullptr;
 public:		// functions
+	inline PtVisitorErrorListener(string* s_filename)
+		: _filename(s_filename)
+	{
+	}
 	virtual ~PtVisitorErrorListener();
 
 	void syntaxError(antlr4::Recognizer *recognizer, 

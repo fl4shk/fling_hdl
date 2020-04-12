@@ -46,5 +46,6 @@ fling_hdl
 fling_hdl_debug
 *.elf
 *.dot
+*.pdf
 *.v
 src/gen_src

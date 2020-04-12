@@ -14,7 +14,7 @@ void AstToDotConverter::convert(const string& dst_filename,
 	_file.open(dst_filename, std::ios_base::out | std::ios_base::trunc);
 
 	osprintout(_file,
-		"digraph ", src_filename, "\n",
+		"digraph ", "file", "\n",
 		"{\n",
 		"\tordering=out;\n",
 		"\tclusterrank=global;\n",
@@ -71,6 +71,12 @@ void AstToDotConverter::_print_dot_wires(size_t level)
 {
 	for (const auto& p: _node_vec.at(level))
 	{
+		if (_conn_map.count(p) == 0)
+		{
+			//printout("RIP\n");
+			continue;
+		}
+
 		const auto& conn = _conn_map.at(p);
 		osprintout(_file,
 			"\t", _node_name(p), " -> ", _node_name(conn),
@@ -102,7 +108,7 @@ void AstToDotConverter::_print_dot_wires(size_t level)
 #define build(type, ...) \
 	void AstToDotConverter::_build_label_map(type* n) \
 	{ \
-		string temp = #type; \
+		string temp = sconcat(#type, ":  "); \
 		temp += strappcom2(__VA_ARGS__); \
 		_label_map[n] = move(temp); \
 	}
@@ -192,7 +198,7 @@ build(DeclAlias_Module)
 void AstToDotConverter::_build_label_map
 	(IdentList* n)
 {
-	string to_insert = "data(";
+	string to_insert = "IdentList:  data(";
 
 	for (auto iter=n->data.begin(); iter!=n->data.end(); ++iter)
 	{
@@ -212,7 +218,21 @@ void AstToDotConverter::_build_label_map
 void AstToDotConverter::_build_label_map
 	(ScopedIdent* n)
 {
-	_build_label_map(static_cast<IdentList*>(n));
+	string to_insert = "ScopedIdent:  data(";
+
+	for (auto iter=n->data.begin(); iter!=n->data.end(); ++iter)
+	{
+		to_insert += iter->data;
+
+		auto temp = iter;
+		++temp;
+		if (temp != n->data.end())
+		{
+			to_insert += ", ";
+		}
+	}
+	to_insert += ")";
+	_label_map[n] = move(to_insert);
 }
 
 build(ImportList)

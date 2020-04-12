@@ -12,9 +12,8 @@ void PtVisitorErrorListener::syntaxError(antlr4::Recognizer *recognizer,
 	size_t charPositionInLine, const std::string &msg, 
 	std::exception_ptr e)
 {
-	printerr("Syntax error on line ", line, 
-		", position ", charPositionInLine, 
-		":  ", msg, "\n");
+	printerr("Syntax error at ", *_filename, ":", line, ":",
+		charPositionInLine, ":  ", msg, "\n");
 	exit(1);
 }
 void PtVisitorErrorListener::reportAmbiguity(antlr4::Parser *recognizer, 

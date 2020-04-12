@@ -5,365 +5,365 @@ module SmallCpu
 (
 	bus: interface Bus<MAIN_WIDTH>
 )
-	import small_cpu_pkg::all
+	//import small_cpu_pkg::all
 {
-	//--------
-	import instr_pkg::Opcode, instr_pkg::GprInd;
-	//--------
+	////--------
+	//import instr_pkg::Opcode, instr_pkg::GprInd;
+	////--------
 
-	//--------
-	curr_enc_instr: wire instr_pkg::EncInstr<MAIN_WIDTH>
-		:= bus.in.read_data;
+	////--------
+	//curr_enc_instr: wire instr_pkg::EncInstr<MAIN_WIDTH>
+	//	:= bus.in.read_data;
 
-	NUM_BYTES_PER_INSTR: const size_t = (MAIN_WIDTH as size_t) / 8;
+	//NUM_BYTES_PER_INSTR: const size_t = (MAIN_WIDTH as size_t) / 8;
 
-	alias MainData: type = logic<MAIN_WIDTH as size_t>;
-	//--------
+	//alias MainData: type = logic<MAIN_WIDTH as size_t>;
+	////--------
 
-	//--------
-	class Locals
-	{
-		//--------
-		enum State
-		{
-			Fetch,
-			GrantInt,
-			DecodeAndSave,
-			Exec,
-			Ldr,
-			Str,
-		}
-		state: State;
-		//--------
+	//////--------
+	////class Locals
+	////{
+	////	//--------
+	////	enum State
+	////	{
+	////		Fetch,
+	////		GrantInt,
+	////		DecodeAndSave,
+	////		Exec,
+	////		Ldr,
+	////		Str,
+	////	}
+	////	state: State;
+	////	//--------
 
-		//--------
-		priv _dec_instr: instr_pkg::DecInstr<MAIN_WIDTH>;
-		task update_dec_instr()
-		{
-			self._dec_instr.init(curr_enc_instr);
-		}
-		const func dec_instr(): auto
-		{
-			return self._dec_instr;
-		}
-		//--------
+	////	//--------
+	////	priv _dec_instr: instr_pkg::DecInstr<MAIN_WIDTH>;
+	////	task update_dec_instr()
+	////	{
+	////		self._dec_instr.init(curr_enc_instr);
+	////	}
+	////	const func dec_instr(): auto
+	////	{
+	////		return self._dec_instr;
+	////	}
+	////	//--------
 
-		//--------
-		static GPR_FILE_SIZE: const size_t
-			= (1 as size_t) lsl instr_pkg::NON_SIMM_FIELD_WIDTH;
+	////	//--------
+	////	static GPR_FILE_SIZE: const size_t
+	////		= (1 as size_t) lsl instr_pkg::NON_SIMM_FIELD_WIDTH;
 
-		gpr_file: MainData[0..GPR_FILE_SIZE - 1];
-		reg_pc: MainData;
-		reg_ie: logic;
+	////	gpr_file: MainData[0 .. GPR_FILE_SIZE - 1];
+	////	reg_pc: MainData;
+	////	reg_ie: logic;
 
-		task set_gpr_a
-		(
-			n_gpr_a: input MainData
-		)
-		{
-			self.gpr_file[self.dec_instr().gpr_a_ind] := n_gpr_a;
-		}
-		//--------
+	////	task set_gpr_a
+	////	(
+	////		n_gpr_a: input MainData
+	////	)
+	////	{
+	////		self.gpr_file[self.dec_instr().gpr_a_ind] := n_gpr_a;
+	////	}
+	////	//--------
 
-		//--------
-		priv _saved_gpr_a, _saved_gpr_b, _saved_gpr_ira: MainData;
-		priv _saved_gpr_a_is_zero, _saved_gpr_a_is_non_zero: logic;
-		priv _saved_ldst_addr: MainData;
-		priv const func _gpr_a(): auto
-		{
-			return self.gpr_file[self.dec_instr().gpr_a_ind];
-		}
-		priv const func _gpr_b(): auto
-		{
-			return self.gpr_file[self.dec_instr().gpr_b_ind];
-		}
+	////	//--------
+	////	priv _saved_gpr_a, _saved_gpr_b, _saved_gpr_ira: MainData;
+	////	priv _saved_gpr_a_is_zero, _saved_gpr_a_is_non_zero: logic;
+	////	priv _saved_ldst_addr: MainData;
+	////	priv const func _gpr_a(): auto
+	////	{
+	////		return self.gpr_file[self.dec_instr().gpr_a_ind];
+	////	}
+	////	priv const func _gpr_b(): auto
+	////	{
+	////		return self.gpr_file[self.dec_instr().gpr_b_ind];
+	////	}
 
-		task update_saved_stuff()
-		{
-			self._saved_gpr_a := self._gpr_a();
-			self._saved_gpr_b := self._gpr_b();
-			self._saved_gpr_ira := self.gpr_file[GprInd::Ira];
+	////	task update_saved_stuff()
+	////	{
+	////		self._saved_gpr_a := self._gpr_a();
+	////		self._saved_gpr_b := self._gpr_b();
+	////		self._saved_gpr_ira := self.gpr_file[GprInd::Ira];
 
-			self._saved_gpr_a_is_zero := self._gpr_a() == 0;
-			self._saved_gpr_a_is_non_zero := self._gpr_a() != 0;
+	////		self._saved_gpr_a_is_zero := self._gpr_a() == 0;
+	////		self._saved_gpr_a_is_non_zero := self._gpr_a() != 0;
 
-			self._saved_ldst_addr := self._gpr_b()
-				+ curr_enc_instr.ext_simm();
-		}
+	////		self._saved_ldst_addr := self._gpr_b()
+	////			+ curr_enc_instr.ext_simm();
+	////	}
 
-		const func saved_gpr_a(): auto
-		{
-			return self._saved_gpr_a;
-		}
-		const func saved_gpr_b(): auto
-		{
-			return self._saved_gpr_b;
-		}
-		const func saved_gpr_ira(): auto
-		{
-			return self._saved_gpr_ira;
-		}
+	////	const func saved_gpr_a(): auto
+	////	{
+	////		return self._saved_gpr_a;
+	////	}
+	////	const func saved_gpr_b(): auto
+	////	{
+	////		return self._saved_gpr_b;
+	////	}
+	////	const func saved_gpr_ira(): auto
+	////	{
+	////		return self._saved_gpr_ira;
+	////	}
 
-		const func saved_gpr_a_is_zero(): auto
-		{
-			return self._saved_gpr_a_is_zero;
-		}
-		const func saved_gpr_a_is_non_zero(): auto
-		{
-			return self._saved_gpr_a_is_non_zero;
-		}
+	////	const func saved_gpr_a_is_zero(): auto
+	////	{
+	////		return self._saved_gpr_a_is_zero;
+	////	}
+	////	const func saved_gpr_a_is_non_zero(): auto
+	////	{
+	////		return self._saved_gpr_a_is_non_zero;
+	////	}
 
-		const func saved_mem_acc_is_ldr(): auto
-		{
-			return self._saved_mem_acc_is_ldr;
-		}
-		const func saved_ldst_addr(): auto
-		{
-			return self._saved_ldst_addr;
-		}
-		//--------
+	////	const func saved_mem_acc_is_ldr(): auto
+	////	{
+	////		return self._saved_mem_acc_is_ldr;
+	////	}
+	////	const func saved_ldst_addr(): auto
+	////	{
+	////		return self._saved_ldst_addr;
+	////	}
+	////	//--------
 
-		//--------
-		task prep_fetch_instr
-		(
-			addr: in MainData
-		)
-		{
-			self.state := State::Fetch;
-			bus.out.prep_bus_read(addr);
-		}
-		task prep_fetch_pc_instr()
-		{
-			prep_fetch_instr(self.reg_pc);
-		}
-		//--------
-	}
-	loc: Locals;
-	alias State: type = Locals::State;
-	//--------
+	////	//--------
+	////	task prep_fetch_instr
+	////	(
+	////		addr: input MainData
+	////	)
+	////	{
+	////		self.state := State::Fetch;
+	////		bus.out.prep_bus_read(addr);
+	////	}
+	////	task prep_fetch_pc_instr()
+	////	{
+	////		prep_fetch_instr(self.reg_pc);
+	////	}
+	////	//--------
+	////}
+	////loc: Locals;
+	////alias State: type = Locals::State;
+	//////--------
 
-	//--------
-	seq posedge bus.in.clk
-	{
-		//--------
-		if !bus.in.rst_n
-		{
-			// VHDL-style iteration that I stole because I loved it.
-			for i in loc.gpr_file$range
-			{
-				loc.gpr_file[i] := 0;
-			}
+	//////--------
+	////seq posedge bus.in.clk
+	////{
+	////	//--------
+	////	if !bus.in.rst_n
+	////	{
+	////		// VHDL-style iteration that I stole because I loved it.
+	////		for i: loc.gpr_file$range
+	////		{
+	////			loc.gpr_file[i] := 0;
+	////		}
 
-			// We start with interrupts disabled.  User code has to turn
-			// them on with `Eint`.
-			loc.reg_ie := 0;
+	////		// We start with interrupts disabled.  User code has to turn
+	////		// them on with `Eint`.
+	////		loc.reg_ie := 0;
 
-			loc.prep_fetch_instr(0);
-			bus.out.igt := 0;
-		}
-		else // if bus.in.rst_n
-		{
-			switch loc.state
-			{
-			//--------
-			State::Fetch
-			{
-				if bus.in.irq && loc.reg_ie
-				{
-					loc.state := State::GrantInt;
-					bus.out.igt := 1;
-				}
-				elif bus.in.acc_ready
-				{
-					loc.state := State::DecodeAndSave;
-				}
-			}
+	////		loc.prep_fetch_instr(0);
+	////		bus.out.igt := 0;
+	////	}
+	////	else // if bus.in.rst_n
+	////	{
+	////		switch loc.state
+	////		{
+	////		//--------
+	////		State::Fetch
+	////		{
+	////			if bus.in.irq && loc.reg_ie
+	////			{
+	////				loc.state := State::GrantInt;
+	////				bus.out.igt := 1;
+	////			}
+	////			elif bus.in.acc_ready
+	////			{
+	////				loc.state := State::DecodeAndSave;
+	////			}
+	////		}
 
-			State::GrantInt
-			{
-				// The outside world is expected to look for a change of
-				// this from 0 to 1, so we set it back to zero.
-				bus.out.igt := 0; 
+	////		State::GrantInt
+	////		{
+	////			// The outside world is expected to look for a change of
+	////			// this from 0 to 1, so we set it back to zero.
+	////			bus.out.igt := 0; 
 
-				// Disable interrupts so that we don't end up with an
-				// interrupt storm.
-				loc.reg_ie := 0;
+	////			// Disable interrupts so that we don't end up with an
+	////			// interrupt storm.
+	////			loc.reg_ie := 0;
 
-				// Save the program counter to the interrupt return address
-				// register.  This is as opposed to pushing the interrupt
-				// return address onto the stack.
-				loc.gpr_file[GprInd::Ira] := loc.reg_pc;
+	////			// Save the program counter to the interrupt return address
+	////			// register.  This is as opposed to pushing the interrupt
+	////			// return address onto the stack.
+	////			loc.gpr_file[GprInd::Ira] := loc.reg_pc;
 
-				// A register, `ida`, is used as the interrupt destination
-				// adddress.
-				loc.reg_pc := loc.gpr_file[GprInd::Ida];
+	////			// A register, `ida`, is used as the interrupt destination
+	////			// adddress.
+	////			loc.reg_pc := loc.gpr_file[GprInd::Ida];
 
-				// We have to set this to the same address as the new
-				// program counter, so we fetch from the value of the
-				// general-purpose register `ida`.
-				loc.prep_fetch_instr(loc.gpr_file[GprInd::Ida]);
-			}
+	////			// We have to set this to the same address as the new
+	////			// program counter, so we fetch from the value of the
+	////			// general-purpose register `ida`.
+	////			loc.prep_fetch_instr(loc.gpr_file[GprInd::Ida]);
+	////		}
 
-			// We also save some values here for later states.  This is
-			// done to shrink the longest combinational logic paths of the
-			// design.
-			State::DecodeAndSave
-			{
-				loc.state := State::Exec;
+	////		// We also save some values here for later states.  This is
+	////		// done to shrink the longest combinational logic paths of the
+	////		// design.
+	////		State::DecodeAndSave
+	////		{
+	////			loc.state := State::Exec;
 
-				loc.update_dec_instr();
-				loc.reg_pc := loc.reg_pc + NUM_BYTES_PER_INSTR;
+	////			loc.update_dec_instr();
+	////			loc.reg_pc := loc.reg_pc + NUM_BYTES_PER_INSTR;
 
-				loc.update_saved_stuff();
-			}
+	////			loc.update_saved_stuff();
+	////		}
 
-			State::Exec
-			{
-				//--------
-				switch loc.dec_instr().op
-				{
-				//--------
-				Opcode::Add
-				{
-					loc.set_gpr_a(n_gpr_a => loc.saved_gpr_a()
-						+ loc.saved_gpr_b());
-					loc.prep_fetch_pc_instr();
-				}
-				Opcode::Sub
-				{
-					loc.set_gpr_a(n_gpr_a => loc.saved_gpr_a()
-						- loc.saved_gpr_b());
-					loc.prep_fetch_pc_instr();
-				}
-				Opcode::Sltu
-				{
-					loc.set_gpr_a(n_gpr_a => loc.saved_gpr_a()
-						< loc.saved_gpr_b());
-					loc.prep_fetch_pc_instr();
-				}
-				Opcode::Addi
-				{
-					loc.set_gpr_a(n_gpr_a => loc.saved_gpr_a()
-						+ loc.dec_instr().signext_imm);
-					loc.prep_fetch_pc_instr();
-				}
+	////		State::Exec
+	////		{
+	////			//--------
+	////			switch loc.dec_instr().op
+	////			{
+	////			//--------
+	////			Opcode::Add
+	////			{
+	////				loc.set_gpr_a(n_gpr_a => loc.saved_gpr_a()
+	////					+ loc.saved_gpr_b());
+	////				loc.prep_fetch_pc_instr();
+	////			}
+	////			Opcode::Sub
+	////			{
+	////				loc.set_gpr_a(n_gpr_a => loc.saved_gpr_a()
+	////					- loc.saved_gpr_b());
+	////				loc.prep_fetch_pc_instr();
+	////			}
+	////			Opcode::Sltu
+	////			{
+	////				loc.set_gpr_a(n_gpr_a => loc.saved_gpr_a()
+	////					< loc.saved_gpr_b());
+	////				loc.prep_fetch_pc_instr();
+	////			}
+	////			Opcode::Addi
+	////			{
+	////				loc.set_gpr_a(n_gpr_a => loc.saved_gpr_a()
+	////					+ loc.dec_instr().signext_imm);
+	////				loc.prep_fetch_pc_instr();
+	////			}
 
-				Opcode::AddiPc
-				{
-					loc.set_gpr_a(n_gpr_a => loc.reg_pc
-						+ loc.dec_instr().signext_imm);
-					loc.prep_fetch_pc_instr();
-				}
-				Opcode::Bzo
-				{
-					if (loc.saved_gpr_a_is_zero())
-					{
-						loc.reg_pc := loc.reg_pc
-							+ loc.dec_instr().signext_imm;
-						loc.prep_fetch_instr(addr => loc.reg_pc
-							+ loc.dec_instr().signext_imm);
-					}
-					else
-					{
-						loc.prep_fetch_pc_instr();
-					}
-				}
-				Opcode::Bnz
-				{
-					if (loc.saved_gpr_a_is_non_zero())
-					{
-						loc.reg_pc := loc.reg_pc
-							+ loc.dec_instr().signext_imm;
-						loc.prep_fetch_instr(addr => loc.reg_pc
-							+ loc.dec_instr().signext_imm);
-					}
-					else
-					{
-						loc.prep_fetch_pc_instr();
-					}
-				}
-				Opcode::Jmp
-				{
-					loc.reg_pc := loc.saved_gpr_a();
-					loc.prep_fetch_instr(addr => loc.saved_gpr_a());
-				}
+	////			Opcode::AddiPc
+	////			{
+	////				loc.set_gpr_a(n_gpr_a => loc.reg_pc
+	////					+ loc.dec_instr().signext_imm);
+	////				loc.prep_fetch_pc_instr();
+	////			}
+	////			Opcode::Bzo
+	////			{
+	////				if (loc.saved_gpr_a_is_zero())
+	////				{
+	////					loc.reg_pc := loc.reg_pc
+	////						+ loc.dec_instr().signext_imm;
+	////					loc.prep_fetch_instr(addr => loc.reg_pc
+	////						+ loc.dec_instr().signext_imm);
+	////				}
+	////				else
+	////				{
+	////					loc.prep_fetch_pc_instr();
+	////				}
+	////			}
+	////			Opcode::Bnz
+	////			{
+	////				if (loc.saved_gpr_a_is_non_zero())
+	////				{
+	////					loc.reg_pc := loc.reg_pc
+	////						+ loc.dec_instr().signext_imm;
+	////					loc.prep_fetch_instr(addr => loc.reg_pc
+	////						+ loc.dec_instr().signext_imm);
+	////				}
+	////				else
+	////				{
+	////					loc.prep_fetch_pc_instr();
+	////				}
+	////			}
+	////			Opcode::Jmp
+	////			{
+	////				loc.reg_pc := loc.saved_gpr_a();
+	////				loc.prep_fetch_instr(addr => loc.saved_gpr_a());
+	////			}
 
-				Opcode::And
-				{
-					loc.set_gpr_a(n_gpr_a => loc.saved_gpr_a()
-						& loc.saved_gpr_b());
-					loc.prep_fetch_pc_instr();
-				}
-				Opcode::Or
-				{
-					loc.set_gpr_a(n_gpr_a => loc.saved_gpr_a()
-						| loc.saved_gpr_b());
-					loc.prep_fetch_pc_instr();
-				}
-				Opcode::Xor
-				{
-					loc.set_gpr_a(n_gpr_a => loc.saved_gpr_a()
-						^ loc.saved_gpr_b());
-					loc.prep_fetch_pc_instr();
-				}
-				Opcode::Ldr
-				{
-					bus.out.prep_bus_read(addr => loc.saved_ldst_addr());
-					loc.state := State::Ldr;
-				}
+	////			Opcode::And
+	////			{
+	////				loc.set_gpr_a(n_gpr_a => loc.saved_gpr_a()
+	////					& loc.saved_gpr_b());
+	////				loc.prep_fetch_pc_instr();
+	////			}
+	////			Opcode::Or
+	////			{
+	////				loc.set_gpr_a(n_gpr_a => loc.saved_gpr_a()
+	////					| loc.saved_gpr_b());
+	////				loc.prep_fetch_pc_instr();
+	////			}
+	////			Opcode::Xor
+	////			{
+	////				loc.set_gpr_a(n_gpr_a => loc.saved_gpr_a()
+	////					^ loc.saved_gpr_b());
+	////				loc.prep_fetch_pc_instr();
+	////			}
+	////			Opcode::Ldr
+	////			{
+	////				bus.out.prep_bus_read(addr => loc.saved_ldst_addr());
+	////				loc.state := State::Ldr;
+	////			}
 
-				Opcode::Str
-				{
-					bus.out.prep_bus_write(addr => loc.saved_ldst_addr(),
-						write_data => loc.saved_gpr_a());
-					loc.state := State::Str;
-				}
-				Opcode::Eint
-				{
-					loc.reg_ie := 1;
-					loc.prep_fetch_pc_instr();
-				}
-				Opcode::Dint
-				{
-					loc.reg_ie := 0;
-					loc.prep_fetch_pc_instr();
-				}
-				Opcode::Reti
-				{
-					loc.reg_ie := 1;
-					loc.reg_pc := loc.saved_gpr_ira();
-					loc.prep_fetch_instr(addr => loc.saved_gpr_ira());
-				}
-				//--------
-				}
-				//--------
-			}
+	////			Opcode::Str
+	////			{
+	////				bus.out.prep_bus_write(addr => loc.saved_ldst_addr(),
+	////					write_data => loc.saved_gpr_a());
+	////				loc.state := State::Str;
+	////			}
+	////			Opcode::Eint
+	////			{
+	////				loc.reg_ie := 1;
+	////				loc.prep_fetch_pc_instr();
+	////			}
+	////			Opcode::Dint
+	////			{
+	////				loc.reg_ie := 0;
+	////				loc.prep_fetch_pc_instr();
+	////			}
+	////			Opcode::Reti
+	////			{
+	////				loc.reg_ie := 1;
+	////				loc.reg_pc := loc.saved_gpr_ira();
+	////				loc.prep_fetch_instr(addr => loc.saved_gpr_ira());
+	////			}
+	////			//--------
+	////			}
+	////			//--------
+	////		}
 
-			State::Ldr
-			{
-				loc.set_gpr_a(n_gpr_a => bus.in.read_data);
-				if bus.in.acc_ready
-				{
-					loc.prep_fetch_pc_instr();
-				}
-			}
+	////		State::Ldr
+	////		{
+	////			loc.set_gpr_a(n_gpr_a => bus.in.read_data);
+	////			if bus.in.acc_ready
+	////			{
+	////				loc.prep_fetch_pc_instr();
+	////			}
+	////		}
 
-			State::Str
-			{
-				if bus.in.acc_ready
-				{
-					loc.prep_fetch_pc_instr();
-				}
-			}
+	////		State::Str
+	////		{
+	////			if bus.in.acc_ready
+	////			{
+	////				loc.prep_fetch_pc_instr();
+	////			}
+	////		}
 
-			default
-			{
-				// Eek!
-			}
-			//--------
-			}
-		}
-		//--------
-	}
-	//--------
+	////		default
+	////		{
+	////			// Eek!
+	////		}
+	////		//--------
+	////		}
+	////	}
+	////	//--------
+	////}
+	//////--------
 }

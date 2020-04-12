@@ -66,11 +66,11 @@ private:		// variables
 	ast::Program* _ast = nullptr;
 	ast::Base* _curr_ast_parent = nullptr;
 
-	stack<string> _str_stack;
-	stack<BigNum> _num_stack;
+	stack<unique_ptr<string>> _str_stack;
+	stack<unique_ptr<BigNum>> _num_stack;
 	
-	stack<ast::BaseSptr> _ast_stack;
-	stack<ast::BaseSptrList> _ast_list_stack;
+	stack<unique_ptr<ast::BaseSptr>> _ast_stack;
+	stack<unique_ptr<ast::BaseSptrList>> _ast_list_stack;
 public:		// misc functions
 	template<typename Type>
 	static inline Type* as(ast::BaseSptr& base_sptr)
@@ -80,59 +80,50 @@ public:		// misc functions
 private:		// misc functions
 	inline void _push_str(const string& to_push)
 	{
-		_str_stack.push(to_push);
+		_str_stack.push(unique_ptr<string>(new string(to_push)));
 	}
-	inline auto _get_top_str()
+	inline void _pop_str(string& to_set)
 	{
-		return _str_stack.top();
-	}
-	inline auto _pop_str()
-	{
-		auto ret = _str_stack.top();
+		to_set = move(*_str_stack.top());
+		_str_stack.top().reset(nullptr);
 		_str_stack.pop();
-		return ret;
 	}
 
 	inline void _push_num(const BigNum& to_push)
 	{
-		_num_stack.push(to_push);
+		_num_stack.push(unique_ptr<BigNum>(new BigNum(to_push)));
 	}
-	inline auto _get_top_num()
+	inline void _pop_num(BigNum& to_set)
 	{
-		return _num_stack.top();
-	}
-	inline auto _pop_num()
-	{
-		auto ret = _num_stack.top();
+		to_set = move(*_num_stack.top());
+		_num_stack.top().reset(nullptr);
 		_num_stack.pop();
-		return ret;
 	}
 
 	inline void _push_ast(ast::Base* to_push)
 	{
-		_ast_stack.push(ast::BaseSptr(to_push));
+		_ast_stack.push(unique_ptr<ast::BaseSptr>
+			(new ast::BaseSptr(to_push)));
 	}
-	inline auto _get_top_ast()
+	inline void _pop_ast(ast::BaseSptr& to_set)
 	{
-		return _ast_stack.top();
-	}
-	inline auto _pop_ast()
-	{
-		auto ret = _ast_stack.top();
+		to_set = move(*_ast_stack.top());
+		_ast_stack.top().reset(nullptr);
 		_ast_stack.pop();
-		return ret;
 	}
 
 	inline void _push_ast_list(ast::BaseSptrList&& to_push)
 	{
-		_ast_list_stack.push(move(to_push));
+		_ast_list_stack.push(unique_ptr<ast::BaseSptrList>
+			(new ast::BaseSptrList(move(to_push))));
 	}
-	inline auto&& _pop_ast_list()
+	inline void _pop_ast_list(ast::BaseSptrList& to_set)
 	{
-		auto&& ret = move(_ast_list_stack.top());
+		to_set = move(*_ast_list_stack.top());
+		_ast_list_stack.top().reset(nullptr);
 		_ast_list_stack.pop();
-		return ret;
 	}
+
 
 	inline void _internal_err(antlr4::ParserRuleContext* ctx,
 		const string& func) const
@@ -148,7 +139,7 @@ private:		// misc functions
 		RemOutputTypes&&... rem_outputs)
 	{
 		pt_node_vec.at(i)->accept(this);
-		first_output = _pop_ast();
+		_pop_ast(first_output);
 
 		if constexpr (sizeof...(rem_outputs) > 0)
 		{

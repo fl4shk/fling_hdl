@@ -98,9 +98,9 @@ Master::Master(int s_argc, char** s_argv)
 					printerr("Error:  invalid option \"", arg, "\".\n");
 					usage();
 				}
+				++i;
 			}
 
-			++i;
 		} while ((i < _argc) && (oa.valid()));
 	}
 
