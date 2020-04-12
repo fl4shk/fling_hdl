@@ -62,7 +62,7 @@ package small_cpu_pkg
 
 			//--------
 			read_data: MainData;
-			read_ready: logic;
+			acc_ready: logic;
 			//--------
 
 			//--------
@@ -115,83 +115,101 @@ package small_cpu_pkg
 
 	package instr_pkg
 	{
+		//--------
 		NON_SIMM_FIELD_WIDTH: const size_t = 4;
+		alias NonSimmField: type = logic<NON_SIMM_FIELD_WIDTH>;
+		//--------
 
-		enum Opcode: logic<NON_SIMM_FIELD_WIDTH>
+		//--------
+		enum Opcode: NonSimmField
 		{
 			Add,
 			Sub,
 			Sltu,
-			Slts,
-
 			Addi,
-			AddiPc,
-			Jmp,
-			Bzo,
 
+			AddiPc,
+			Bzo,
 			Bnz,
+			Jmp,
+
 			And,
 			Or,
 			Xor,
-
 			Ldr,
+
 			Str,
-			Ei,
-			Di,
+
+			// Enable interrupts
+			Eint,
+
+			// Disable interrupts
+			Dint,
+
+			// Enable interrupts and jump to the `ira` general-purpose
+			// register
+			Reti,
 		}
 
-		enum RegInd: logic<NON_SIMM_FIELD_WIDTH>
+		enum GprInd: NonSimmField
 		{
+			Ira,
+			Ida,
 			U0,
 			U1,
+
 			U2,
 			U3,
-
 			U4,
 			U5,
+
 			U6,
 			U7,
-
 			U8,
 			U9,
-			U10,
-			Ida,
 
-			Ira,
+			U10,
 			Lr,
 			Fp,
 			Sp,
 		}
+		//--------
 
-		base class packed EncOrDecInstrSharedStuff
+		//--------
+		base class packed EncOrDecInstrBase
 		<
 			MAIN_WIDTH: MainWidth
 		>
 		{
+			//--------
 			alias MainData: type = logic<MAIN_WIDTH as size_t>;
+			//--------
 
+			//--------
 			op: Opcode;
-			reg_a, reg_b: RegInd;
+			gpr_a_ind, gpr_b_ind: GprInd;
+			//--------
 		}
+		//--------
 
+		//--------
 		class packed EncInstr
 		<
 			MAIN_WIDTH: MainWidth
 		>
-			extends EncOrDecInstrSharedStuff<MAIN_WIDTH>
+			extends EncOrDecInstrBase<MAIN_WIDTH>
 		{
 			//--------
 			static SIMM_FIELD_WIDTH: const size_t 
 				= (MAIN_WIDTH as size_t)
-				- EncOrDecInstrSharedStuff<MAIN_WIDTH>$size;
+				- EncOrDecInstrBase<MAIN_WIDTH>$size;
 
-			static alias Simm: type = logic<SIMM_FIELD_WIDTH>;
-			static EXT_AMOUNT: const size_t = MainData$size - Simm$size;
-			simm: Simm;
+			simm: logic<SIMM_FIELD_WIDTH>;
 
-			const func ext_simm(): MainData
+			const func ext_simm(): dyn MainData
 			{
-				return cat(sized(EXT_AMOUNT, simm$lastel), simm);
+				return cat(sized(MainData$size - self.simm$size,
+					self.simm$lastel), self.simm);
 			}
 			//--------
 		}
@@ -199,9 +217,25 @@ package small_cpu_pkg
 		<
 			MAIN_WIDTH: MainWidth
 		>
-			extends EncOrDecInstrSharedStuff<MAIN_WIDTH>
+			extends EncOrDecInstrBase<MAIN_WIDTH>
 		{
+			//--------
 			signext_imm: MainData;
+			//--------
+
+			//--------
+			task init
+			(
+				enc_instr: input EncInstr<MAIN_WIDTH>
+			)
+			{
+				cat(self.op, self.gpr_a_ind, self.gpr_b_ind)
+					:= cat(enc_instr.op, enc_instr.gpr_a_ind,
+						enc_instr.gpr_b_ind);
+				self.signext_imm := enc_instr.ext_simm();
+			}
+			//--------
 		}
+		//--------
 	}
 }

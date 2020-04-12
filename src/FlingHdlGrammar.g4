@@ -890,11 +890,11 @@ flingTypenameOrModname:
 	| flingTypenameOrModname_Typeof
 	| flingTypenameOrModname_Builtin
 
-	| (KwDyn | KwWeakRef)? (KwSelfT | KwRetT)
+	| (KwDyn | KwWeakref)? (KwSelfT | KwRetT)
 	;
 
 flingTypenameOrModname_Cstm:
-	(KwDyn | KwWeakRef)? flingTypenameOrModname_Cstm_Item
+	(KwDyn | KwWeakref)? flingTypenameOrModname_Cstm_Item
 	(PunctScopeAccess flingTypenameOrModname_Cstm_Item)*
 		flingTypenameOrModname_ArrDim*
 	;
@@ -913,7 +913,7 @@ flingTypenameOrModname_ArrDim:
 	;
 
 flingTypenameOrModname_Builtin:
-	(KwDyn | KwWeakRef)?
+	(KwDyn | KwWeakref)?
 	(
 		KwSigned? KwLogic flingInstParamList?
 
@@ -1379,7 +1379,7 @@ KwDollarIsvtype: '$isvtype' ;
 
 KwBase: 'base' ;
 KwDyn: 'dyn' ;
-KwWeakRef: 'weak_ref' ;
+KwWeakref: 'weakref' ;
 KwNull: 'null' ;
 KwStatic: 'static' ;
 KwProc: 'proc' ;

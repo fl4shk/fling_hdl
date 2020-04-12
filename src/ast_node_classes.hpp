@@ -686,7 +686,7 @@ public:		// types
 			RetT)
 	}
 public:		// variables
-	bool is_dyn = false, is_weak_ref = false;
+	bool is_dyn = false, is_weakref = false;
 	Kind kind;
 public:		// variables
 	SHARED_FUNC_CONTENTS(TypenameOrModname_Special, Base);
@@ -696,7 +696,7 @@ public:		// variables
 class TypenameOrModname_Cstm: public Base
 {
 public:		// variables
-	bool is_dyn = false, is_weak_ref = false;
+	bool is_dyn = false, is_weakref = false;
 	BaseSptrList item_list, arr_dim_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(TypenameOrModname_Cstm, Base);
@@ -713,7 +713,7 @@ public:		// functions
 class TypenameOrModname_Cstm_Item: public Base
 {
 public:		// variables
-	bool is_dyn = false, is_weak_ref = false;
+	bool is_dyn = false, is_weakref = false;
 	string ident;
 	BaseSptr opt_param_list;
 public:		// functions
@@ -777,7 +777,7 @@ public:		// types
 			Void);
 	}
 public:		// variables
-	bool is_dyn = false, is_weak_ref = false;
+	bool is_dyn = false, is_weakref = false;
 	Kind kind;
 	BaseSptr opt_param_list;
 	BaseSptrList arr_dim_list;

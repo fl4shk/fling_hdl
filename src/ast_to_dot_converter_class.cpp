@@ -218,13 +218,12 @@ void AstToDotConverter::_build_label_map
 build(ImportList)
 build(ImportList_Item, wrap(has_all))
 
-build(TypenameOrModname_Special, wrap(is_dyn, is_weak_ref),
+build(TypenameOrModname_Special, wrap(is_dyn, is_weakref),
 	wrap_conv(kind))
-build(TypenameOrModname_Cstm, wrap(is_dyn, is_weak_ref))
+build(TypenameOrModname_Cstm, wrap(is_dyn, is_weakref))
 build(TypenameOrModname_Typeof)
-build(TypenameOrModname_Cstm_Item, wrap(is_dyn, is_weak_ref, ident))
-build(TypenameOrModname_Builtin, wrap(is_dyn, is_weak_ref),
-	wrap_conv(kind))
+build(TypenameOrModname_Cstm_Item, wrap(is_dyn, is_weakref, ident))
+build(TypenameOrModname_Builtin, wrap(is_dyn, is_weakref), wrap_conv(kind))
 
 #define X(basic_label) \
 	build(basic_label)

@@ -2454,7 +2454,7 @@ antlrcpp::Any PtVisitor::visitFlingTypenameOrModname
 	{
 		DEFER_PUSH(node, TypenameOrModname_Special);
 		node->is_dyn = ctx->KwDyn();
-		node->is_weak_ref = ctx->KwWeakRef();
+		node->is_weak_ref = ctx->KwWeakref();
 
 		using Kind = TypenameOrModname_Special::Kind;
 		if (!_conv_pt_to_enum(node->kind,
@@ -2473,7 +2473,7 @@ antlrcpp::Any PtVisitor::visitFlingTypenameOrModname_Cstm
 	DEFER_PUSH(node, TypenameOrModname_Cstm);
 
 	node->is_dyn = ctx->KwDyn();
-	node->is_weak_ref = ctx->KwWeakRef();
+	node->is_weak_ref = ctx->KwWeakref();
 
 	FOR_PT(p, flingTypenameOrModname_Cstm_Item)
 	{
@@ -2539,7 +2539,7 @@ antlrcpp::Any PtVisitor::visitFlingTypenameOrModname_Builtin
 	DEFER_PUSH(node, TypenameOrModname_Builtin);
 
 	node->is_dyn = ctx->KwDyn();
-	node->is_weak_ref = ctx->KwWeakRef();
+	node->is_weak_ref = ctx->KwWeakref();
 
 	using Kind = TypenameOrModname_Builtin::Kind;
 
