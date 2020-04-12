@@ -9,7 +9,7 @@ Master::Master(int s_argc, char** s_argv)
 {
 	auto usage = [&]() -> void
 	{
-		printerr("Usage:  ", _argv[0], " <options> <input files...>");
+		printerr("Usage:  ", _argv[0], " <options> <input files...>\n");
 		exit(1);
 	};
 
@@ -83,6 +83,12 @@ Master::Master(int s_argc, char** s_argv)
 					if (opt().out_dir.size() != 0)
 					{
 						printerr("Error:  ", oa.errwarn_msg_dup(), "\n");
+						usage();
+					}
+					else if (oa.val().size() == 0)
+					{
+						printerr("Error:  ", oa.errwarn_msg_no_val(),
+							"\n");
 						usage();
 					}
 					_opt.out_dir = oa.val();

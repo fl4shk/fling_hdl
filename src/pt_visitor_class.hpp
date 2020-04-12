@@ -701,6 +701,8 @@ private:		// visitor functions
 	//--------
 	antlrcpp::Any visitFlingExpr_IdentEtc
 		(Parser::FlingExpr_IdentEtcContext *ctx);
+	antlrcpp::Any visitFlingExpr_IdentEtc_DollarFuncSuffix
+		(Parser::FlingExpr_IdentEtc_DollarFuncSuffixContext *ctx);
 	antlrcpp::Any visitFlingExpr_IdentEtc_FirstItem
 		(Parser::FlingExpr_IdentEtc_FirstItemContext *ctx);
 	antlrcpp::Any visitFlingExpr_IdentEtc_NonSelfItem

@@ -3010,25 +3010,51 @@ antlrcpp::Any PtVisitor::visitFlingExpr_IdentEtc
 {
 	DEFER_PUSH(node, ExprIdentEtc);
 
-	using SuffKind = ExprIdentEtc::SuffKind;
+
 	ACCEPT_AND_POP_AST_IF
 		(node->opt_typename_or_modname, flingTypenameOrModname);
-	JUST_ACCEPT_AND_POP_AST
-		(node->first_item, flingExpr_IdentEtc_FirstItem);
-
-	FOR_PT(p, flingExpr_IdentEtc_NonSelfItem)
+	CHECK(flingExpr_IdentEtc_FirstItem)
 	{
-		p->accept(this);
-		node->opt_later_item_list.push_back(_pop_ast());
+
+		JUST_ACCEPT_AND_POP_AST
+			(node->first_item, flingExpr_IdentEtc_FirstItem);
+
+		FOR_PT(p, flingExpr_IdentEtc_NonSelfItem)
+		{
+			p->accept(this);
+			node->opt_later_item_list.push_back(_pop_ast());
+		}
 	}
-	if (!_conv_pt_to_enum(node->suff_kind,
+	CHECK(flingExpr_IdentEtc_DollarFuncSuffix)
+	{
+		BigNum num;
+		JUST_ACCEPT_AND_POP_NUM(num, flingExpr_IdentEtc_DollarFuncSuffix);
+		node->suff_kind = static_cast<ExprIdentEtc::SuffKind>
+			(conv_bignum_to<size_t>(num));
+	}
+	else
+	{
+		node->suff_kind = ExprIdentEtc::SuffKind::None;
+	}
+
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingExpr_IdentEtc_DollarFuncSuffix
+	(Parser::FlingExpr_IdentEtc_DollarFuncSuffixContext *ctx)
+{
+	using SuffKind = ExprIdentEtc::SuffKind;
+	SuffKind to_push;
+
+	if (!_conv_pt_to_enum(to_push,
 		ctx->KwDollarSize(), SuffKind::DollarSize,
 		ctx->KwDollarRange(), SuffKind::DollarRange,
 		ctx->KwDollarHigh(), SuffKind::DollarHigh,
 		ctx->KwDollarLow(), SuffKind::DollarLow))
 	{
-		internal_err(visitFlingExpr_IdentEtc);
+		internal_err(visitFlingExpr_IdentEtc_DollarFuncSuffix);
 	}
+
+	_push_num(static_cast<size_t>(to_push));
 
 	return nullptr;
 }

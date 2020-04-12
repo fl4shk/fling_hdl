@@ -1070,11 +1070,19 @@ flingExpr_KwDollarFuncOf_Pow:
 
 flingExpr_IdentEtc:
 	(flingTypenameOrModname PunctScopeAccess)?
-	flingExpr_IdentEtc_FirstItem
-	(PunctMemberAccess flingExpr_IdentEtc_NonSelfItem)*
+		flingExpr_IdentEtc_FirstItem
+		(PunctMemberAccess flingExpr_IdentEtc_NonSelfItem)*
+		flingExpr_IdentEtc_DollarFuncSuffix?
+	| flingTypenameOrModname flingExpr_IdentEtc_DollarFuncSuffix
 
-	(KwDollarSize | KwDollarRange | KwDollarHigh | KwDollarLow)?
 	;
+flingExpr_IdentEtc_DollarFuncSuffix:
+	KwDollarSize
+	| KwDollarRange
+	| KwDollarHigh
+	| KwDollarLow
+	;
+
 flingExpr_IdentEtc_FirstItem:
 	KwSelf
 	| flingExpr_IdentEtc_NonSelfItem

@@ -45,4 +45,6 @@ types_*.taghl
 fling_hdl
 fling_hdl_debug
 *.elf
+*.dot
+*.v
 src/gen_src

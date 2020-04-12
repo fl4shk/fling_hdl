@@ -1,4 +1,4 @@
-module small_cpu
+module SmallCpu
 <
 	MAIN_WIDTH: MainWidth = MainWidth::W16
 >
