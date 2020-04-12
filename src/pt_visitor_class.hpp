@@ -7,6 +7,7 @@
 
 #include "ast_node_classes.hpp"
 #include "liborangepower_src/cpp_magic.hpp"
+#include "pt_visitor_error_listener_class.hpp"
 
 namespace fling_hdl
 {
@@ -15,19 +16,25 @@ namespace fling_hdl
 class AstEtc final
 {
 public:		// types
+	using Lexer = FlingHdlGrammarLexer;
 	using Parser = FlingHdlGrammarParser;
 	using ProgramContext = Parser::FlingProgramContext;
 private:		// variables
 	string _filename;
+
+	unique_ptr<antlr4::ANTLRInputStream> _input;
+	unique_ptr<Lexer> _lexer;
+	unique_ptr<antlr4::CommonTokenStream> _token_stream;
+
+	unique_ptr<Parser> _parser;
+	unique_ptr<PtVisitorErrorListener> _error_listener;
+
 	ProgramContext* _program_ctx = nullptr;
 	ast::BaseSptr _ast;
 	size_t _max_ast_level;
 public:		// functions
 	inline AstEtc() = default;
-	inline AstEtc(const string& s_filename, ProgramContext* s_program_ctx)
-		: _filename(s_filename), _program_ctx(s_program_ctx)
-	{
-	}
+	AstEtc(const string& s_filename);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AstEtc);
 	inline ~AstEtc() = default;
 

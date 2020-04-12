@@ -1,5 +1,4 @@
 #include "pt_visitor_class.hpp"
-#include "pt_visitor_error_listener_class.hpp"
 
 namespace fling_hdl
 {
@@ -118,6 +117,34 @@ inline bool _conv_pt_to_enum(EnumType& ret, bool cmp, EnumType check,
 #define FOR_PT(p, pt_node) \
 	for (const auto& p: ctx->pt_node())
 
+AstEtc::AstEtc(const string& s_filename)
+	: _filename(s_filename)
+{
+	//antlr4::ANTLRInputStream input(get_istream_as_str(std::ifstream
+	//	(s_filename, std::ios_base::in)));
+	//FlingHdlGrammarLexer lexer(&input);
+	//antlr4::CommonTokenStream tokens(&lexer);
+	//tokens.fill();
+
+	//FlingHdlGrammarParser parser(&tokens);
+	//parser.removeErrorListeners();
+	//unique_ptr<PtVisitorErrorListener>
+	//	pt_visitor_error_listener(new PtVisitorErrorListener());
+	//parser.addErrorListener(pt_visitor_error_listener.get());
+
+	_input.reset(new antlr4::ANTLRInputStream(get_istream_as_str
+		(std::ifstream (s_filename, std::ios_base::in))));
+	_lexer.reset(new Lexer(_input.get()));
+	_token_stream.reset(new antlr4::CommonTokenStream(_lexer.get()));
+	_token_stream->fill();
+
+	_parser.reset(new Parser(_token_stream.get()));
+	_parser->removeErrorListeners();
+	_error_listener.reset(new PtVisitorErrorListener());
+	_parser->addErrorListener(_error_listener.get());
+	_program_ctx = _parser->flingProgram();
+}
+
 PtVisitor::PtVisitor(set<string>* s_filename_set)
 {
 	_filename_set = s_filename_set;
@@ -126,20 +153,7 @@ PtVisitor::PtVisitor(set<string>* s_filename_set)
 
 	for (const auto& s_filename: *_filename_set)
 	{
-		antlr4::ANTLRInputStream input(get_istream_as_str(std::ifstream
-			(s_filename, std::ios_base::in)));
-		FlingHdlGrammarLexer lexer(&input);
-		antlr4::CommonTokenStream tokens(&lexer);
-		tokens.fill();
-
-		FlingHdlGrammarParser parser(&tokens);
-		parser.removeErrorListeners();
-		unique_ptr<PtVisitorErrorListener>
-			pt_visitor_error_listener(new PtVisitorErrorListener());
-		parser.addErrorListener(pt_visitor_error_listener.get());
-
-		_ast_etc_map[s_filename] = AstEtc(s_filename,
-			parser.flingProgram());
+		_ast_etc_map[s_filename] = AstEtc(s_filename);
 	}
 }
 PtVisitor::~PtVisitor()
