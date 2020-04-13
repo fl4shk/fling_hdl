@@ -71,16 +71,27 @@ void AstToDotConverter::_print_dot_wires(size_t level)
 {
 	for (const auto& p: _node_vec.at(level))
 	{
+		//if (_conn_map.count(p) == 0)
+		//{
+		//	//printout("RIP\n");
+		//	continue;
+		//}
+
+		//const auto& conn = _conn_map.at(p);
+		//osprintout(_file,
+		//	"\t", _node_name(p), " -> ", _node_name(conn),
+		//		" [color=\"", _color(level), ",1.0,1.0\"];\n");
+
 		if (_conn_map.count(p) == 0)
 		{
-			//printout("RIP\n");
 			continue;
 		}
-
-		const auto& conn = _conn_map.at(p);
-		osprintout(_file,
-			"\t", _node_name(p), " -> ", _node_name(conn),
-				" [color=\"", _color(level), ",1.0,1.0\"];\n");
+		for (const auto& q: _conn_map.at(p))
+		{
+			osprintout(_file,
+				"\t", _node_name(p), " -> ", _node_name(q),
+					" [color=\"", _color(level), ",1.0,1.0\"];\n");
+		}
 	}
 
 	osprintout(_file,

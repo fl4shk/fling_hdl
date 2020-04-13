@@ -559,37 +559,8 @@ antlrcpp::Any PtVisitor::visitFlingDeclModule
 	DEFER_PUSH(node, DeclModule);
 
 	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
-
 	ACCEPT_AND_POP_AST_IF(node->opt_param_list, flingDeclParamList);
-	uintptr_t opt_param_list = 0, arg_list = 0;
-	if (node->opt_param_list.get() != nullptr)
-	{
-		memcpy(&opt_param_list, node->opt_param_list.get(),
-			sizeof(opt_param_list));
-	}
-	if (node->arg_list.get() != nullptr)
-	{
-		memcpy(&arg_list, node->arg_list.get(), sizeof(arg_list));
-	}
-	printout("PtVisitor testificate:  ", strappcom2(opt_param_list,
-		arg_list), "\n");
-
 	JUST_ACCEPT_AND_POP_AST(node->arg_list, flingDeclArgList);
-	opt_param_list = 0;
-	arg_list = 0;
-	if (node->opt_param_list.get() != nullptr)
-	{
-		memcpy(&opt_param_list, node->opt_param_list.get(),
-			sizeof(opt_param_list));
-	}
-	if (node->arg_list.get() != nullptr)
-	{
-		memcpy(&arg_list, node->arg_list.get(), sizeof(arg_list));
-	}
-	printout("PtVisitor testificate:  ", strappcom2(opt_param_list,
-		arg_list), "\n");
-
-
 	ACCEPT_AND_POP_AST_IF(node->opt_import_list, flingImportList);
 	JUST_ACCEPT_AND_POP_AST_LIST(node->item_list, flingDeclModule_Scope);
 
