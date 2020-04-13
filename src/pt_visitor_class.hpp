@@ -630,6 +630,11 @@ private:		// visitor functions
 	//--------
 
 	//--------
+	antlrcpp::Any visitFlingExpr_Range
+		(Parser::FlingExpr_RangeContext *ctx);
+	//--------
+
+	//--------
 	antlrcpp::Any visitFlingExpr_Mux
 		(Parser::FlingExpr_MuxContext *ctx);
 	//--------
@@ -675,12 +680,12 @@ private:		// visitor functions
 		(Parser::FlingExpr_LiteralContext *ctx);
 	antlrcpp::Any visitFlingExpr_Sized
 		(Parser::FlingExpr_SizedContext *ctx);
-	antlrcpp::Any visitFlingExpr_Range
-		(Parser::FlingExpr_RangeContext *ctx);
-	antlrcpp::Any visitFlingExpr_Range_DotDot
-		(Parser::FlingExpr_Range_DotDotContext *ctx);
-	antlrcpp::Any visitFlingExpr_Range_CallFunc
-		(Parser::FlingExpr_Range_CallFuncContext *ctx);
+	antlrcpp::Any visitFlingExpr_RealRange
+		(Parser::FlingExpr_RealRangeContext *ctx);
+	antlrcpp::Any visitFlingExpr_RealRange_DotDot
+		(Parser::FlingExpr_RealRange_DotDotContext *ctx);
+	antlrcpp::Any visitFlingExpr_RealRange_CallFunc
+		(Parser::FlingExpr_RealRange_CallFuncContext *ctx);
 	antlrcpp::Any visitFlingExpr_Cat
 		(Parser::FlingExpr_CatContext *ctx);
 	antlrcpp::Any visitFlingExpr_Repl

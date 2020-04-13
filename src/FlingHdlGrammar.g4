@@ -140,6 +140,7 @@ flingInstArgList_Pos_Item_Unparpk:
 flingInstArgList_Named:
 	flingInstArgList_Named_Item
 	(',' flingInstArgList_Named_Item)*
+	','?
 	;
 
 flingInstArgList_Named_Item:
@@ -942,6 +943,11 @@ flingTypenameOrModname_Builtin:
 
 //--------
 flingExpr:
+	flingExpr_RealRange
+	| flingExpr_Range
+	;
+
+flingExpr_Range:
 	KwMux '(' flingExpr ',' flingExpr ',' flingExpr ')' 
 	| flingExpr_Mux
 	;
@@ -1005,7 +1011,6 @@ flingExpr_Mul_Or_Div_Or_Mod:
 
 flingExpr_Unary:
 	flingExpr_Unary_ItemFromMajority
-	| flingExpr_Range
 	| flingExpr_Cast
 	| flingExpr_CallSubprog_PseudoOper
 	;
@@ -1035,15 +1040,15 @@ flingExpr_Sized:
 	KwSized '(' flingExpr (',' flingExpr)? ')'
 	;
 
-flingExpr_Range:
-	flingExpr_Range_DotDot
-	| flingExpr_Range_CallFunc
+flingExpr_RealRange:
+	flingExpr_RealRange_DotDot
+	| flingExpr_RealRange_CallFunc
 	;
 
-flingExpr_Range_DotDot:
+flingExpr_RealRange_DotDot:
 	flingExpr_Unary_ItemFromMajority PunctRangeSeparator flingExpr
 	;
-flingExpr_Range_CallFunc:
+flingExpr_RealRange_CallFunc:
 	KwRange '(' flingExpr (',' flingExpr)? ')'
 	;
 
@@ -1105,7 +1110,7 @@ flingExpr_IdentEtc_Item_End_Index:
 flingExpr_Cast:
 	(
 		flingExpr_Unary_ItemFromMajority
-		| flingExpr_Range_CallFunc
+		| flingExpr_RealRange_CallFunc
 		| flingExpr_CallSubprog_PseudoOper
 	)
 	KwAs flingTypenameOrModname
@@ -1115,7 +1120,7 @@ flingExpr_Cast:
 flingExpr_CallSubprog_PseudoOper:
 	(
 		flingExpr_Unary_ItemFromMajority
-		| flingExpr_Range_CallFunc
+		| flingExpr_RealRange_CallFunc
 	)
 	flingIdent flingInstParamList? flingExpr
 	;
@@ -1130,6 +1135,10 @@ LexLineComment: ('//' ~('\n')+) -> skip ;
 //--------
 
 //--------
+PunctRangeSeparator: '..' ;
+//--------
+
+//--------
 fragment FragDecNum:
 	[0-9] [0-9_]*
 	;
@@ -1141,7 +1150,7 @@ LitBinNum: '0b' [0-1] [0-1_]* ;
 
 fragment FragFloatFrac:
 	FragDecNum? '.' FragDecNum
-	| FragDecNum '.'
+	//| FragDecNum '.'
 	;
 fragment FragFloatExpPart:
 	'e' FragFloatSign? FragDecNum
@@ -1245,7 +1254,6 @@ PunctColon: ':' ;
 PunctPlusColon: '+:' ;
 PunctMinusColon: '-:' ;
 PunctComma: ',' ;
-PunctRangeSeparator: '..' ;
 //PunctParamPack: '...' ;
 //--------
 

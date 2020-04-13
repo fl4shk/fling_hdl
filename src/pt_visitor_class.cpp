@@ -2834,6 +2834,19 @@ antlrcpp::Any PtVisitor::visitFlingTypenameOrModname_Builtin
 antlrcpp::Any PtVisitor::visitFlingExpr
 	(Parser::FlingExprContext *ctx)
 {
+	ACCEPT_IFELSE
+		(flingExpr_RealRange,
+		flingExpr_Range)
+	else
+	{
+		internal_err(visitFlingExpr);
+	}
+	return nullptr;
+}
+
+antlrcpp::Any PtVisitor::visitFlingExpr_Range
+	(Parser::FlingExpr_RangeContext *ctx)
+{
 	CHECK(KwMux)
 	{
 		DEFER_PUSH(node, ExprMux);
@@ -3048,7 +3061,6 @@ antlrcpp::Any PtVisitor::visitFlingExpr_Unary
 {
 	ACCEPT_IFELSE
 		(flingExpr_Unary_ItemFromMajority,
-		flingExpr_Range,
 		flingExpr_Cast,
 		flingExpr_CallSubprog_PseudoOper)
 	else
@@ -3122,20 +3134,20 @@ antlrcpp::Any PtVisitor::visitFlingExpr_Sized
 
 	return nullptr;
 }
-antlrcpp::Any PtVisitor::visitFlingExpr_Range
-	(Parser::FlingExpr_RangeContext *ctx)
+antlrcpp::Any PtVisitor::visitFlingExpr_RealRange
+	(Parser::FlingExpr_RealRangeContext *ctx)
 {
 	ACCEPT_IFELSE
-		(flingExpr_Range_DotDot,
-		flingExpr_Range_CallFunc)
+		(flingExpr_RealRange_DotDot,
+		flingExpr_RealRange_CallFunc)
 	else
 	{
-		internal_err(visitFlingExpr_Range);
+		internal_err(visitFlingExpr_RealRange);
 	}
 	return nullptr;
 }
-antlrcpp::Any PtVisitor::visitFlingExpr_Range_DotDot
-	(Parser::FlingExpr_Range_DotDotContext *ctx)
+antlrcpp::Any PtVisitor::visitFlingExpr_RealRange_DotDot
+	(Parser::FlingExpr_RealRange_DotDotContext *ctx)
 {
 	DEFER_PUSH(node, ExprRange);
 
@@ -3145,8 +3157,8 @@ antlrcpp::Any PtVisitor::visitFlingExpr_Range_DotDot
 
 	return nullptr;
 }
-antlrcpp::Any PtVisitor::visitFlingExpr_Range_CallFunc
-	(Parser::FlingExpr_Range_CallFuncContext *ctx)
+antlrcpp::Any PtVisitor::visitFlingExpr_RealRange_CallFunc
+	(Parser::FlingExpr_RealRange_CallFuncContext *ctx)
 {
 	DEFER_PUSH(node, ExprRange);
 
@@ -3162,7 +3174,7 @@ antlrcpp::Any PtVisitor::visitFlingExpr_Range_CallFunc
 	}
 	else
 	{
-		internal_err(visitFlingExpr_Range_CallFunc);
+		internal_err(visitFlingExpr_RealRange_CallFunc);
 	}
 
 	return nullptr;
@@ -3391,7 +3403,7 @@ antlrcpp::Any PtVisitor::visitFlingExpr_Cast
 
 	ACCEPT_IFELSE
 		(flingExpr_Unary_ItemFromMajority,
-		flingExpr_Range_CallFunc,
+		flingExpr_RealRange_CallFunc,
 		flingExpr_CallSubprog_PseudoOper)
 	else
 	{
@@ -3413,7 +3425,7 @@ antlrcpp::Any PtVisitor::visitFlingExpr_CallSubprog_PseudoOper
 
 	ACCEPT_IFELSE
 		(flingExpr_Unary_ItemFromMajority,
-		flingExpr_Range_CallFunc)
+		flingExpr_RealRange_CallFunc)
 	else
 	{
 		internal_err(visitFlingExpr_CallSubprog_PseudoOper);

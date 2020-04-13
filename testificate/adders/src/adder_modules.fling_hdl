@@ -1,0 +1,73 @@
+module FullAdderGateLevel
+(
+	//--------
+	bus_in_a, bus_in_b, bus_in_carry: input logic;
+	//--------
+
+	//--------
+	bus_out_sum, bus_out_carry: output logic;
+	//--------
+)
+{
+	bus_out_sum := (bus_in_a ^ bus_in_b) ^ bus_in_carry;
+	bus_out_carry := ((bus_in_a ^ bus_in_b) & bus_in_carry)
+		| (bus_in_a & bus_in_b);
+}
+
+module FullAdderPlusOp
+(
+	//--------
+	bus_in_a, bus_in_b, bus_in_carry: input logic;
+	//--------
+
+	//--------
+	bus_out_sum, bus_out_carry: output logic;
+	//--------
+)
+{
+	cat(bus_out_carry, bus_out_sum) := cat(sized(0), bus_in_a)
+		+ cat(sized(0), bus_in_b) + cat(sized(0), bus_in_carry);
+}
+
+module RippleCarryAdder
+<
+	WIDTH: size_t = 8;
+	FullAdderKind: module = FullAdderGateLevel;
+>
+(
+	//--------
+	bus_in_a, bus_in_b: input logic<WIDTH - 1..0>;
+	bus_in_carry: input logic;
+	//--------
+
+	//--------
+	bus_out_sum: output logic<WIDTH>;
+	bus_out_carry: output logic;
+	//--------
+)
+{
+	//--------
+	temp_carry_vec: logic<WIDTH + 1>;
+	temp_carry_vec$firstel := bus_in_carry;
+	bus_out_carry := temp_carry_vec$lastel;
+	//--------
+
+	//--------
+	gen [lab] for i: 0..WIDTH - 1
+	{
+		inst_adc: module FullAdderKind
+		(
+			//--------
+			bus_in_a => bus_in_a[i],
+			bus_in_b => bus_in_b[i],
+			bus_in_carry => temp_carry_vec[i],
+			//--------
+
+			//--------
+			bus_out_sum => bus_out_sum[i],
+			bus_out_carry => temp_carry_vec[i + 1],
+			//--------
+		);
+	}
+	//--------
+}
