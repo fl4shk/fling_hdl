@@ -13,6 +13,7 @@
 #include "liborangepower_src/gen_class_innards_defines.hpp"
 #include "liborangepower_src/strings/string_conversion_stuff.hpp"
 #include "liborangepower_src/strings/string_extra_stuff.hpp"
+#include "liborangepower_src/strings/sconcat_etc.hpp"
 #include "liborangepower_src/containers/linked_list_classes.hpp"
 #include "liborangepower_src/gmp_stuff/gmp_stuff.hpp"
 #include "liborangepower_src/arg_parsing_stuff.hpp"
