@@ -92,6 +92,8 @@ void AstToDotConverter::_print_dot_wires(size_t level)
 				"\t", _node_name(p), " -> ", _node_name(q),
 					" [color=\"", _color(level), ",1.0,1.0\"];\n");
 		}
+		osprintout(_file,
+			"\n");
 	}
 
 	osprintout(_file,
@@ -119,11 +121,11 @@ void AstToDotConverter::_print_dot_wires(size_t level)
 #define build(type, ...) \
 	void AstToDotConverter::_build_label_map(type* n) \
 	{ \
-		string temp = sconcat(_memb_name, ":  id(", n->id(), ")"); \
+		string temp = sconcat(_memb_name, ", ", n->id()); \
 		const string to_append = strappcom2(__VA_ARGS__); \
 		if (to_append.size() != 0) \
 		{ \
-			temp += sconcat(", ", to_append); \
+			temp += sconcat(":  ", to_append); \
 		} \
 		_label_map[n] = move(temp); \
 	}
@@ -213,7 +215,8 @@ build(DeclAlias_Module)
 void AstToDotConverter::_build_label_map
 	(IdentList* n)
 {
-	string to_insert = sconcat(_memb_name, ":  id(", n->id(), "), data(");
+	string to_insert = sconcat(strappcom2(_memb_name, n->id()),
+		":  data(");
 
 	for (auto iter=n->data.begin(); iter!=n->data.end(); ++iter)
 	{
@@ -233,7 +236,8 @@ void AstToDotConverter::_build_label_map
 void AstToDotConverter::_build_label_map
 	(ScopedIdent* n)
 {
-	string to_insert = sconcat(_memb_name, ":  id(", n->id(), "), data(");
+	string to_insert = sconcat(strappcom2(_memb_name, n->id()),
+		":  data(");
 
 	for (auto iter=n->data.begin(); iter!=n->data.end(); ++iter)
 	{

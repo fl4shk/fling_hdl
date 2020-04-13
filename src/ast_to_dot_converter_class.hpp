@@ -29,11 +29,11 @@ protected:		// variables
 	string _name;
 	size_t _max_ast_level;
 	State _state;
-	vector<set<Base*>> _node_vec;
+	vector<vector<Base*>> _node_vec;
 	map<Base*, string> _label_map;
 
 	// For easy iteration
-	map<Base*, set<Base*>> _conn_map;
+	map<Base*, vector<Base*>> _conn_map;
 public:		// functions
 	inline AstToDotConverter() = default;
 	virtual ~AstToDotConverter() = default;
@@ -52,7 +52,7 @@ protected:		// misc. functions
 	{
 		while (_node_vec.size() <= some_ast->level())
 		{
-			_node_vec.push_back(set<Base*>());
+			_node_vec.push_back(vector<Base*>());
 		}
 	}
 	static std::uintptr_t _ast_to_uintptr(Base* some_ast)
@@ -75,7 +75,7 @@ protected:		// visitor functions
 			/* -------- */ \
 			case State::BuildNodeVec: \
 				_update_node_vec_size(n); \
-				_node_vec.at(n->level()).insert(n); \
+				_node_vec.at(n->level()).push_back(n); \
 				break; \
 			case State::BuildLabelMap: \
 				_build_label_map(n); \
@@ -83,7 +83,7 @@ protected:		// visitor functions
 			case State::BuildConnMap: \
 				if (n->parent() != nullptr) \
 				{ \
-					_conn_map[n->parent()].insert(n); \
+					_conn_map[n->parent()].push_back(n); \
 				} \
 				break; \
 			/* -------- */ \
