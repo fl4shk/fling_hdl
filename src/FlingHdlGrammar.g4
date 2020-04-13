@@ -1046,7 +1046,7 @@ flingExpr_RealRange:
 	;
 
 flingExpr_RealRange_DotDot:
-	flingExpr_Unary_ItemFromMajority PunctRangeSeparator flingExpr
+	flingExpr_Range PunctRangeSeparator flingExpr
 	;
 flingExpr_RealRange_CallFunc:
 	KwRange '(' flingExpr (',' flingExpr)? ')'

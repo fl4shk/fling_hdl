@@ -3152,7 +3152,7 @@ antlrcpp::Any PtVisitor::visitFlingExpr_RealRange_DotDot
 	DEFER_PUSH(node, ExprRange);
 
 	JUST_ACCEPT_AND_POP_AST
-		(node->left, flingExpr_Unary_ItemFromMajority,
+		(node->left, flingExpr_Range,
 		node->right, flingExpr);
 
 	return nullptr;

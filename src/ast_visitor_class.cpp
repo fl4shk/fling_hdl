@@ -94,11 +94,7 @@ void AstVisitor::_accept_children
 void AstVisitor::_accept_children
 	(DeclModule* n)
 {
-	//ACCEPT(opt_param_list, arg_list, opt_import_list, item_list);
-	_inner_accept_children("opt_param_list", n->opt_param_list);
-	_inner_accept_children("arg_list", n->arg_list);
-	_inner_accept_children("opt_import_list", n->opt_import_list);
-	_inner_accept_children("item_list", n->item_list);
+	ACCEPT(opt_param_list, arg_list, opt_import_list, item_list);
 }
 void AstVisitor::_accept_children
 	(InstModule* n)
