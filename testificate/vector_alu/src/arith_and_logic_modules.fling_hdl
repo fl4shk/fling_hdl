@@ -1,0 +1,84 @@
+module Alu
+<
+	WIDTH: size_t;
+>
+(
+	bus: interface Bus<WIDTH => WIDTH>;
+)
+	import alu_pkg::all
+{
+	//--------
+	comb
+	{
+		switch bus.in.op
+		{
+		//--------
+		Opcode::Add
+		{
+			bus.out.set_cat(cat(sized(0), bus.in.data.a)
+				+ cat(sized(0), bus.in.data.b));
+		}
+		Opcode::Adc
+		{
+			bus.out.set_cat(cat(sized(0), bus.in.data.a)
+				+ cat(sized(0), bus.in.data.b) + bus.in.data.carry);
+		}
+		Opcode::Sub
+		{
+			bus.out.set_cat(cat(sized(0), bus.in.data.a)
+				+ cat(sized(0), ~bus.in.data.b) + sized(1));
+		}
+		Opcode::Sbc
+		{
+			bus.out.set_cat(cat(sized(0), bus.in.data.a)
+				+ cat(sized(0), ~bus.in.data.b) + bus.in.data.carry);
+		}
+
+		Opcode::And
+		{
+			bus.out.set_cat(cat(sized(0), bus.in.data.a & bus.in.data.b));
+		}
+		Opcode::Or
+		{
+			bus.out.set_cat(cat(sized(0), bus.in.data.a | bus.in.data.b));
+		}
+		Opcode::Xor
+		{
+			bus.out.set_cat(cat(sized(0), bus.in.data.a ^ bus.in.data.b));
+		}
+		Opcode::Nor
+		{
+			bus.out.set_cat(cat(sized(0), bus.in.data.a ~| bus.in.data.b));
+		}
+		//--------
+		}
+	}
+	//--------
+}
+
+module VectorAlu
+<
+	ARR_SIZE, WIDTH: size_t
+>
+(
+	bus: interface VectorBus<ARR_SIZE => ARR_SIZE, WIDTH => WIDTH>
+)
+	import alu_pkg::all
+{
+	//--------
+	inst_alu_bus_arr: Bus<WIDTH => WIDTH>[0..ARR_SIZE - 1];
+
+	gen [inst_alu_vec_gen] for i: inst_alu_bus_arr$range
+	{
+		inst_alu_bus_arr[i].data.a := bus.data.a[i];
+		inst_alu_bus_arr[i].data.b := bus.data.b[i];
+		inst_alu_bus_arr[i].data.carry := bus.data.carry[i];
+		inst_alu_bus_arr[i].op := bus.op;
+
+		// Note the lack of generic parameters provided here.  It's not
+		// necessary as they will be inferred from the generics of
+		// `inst_alu_bus_arr[i]`.
+		inst_alu: module Alu(bus => inst_alu_bus_arr[i]);
+	}
+	//--------
+}

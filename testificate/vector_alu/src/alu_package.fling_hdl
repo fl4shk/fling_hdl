@@ -1,0 +1,91 @@
+package alu_pkg
+{
+	//--------
+	OPCODE_WIDTH: const size_t = 3;
+	enum Opcode: logic<OPCODE_WIDTH>
+	{
+		//--------
+		Add,
+		Adc,
+		Sub,
+		Sbc,
+		//--------
+
+		//--------
+		And,
+		Or,
+		Xor,
+		Nor,
+		//--------
+	}
+	//--------
+
+	//--------
+	class BusInData
+	<
+		WIDTH: size_t;
+	>
+	{
+		a, b: logic<WIDTH>;
+		carry: logic;
+	}
+	class BusIn
+	<
+		WIDTH: size_t;
+	>
+	{
+		data: BusInData<WIDTH => WIDTH>;
+		op: Opcode;
+	}
+	class BusOut
+	<
+		WIDTH: size_t;
+	>
+	{
+		result: logic<WIDTH>;
+		carry: logic;
+
+		task set_cat
+		(
+			n_val: input logic<WIDTH + 1>;
+		)
+		{
+			cat(self.carry, self.result) = n_val;
+		}
+	}
+	class Bus
+	<
+		WIDTH: size_t;
+	>
+	{
+		in: BusIn<WIDTH>;
+		out: BusOut<WIDTH>;
+	}
+	//--------
+
+	//--------
+	class VectorBusIn
+	<
+		ARR_SIZE, WIDTH: size_t;
+	>
+	{
+		data: BusInData<WIDTH => WIDTH>[0..ARR_SIZE - 1];
+		op: Opcode;
+	}
+	class VectorBusOut
+	<
+		ARR_SIZE, WIDTH: size_t;
+	>
+	{
+		data: BusOut<WIDTH>[0..ARR_SIZE - 1];
+	}
+	class VectorBus
+	<
+		ARR_SIZE, WIDTH: size_t;
+	>
+	{
+		in: VectorBusIn<ARR_SIZE => ARR_SIZE, WIDTH => WIDTH>;
+		out: VectorBusOut<ARR_SIZE => ARR_SIZE, WIDTH => WIDTH>;
+	}
+	//--------
+}
