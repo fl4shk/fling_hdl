@@ -72,6 +72,17 @@ protected:		// misc. functions
 	}
 
 protected:		// visitor functions
+	virtual inline void _build_conn_map(ast::Base* n)
+	{
+		if (n->parent() != nullptr)
+		{
+			_conn_map[n->parent()].push_back(n);
+		}
+		//else
+		//{
+		//	printout("testificate\n");
+		//}
+	}
 	#define GEN_VISIT_FUNCS(name) \
 		virtual inline void visit##name(ast::name* n) \
 		{ \
@@ -86,10 +97,7 @@ protected:		// visitor functions
 				_build_label_map(n); \
 				break; \
 			case State::BuildConnMap: \
-				if (n->parent() != nullptr) \
-				{ \
-					_conn_map[n->parent()].push_back(n); \
-				} \
+				_build_conn_map(n); \
 				break; \
 			/* -------- */ \
 			} \
@@ -98,7 +106,6 @@ protected:		// visitor functions
 		virtual void _build_label_map(ast::name* n);
 	LIST_OF_AST_NODE_CLASSES(GEN_VISIT_FUNCS)
 	#undef GEN_VISIT_FUNCS
-
 };
 
 } // namespace fling_hdl

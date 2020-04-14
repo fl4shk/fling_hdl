@@ -35,6 +35,7 @@ void AstToDotConverter::convert(const string& dst_filename,
 	root->accept(this);
 
 	for (size_t level=0; level<=_max_ast_level; ++level)
+	//for (size_t level=0; level<_node_vec.size(); ++level)
 	{
 		_print_dot_subgraph_cluster(level);
 	}

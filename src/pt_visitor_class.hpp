@@ -723,9 +723,13 @@ public:		// functions
 		auto& ast_etc = _pt_visitor->_ast_etc_map.at
 			(_pt_visitor->_filename);
 
-		if (_prev_ast_parent->level() > ast_etc.max_ast_level())
+		//if (_prev_ast_parent->level() > ast_etc.max_ast_level())
+		//{
+		//	ast_etc.set_max_ast_level(_prev_ast_parent->level());
+		//}
+		if (ast_etc.max_ast_level() < _node->level())
 		{
-			ast_etc.set_max_ast_level(_prev_ast_parent->level());
+			ast_etc.set_max_ast_level(_node->level());
 		}
 	}
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AstNodeDeferredPusher);
