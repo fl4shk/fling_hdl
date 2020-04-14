@@ -2835,12 +2835,46 @@ antlrcpp::Any PtVisitor::visitFlingExpr
 	(Parser::FlingExprContext *ctx)
 {
 	ACCEPT_IFELSE
-		(flingExpr_RealRange,
+		(flingExpr_RealRange_DotDot,
+		flingExpr_RealRange_CallFunc,
 		flingExpr_Range)
 	else
 	{
 		internal_err(visitFlingExpr);
 	}
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingExpr_RealRange_DotDot
+	(Parser::FlingExpr_RealRange_DotDotContext *ctx)
+{
+	DEFER_PUSH(node, ExprRange);
+
+	JUST_ACCEPT_AND_POP_AST
+		(node->left, flingExpr_Range,
+		node->right, flingExpr);
+
+	return nullptr;
+}
+antlrcpp::Any PtVisitor::visitFlingExpr_RealRange_CallFunc
+	(Parser::FlingExpr_RealRange_CallFuncContext *ctx)
+{
+	DEFER_PUSH(node, ExprRange);
+
+	if (ctx->flingExpr().size() == 1)
+	{
+		_vec_just_accept_and_pop_ast(ctx->flingExpr(),
+			node->left);
+	}
+	else if (ctx->flingExpr().size() == 2)
+	{
+		_vec_just_accept_and_pop_ast(ctx->flingExpr(),
+			node->left, node->right);
+	}
+	else
+	{
+		internal_err(visitFlingExpr_RealRange_CallFunc);
+	}
+
 	return nullptr;
 }
 
@@ -2860,9 +2894,6 @@ antlrcpp::Any PtVisitor::visitFlingExpr_Range
 	}
 	return nullptr;
 }
-//--------
-
-//--------
 antlrcpp::Any PtVisitor::visitFlingExpr_Mux
 	(Parser::FlingExpr_MuxContext *ctx)
 {
@@ -2873,9 +2904,6 @@ antlrcpp::Any PtVisitor::visitFlingExpr_Mux
 	}
 	return nullptr;
 }
-//--------
-
-//--------
 antlrcpp::Any PtVisitor::visitFlingExpr_LogOr
 	(Parser::FlingExpr_LogOrContext *ctx)
 {
@@ -2901,9 +2929,6 @@ antlrcpp::Any PtVisitor::visitFlingExpr_LogAnd
 	}
 	return nullptr;
 }
-//--------
-
-//--------
 antlrcpp::Any PtVisitor::visitFlingExpr_BitOr_Or_BitNor
 	(Parser::FlingExpr_BitOr_Or_BitNorContext *ctx)
 {
@@ -2951,9 +2976,6 @@ antlrcpp::Any PtVisitor::visitFlingExpr_BitXor_Or_BitXnor
 	}
 	return nullptr;
 }
-//--------
-
-//--------
 antlrcpp::Any PtVisitor::visitFlingExpr_CmpEqEtc
 	(Parser::FlingExpr_CmpEqEtcContext *ctx)
 {
@@ -2987,9 +3009,6 @@ antlrcpp::Any PtVisitor::visitFlingExpr_CmpLtEtc
 	}
 	return nullptr;
 }
-//--------
-
-//--------
 antlrcpp::Any PtVisitor::visitFlingExpr_BitShift
 	(Parser::FlingExpr_BitShiftContext *ctx)
 {
@@ -3053,9 +3072,6 @@ antlrcpp::Any PtVisitor::visitFlingExpr_Mul_Or_Div_Or_Mod
 	}
 	return nullptr;
 }
-//--------
-
-//--------
 antlrcpp::Any PtVisitor::visitFlingExpr_Unary
 	(Parser::FlingExpr_UnaryContext *ctx)
 {
@@ -3130,51 +3146,6 @@ antlrcpp::Any PtVisitor::visitFlingExpr_Sized
 	else
 	{
 		internal_err(visitFlingExpr_Sized);
-	}
-
-	return nullptr;
-}
-antlrcpp::Any PtVisitor::visitFlingExpr_RealRange
-	(Parser::FlingExpr_RealRangeContext *ctx)
-{
-	ACCEPT_IFELSE
-		(flingExpr_RealRange_DotDot,
-		flingExpr_RealRange_CallFunc)
-	else
-	{
-		internal_err(visitFlingExpr_RealRange);
-	}
-	return nullptr;
-}
-antlrcpp::Any PtVisitor::visitFlingExpr_RealRange_DotDot
-	(Parser::FlingExpr_RealRange_DotDotContext *ctx)
-{
-	DEFER_PUSH(node, ExprRange);
-
-	JUST_ACCEPT_AND_POP_AST
-		(node->left, flingExpr_Range,
-		node->right, flingExpr);
-
-	return nullptr;
-}
-antlrcpp::Any PtVisitor::visitFlingExpr_RealRange_CallFunc
-	(Parser::FlingExpr_RealRange_CallFuncContext *ctx)
-{
-	DEFER_PUSH(node, ExprRange);
-
-	if (ctx->flingExpr().size() == 1)
-	{
-		_vec_just_accept_and_pop_ast(ctx->flingExpr(),
-			node->left);
-	}
-	else if (ctx->flingExpr().size() == 2)
-	{
-		_vec_just_accept_and_pop_ast(ctx->flingExpr(),
-			node->left, node->right);
-	}
-	else
-	{
-		internal_err(visitFlingExpr_RealRange_CallFunc);
 	}
 
 	return nullptr;

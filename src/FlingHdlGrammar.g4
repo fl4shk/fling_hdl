@@ -943,10 +943,20 @@ flingTypenameOrModname_Builtin:
 
 //--------
 flingExpr:
-	flingExpr_RealRange
+	flingExpr_RealRange_DotDot
+	| flingExpr_RealRange_CallFunc
 	| flingExpr_Range
 	;
 
+flingExpr_RealRange_DotDot:
+	flingExpr_Range PunctRangeSeparator flingExpr
+	;
+flingExpr_RealRange_CallFunc:
+	KwRange '(' flingExpr (',' flingExpr)? ')'
+	;
+//--------
+
+//--------
 flingExpr_Range:
 	KwMux '(' flingExpr ',' flingExpr ',' flingExpr ')' 
 	| flingExpr_Mux
@@ -1038,18 +1048,6 @@ flingExpr_Literal:
 	;
 flingExpr_Sized:
 	KwSized '(' flingExpr (',' flingExpr)? ')'
-	;
-
-flingExpr_RealRange:
-	flingExpr_RealRange_DotDot
-	| flingExpr_RealRange_CallFunc
-	;
-
-flingExpr_RealRange_DotDot:
-	flingExpr_Range PunctRangeSeparator flingExpr
-	;
-flingExpr_RealRange_CallFunc:
-	KwRange '(' flingExpr (',' flingExpr)? ')'
 	;
 
 flingExpr_Cat:

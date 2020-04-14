@@ -102,18 +102,18 @@ void AstToDotConverter::_print_dot_wires(size_t level)
 
 
 #define _INNER_WRAP(item) \
-	sconcat(#item, "(", n->item, ")")
+	sconcat(#item, ":  ", n->item)
 #define wrap(...) \
 	EVAL(MAP(_INNER_WRAP, COMMA, __VA_ARGS__))
 
 
 #define _INNER_WRAP_CONV(item) \
-	sconcat(#item, "(", n->conv_##item(n->item), ")")
+	sconcat(#item, ":  ", n->conv_##item(n->item))
 #define wrap_conv(...) \
 	EVAL(MAP(_INNER_WRAP_CONV, COMMA, __VA_ARGS__))
 
 #define _INNER_WRAP_CONV_2(item, ...) \
-	sconcat(#item, "(", conv_##item(n->item), ")")
+	sconcat(#item, ":  ", conv_##item(n->item))
 #define wrap_conv_2(...) \
 	EVAL(MAP(_INNER_WRAP_CONV_2, COMMA, __VA_ARGS__))
 
@@ -121,11 +121,11 @@ void AstToDotConverter::_print_dot_wires(size_t level)
 #define build(type, ...) \
 	void AstToDotConverter::_build_label_map(type* n) \
 	{ \
-		string temp = sconcat(_memb_name, ", ", n->id()); \
-		const string to_append = strappcom2(__VA_ARGS__); \
+		auto temp = sconcat(_memb_name, "\\n", "id:  ", n->id()); \
+		auto to_append = _strjoin2_raw_newline(__VA_ARGS__); \
 		if (to_append.size() != 0) \
 		{ \
-			temp += sconcat(":  ", to_append); \
+			temp += sconcat("\\n---- ---- ---- ----\\n", to_append); \
 		} \
 		_label_map[n] = move(temp); \
 	}
@@ -215,8 +215,9 @@ build(DeclAlias_Module)
 void AstToDotConverter::_build_label_map
 	(IdentList* n)
 {
-	string to_insert = sconcat(strappcom2(_memb_name, n->id()),
-		":  data(");
+	auto to_insert = sconcat(_memb_name, "\\n", "id:  ", n->id(),
+		"\\n---- ---- ---- ----\\ndata:  ");
+
 
 	for (auto iter=n->data.begin(); iter!=n->data.end(); ++iter)
 	{
@@ -229,29 +230,13 @@ void AstToDotConverter::_build_label_map
 			to_insert += ", ";
 		}
 	}
-	to_insert += ")";
 	_label_map[n] = move(to_insert);
 }
 
 void AstToDotConverter::_build_label_map
 	(ScopedIdent* n)
 {
-	string to_insert = sconcat(strappcom2(_memb_name, n->id()),
-		":  data(");
-
-	for (auto iter=n->data.begin(); iter!=n->data.end(); ++iter)
-	{
-		to_insert += iter->data;
-
-		auto temp = iter;
-		++temp;
-		if (temp != n->data.end())
-		{
-			to_insert += ", ";
-		}
-	}
-	to_insert += ")";
-	_label_map[n] = move(to_insert);
+	_build_label_map(static_cast<IdentList*>(n));
 }
 
 build(ImportList)

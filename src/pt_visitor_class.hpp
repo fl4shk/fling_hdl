@@ -627,51 +627,37 @@ private:		// visitor functions
 	//--------
 	antlrcpp::Any visitFlingExpr
 		(Parser::FlingExprContext *ctx);
+	antlrcpp::Any visitFlingExpr_RealRange_DotDot
+		(Parser::FlingExpr_RealRange_DotDotContext *ctx);
+	antlrcpp::Any visitFlingExpr_RealRange_CallFunc
+		(Parser::FlingExpr_RealRange_CallFuncContext *ctx);
 	//--------
 
 	//--------
 	antlrcpp::Any visitFlingExpr_Range
 		(Parser::FlingExpr_RangeContext *ctx);
-	//--------
-
-	//--------
 	antlrcpp::Any visitFlingExpr_Mux
 		(Parser::FlingExpr_MuxContext *ctx);
-	//--------
-
-	//--------
 	antlrcpp::Any visitFlingExpr_LogOr
 		(Parser::FlingExpr_LogOrContext *ctx);
 	antlrcpp::Any visitFlingExpr_LogAnd
 		(Parser::FlingExpr_LogAndContext *ctx);
-	//--------
-
-	//--------
 	antlrcpp::Any visitFlingExpr_BitOr_Or_BitNor
 		(Parser::FlingExpr_BitOr_Or_BitNorContext *ctx);
 	antlrcpp::Any visitFlingExpr_BitAnd_Or_BitNand
 		(Parser::FlingExpr_BitAnd_Or_BitNandContext *ctx);
 	antlrcpp::Any visitFlingExpr_BitXor_Or_BitXnor
 		(Parser::FlingExpr_BitXor_Or_BitXnorContext *ctx);
-	//--------
-
-	//--------
 	antlrcpp::Any visitFlingExpr_CmpEqEtc
 		(Parser::FlingExpr_CmpEqEtcContext *ctx);
 	antlrcpp::Any visitFlingExpr_CmpLtEtc
 		(Parser::FlingExpr_CmpLtEtcContext *ctx);
-	//--------
-
-	//--------
 	antlrcpp::Any visitFlingExpr_BitShift
 		(Parser::FlingExpr_BitShiftContext *ctx);
 	antlrcpp::Any visitFlingExpr_BinaryPlus_Or_BinaryMinus
 		(Parser::FlingExpr_BinaryPlus_Or_BinaryMinusContext *ctx);
 	antlrcpp::Any visitFlingExpr_Mul_Or_Div_Or_Mod
 		(Parser::FlingExpr_Mul_Or_Div_Or_ModContext *ctx);
-	//--------
-
-	//--------
 	antlrcpp::Any visitFlingExpr_Unary
 		(Parser::FlingExpr_UnaryContext *ctx);
 	antlrcpp::Any visitFlingExpr_Unary_ItemFromMajority
@@ -680,12 +666,6 @@ private:		// visitor functions
 		(Parser::FlingExpr_LiteralContext *ctx);
 	antlrcpp::Any visitFlingExpr_Sized
 		(Parser::FlingExpr_SizedContext *ctx);
-	antlrcpp::Any visitFlingExpr_RealRange
-		(Parser::FlingExpr_RealRangeContext *ctx);
-	antlrcpp::Any visitFlingExpr_RealRange_DotDot
-		(Parser::FlingExpr_RealRange_DotDotContext *ctx);
-	antlrcpp::Any visitFlingExpr_RealRange_CallFunc
-		(Parser::FlingExpr_RealRange_CallFuncContext *ctx);
 	antlrcpp::Any visitFlingExpr_Cat
 		(Parser::FlingExpr_CatContext *ctx);
 	antlrcpp::Any visitFlingExpr_Repl

@@ -65,6 +65,11 @@ protected:		// misc. functions
 	{
 		return sconcat(p->id(), "_", _ast_to_uintptr(p));
 	}
+	template<typename... ArgTypes>
+	static inline string _strjoin2_raw_newline(ArgTypes&&... args)
+	{
+		return strjoin2("\\n", args...);
+	}
 
 protected:		// visitor functions
 	#define GEN_VISIT_FUNCS(name) \
