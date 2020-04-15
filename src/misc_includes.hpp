@@ -41,6 +41,7 @@ using namespace liborangepower::arg_parse;
 #include <set>
 #include <array>
 #include <filesystem>
+#include <system_error>
 
 #include <string.h>
 #include <libgen.h>
@@ -59,6 +60,7 @@ using std::map;
 using std::set;
 using std::stringstream;
 using std::fstream;
+using std::error_code;
 namespace fs = std::filesystem;
 
 #endif		// src_misc_includes_hpp

@@ -82,24 +82,6 @@ using namespace ast;
 	EVAL(MAP_PAIRS(_INNER_ACCEPT_AND_POP_STR_IF, SEMICOLON, __VA_ARGS__))
 
 
-template<typename EnumType, typename... RemArgTypes>
-inline bool _conv_pt_to_enum(EnumType& ret, bool cmp, EnumType check,
-	RemArgTypes&&... rem_args)
-{
-	if (cmp)
-	{
-		ret = check;
-		return true;
-	}
-	else if constexpr (sizeof...(rem_args) > 0)
-	{
-		return _conv_pt_to_enum(ret, rem_args...);
-	}
-	else
-	{
-		return false;
-	}
-}
 
 #define make_ast(type) \
 	new type(_curr_ast_parent, FilePos(_filename, ctx));
@@ -1554,7 +1536,8 @@ antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item_DeclSubprog_Abstract
 
 	ACCEPT_AND_POP_AST_IFELSE
 		(node->header, flingDeclFunc_Header,
-		node->header, flingDeclTask_Header)
+		node->header, flingDeclTask_Header,
+		node->header, flingDeclProc_Header)
 	else
 	{
 		internal_err(visitFlingDeclClsOrMxn_Item_DeclSubprog_Abstract);
@@ -2459,56 +2442,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclProc_Header
 
 	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
 	ACCEPT_AND_POP_AST_IF(node->opt_param_list, flingDeclParamList);
-	JUST_ACCEPT_AND_POP_AST(node->arg_list, flingDeclProc_ArgList);
-
-	return nullptr;
-}
-antlrcpp::Any PtVisitor::visitFlingDeclProc_ArgList
-	(Parser::FlingDeclProc_ArgListContext *ctx)
-{
-	DEFER_PUSH(node, ParamOrArgList);
-
-	FOR_PT(p, flingDeclProc_ArgList_Item)
-	{
-		p->accept(this);
-		//node->item_list.push_back(_pop_ast());
-		BaseSptr to_push;
-		_pop_ast(to_push);
-		node->item_list.push_back(move(to_push));
-	}
-
-	return nullptr;
-}
-antlrcpp::Any PtVisitor::visitFlingDeclProc_ArgList_Item
-	(Parser::FlingDeclProc_ArgList_ItemContext *ctx)
-{
-	DEFER_PUSH(node, DeclArgList_Item);
-
-	JUST_ACCEPT_AND_POP_AST(node->ident_list, flingIdentList);
-	using Kind = DeclArgList_Item::Kind;
-
-	CHECK(KwParpk)
-	{
-		if (!_conv_pt_to_enum(node->kind,
-			ctx->KwInput(), Kind::ParpkInput,
-			ctx->KwInout(), Kind::ParpkInout))
-		{
-			internal_err(visitFlingDeclProc_ArgList_Item);
-		}
-	}
-	else
-	{
-		if (!_conv_pt_to_enum(node->kind,
-			ctx->KwInput(), Kind::Input,
-			ctx->KwInout(), Kind::Inout))
-		{
-			internal_err(visitFlingDeclProc_ArgList_Item);
-		}
-	}
-	JUST_ACCEPT_AND_POP_AST(node->typename_or_modname,
-		flingTypenameOrModname);
-
-	ACCEPT_AND_POP_AST_LIST_IF(node->opt_expr_list, flingExprList);
+	JUST_ACCEPT_AND_POP_AST(node->arg_list, flingDeclArgList);
 
 	return nullptr;
 }
@@ -2785,6 +2719,8 @@ antlrcpp::Any PtVisitor::visitFlingTypenameOrModname_Builtin
 		ctx->KwSizeT(), Kind::SizeT,
 		ctx->KwRange(), Kind::Range,
 		ctx->KwString(), Kind::String,
+		ctx->KwFile(), Kind::File,
+		ctx->KwTokstrm(), Kind::Tokstrm,
 
 		ctx->KwU8(), Kind::U8,
 		ctx->KwI8(), Kind::I8,
@@ -3305,10 +3241,24 @@ antlrcpp::Any PtVisitor::visitFlingExpr_IdentEtc_NonSelfItem
 {
 	DEFER_PUSH(node, ExprIdentEtc_NonSelfItem);
 
-	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
-	ACCEPT_AND_POP_AST_IF
-		(node->opt_param_list, flingInstParamList,
-		node->opt_arg_list, flingInstArgList);
+
+	CHECK(flingIdent)
+	{
+		JUST_ACCEPT_AND_POP_STR(node->opt_ident, flingIdent);
+		ACCEPT_AND_POP_AST_IF
+			(node->opt_param_list, flingInstParamList,
+			node->opt_arg_list, flingInstArgList);
+	}
+	else CHECK(flingTypenameOrModname)
+	{
+		JUST_ACCEPT_AND_POP_AST
+			(node->opt_typename_or_modname, flingTypenameOrModname,
+			node->opt_arg_list, flingInstArgList);
+	}
+	else
+	{
+		internal_err(visitFlingExpr_IdentEtc_NonSelfItem);
+	}
 
 	FOR_PT(p, flingExpr_IdentEtc_Item_End)
 	{
@@ -3410,5 +3360,6 @@ antlrcpp::Any PtVisitor::visitFlingExpr_CallSubprog_PseudoOper
 	return nullptr;
 }
 //--------
+
 
 } // namespace fling_hdl

@@ -504,8 +504,7 @@ flingDeclClsOrMxn_Item_DeclSubprog_FullDefn:
 	flingDeclClsOrMxn_AccessSpecifier?
 	(
 		(KwVirtual | KwStatic)? KwConst? 
-			(flingDeclFunc | flingDeclTask)
-		| KwStatic? flingDeclProc
+			(flingDeclFunc | flingDeclTask | flingDeclProc)
 	)
 	;
 flingDeclClsOrMxn_Item_DeclSubprog_Abstract:
@@ -514,6 +513,7 @@ flingDeclClsOrMxn_Item_DeclSubprog_Abstract:
 	(
 		flingDeclFunc_Header
 		| flingDeclTask_Header
+		| flingDeclProc_Header
 	)
 	';'
 	;
@@ -822,21 +822,7 @@ flingDeclProc:
 	flingDeclProc_Header flingDeclModule_Scope
 	;
 flingDeclProc_Header:
-	KwProc flingIdent flingDeclParamList? flingDeclProc_ArgList
-	;
-flingDeclProc_ArgList:
-	'('
-		flingDeclProc_ArgList_Item
-		(';' flingDeclProc_ArgList_Item)*
-		';'?
-	')'
-	;
-flingDeclProc_ArgList_Item:
-	flingIdentList ':' (KwInput | KwInout)
-		(
-			flingTypenameOrModname ('=' flingExprList)?
-			| KwParpk '<' flingTypenameOrModname '>'
-		)
+	KwProc flingIdent flingDeclParamList? flingDeclArgList
 	;
 //--------
 
@@ -923,6 +909,7 @@ flingTypenameOrModname_Builtin:
 		| KwRange
 		| KwString
 		| KwFile
+		| KwTokstrm
 
 		| KwU8
 		| KwI8
@@ -1092,8 +1079,11 @@ flingExpr_IdentEtc_FirstItem:
 	;
 
 flingExpr_IdentEtc_NonSelfItem:
-	flingIdent (flingInstParamList? flingInstArgList)?
-		flingExpr_IdentEtc_Item_End*
+	(
+		flingIdent (flingInstParamList? flingInstArgList)?
+		| flingTypenameOrModname flingInstArgList
+	)
+	flingExpr_IdentEtc_Item_End*
 	;
 
 flingExpr_IdentEtc_Item_End:
@@ -1397,6 +1387,7 @@ KwWeakref: 'weakref' ;
 KwNull: 'null' ;
 KwStatic: 'static' ;
 KwProc: 'proc' ;
+KwMacro: 'macro' ;
 KwSelf: 'self' ;
 KwSelfT: 'self_t' ;
 
@@ -1410,13 +1401,11 @@ KwPriv: 'priv' ;
 
 //KwMove: 'move' ;
 
-//KwList: 'list' ;
-//KwDict: 'dict' ;
-//KwSet: 'set' ;
 KwString: 'string' ;
 
 KwFloat: 'float' ;
 KwFile: 'file' ;
+KwTokstrm: 'tokstrm' ;
 
 //KwDelay: 'delay' ;
 //--------

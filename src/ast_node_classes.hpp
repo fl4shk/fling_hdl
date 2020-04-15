@@ -64,6 +64,7 @@ using BaseSptrList = IndCircLinkList<BaseSptr>;
 
 class Base
 {
+public:		// types
 protected:		// variables
 	Base* _parent = nullptr;
 	FilePos _fp;
@@ -741,6 +742,7 @@ public:		// types
 		//Float,
 		String,
 		File,
+		Tokstrm,
 
 		U8,
 		I8,
@@ -768,6 +770,7 @@ public:		// types
 			//Float,
 			String,
 			File,
+			Tokstrm,
 
 			U8,
 			I8,
@@ -1140,8 +1143,8 @@ public:		// functions
 class ExprIdentEtc_NonSelfItem: public Base
 {
 public:		// variables
-	string ident;
-	BaseSptr opt_param_list, opt_arg_list;
+	string opt_ident;
+	BaseSptr opt_typename_or_modname, opt_param_list, opt_arg_list;
 	BaseSptrList end_item_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(ExprIdentEtc_NonSelfItem, Base);

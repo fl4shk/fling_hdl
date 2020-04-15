@@ -7,7 +7,7 @@ namespace fling_hdl
 using namespace ast;
 
 void AstToDotConverter::convert(const string& dst_filename,
-	const string& src_filename, const AstEtc& ast_etc)
+	const AstEtc& ast_etc)
 {
 	_max_ast_level = ast_etc.max_ast_level();
 	const auto& root = ast_etc.ast();
@@ -288,7 +288,7 @@ EVAL(MAP(X, EMPTY,
 
 build(ExprIdentEtc, wrap_conv(suff_kind))
 build(ExprIdentEtc_FirstItem, wrap_conv(kind))
-build(ExprIdentEtc_NonSelfItem, wrap(ident))
+build(ExprIdentEtc_NonSelfItem, wrap(opt_ident))
 build(ExprIdentEtc_ItemEnd, wrap_conv(kind))
 build(ExprIdentEtc_ItemEndIndex, wrap_conv(kind))
 build(ExprCast)

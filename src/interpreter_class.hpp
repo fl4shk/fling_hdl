@@ -4,24 +4,19 @@
 // src/interpreter_class.hpp
 
 #include "misc_includes.hpp"
+#include "sem_analyzer_and_eval_class.hpp"
 
 namespace fling_hdl
 {
 
-class SemAnalyzer;
-
-class Interpreter final
+class Interpreter final: public AstVisitor
 {
-private:		// variables
-	SemAnalyzer* _sem_analyzer = nullptr;
-
 public:		// functions
-	inline Interpreter(SemAnalyzer* s_sem_analyzer)
-		: _sem_analyzer(s_sem_analyzer)
-	{
-	}
-	inline ~Interpreter() = default;
+	Interpreter(AstEtcMap* s_ast_etc_map);
+	~Interpreter();
 	int run();
+
+private:		// functions
 };
 
 }

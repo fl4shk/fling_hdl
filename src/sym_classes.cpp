@@ -1,4 +1,4 @@
-#include "sym_struct_classes.hpp"
+#include "sym_classes.hpp"
 
 namespace fling_hdl
 {

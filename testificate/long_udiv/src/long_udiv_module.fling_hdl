@@ -1,0 +1,63 @@
+// This is pipelined but with one bit computed per pipeline stage.
+module LongUdiv
+<
+	WIDTH: size_t;
+	TAG_WIDTH: size_t = 8;
+>
+(
+	bus: interface long_udiv_pkg::Bus<WIDTH, TAG_WIDTH>
+)
+{
+	//--------
+	alias Bus: type = typeof(bus);
+	//--------
+
+	//--------
+	// Pipeline stage data
+	class PsDataElem
+	{
+		//--------
+		in_data: Bus::InData;
+		out_data: Bus::OutData;
+		tag: typeof(bus)::Tag;
+		//--------
+	}
+	ps_data: PsDataElem[WIDTH + 1];
+
+	// Test calling a `proc`
+	bus.out.data.assign(ps_data$lastel.out_data);
+
+	bus.out.tag := ps_data$lastel.out_data.tag;
+
+	// Test calling a `proc`
+	bus.out.assign_by_zero(denom => ps_data$lastel.in_data.denom);
+
+	seq posedge bus.in.clk
+	{
+		if !bus.in.rst_n
+		{
+			for item: ps_data
+			{
+				item.in_data.init(num => 0, denom => 0);
+				item.out_data.init(quot => 0, rem => 0);
+				item.tag := 0;
+			}
+		}
+		else // if bus.in.rst_n
+		{
+			for i: ps_data$range
+			{
+				if i == ps_data$low
+				{
+				}
+				elif (i > ps_data$low) && (i < ps_data$high)
+				{
+				}
+				else // if i == ps_data$high
+				{
+				}
+			}
+		}
+	}
+	//--------
+}

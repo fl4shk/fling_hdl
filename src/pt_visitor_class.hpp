@@ -47,6 +47,8 @@ public:		// functions
 class AstNodeDeferredPusher;
 class AstNodeListDeferredPusher;
 
+using AstEtcMap = map<string, AstEtc>;
+
 class PtVisitor final: public FlingHdlGrammarVisitor
 {
 	friend class AstNodeDeferredPusher;
@@ -59,7 +61,7 @@ private:		// variables
 	set<string>* _filename_set = nullptr;
 
 	// This maps a filename to an `AstEtc`.
-	map<string, AstEtc> _ast_etc_map;
+	AstEtcMap _ast_etc_map;
 
 	// The current filename
 	string _filename;
@@ -198,6 +200,25 @@ private:		// error/warning functions
 	inline void _warn(const std::string& msg)
 	{
 		printerr("Warning:  ", msg, "\n");
+	}
+
+	template<typename EnumType, typename... RemArgTypes>
+	static bool _conv_pt_to_enum(EnumType& ret, bool cmp, EnumType check,
+		RemArgTypes&&... rem_args)
+	{
+		if (cmp)
+		{
+			ret = check;
+			return true;
+		}
+		else if constexpr (sizeof...(rem_args) > 0)
+		{
+			return _conv_pt_to_enum(ret, rem_args...);
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 private:		// visitor functions
@@ -575,10 +596,6 @@ private:		// visitor functions
 		(Parser::FlingDeclProcContext *ctx);
 	antlrcpp::Any visitFlingDeclProc_Header
 		(Parser::FlingDeclProc_HeaderContext *ctx);
-	antlrcpp::Any visitFlingDeclProc_ArgList
-		(Parser::FlingDeclProc_ArgListContext *ctx);
-	antlrcpp::Any visitFlingDeclProc_ArgList_Item
-		(Parser::FlingDeclProc_ArgList_ItemContext *ctx);
 	//--------
 
 	//--------

@@ -1,0 +1,102 @@
+package long_udiv_pkg
+{
+	class Bus
+	<
+		WIDTH: size_t;
+		TAG_WIDTH: size_t = 8
+	>
+	{
+		alias DataInout: type = logic<WIDTH - 1..0>;
+		alias Tag: type = logic<TAG_WIDTH - 1..0>;
+
+		class InData
+		{
+			//--------
+			num, denom: DataInout;
+			//--------
+
+			//--------
+			task init
+			(
+				num: input typeof(self_t::num);
+				denom: input typeof(self.denom);
+			)
+			{
+				cat(self.num, self.denom) := cat(num, denom);
+			}
+			//--------
+		}
+
+		class In
+		{
+			//--------
+			clk, rst_n: logic;
+			tag: Tag;
+			//--------
+
+			//--------
+			data: InData;
+			//--------
+		}
+
+		class OutData
+		{
+			//--------
+			quot, rem: DataInout;
+			//--------
+
+			//--------
+			task init
+			(
+				quot: input typeof(self_t::quot);
+				rem: input typeof(self.rem);
+			)
+			{
+				cat(self.quot, self.rem) := cat(quot, rem);
+			}
+			proc assign
+			(
+				to_copy: input self_t
+			)
+			{
+				self := to_copy;
+			}
+			//--------
+		}
+
+		class Out
+		{
+			//--------
+			tag: Tag;
+			by_zero: logic;
+			//--------
+
+			//--------
+			proc assign_by_zero
+			(
+				denom: input DataInout
+			)
+			{
+				comb
+				{
+					if ps_data$lastel.in_data.denom == 0
+					{
+						bus.out.by_zero := 1;
+					}
+					else
+					{
+						bus.out.by_zero := 0;
+					}
+				}
+			}
+			//--------
+
+			//--------
+			data: OutData;
+			//--------
+		}
+
+		in: In;
+		out: Out;
+	}
+

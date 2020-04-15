@@ -601,7 +601,8 @@ void AstVisitor::_accept_children
 void AstVisitor::_accept_children
 	(ExprIdentEtc_NonSelfItem* n)
 {
-	ACCEPT(opt_param_list, opt_arg_list, end_item_list);
+	ACCEPT(opt_typename_or_modname, opt_param_list, opt_arg_list,
+		end_item_list);
 }
 void AstVisitor::_accept_children
 	(ExprIdentEtc_ItemEnd* n)

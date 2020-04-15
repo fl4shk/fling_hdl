@@ -41,7 +41,6 @@ public:		// functions
 	#undef GEN_VISIT_FUNC
 
 private:		// functions
-
 	void _inner_accept_children(const string& memb_name, 
 		const ast::BaseSptr& node);
 
