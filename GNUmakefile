@@ -93,7 +93,7 @@ ASMOUTS:=$(CXX_ASMOUTS)
 
 
 .PHONY : all
-all : all_pre $(OFILES)
+all : check_grammar all_pre $(OFILES)
 	$(LD) $(OFILES) -o $(PROJ) $(LD_FLAGS)
 
 .PHONY : check_grammar
