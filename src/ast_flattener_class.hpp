@@ -1,7 +1,7 @@
-#ifndef src_sem_analyzer_and_eval_class_hpp
-#define src_sem_analyzer_and_eval_class_hpp
+#ifndef src_ast_flattener_class_hpp
+#define src_ast_flattener_class_hpp
 
-// src/sem_analyzer_and_eval_class.hpp
+// src/ast_flattener_class.hpp
 
 #include "misc_includes.hpp"
 #include "sym_classes.hpp"
@@ -11,14 +11,14 @@
 namespace fling_hdl
 {
 
-class SemAnalyzerAndEval final: public AstVisitor
+class AstFlattener final: public AstVisitor
 {
 protected:		// variables
 	AstEtcMap* _ast_etc_map = nullptr;
 
 public:		// functions
-	SemAnalyzerAndEval(AstEtcMap* s_ast_etc_map);
-	virtual ~SemAnalyzerAndEval();
+	AstFlattener(AstEtcMap* s_ast_etc_map);
+	virtual ~AstFlattener();
 
 protected:		// functions
 	#define GEN_VISIT_FUNCS(name) \
@@ -29,4 +29,4 @@ protected:		// functions
 
 } // namespace fling_hdl
 
-#endif		// src_sem_analyzer_and_eval_class_hpp
+#endif		// src_ast_flattener_class_hpp

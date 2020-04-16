@@ -48,4 +48,4 @@ fling_hdl_debug
 *.dot
 *.pdf
 *.v
-src/gen_src
+gen_src

@@ -32,6 +32,7 @@ module LongUdiv
 	// Test calling a `proc`
 	bus.out.assign_by_zero(denom => ps_data$lastel.in_data.denom);
 
+	// Implement the pipeline here.
 	seq posedge bus.in.clk
 	{
 		if !bus.in.rst_n
@@ -47,13 +48,13 @@ module LongUdiv
 		{
 			for i: ps_data$range
 			{
+				alias ps_datum: auto = ps_data[i];
+
 				if i == ps_data$low
 				{
+					ps_datum.in_data := bus.in.data;
 				}
-				elif (i > ps_data$low) && (i < ps_data$high)
-				{
-				}
-				else // if i == ps_data$high
+				else // if i > ps_data$low
 				{
 				}
 			}
