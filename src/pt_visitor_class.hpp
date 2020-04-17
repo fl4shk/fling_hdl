@@ -5,6 +5,10 @@
 
 #include "misc_includes.hpp"
 
+#include "gen_src/FlingHdlGrammarLexer.h"
+#include "gen_src/FlingHdlGrammarParser.h"
+#include "gen_src/FlingHdlGrammarVisitor.h"
+
 #include "ast_node_classes.hpp"
 #include "liborangepower_src/cpp_magic.hpp"
 #include "pt_visitor_error_listener_class.hpp"
@@ -130,7 +134,7 @@ private:		// misc functions
 	inline void _internal_err(antlr4::ParserRuleContext* ctx,
 		const string& func) const
 	{
-		FilePos(_filename, ctx).err(sconcat("PtVisitor::", func, "():  ",
+		FilePos(_filename, ctx).err(sconcat("Parser::", func, "():  ",
 			"Internal error."));
 	}
 

@@ -1,7 +1,7 @@
 grammar FlingHdlGrammar;
 
 //--------
-// Parser rules
+// PtVisitor rules
 flingProgram:
 	flingProgram_Item*
 	EOF
