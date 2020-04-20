@@ -13,6 +13,8 @@
 namespace fling_hdl
 {
 
+class Symbol;
+
 namespace ast
 {
 
@@ -61,6 +63,7 @@ namespace ast
 class Base;
 using BaseSptr = shared_ptr<Base>;
 using BaseSptrList = IndCircLinkList<BaseSptr>;
+using BaseWptr = weak_ptr<Base>;
 
 class Base
 {
@@ -69,6 +72,9 @@ protected:		// variables
 	Base* _parent = nullptr;
 	FilePos _fp;
 	size_t _level = 0;
+
+public:		// variables
+	Symbol* sym = nullptr;
 
 public:		// functions
 	inline Base() = default;
@@ -128,6 +134,7 @@ public:		// types
 		Var,
 		Type,
 		Module,
+
 		ParpkVar,
 		ParpkType,
 		ParpkModule
@@ -183,11 +190,13 @@ public:		// types
 			ParpkInout,
 			ParpkInterface)
 	}
+
 public:		// variables
 	BaseSptr ident_list;
 	Kind kind;
 	BaseSptr typename_or_modname;
 	BaseSptrList opt_expr_list;
+
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclArgList_Item, Base);
 };
@@ -742,7 +751,7 @@ public:		// types
 		//Float,
 		String,
 		File,
-		Tokstrm,
+		//Tokstrm,
 
 		U8,
 		I8,
@@ -770,7 +779,7 @@ public:		// types
 			//Float,
 			String,
 			File,
-			Tokstrm,
+			//Tokstrm,
 
 			U8,
 			I8,

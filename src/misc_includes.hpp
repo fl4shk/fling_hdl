@@ -49,18 +49,26 @@ using namespace liborangepower::arg_parse;
 using std::stack;
 using std::vector;
 using std::string;
+
 using std::variant;
 using std::optional;
+
 using std::unique_ptr;
 using std::shared_ptr;
 using std::make_shared;
+using std::weak_ptr;
+
 using std::hash;
+
 using std::move;
+
 using std::map;
 using std::set;
+
 using std::stringstream;
 using std::fstream;
 using std::error_code;
+
 namespace fs = std::filesystem;
 
 #endif		// src_misc_includes_hpp

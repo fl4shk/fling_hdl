@@ -32,6 +32,7 @@ flingDeclPackage_Item:
 	| flingDeclSubprog
 	| flingDeclAlias
 	| flingDeclConst
+	| flingImportList
 	;
 //--------
 
@@ -48,8 +49,10 @@ flingDeclParamList_Item:
 		(
 			flingTypenameOrModname ('=' flingExprList)?
 			| (KwType | KwModule) ('=' flingTypenameOrModnameList)?
-			| KwParpk 
-				'<' (flingTypenameOrModname | KwType | KwModule) '>'
+			| KwParpk '<' flingTypenameOrModname '>' 
+				('=' KwParpk '(' flingExprList ')')?
+			| KwParpk '<' (KwType | KwModule) '>'
+				('=' KwParpk '(' flingTypenameOrModnameList ')')?
 		)
 	;
 
@@ -68,6 +71,7 @@ flingDeclArgList_Item:
 		(
 			flingTypenameOrModname ('=' flingExprList)?
 			| KwParpk '<' flingTypenameOrModname '>'
+				('=' KwParpk '(' flingExprList ')')?
 		)
 	;
 //--------
@@ -488,8 +492,11 @@ flingDeclClsOrMxn_Item_DeclType:
 	flingDeclClsOrMxn_AccessSpecifier? flingDeclType
 	;
 flingDeclClsOrMxn_Item_DeclAliasOrConst:
-	flingDeclClsOrMxn_AccessSpecifier? KwStatic?
-	(flingDeclAlias | flingDeclConst)
+	flingDeclClsOrMxn_AccessSpecifier? 
+	(
+		flingDeclAlias
+		| KwStatic? flingDeclConst
+	)
 	;
 
 flingDeclClsOrMxn_AccessSpecifier:
@@ -833,13 +840,15 @@ flingDeclAlias:
 	| flingDeclAlias_Module
 	;
 flingDeclAlias_Value:
-	KwAlias flingIdentList ':' flingTypenameOrModname '=' flingExprList ';'
+	KwAlias flingIdentList ':' flingTypenameOrModname '=' flingExprList
+		';'
 	;
 flingDeclAlias_Type:
 	KwAlias flingIdentList ':' KwType '=' flingTypenameOrModnameList ';'
 	;
 flingDeclAlias_Module:
-	KwAlias flingIdentList ':' KwModule '=' flingTypenameOrModnameList ';'
+	KwAlias flingIdentList ':' KwModule '=' flingTypenameOrModnameList
+		';'
 	;
 //--------
 
@@ -909,7 +918,7 @@ flingTypenameOrModname_Builtin:
 		| KwRange
 		| KwString
 		| KwFile
-		| KwTokstrm
+		//| KwTokstrm
 
 		| KwU8
 		| KwI8
@@ -1405,7 +1414,7 @@ KwString: 'string' ;
 
 KwFloat: 'float' ;
 KwFile: 'file' ;
-KwTokstrm: 'tokstrm' ;
+//KwTokstrm: 'tokstrm' ;
 
 //KwDelay: 'delay' ;
 //--------

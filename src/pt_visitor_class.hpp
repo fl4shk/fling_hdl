@@ -167,7 +167,7 @@ public:		// functions
 	virtual ~PtVisitor();
 	int run();
 
-	GEN_GETTER_BY_REF(ast_etc_map);
+	GEN_GETTERS_BY_CON_REF_AND_REF(ast_etc_map);
 
 private:		// error/warning functions
 	inline void _err(ParserRuleContext* ctx, const std::string& msg)

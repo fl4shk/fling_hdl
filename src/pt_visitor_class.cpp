@@ -215,7 +215,8 @@ antlrcpp::Any PtVisitor::visitFlingDeclPackage_Item
 		flingDeclType,
 		flingDeclSubprog,
 		flingDeclAlias,
-		flingDeclConst)
+		flingDeclConst,
+		flingImportList)
 	else
 	{
 		internal_err(visitFlingDeclPackage_Item);
@@ -251,49 +252,47 @@ antlrcpp::Any PtVisitor::visitFlingDeclParamList_Item
 
 	CHECK(flingTypenameOrModname)
 	{
-		CHECK(KwParpk)
+		if (ctx->KwParpk().size() > 0)
 		{
 			node->kind = Kind::ParpkVar;
 		}
 		else
 		{
 			node->kind = Kind::Var;
-			JUST_ACCEPT_AND_POP_AST(node->opt_typename_or_modname,
-				flingTypenameOrModname);
-			ACCEPT_AND_POP_AST_LIST_IF(node->opt_expr_list, flingExprList);
 		}
+
+		JUST_ACCEPT_AND_POP_AST
+			(node->opt_typename_or_modname, flingTypenameOrModname);
 	}
 	else CHECK(KwType)
 	{
-		CHECK(KwParpk)
+		if (ctx->KwParpk().size() > 0)
 		{
 			node->kind = Kind::ParpkType;
 		}
 		else
 		{
 			node->kind = Kind::Type;
-
-			ACCEPT_AND_POP_AST_LIST_IF(node->opt_typename_or_modname_list,
-				flingTypenameOrModnameList);
 		}
 	}
 	else CHECK(KwModule)
 	{
-		CHECK(KwParpk)
+		if (ctx->KwParpk().size() > 0)
 		{
 			node->kind = Kind::ParpkModule;
 		}
 		else
 		{
 			node->kind = Kind::Module;
-			ACCEPT_AND_POP_AST_LIST_IF(node->opt_typename_or_modname_list,
-				flingTypenameOrModnameList);
 		}
 	}
 	else
 	{
 		internal_err(visitFlingDeclParamList_Item);
 	}
+	ACCEPT_AND_POP_AST_LIST_IFELSE
+		(node->opt_expr_list, flingExprList,
+		node->opt_typename_or_modname_list, flingTypenameOrModnameList);
 
 	return nullptr;
 }
@@ -324,7 +323,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclArgList_Item
 	JUST_ACCEPT_AND_POP_AST(node->ident_list, flingIdentList);
 
 	using Kind = DeclArgList_Item::Kind;
-	CHECK(KwParpk)
+	if (ctx->KwParpk().size() > 0)
 	{
 		if (!_conv_pt_to_enum(node->kind,
 			ctx->KwInput(), Kind::ParpkInput,
@@ -1441,14 +1440,9 @@ antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item_DeclAliasOrConst
 	}
 
 	node->is_static = ctx->KwStatic();
-	CHECK(flingDeclAlias)
-	{
-		JUST_ACCEPT_AND_POP_AST(node->decl_alias_or_const, flingDeclAlias);
-	}
-	else CHECK(flingDeclConst)
-	{
-		JUST_ACCEPT_AND_POP_AST(node->decl_alias_or_const, flingDeclConst);
-	}
+	ACCEPT_AND_POP_AST_IFELSE
+		(node->decl_alias_or_const, flingDeclAlias,
+		node->decl_alias_or_const, flingDeclConst)
 	else
 	{
 		internal_err(visitFlingDeclClsOrMxn_Item_DeclAliasOrConst);
@@ -2720,7 +2714,7 @@ antlrcpp::Any PtVisitor::visitFlingTypenameOrModname_Builtin
 		ctx->KwRange(), Kind::Range,
 		ctx->KwString(), Kind::String,
 		ctx->KwFile(), Kind::File,
-		ctx->KwTokstrm(), Kind::Tokstrm,
+		//ctx->KwTokstrm(), Kind::Tokstrm,
 
 		ctx->KwU8(), Kind::U8,
 		ctx->KwI8(), Kind::I8,
