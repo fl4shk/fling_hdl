@@ -1239,7 +1239,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclClass_Item_DeclVar
 		node->acc_spec = static_cast<AccSpec>(conv_bignum_to<size_t>
 			(temp));
 	}
-	node->is_static = ctx->KwStatic();
+	//node->is_static = ctx->KwStatic();
 	JUST_ACCEPT_AND_POP_AST(node->decl_var, flingDeclVar);
 
 	return nullptr;
@@ -1439,7 +1439,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item_DeclAliasOrConst
 			(temp));
 	}
 
-	node->is_static = ctx->KwStatic();
+	//node->is_static = ctx->KwStatic();
 	ACCEPT_AND_POP_AST_IFELSE
 		(node->decl_alias_or_const, flingDeclAlias,
 		node->decl_alias_or_const, flingDeclConst)
@@ -1498,7 +1498,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item_DeclSubprog_FullDefn
 	}
 
 	node->is_virtual = ctx->KwVirtual();
-	node->is_static = ctx->KwStatic();
+	//node->is_static = ctx->KwStatic();
 	node->is_const = ctx->KwConst();
 
 	ACCEPT_AND_POP_AST_IFELSE

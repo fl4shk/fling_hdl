@@ -532,7 +532,7 @@ public:		// functions
 class DeclClass_DeclVar: public DeclClsOrMxn_ItemBase
 {
 public:		// variables
-	bool is_static = false;
+	//bool is_static = false;
 	BaseSptr decl_var;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclClass_DeclVar, DeclClsOrMxn_ItemBase);
@@ -550,7 +550,7 @@ public:		// functions
 class DeclClsOrMxn_DeclAliasOrConst: public DeclClsOrMxn_ItemBase
 {
 public:		// variables
-	bool is_static = false;
+	//bool is_static = false;
 	BaseSptr decl_alias_or_const;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclClsOrMxn_DeclAliasOrConst,
@@ -560,7 +560,8 @@ public:		// functions
 class DeclClsOrMxn_DeclSubprogFullDefn: public DeclClsOrMxn_ItemBase
 {
 public:		// variables
-	bool is_virtual = false, is_static = false, is_const = false;
+	//bool is_virtual = false, is_static = false, is_const = false;
+	bool is_virtual = false, is_const = false;
 	BaseSptr subprog;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclClsOrMxn_DeclSubprogFullDefn,

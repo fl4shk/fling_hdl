@@ -47,6 +47,9 @@ public:		// types
 protected:		// variables
 	TypeKind _type_kind = TypeKind::Regular;
 	Symbol* _type = nullptr;
+
+	// The expression this has been set to.  A `VarEtcBase` will not always
+	// have one of these (i.e. it may just contain a `nullptr`).
 	AstBaseWptr _expr;
 
 public:		// functions
@@ -101,19 +104,17 @@ public:		// types
 protected:		// variables
 	Kind _kind;
 	AccSpec _acc_spec;
-	bool _is_static;
 
 public:		// functions
 	MembVarEtc(const AstBaseWptr& s_defn, TypeKind s_type_kind,
 		Symbol* s_type, const AstBaseWptr& s_expr, Kind s_kind,
-		AccSpec s_acc_spec, bool s_is_static);
+		AccSpec s_acc_spec);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(MembVarEtc);
 	virtual ~MembVarEtc();
 
 	EVAL(MAP(GEN_GETTER_BY_VAL, SEMICOLON,
 		kind,
-		acc_spec,
-		is_static));
+		acc_spec));
 };
 //--------
 

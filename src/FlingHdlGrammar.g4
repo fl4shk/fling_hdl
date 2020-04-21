@@ -432,7 +432,7 @@ flingDeclClass_Item:
 	| flingDeclClsOrMxn_Item
 	;
 flingDeclClass_Item_DeclVar:
-	flingDeclClsOrMxn_AccessSpecifier? KwStatic? flingDeclVar
+	flingDeclClsOrMxn_AccessSpecifier? flingDeclVar
 	;
 //--------
 
@@ -495,7 +495,7 @@ flingDeclClsOrMxn_Item_DeclAliasOrConst:
 	flingDeclClsOrMxn_AccessSpecifier? 
 	(
 		flingDeclAlias
-		| KwStatic? flingDeclConst
+		| flingDeclConst
 	)
 	;
 
@@ -510,8 +510,7 @@ flingDeclClsOrMxn_Item_DeclSubprog:
 flingDeclClsOrMxn_Item_DeclSubprog_FullDefn:
 	flingDeclClsOrMxn_AccessSpecifier?
 	(
-		(KwVirtual | KwStatic)? KwConst? 
-			(flingDeclFunc | flingDeclTask | flingDeclProc)
+		KwVirtual? KwConst? (flingDeclFunc | flingDeclTask | flingDeclProc)
 	)
 	;
 flingDeclClsOrMxn_Item_DeclSubprog_Abstract:
@@ -1394,7 +1393,6 @@ KwBase: 'base' ;
 KwDyn: 'dyn' ;
 KwWeakref: 'weakref' ;
 KwNull: 'null' ;
-KwStatic: 'static' ;
 KwProc: 'proc' ;
 KwMacro: 'macro' ;
 KwSelf: 'self' ;

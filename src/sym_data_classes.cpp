@@ -39,9 +39,9 @@ VarEtc::~VarEtc()
 
 MembVarEtc::MembVarEtc(const AstBaseWptr& s_defn, TypeKind s_type_kind,
 	Symbol* s_type, const AstBaseWptr& s_expr, Kind s_kind,
-	AccSpec s_acc_spec, bool s_is_static)
+	AccSpec s_acc_spec)
 	: VarEtcBase(s_defn, s_type_kind, s_type, s_expr), _kind(s_kind),
-	_acc_spec(s_acc_spec), _is_static(s_is_static)
+	_acc_spec(s_acc_spec)
 {
 }
 MembVarEtc::~MembVarEtc()

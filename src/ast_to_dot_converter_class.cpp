@@ -188,13 +188,12 @@ build(DeclMixin, wrap(is_base, ident))
 
 build(DeclClass, wrap(is_base, ident, is_signed, is_packed))
 
-build(DeclClass_DeclVar, wrap_conv_2(acc_spec), wrap(is_static))
+build(DeclClass_DeclVar, wrap_conv_2(acc_spec))
 build(DeclClsOrMxn_DeclType, wrap_conv_2(acc_spec))
-build(DeclClsOrMxn_DeclAliasOrConst, wrap_conv_2(acc_spec),
-	wrap(is_static))
+build(DeclClsOrMxn_DeclAliasOrConst, wrap_conv_2(acc_spec))
 
 build(DeclClsOrMxn_DeclSubprogFullDefn, wrap_conv_2(acc_spec),
-	wrap(is_virtual, is_static, is_const))
+	wrap(is_virtual, is_const))
 build(DeclClsOrMxn_DeclSubprogAbstract, wrap_conv_2(acc_spec),
 	wrap(is_const))
 
