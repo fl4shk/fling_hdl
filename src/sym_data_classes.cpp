@@ -17,6 +17,14 @@ Base::~Base()
 //--------
 
 //--------
+FullType::FullType(Symbol* s_partial_type, Kind s_kind)
+	: _partial_type(s_partial_type), _kind(s_kind)
+{
+}
+FullType::~FullType()
+{
+}
+
 VarEtcData::VarEtcData(const FullType& s_full_type,
 	const AstBaseWptr& s_expr)
 	: _full_type(s_full_type), _expr(s_expr)
@@ -25,7 +33,9 @@ VarEtcData::VarEtcData(const FullType& s_full_type,
 VarEtcData::~VarEtcData()
 {
 }
+//--------
 
+//--------
 VarEtcBase::VarEtcBase(const AstBaseWptr& s_defn, const Data& s_data)
 	: Base(s_defn), _data(s_data)
 {

@@ -49,7 +49,7 @@ private:		// variables
 	Kind _kind = Kind::Regular;
 
 public:		// functions
-	FullType(Symbol* s_type, Kind s_kind);
+	FullType(Symbol* s_partial_type, Kind s_kind);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(FullType);
 	~FullType();
 
@@ -79,7 +79,9 @@ public:		// functions
 		full_type,
 		expr));
 };
+//--------
 
+//--------
 class VarEtcBase: public Base
 {
 public:		// types
