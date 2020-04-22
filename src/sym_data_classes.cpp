@@ -17,9 +17,17 @@ Base::~Base()
 //--------
 
 //--------
-VarEtcBase::VarEtcBase(const AstBaseWptr& s_defn, TypeKind s_type_kind,
-	Symbol* s_type, const AstBaseWptr& s_expr)
-	: Base(s_defn), _type_kind(s_type_kind),  _type(s_type), _expr(s_expr)
+VarEtcData::VarEtcData(const FullType& s_full_type,
+	const AstBaseWptr& s_expr)
+	: _full_type(s_full_type), _expr(s_expr)
+{
+}
+VarEtcData::~VarEtcData()
+{
+}
+
+VarEtcBase::VarEtcBase(const AstBaseWptr& s_defn, const Data& s_data)
+	: Base(s_defn), _data(s_data)
 {
 }
 VarEtcBase::~VarEtcBase()
@@ -28,19 +36,17 @@ VarEtcBase::~VarEtcBase()
 //--------
 
 //--------
-VarEtc::VarEtc(const AstBaseWptr& s_defn, TypeKind s_type_kind,
-	Symbol* s_type, const AstBaseWptr& s_expr, Kind s_kind)
-	: VarEtcBase(s_defn, s_type_kind, s_type, s_expr), _kind(s_kind)
+VarEtc::VarEtc(const AstBaseWptr& s_defn, const Data& s_data, Kind s_kind)
+	: VarEtcBase(s_defn, s_data), _kind(s_kind)
 {
 }
 VarEtc::~VarEtc()
 {
 }
 
-MembVarEtc::MembVarEtc(const AstBaseWptr& s_defn, TypeKind s_type_kind,
-	Symbol* s_type, const AstBaseWptr& s_expr, Kind s_kind,
-	AccSpec s_acc_spec)
-	: VarEtcBase(s_defn, s_type_kind, s_type, s_expr), _kind(s_kind),
+MembVarEtc::MembVarEtc(const AstBaseWptr& s_defn, const Data& s_data,
+	Kind s_kind, AccSpec s_acc_spec)
+	: VarEtcBase(s_defn, s_data), _kind(s_kind),
 	_acc_spec(s_acc_spec)
 {
 }
@@ -51,9 +57,8 @@ MembVarEtc::~MembVarEtc()
 
 //--------
 DeclParamItemVar::DeclParamItemVar(const AstBaseWptr& s_defn,
-	TypeKind s_type_kind, Symbol* s_type, const AstBaseWptr& s_expr,
-	Kind s_kind)
-	: VarEtcBase(s_defn, s_type_kind, s_type, s_expr), _kind(s_kind)
+	const Data& s_data, Kind s_kind)
+	: VarEtcBase(s_defn, s_data), _kind(s_kind)
 {
 }
 DeclParamItemVar::~DeclParamItemVar()
@@ -61,8 +66,8 @@ DeclParamItemVar::~DeclParamItemVar()
 }
 
 DeclParamItemType::DeclParamItemType(const AstBaseWptr& s_defn,
-	TypeKind s_type_kind, Symbol* s_type, Kind s_kind)
-	: Base(s_defn), _type_kind(s_type_kind), _type(s_type), _kind(s_kind)
+	const FullType& s_full_type, Kind s_kind)
+	: Base(s_defn), _full_type(s_full_type), _kind(s_kind)
 {
 }
 DeclParamItemType::~DeclParamItemType()
@@ -79,12 +84,30 @@ DeclParamItemModule::~DeclParamItemModule()
 }
 
 DeclArgItemVar::DeclArgItemVar(const AstBaseWptr& s_defn,
-	TypeKind s_type_kind, Symbol* s_type, const AstBaseWptr& s_expr,
-	Kind s_kind)
-	: VarEtcBase(s_defn, s_type_kind, s_type, s_expr), _kind(s_kind)
+	const Data& s_data, Kind s_kind)
+	: VarEtcBase(s_defn, s_data), _kind(s_kind)
 {
 }
 DeclArgItemVar::~DeclArgItemVar()
+{
+}
+//--------
+
+//--------
+AliasValue::AliasValue(const AstBaseWptr& s_defn, const Data& s_data)
+	: VarEtcBase(s_defn, s_data)
+{
+}
+AliasValue::~AliasValue()
+{
+}
+
+AliasType::AliasType(const AstBaseWptr& s_defn,
+	const FullType& s_full_type)
+	: Base(s_defn), _full_type(s_full_type)
+{
+}
+AliasType::~AliasType()
 {
 }
 //--------

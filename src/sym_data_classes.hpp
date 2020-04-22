@@ -34,32 +34,66 @@ public:		// functions
 //--------
 
 //--------
-class VarEtcBase: public Base
+class FullType final
 {
 public:		// types
-	enum class TypeKind
+	enum class Kind
 	{
 		Regular,
 		Dyn,
 		Weakref,
 	};
 
-protected:		// variables
-	TypeKind _type_kind = TypeKind::Regular;
-	Symbol* _type = nullptr;
+private:		// variables
+	Symbol* _partial_type = nullptr;
+	Kind _kind = Kind::Regular;
 
-	// The expression this has been set to.  A `VarEtcBase` will not always
-	// have one of these (i.e. it may just contain a `nullptr`).
+public:		// functions
+	FullType(Symbol* s_type, Kind s_kind);
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(FullType);
+	~FullType();
+
+	EVAL(MAP(GEN_GETTER_BY_VAL, SEMICOLON,
+		partial_type,
+		kind));
+};
+
+class VarEtcData final
+{
+public:		// types
+	using AstBaseWptr = Base::AstBaseWptr;
+
+private:		// variables
+	FullType _full_type;
+
+	// The expression this has been set to.  A `VarEtcBase` will not
+	// always have one of these (i.e. it may just contain a `nullptr`).
 	AstBaseWptr _expr;
 
 public:		// functions
-	VarEtcBase(const AstBaseWptr& s_defn, TypeKind s_type_kind,
-		Symbol* s_type, const AstBaseWptr& s_expr);
+	VarEtcData(const FullType& s_full_type, const AstBaseWptr& s_expr);
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(VarEtcData);
+	~VarEtcData();
+
+	EVAL(MAP(GEN_GETTER_BY_CON_REF, SEMICOLON,
+		full_type,
+		expr));
+};
+
+class VarEtcBase: public Base
+{
+public:		// types
+	using Data = VarEtcData;
+
+protected:		// variables
+	Data _data;
+
+public:		// functions
+	VarEtcBase(const AstBaseWptr& s_defn, const Data& s_data);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(VarEtcBase);
 	virtual ~VarEtcBase();
 
-	GEN_GETTER_BY_VAL(type);
-	GEN_GETTER_BY_CON_REF(expr);
+	GEN_GETTER_BY_CON_REF(data);
 };
 //--------
 
@@ -67,7 +101,7 @@ public:		// functions
 class VarEtc: public VarEtcBase
 {
 public:		// types
-	using TypeKind = VarEtcBase::TypeKind;
+	using Data = VarEtcBase::Data;
 
 	enum class Kind
 	{
@@ -80,8 +114,7 @@ protected:		// variables
 	Kind _kind;
 
 public:		// functions
-	VarEtc(const AstBaseWptr& s_defn, TypeKind s_type_kind, Symbol* s_type,
-		const AstBaseWptr& s_expr, Kind s_kind);
+	VarEtc(const AstBaseWptr& s_defn, const Data& s_data, Kind s_kind);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(VarEtc);
 	virtual ~VarEtc();
 
@@ -91,7 +124,7 @@ public:		// functions
 class MembVarEtc: public VarEtcBase
 {
 public:		// types
-	using TypeKind = VarEtcBase::TypeKind;
+	using Data = VarEtcBase::Data;
 
 	enum class Kind
 	{
@@ -106,8 +139,7 @@ protected:		// variables
 	AccSpec _acc_spec;
 
 public:		// functions
-	MembVarEtc(const AstBaseWptr& s_defn, TypeKind s_type_kind,
-		Symbol* s_type, const AstBaseWptr& s_expr, Kind s_kind,
+	MembVarEtc(const AstBaseWptr& s_defn, const Data& s_data, Kind s_kind,
 		AccSpec s_acc_spec);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(MembVarEtc);
 	virtual ~MembVarEtc();
@@ -123,7 +155,7 @@ public:		// functions
 class DeclParamItemVar final: public VarEtcBase
 {
 public:		// types
-	using TypeKind = VarEtcBase::TypeKind;
+	using Data = VarEtcBase::Data;
 
 	enum class Kind
 	{
@@ -135,8 +167,8 @@ private:		// variables
 	Kind _kind;
 
 public:		// functions
-	DeclParamItemVar(const AstBaseWptr& s_defn, TypeKind s_type_kind,
-		Symbol* s_type, const AstBaseWptr& s_expr, Kind s_kind);
+	DeclParamItemVar(const AstBaseWptr& s_defn, const Data& s_data,
+		Kind s_kind);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(DeclParamItemVar);
 	virtual ~DeclParamItemVar();
 
@@ -146,7 +178,6 @@ public:		// functions
 class DeclParamItemType final: public Base
 {
 public:		// types
-	using TypeKind = VarEtcBase::TypeKind;
 	enum class Kind
 	{
 		Type,
@@ -154,20 +185,17 @@ public:		// types
 	};
 
 private:		// variables
-	TypeKind _type_kind = TypeKind::Regular;
-	Symbol* _type = nullptr;
+	FullType _full_type;
 	Kind _kind;
 
 public:		// functions
-	DeclParamItemType(const AstBaseWptr& s_defn, TypeKind s_type_kind,
-		Symbol* s_type, Kind s_kind);
+	DeclParamItemType(const AstBaseWptr& s_defn,
+		const FullType& s_full_type, Kind s_kind);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(DeclParamItemType);
 	virtual ~DeclParamItemType();
 
-	EVAL(MAP(GEN_GETTER_BY_VAL, SEMICOLON,
-		type_kind,
-		type,
-		kind));
+	GEN_GETTER_BY_CON_REF(full_type);
+	GEN_GETTER_BY_VAL(kind);
 };
 
 class DeclParamItemModule final: public Base
@@ -198,7 +226,7 @@ public:		// functions
 class DeclArgItemVar final: public VarEtcBase
 {
 public:		// types
-	using TypeKind = VarEtcBase::TypeKind;
+	using Data = VarEtcBase::Data;
 
 	using Kind = ast::DeclArgList_Item::Kind;
 
@@ -206,22 +234,35 @@ private:		// variables
 	Kind _kind;
 
 public:		// functions
-	DeclArgItemVar(const AstBaseWptr& s_defn, TypeKind s_type_kind,
-		Symbol* s_type, const AstBaseWptr& s_expr, Kind s_kind);
+	DeclArgItemVar(const AstBaseWptr& s_defn, const Data& s_data,
+		Kind s_kind);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(DeclArgItemVar);
 	virtual ~DeclArgItemVar();
 };
 //--------
 
 //--------
-//class AliasValue: public VarEtcBase
-//{
-//protected:		// variables
-//	Symbol* _type = nullptr;
-//	AstBaseWptr _expr;
-//
-//public:		// functions
-//};
+class AliasValue final: public VarEtcBase
+{
+public:		// types
+	using Data = VarEtcBase::Data;
+
+public:		// functions
+	AliasValue(const AstBaseWptr& s_defn, const Data& s_data);
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AliasValue);
+	virtual ~AliasValue();
+};
+
+class AliasType final: public Base
+{
+private:		// variables
+	FullType _full_type;
+
+public:		// functions
+	AliasType(const AstBaseWptr& s_defn, const FullType& s_full_type);
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AliasType);
+	virtual ~AliasType();
+};
 //--------
 
 } // namespace sym_data

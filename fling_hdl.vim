@@ -110,7 +110,7 @@ syn keyword fling_hdl_stmt parpk unparpk
 syn keyword fling_hdl_stmt virtual abstract
 syn match fling_hdl_func "$isvtype"
 
-syn keyword fling_hdl_stmt base dyn weakref static proc self
+syn keyword fling_hdl_stmt base dyn weakref proc self
 syn keyword fling_hdl_type self_t
 
 syn keyword fling_hdl_stmt pub prot priv
