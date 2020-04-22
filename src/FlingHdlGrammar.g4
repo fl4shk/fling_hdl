@@ -1331,30 +1331,56 @@ KwCat: 'cat' ;
 KwRepl: 'repl' ;
 KwAs: 'as' ;
 
+//--------
 KwDollarSize: '$size' ;
 KwDollarRange: '$range' ;
 KwDollarHigh: '$high' ;
 KwDollarLow: '$low' ;
 KwDollarFirstel: '$firstel' ;
 KwDollarLastel: '$lastel' ;
+//--------
+
+//--------
 KwDollarSigned: '$signed' ;
 KwDollarUnsigned: '$unsigned' ;
+//--------
 
+//--------
 KwDollarPow: '$pow' ;
 KwDollarClog2: '$clog2' ;
+//--------
 
-//KwDollarIsUnknown: '$is_unknown' ;
-//KwDollarIsHighImp: '$is_high_imp' ;
+//--------
+KwDollarIsUnknown: '$is_unknown' ;
+KwDollarIsHighImp: '$is_high_imp' ;
+//--------
 
-//KwDollarDisplay: '$display' ;
-//KwDollarMonitor: '$monitor' ;
-//KwDollarFinish: '$finish' ;
-//KwDollarStop: '$stop' ;
+//--------
+KwDollarDisplay: '$display' ;
+KwDollarMonitor: '$monitor' ;
+KwDollarFinish: '$finish' ;
+KwDollarStop: '$stop' ;
+//--------
 
 
+//--------
+KwStaticAssert: 'static_assert' ;
+//--------
+
+//--------
 KwAssert: 'assert' ;
 KwAssume: 'assume' ;
 KwCover: 'cover' ;
+
+KwProperty: 'property' ;
+KwIff: 'iff' ;
+
+KwDollarPast: '$past' ;
+KwDollarRose: '$rose' ;
+KwDollarFell: '$fell' ;
+KwDollarStable: '$stable' ;
+
+KwDollarIsformal: '$isformal' ;
 //--------
 
 
@@ -1387,14 +1413,12 @@ KwDollarIsvtype: '$isvtype' ;
 //KwDollarIsUnsigned: '$is_unsigned' ;
 //KwDollarIsSame: '$is_same' ;
 //KwDollarIsBaseOf: '$is_base_of' ;
-//KwDollarIsStatic: '$is_static' ;
 
 KwBase: 'base' ;
 KwDyn: 'dyn' ;
 KwWeakref: 'weakref' ;
 KwNull: 'null' ;
 KwProc: 'proc' ;
-KwMacro: 'macro' ;
 KwSelf: 'self' ;
 KwSelfT: 'self_t' ;
 

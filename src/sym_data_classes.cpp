@@ -17,17 +17,17 @@ Base::~Base()
 //--------
 
 //--------
-FullType::FullType(Symbol* s_partial_type, Kind s_kind)
-	: _partial_type(s_partial_type), _kind(s_kind)
+Typenm::Typenm(Symbol* s_partial_typenm, Kind s_kind)
+	: _partial_typenm(s_partial_typenm), _kind(s_kind)
 {
 }
-FullType::~FullType()
+Typenm::~Typenm()
 {
 }
 
-VarEtcData::VarEtcData(const FullType& s_full_type,
+VarEtcData::VarEtcData(const Typenm& s_typenm,
 	const AstBaseWptr& s_expr)
-	: _full_type(s_full_type), _expr(s_expr)
+	: _typenm(s_typenm), _expr(s_expr)
 {
 }
 VarEtcData::~VarEtcData()
@@ -76,8 +76,8 @@ DeclParamItemVar::~DeclParamItemVar()
 }
 
 DeclParamItemType::DeclParamItemType(const AstBaseWptr& s_defn,
-	const FullType& s_full_type, Kind s_kind)
-	: Base(s_defn), _full_type(s_full_type), _kind(s_kind)
+	const Typenm& s_typenm, Kind s_kind)
+	: Base(s_defn), _typenm(s_typenm), _kind(s_kind)
 {
 }
 DeclParamItemType::~DeclParamItemType()
@@ -113,11 +113,19 @@ AliasValue::~AliasValue()
 }
 
 AliasType::AliasType(const AstBaseWptr& s_defn,
-	const FullType& s_full_type)
-	: Base(s_defn), _full_type(s_full_type)
+	const Typenm& s_typenm)
+	: Base(s_defn), _typenm(s_typenm)
 {
 }
 AliasType::~AliasType()
+{
+}
+
+AliasModule::AliasModule(const AstBaseWptr& s_defn, Symbol* s_module)
+	: Base(s_defn), _module(s_module)
+{
+}
+AliasModule::~AliasModule()
 {
 }
 //--------
