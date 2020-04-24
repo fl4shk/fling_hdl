@@ -1498,7 +1498,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item_DeclSubprog_FullDefn
 	}
 
 	node->is_virtual = ctx->KwVirtual();
-	//node->is_static = ctx->KwStatic();
+	node->is_static = ctx->KwStatic();
 	node->is_const = ctx->KwConst();
 
 	ACCEPT_AND_POP_AST_IFELSE

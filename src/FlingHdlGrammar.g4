@@ -510,7 +510,8 @@ flingDeclClsOrMxn_Item_DeclSubprog:
 flingDeclClsOrMxn_Item_DeclSubprog_FullDefn:
 	flingDeclClsOrMxn_AccessSpecifier?
 	(
-		KwVirtual? KwConst? (flingDeclFunc | flingDeclTask | flingDeclProc)
+		(KwVirtual | KwStatic)? KwConst?
+			(flingDeclFunc | flingDeclTask | flingDeclProc)
 	)
 	;
 flingDeclClsOrMxn_Item_DeclSubprog_Abstract:
@@ -1405,6 +1406,7 @@ KwUnparpk: 'unparpk' ;
 KwMixin: 'mixin' ;
 KwExtends: 'extends' ;
 
+KwStatic: 'static' ;
 KwVirtual: 'virtual' ;
 KwAbstract: 'abstract' ;
 KwDollarIsvtype: '$isvtype' ;

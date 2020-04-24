@@ -193,7 +193,7 @@ build(DeclClsOrMxn_DeclType, wrap_conv_2(acc_spec))
 build(DeclClsOrMxn_DeclAliasOrConst, wrap_conv_2(acc_spec))
 
 build(DeclClsOrMxn_DeclSubprogFullDefn, wrap_conv_2(acc_spec),
-	wrap(is_virtual, is_const))
+	wrap(is_virtual, is_static, is_const))
 build(DeclClsOrMxn_DeclSubprogAbstract, wrap_conv_2(acc_spec),
 	wrap(is_const))
 
