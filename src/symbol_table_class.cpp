@@ -20,12 +20,13 @@ SymbolTable* Symbol::scope() const
 {
 	return parent()->scope_table().at(name()).get();
 }
-SymTableMap* Symbol::linked_scope_table() const
+SymTableMap* Symbol::imported_pkg_scope_table() const
 {
-	return parent()->linked_scope_table_map().at(name()).get();
+	return parent()->imported_pkg_scope_table_map().at(name()).get();
 }
 string Symbol::full_name() const
 {
+	// Fill this in later.
 }
 //--------
 
@@ -92,7 +93,6 @@ string SymbolTable::pkg_scope_seq(const vector<string>& vec)
 
 	return ret;
 }
-
 //--------
 
 } // namespace fling_hdl

@@ -49,3 +49,4 @@ fling_hdl_debug
 *.pdf
 *.v
 gen_src
+docs/*/build

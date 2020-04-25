@@ -42,8 +42,9 @@ public:		// functions
 	~Symbol();
 
 	SymbolTable* scope() const;
-	SymTableMap* linked_scope_table() const;
+	SymTableMap* imported_pkg_scope_table() const;
 
+	// This is intended for use with 
 	string full_name() const;
 
 	GEN_GETTER_BY_CON_REF(name);
@@ -72,7 +73,7 @@ public:		// types
 	using ScopeTable = map<string, unique_ptr<SymbolTable>>;
 
 	// This is used for imported packages.
-	using LinkedScopeTableMap = map<string, unique_ptr<SymTableMap>>;
+	using ImportedPkgScopeTableMap = map<string, unique_ptr<SymTableMap>>;
 
 private:		// variables
 	// This is unused for the global scope.
@@ -81,7 +82,7 @@ private:		// variables
 
 	LocalSymTable _local_table;
 	ScopeTable _scope_table;
-	LinkedScopeTableMap _linked_scope_table_map;
+	ImportedPkgScopeTableMap _imported_pkg_scope_table_map;
 
 public:		// functions
 	SymbolTable(SymbolTable* s_parent=nullptr);
@@ -91,7 +92,7 @@ public:		// functions
 	// Insert a new `Symbol` into this `SymbolTable`, possibly creating a
 	// scope and/or a linked scope table for it.
 	Symbol* insert(const string& s_name, const AstBaseWptr& s_defn,
-		bool create_scope=false, bool create_linked_scope_table=false);
+		bool create_scope=false, bool create_imported_pkg_scope_table=false);
 
 	// This is kept simple, looking up only *one* name, and not some
 	// more complex named scopes lookup.  As such, if `alu_pkg::Bus<WIDTH>`
@@ -107,7 +108,7 @@ public:		// functions
 	EVAL(MAP(GEN_GETTER_BY_CON_REF, SEMICOLON,
 		local_table,
 		scope_table,
-		linked_scope_table_map));
+		imported_pkg_scope_table_map));
 };
 //--------
 

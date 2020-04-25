@@ -1,0 +1,178 @@
+\documentclass{article}
+
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{fancyvrb}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{setspace}
+\usepackage[nottoc]{tocbibind}
+\usepackage[font=large]{caption}
+\usepackage{framed}
+\usepackage{tabularx}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{fontspec}
+\usepackage[backend=biber,sorting=none]{biblatex}
+%%\usepackage[
+%%	backend=biber,
+%%	style=ieee,
+%%	sorting=none
+%%]{biblatex}
+%\addbibresource{project_refs.bib}
+
+%% Hide section, subsection, and subsubsection numbering
+%\renewcommand{\thesection}{}
+%\renewcommand{\thesubsection}{}
+%\renewcommand{\thesubsubsection}{}
+
+% Alternative form of doing section stuff
+\renewcommand{\thesection}{}
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+\makeatletter
+\def\@seccntformat#1{\csname #1ignore\expandafter\endcsname\csname the#1\endcsname\quad}
+\let\sectionignore\@gobbletwo
+\let\latex@numberline\numberline
+\def\numberline#1{\if\relax#1\relax\else\latex@numberline{#1}\fi}
+\makeatother
+
+\makeatletter
+\renewcommand\tableofcontents{%
+    \@starttoc{toc}%
+}
+\makeatother
+
+\newcommand{\respacing}{\doublespacing \singlespacing}
+\newcommand{\code}[2][1]{\noindent \texttt{\tab[#1] #2} \\}
+\newcommand{\skipline}[0]{\texttt{}\\}
+\newcommand{\tnl}[0]{\tabularnewline}
+
+\begin{document}
+%--------
+	\font\titlefont={Times New Roman} at 20pt
+	\title{{\titlefont Fling HDL Language Implementation Notes }}
+
+	\font\bottomtextfont={Times New Roman} at 12pt
+	\date{{\bottomtextfont} \today}
+	\author{{\bottomtextfont Andrew Clark}}
+
+	\maketitle
+	\pagenumbering{gobble}
+
+	\newpage
+	\pagenumbering{arabic}
+	\tableofcontents
+
+	\newpage
+	\setmainfont{Times New Roman}
+	\setmonofont{Courier New}
+
+%\doublespacing
+%\section{Abstract}
+	%\setcounter{section}{-1}
+
+\section{Table of Contents}
+	\tableofcontents
+	\newpage
+
+\section{Passes}
+	\begin{enumerate}
+	%--------
+	\item Parsing to create initial AST
+		\begin{itemize}
+		%--------
+		\item Parsing itself is done with an ANTLR4-generated parser.
+		\item A parse tree visitor, \texttt{PtVisitor}, is used to
+		construct the initial AST.  This is largely done, not counting any
+		bugs that may remain, and it is ready to be expanded with future
+		language constructs.
+		\item This stage does \textit{not} create the symbol table.
+		\item Note:  the AST and symbol table are considered immutable, so
+		changes to the structure of the AST and symbol table will simply be
+		provided by generating new ones, generating the AST first, followed
+		by a new symbol table created from that AST.
+		\item Note:  The symbol table and AST are the two primary data
+		structures within the compiler, besides anything needed for running
+		the partial language interpreter.  (One day there may be a full
+		language interpreter).
+		%--------
+		\end{itemize}
+	\item Create Symbol Table (Same algorithm used for all cases when a new
+	symbol table is built)
+		\begin{itemize}
+		%--------
+		\item This is performed with an AST visitor.
+		\item This stage takes multiple passes because ordering of symbol
+		definitions does not matter per the language's semantics.
+		\item This stage does some semantic analysis.  It prevents
+		multiple instances of the same symbol identifier within one scope.
+		\item This stage should \textit{not} expand template instances into
+		their own symbols.  Let's leave that for the next phase of the
+		compiler.
+		\item Note:  Once named constants are evaluated, it is no longer
+		necessary to compute their values.  It makes sense to transfer
+		their values from one symbol table to the next.  Some mechanism
+		needs to exist to facilitate this goal.
+		%--------
+		\end{itemize}
+	\item First phase of AST lowering.
+		\begin{itemize}
+		%--------
+		\item This stage needs to perform the following, not necessarily in
+		this order.
+			\begin{itemize}
+			%--------
+			\item Expand template instances into new AST nodes.  This is to
+			be done for \texttt{module}s, types, and subprograms.
+			\item Elaborate \texttt{gen} constructs into new AST nodes.
+			\item Elaborate \texttt{proc}s into new AST nodes when called
+			inside of \texttt{module}s.  Since this is part of the
+			metaprogramming system, I believe it can go here.
+			\item Compute the values of constants as needed for the
+			previous items.  A template that takes a \texttt{size\_t}
+			parameter will need to be elaborated with whatever value was
+			provided.  A \texttt{gen} \texttt{for} construct will need to
+			know the range of iteration to be performed.
+				\begin{itemize}
+				%--------
+				\item This item needs an interpreter for the components of
+				the language that can be evaluated at compile-time.
+				\item Also, the interpreter itself may find a template
+				instance or a \texttt{gen} construct that itself needs
+				expanded.
+				%--------
+				\end{itemize}
+			%--------
+			\end{itemize}
+		\item This phase should inject information about where new AST
+		nodes came from for error messages.  (\texttt{In
+		expansion of proc build\_adder(), filename.fling\_hdl:30:60})
+		\item Every pass of this section of this phase will rely upon the
+		one always following it, another Create Symbol Table pass, to
+		determine if the expansion created too many scopes.  
+		\item I believe that circular dependencies can be prevented by not
+		allowing a template to depend on another instance of itself.  Does
+		this break anywhere?  I don't think I've ever written C++ code
+		where a template dependended upon itself.  This seems both
+		reasonable and to be the solution.
+			\begin{itemize}
+			%--------
+			\item A template \texttt{class} (or \texttt{mixin}) that takes
+			an instance of itself as an argument can simply be banned.
+			\item Allow \texttt{class}es, \texttt{mixin}s, and
+			\texttt{module}s to contain instances of themselves,
+			recursively, but only up to a maximum recursion depth.  A
+			\texttt{gen} \texttt{if} construct can be used to determine if
+			there should be recursion.  Verilog already allows recursive
+			\texttt{module}s via this method.
+			%--------
+			\end{itemize}
+		%--------
+		\end{itemize}
+	%--------
+	\end{enumerate}
+
+
+	%\printbibliography[heading=bibnumbered,title={Bibliography}]
+
+\end{document}

@@ -172,9 +172,9 @@ public:		// functions
 	GEN_GETTER_BY_CON_REF(order_vec);
 };
 
-class InstParamOrArgListNamed final: public Base
-{
-};
+//class InstParamOrArgListNamed final: public Base
+//{
+//};
 //--------
 
 //--------
