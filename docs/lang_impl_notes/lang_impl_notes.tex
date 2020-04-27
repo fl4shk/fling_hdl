@@ -56,18 +56,19 @@
 	\date{{\bottomtextfont} \today}
 	\author{{\bottomtextfont Andrew Clark}}
 
+	\setmainfont{Times New Roman}
+	\setmonofont{Courier New}
+
 	\maketitle
 	\pagenumbering{gobble}
 
 	\newpage
 	\pagenumbering{arabic}
-	\tableofcontents
+	%\tableofcontents
+	%\newpage
 
-	\newpage
-	\setmainfont{Times New Roman}
-	\setmonofont{Courier New}
+	\doublespacing
 
-%\doublespacing
 %\section{Abstract}
 	%\setcounter{section}{-1}
 
@@ -75,102 +76,177 @@
 	\tableofcontents
 	\newpage
 
-\section{Passes}
-	\begin{enumerate}
-	%--------
-	\item Parsing to create initial AST
+\section{Components}
+	\subsection{Phase:  Parsing to create initial AST}
 		\begin{itemize}
 		%--------
 		\item Parsing itself is done with an ANTLR4-generated parser.
 		\item A parse tree visitor, \texttt{PtVisitor}, is used to
-		construct the initial AST.  This is largely done, not counting any
-		bugs that may remain, and it is ready to be expanded with future
-		language constructs.
+			construct the initial AST.  This is largely a finished part of
+			the compiler, not counting any bugs that may remain, and it is
+			ready to be expanded with future language constructs.
 		\item This stage does \textit{not} create the symbol table.
 		\item Note:  the AST and symbol table are considered immutable, so
-		changes to the structure of the AST and symbol table will simply be
-		provided by generating new ones, generating the AST first, followed
-		by a new symbol table created from that AST.
+			changes to the structure of the AST and symbol table will
+			simply be provided by generating new ones, generating the AST
+			first, followed by a new symbol table created from that AST.
 		\item Note:  The symbol table and AST are the two primary data
-		structures within the compiler, besides anything needed for running
-		the partial language interpreter.  (One day there may be a full
-		language interpreter).
+			structures within the compiler, besides anything needed for
+			running the partial language interpreter.  (One day there may
+			be a full language interpreter).
 		%--------
 		\end{itemize}
-	\item Create Symbol Table (Same algorithm used for all cases when a new
-	symbol table is built)
+	\subsection{Stage:  Create Symbol Table }
 		\begin{itemize}
 		%--------
-		\item This is performed with an AST visitor.
+		\item This stage is done after every generation of a new AST, and
+			it is performed with an AST visitor.  The reasoning for doing
+			this separately is that it ensures consistent generation of the
+			symbol table for a particular AST, i.e. it localizes bugs in
+			code that generates the symbol table.
 		\item This stage takes multiple passes because ordering of symbol
-		definitions does not matter per the language's semantics.
-		\item This stage does some semantic analysis.  It prevents
-		multiple instances of the same symbol identifier within one scope.
-		\item This stage should \textit{not} expand template instances into
-		their own symbols.  Let's leave that for the next phase of the
-		compiler.
-		\item Note:  Once named constants are evaluated, it is no longer
-		necessary to compute their values.  It makes sense to transfer
-		their values from one symbol table to the next.  Some mechanism
-		needs to exist to facilitate this goal.
-		%--------
-		\end{itemize}
-	\item First phase of AST lowering.
-		\begin{itemize}
-		%--------
-		\item This stage needs to perform the following, not necessarily in
-		this order.
+			definitions does not matter per the language's semantics.
+		\item This stage does some semantic analysis.  It prevents multiple
+			instances of the same symbol identifier within one scope.
+		\item This stage does \textit{not} expand template instances into
+			their own symbols.
+		\item This stage does \textit{not} elaborate the values of named
+			constants.
 			\begin{itemize}
 			%--------
-			\item Expand template instances into new AST nodes.  This is to
-			be done for \texttt{module}s, types, and subprograms.
-			\item Elaborate \texttt{gen} constructs into new AST nodes.
-			\item Elaborate \texttt{proc}s into new AST nodes when called
-			inside of \texttt{module}s.  Since this is part of the
-			metaprogramming system, I believe it can go here.
-			\item Compute the values of constants as needed for the
-			previous items.  A template that takes a \texttt{size\_t}
-			parameter will need to be elaborated with whatever value was
-			provided.  A \texttt{gen} \texttt{for} construct will need to
-			know the range of iteration to be performed.
-				\begin{itemize}
-				%--------
-				\item This item needs an interpreter for the components of
-				the language that can be evaluated at compile-time.
-				\item Also, the interpreter itself may find a template
-				instance or a \texttt{gen} construct that itself needs
-				expanded.
-				%--------
-				\end{itemize}
+			\item Note:  Once named constants are evaluated, it is no longer
+				necessary to compute their values.  It makes sense to copy
+				their values from one symbol table to the next.  Some
+				mechanism needs to exist to facilitate this goal.
+			\item Note  Named constants will need to be translated into
+				Verilog's \texttt{localparam}s, which are always Verilog
+				vectors.  Non-\texttt{packed} \texttt{class}es and arrays
+				in my language will necessarily be translated freely into
 			%--------
 			\end{itemize}
-		\item This phase should inject information about where new AST
-		nodes came from for error messages.  (\texttt{In
-		expansion of proc build\_adder(), filename.fling\_hdl:30:60})
-		\item Every pass of this section of this phase will rely upon the
-		one always following it, another Create Symbol Table pass, to
-		determine if the expansion created too many scopes.  
-		\item I believe that circular dependencies can be prevented by not
-		allowing a template to depend on another instance of itself.  Does
-		this break anywhere?  I don't think I've ever written C++ code
-		where a template dependended upon itself.  This seems both
-		reasonable and to be the solution.
+		\item This stage will handle the semantics of \texttt{class}es and
+			\texttt{mixin}s, including inheritance.
 			\begin{itemize}
 			%--------
-			\item A template \texttt{class} (or \texttt{mixin}) that takes
-			an instance of itself as an argument can simply be banned.
-			\item Allow \texttt{class}es, \texttt{mixin}s, and
+			\item But what about multiple inheritance of mixins anyway?
+				How should that be set up?  Problems only exist when names
+				clash.
+			\item Here is my idea, based on how Python does things:  have
+				name clashes be resolved by simply using whatever showed up
+				first within the \texttt{extends} list, prioritizing an
+				inherited \texttt{class}'s named object over an inherited
+				\texttt{mixin}'s.
+			%--------
+			\end{itemize}
+		%--------
+		\end{itemize}
+	\subsection{Phase:  First AST lowering phase}
+		This stage needs to perform the following, not necessarily in this
+		order, in a loop until it cannot do so any more.
+		\begin{itemize}
+		%--------
+		\item Expand template instances into new AST nodes.  This is to
+			be done for \texttt{module}s, types, and subprograms.
+		\item Elaborate \texttt{gen} constructs into new AST nodes.
+		\item Flatten \texttt{proc} calls into new AST nodes.  Since
+			this is part of the metaprogramming system, I believe it
+			can go here.
+		\item Flatten instantiations of \texttt{parpk} into separate named
+			elements.
+		\item Use the \texttt{Interpreter} class to compute the values of
+			constants as needed for the previous items.
+		\item Use the \texttt{SymbolTableBuilder} class to build a new
+			symbol table.
+		%--------
+		\end{itemize}
+		Note that any of these items besides buiding a new symbol table for
+		the new AST will involve giving up the current node's translation
+		if it depends on another stage within this phase.
+
+
+		This phase should inject information about where new AST nodes came
+		from for error messages:
+		\begin{itemize}
+		%--------
+		\item Example:  \texttt{Error:  in expansion of proc
+			build\_adder()...}
+		%--------
+		\end{itemize}
+
+		%Every pass of this section of this phase will rely upon the one
+		%always following it, another Create Symbol Table pass, to determine
+		%if the expansion created too many scopes.  
+
+		%I believe that circular dependencies can be prevented by not
+		%allowing a template to depend on another instance of itself.  Does
+		%this break anywhere?  I don't think I've ever written C++ code
+		%where a template dependended upon itself.  This seems both
+		%reasonable and to be the solution.
+
+		\subsubsection{Handling Circular Dependencies}
+		Here are some notes on handling circular dependencies within this
+		phase.
+		\begin{itemize}
+		%--------
+		\item A template \texttt{class} (or \texttt{mixin}) that takes
+			an instance of itself (or its template type with another
+			parameter) as a template parameter can simply be banned.
+			\begin{itemize}
+			%--------
+			\item Note:  this won't mean that a \texttt{type} or
+				\texttt{module} template parameter can't be used.
+			%--------
+			\end{itemize}
+		\item Allow \texttt{class}es, \texttt{mixin}s, and
 			\texttt{module}s to contain instances of themselves,
 			recursively, but only up to a maximum recursion depth.  A
-			\texttt{gen} \texttt{if} construct can be used to determine if
-			there should be recursion.  Verilog already allows recursive
-			\texttt{module}s via this method.
+			\texttt{gen if} construct can be used to determine
+			if there should be recursion.  I only want this because even
+			\textit{Verilog} allows recursive \texttt{module}s via this
+			method.
+			\begin{itemize}
+			%--------
+			\item How should recursion be handled?  How about implementing
+				this check for recursion as based upon the specific type of
+				module (same parameters and everything), limiting the
+				amount of recursion in those.  That can simply be
+				implemented with an \texttt{std::map<Symbol*, size\_t>}.
+				If any of the \texttt{Symbol} pointers have too many
+				instances due to recursion, we throw an error.
+			%--------
+			\end{itemize}
+		\item Of course, don't allow classes or mixins to derive from their
+			own type.
+			\begin{itemize}
+			%--------
+			\item This can probably be handled by just using an
+				\texttt{std::set<Symbol*>}.
 			%--------
 			\end{itemize}
 		%--------
 		\end{itemize}
-	%--------
-	\end{enumerate}
+
+		%\subsubsection{Algorithms For This Stage}
+		%	Template instance expansion algorithm:
+		%	\begin{itemize}
+		%	%--------
+		%	\item For every template instance:
+		%		\begin{itemize}
+		%		%--------
+		%		\item If this template instance has no corresponding AST
+		%			node in the new AST (kept track of with some kind of
+		%			\texttt{std::map})
+
+		%			\begin{itemize}
+		%			%--------
+		%			\item Create a new AST node representing this
+		%				template instance.
+		%			%--------
+		%			\end{itemize}
+		%		%--------
+		%		\end{itemize}
+		%	%--------
+		%	\end{itemize}
 
 
 	%\printbibliography[heading=bibnumbered,title={Bibliography}]
