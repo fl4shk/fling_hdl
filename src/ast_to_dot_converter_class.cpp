@@ -144,7 +144,7 @@ build(InstParamOrArgList_PosItemUnparpk, wrap(ident))
 build(InstParamList_NamedItem, wrap(ident))
 build(InstArgList_NamedItem, wrap(ident))
 
-build(DeclModule, wrap(ident))
+build(DeclModnm, wrap(ident))
 build(InstModule, wrap(ident))
 
 build(GenIf)
@@ -210,7 +210,7 @@ build(DeclProc_Header, wrap(ident))
 
 build(DeclAlias_Value)
 build(DeclAlias_Type)
-build(DeclAlias_Module)
+build(DeclAlias_Modnm)
 
 void AstToDotConverter::_build_label_map
 	(IdentList* n)

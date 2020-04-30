@@ -51,7 +51,7 @@ public:		// functions
 class AstNodeDeferredPusher;
 class AstNodeListDeferredPusher;
 
-using AstEtcMap = map<string, AstEtc>;
+using AstEtcMapPair = std::pair<map<string, AstEtc>, map<string, AstEtc>>;
 
 class PtVisitor final: public FlingHdlGrammarVisitor
 {
@@ -64,8 +64,7 @@ public:		// typedefs
 private:		// variables
 	set<string>* _filename_set = nullptr;
 
-	// This maps a filename to an `AstEtc`.
-	AstEtcMap _ast_etc_map;
+	AstEtcMapPair _ast_etc_map_pair;
 
 	// The current filename
 	string _filename;
@@ -167,7 +166,7 @@ public:		// functions
 	virtual ~PtVisitor();
 	int run();
 
-	GEN_GETTERS_BY_CON_REF_AND_REF(ast_etc_map);
+	GEN_GETTERS_BY_CON_REF_AND_REF(ast_etc_map_pair);
 
 private:		// error/warning functions
 	inline void _err(ParserRuleContext* ctx, const std::string& msg)
@@ -741,7 +740,7 @@ public:		// functions
 		_prev_ast_parent = _pt_visitor->_curr_ast_parent;
 		_pt_visitor->_curr_ast_parent = _node;
 
-		auto& ast_etc = _pt_visitor->_ast_etc_map.at
+		auto& ast_etc = _pt_visitor->_ast_etc_map_pair.second.at
 			(_pt_visitor->_filename);
 
 		//if (_prev_ast_parent->level() > ast_etc.max_ast_level())

@@ -12,7 +12,7 @@ using namespace ast;
 #define ACCEPT(...) \
 	EVAL(MAP(_INNER_ACCEPT, SEMICOLON, __VA_ARGS__))
 
-//DeclModule* temp = nullptr;
+//DeclModnm* temp = nullptr;
 
 void AstVisitor::_inner_accept_children(const string& memb_name, 
 	const BaseSptr& node)
@@ -92,7 +92,7 @@ void AstVisitor::_accept_children
 	ACCEPT(item);
 }
 void AstVisitor::_accept_children
-	(DeclModule* n)
+	(DeclModnm* n)
 {
 	ACCEPT(opt_param_list, arg_list, opt_import_list, item_list);
 }
@@ -317,7 +317,7 @@ void AstVisitor::_accept_children
 	ACCEPT(ident_list, typename_or_modname_list);
 }
 void AstVisitor::_accept_children
-	(DeclAlias_Module* n)
+	(DeclAlias_Modnm* n)
 {
 	_accept_children(static_cast<DeclAlias_Type*>(n));
 }

@@ -135,7 +135,7 @@ PtVisitor::PtVisitor(set<string>* s_filename_set)
 
 	for (const auto& s_filename: *_filename_set)
 	{
-		_ast_etc_map[s_filename] = AstEtc(s_filename);
+		_ast_etc_map_pair.second[s_filename] = AstEtc(s_filename);
 	}
 }
 PtVisitor::~PtVisitor()
@@ -143,7 +143,7 @@ PtVisitor::~PtVisitor()
 }
 int PtVisitor::run()
 {
-	for (auto& p: _ast_etc_map)
+	for (auto& p: _ast_etc_map_pair.second)
 	{
 		_filename = p.second.filename();
 		_ast = new Program(nullptr, FilePos(_filename,
@@ -279,7 +279,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclParamList_Item
 	{
 		if (ctx->KwParpk().size() > 0)
 		{
-			node->kind = Kind::ParpkModule;
+			node->kind = Kind::ParpkModnm;
 		}
 		else
 		{
@@ -537,7 +537,7 @@ antlrcpp::Any PtVisitor::visitFlingInstArgList_Named_Item
 antlrcpp::Any PtVisitor::visitFlingDeclModule
 	(Parser::FlingDeclModuleContext *ctx)
 {
-	DEFER_PUSH(node, DeclModule);
+	DEFER_PUSH(node, DeclModnm);
 
 	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
 	ACCEPT_AND_POP_AST_IF(node->opt_param_list, flingDeclParamList);
@@ -2482,7 +2482,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclAlias_Type
 antlrcpp::Any PtVisitor::visitFlingDeclAlias_Module
 	(Parser::FlingDeclAlias_ModuleContext *ctx)
 {
-	DEFER_PUSH(node, DeclAlias_Module);
+	DEFER_PUSH(node, DeclAlias_Modnm);
 
 	JUST_ACCEPT_AND_POP_AST(node->ident_list, flingIdentList);
 	JUST_ACCEPT_AND_POP_AST_LIST(node->typename_or_modname_list,

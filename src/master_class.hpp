@@ -72,7 +72,7 @@ private:		// functions
 		exit(1);
 	}
 	void _create_ofile_dirs(const string& ofile_ext,
-		const AstEtcMap& ast_etc_map);
+		const map<string, AstEtc>& ast_etc_map);
 };
 
 } // namespace fling_hdl

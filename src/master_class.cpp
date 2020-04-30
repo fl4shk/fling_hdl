@@ -174,7 +174,7 @@ int Master::run()
 {
 	PtVisitor pt_visitor(&_src_filename_set);
 	pt_visitor.run();
-	const auto& ast_etc_map = pt_visitor.ast_etc_map();
+	const auto& ast_etc_map = pt_visitor.ast_etc_map_pair().second;
 
 	using RunType = Opt::RunType;
 
@@ -201,7 +201,7 @@ int Master::run()
 	return 0;
 }
 void Master::_create_ofile_dirs(const string& ofile_ext,
-	const AstEtcMap& ast_etc_map)
+	const map<string, AstEtc>& ast_etc_map)
 {
 	for (const auto& p: ast_etc_map)
 	{

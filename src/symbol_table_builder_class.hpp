@@ -21,14 +21,21 @@ private:		// variables
 	SymbolTable _sym_table;
 
 public:		// functions
-	SymbolTableBuilder(AstEtcMap* s_ast_etc_map);
+	SymbolTableBuilder(AstEtcMapPair* s_ast_etc_map_pair);
 	~SymbolTableBuilder();
 
 	GEN_GETTER_BY_CON_REF(sym_table);
 
 private:		// functions
+	virtual bool should_perf_ast_etc_map_move() const;
+
 	#define GEN_VISIT_FUNCS(name) \
-		virtual void visit##name(ast::name* n);
+		virtual void visit##name(ast::name* n) \
+		{ \
+			_build_sym_table(n); \
+			_accept_children(n); \
+		} \
+		void _build_sym_table(ast::name* n);
 	LIST_OF_AST_NODE_CLASSES(GEN_VISIT_FUNCS)
 	#undef GEN_VISIT_FUNCS
 };

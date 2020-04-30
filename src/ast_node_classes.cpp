@@ -103,10 +103,10 @@ using namespace fling_hdl::ast;
 //			#define TYPE InstArgList_Named_Item
 //			osprintout(os, strappcom2(wrap(ident), wrap(expr)));
 //		}
-//		else idcmp(DeclModule)
+//		else idcmp(DeclModnm)
 //		{
 //			#undef TYPE
-//			#define TYPE DeclModule
+//			#define TYPE DeclModnm
 //			osprintout(os, strappcom2(wrap(ident), wrap(opt_param_list),
 //				wrap(arg_list), wrap(opt_import_list), wrap(item_list)));
 //		}
@@ -373,7 +373,7 @@ using namespace fling_hdl::ast;
 //			osprintout(os, strappcom2(wrap(ident_list),
 //				wrap(typename_or_modname), wrap(expr_list)));
 //		}
-//		else idcmp(DeclAlias_Type, DeclAlias_Module)
+//		else idcmp(DeclAlias_Type, DeclAlias_Modnm)
 //		{
 //			#undef TYPE
 //			#define TYPE DeclAlias_Type

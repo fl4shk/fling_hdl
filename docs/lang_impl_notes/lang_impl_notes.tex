@@ -86,14 +86,19 @@
 			the compiler, not counting any bugs that may remain, and it is
 			ready to be expanded with future language constructs.
 		\item This stage does \textit{not} create the symbol table.
-		\item Note:  the AST and symbol table are considered immutable, so
-			changes to the structure of the AST and symbol table will
-			simply be provided by generating new ones, generating the AST
-			first, followed by a new symbol table created from that AST.
-		\item Note:  The symbol table and AST are the two primary data
-			structures within the compiler, besides anything needed for
-			running the partial language interpreter.  (One day there may
-			be a full language interpreter).
+			\begin{itemize}
+			%--------
+			\item Note:  the AST and symbol table are considered immutable,
+				so changes to the structure of the AST and symbol table
+				will simply be provided by generating new ones, generating
+				the AST first, followed by a new symbol table created from
+				that AST.
+			\item Note:  The symbol table and AST are the two primary data
+				structures within the compiler, besides anything needed for
+				running the partial language interpreter.  (One day there
+				may be a full language interpreter).
+			%--------
+			\end{itemize}
 		%--------
 		\end{itemize}
 	\subsection{Stage:  Create Symbol Table }
@@ -118,7 +123,7 @@
 				necessary to compute their values.  It makes sense to copy
 				their values from one symbol table to the next.  Some
 				mechanism needs to exist to facilitate this goal.
-			\item Note  Named constants will need to be translated into
+			\item Note:  Named constants will need to be translated into
 				Verilog's \texttt{localparam}s, which are always Verilog
 				vectors.  Non-\texttt{packed} \texttt{class}es and arrays
 				in my language will necessarily be translated freely into
@@ -141,27 +146,27 @@
 		%--------
 		\end{itemize}
 	\subsection{Phase:  First AST lowering phase}
-		This stage needs to perform the following, not necessarily in this
-		order, in a loop until it cannot do so any more.
+		This phase will perform each of the following, as much as can be
+		accomplished, on every other pass.  The other passes are used for
+		building a new symbol table.
 		\begin{itemize}
 		%--------
-		\item Expand template instances into new AST nodes.  This is to
-			be done for \texttt{module}s, types, and subprograms.
+		\item Expand instantiated templates and \texttt{parpk} into new AST
+			nodes.  This is to be done for \texttt{module}s, template types,
+			and subprograms.
 		\item Elaborate \texttt{gen} constructs into new AST nodes.
 		\item Flatten \texttt{proc} calls into new AST nodes.  Since
 			this is part of the metaprogramming system, I believe it
 			can go here.
-		\item Flatten instantiations of \texttt{parpk} into separate named
-			elements.
 		\item Use the \texttt{Interpreter} class to compute the values of
 			constants as needed for the previous items.
-		\item Use the \texttt{SymbolTableBuilder} class to build a new
-			symbol table.
 		%--------
 		\end{itemize}
 		Note that any of these items besides buiding a new symbol table for
 		the new AST will involve giving up the current node's translation
-		if it depends on another stage within this phase.
+		if it depends on another stage within this phase.  Also, each of
+		these items will build a new symbol table upon their (potentially
+		partial) completion.
 
 
 		This phase should inject information about where new AST nodes came
@@ -189,14 +194,14 @@
 		\begin{itemize}
 		%--------
 		\item A template \texttt{class} (or \texttt{mixin}) that takes
-			an instance of itself (or its template type with another
-			parameter) as a template parameter can simply be banned.
-			\begin{itemize}
-			%--------
-			\item Note:  this won't mean that a \texttt{type} or
-				\texttt{module} template parameter can't be used.
-			%--------
-			\end{itemize}
+			an instance of itself as a template parameter can simply be
+			banned.
+			%\begin{itemize}
+			%%--------
+			%\item Note:  this won't mean that a \texttt{type} or
+			%	\texttt{module} template parameter can't be used.
+			%%--------
+			%\end{itemize}
 		\item Allow \texttt{class}es, \texttt{mixin}s, and
 			\texttt{module}s to contain instances of themselves,
 			recursively, but only up to a maximum recursion depth.  A

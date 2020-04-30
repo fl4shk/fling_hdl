@@ -137,7 +137,7 @@ public:		// types
 
 		ParpkVar,
 		ParpkType,
-		ParpkModule
+		ParpkModnm
 	};
 	static string conv_kind(Kind to_conv)
 	{
@@ -148,7 +148,7 @@ public:		// types
 
 			ParpkVar,
 			ParpkType,
-			ParpkModule);
+			ParpkModnm);
 	}
 
 public:		// variables
@@ -238,14 +238,14 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(InstArgList_NamedItem, Base);
 };
 
-class DeclModule: public Base
+class DeclModnm: public Base
 {
 public:		// variables
 	string ident;
 	BaseSptr opt_param_list, arg_list, opt_import_list;
 	BaseSptrList item_list;
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclModule, Base);
+	SHARED_FUNC_CONTENTS(DeclModnm, Base);
 };
 
 class InstModule: public Base
@@ -655,10 +655,10 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(DeclAlias_Type, Base);
 };
 
-class DeclAlias_Module: public DeclAlias_Type
+class DeclAlias_Modnm: public DeclAlias_Type
 {
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclAlias_Module, DeclAlias_Type);
+	SHARED_FUNC_CONTENTS(DeclAlias_Modnm, DeclAlias_Type);
 };
 
 class IdentList: public Base

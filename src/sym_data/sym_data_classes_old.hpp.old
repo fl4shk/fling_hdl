@@ -148,7 +148,7 @@ public:		// functions
 //--------
 
 //--------
-class DeclParamOrArgList final: public Base
+class ParamOrArgListBase: public Base
 {
 public:		// types
 	enum class Kind
@@ -157,10 +157,51 @@ public:		// types
 		Arg,
 	};
 
-	using OrderVec = vector<string>;
-
 protected:		// variables
 	Kind _kind;
+
+public:		// functions
+	ParamOrArgListBase(Kind s_kind);
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(ParamOrArgListBase);
+	virtual ~ParamOrArgListBase();
+
+	GEN_GETTER_BY_VAL(kind);
+};
+
+class ParamItemTypeBase: public Base
+{
+protected:		// variables
+	Typenm _typenm;
+
+public:		// functions
+	ParamItemTypeBase(const Typenm& s_typenm);
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(ParamItemTypeBase);
+	virtual ~ParamItemTypeBase();
+
+	GEN_GETTER_BY_CON_REF(typenm);
+};
+
+class ParamItemModnmBase: public Base
+{
+protected:		// variables
+	Symbol* _modnm = nullptr;
+
+public:		// functions
+	ParamItemModnmBase(Symbol* s_modnm);
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(ParamItemModnmBase);
+	virtual ~ParamItemModnmBase();
+
+	GEN_GETTER_BY_VAL(modnm);
+};
+//--------
+
+//--------
+class DeclParamOrArgList final: public ParamOrArgListBase
+{
+public:		// types
+	using OrderVec = vector<string>;
+
+private:		// variables
 	OrderVec _order_vec;
 
 public:		// functions
@@ -168,16 +209,9 @@ public:		// functions
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(DeclParamOrArgList);
 	virtual ~DeclParamOrArgList();
 
-	GEN_GETTER_BY_VAL(kind);
 	GEN_GETTER_BY_CON_REF(order_vec);
 };
 
-//class InstParamOrArgListNamed final: public Base
-//{
-//};
-//--------
-
-//--------
 // Specifically, a parameter *variable*
 class DeclParamItemVar final: public VarEtcBase
 {
@@ -221,26 +255,26 @@ public:		// functions
 	GEN_GETTER_BY_VAL(kind);
 };
 
-class DeclParamItemModule final: public Base
+class DeclParamItemModnm final: public Base
 {
 public:		// types
 	enum class Kind
 	{
 		Module,
-		ParpkModule,
+		ParpkModnm,
 	};
 
 private:		// variables
-	Symbol* _module = nullptr;
+	Symbol* _modnm = nullptr;
 	Kind _kind;
 
 public:		// functions
-	DeclParamItemModule(Symbol* s_module, Kind s_kind);
-	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(DeclParamItemModule);
-	virtual ~DeclParamItemModule();
+	DeclParamItemModnm(Symbol* s_modnm, Kind s_kind);
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(DeclParamItemModnm);
+	virtual ~DeclParamItemModnm();
 
 	EVAL(MAP(GEN_GETTER_BY_VAL, SEMICOLON,
-		module,
+		modnm,
 		kind));
 };
 
@@ -259,6 +293,37 @@ public:		// functions
 	virtual ~DeclArgItemVar();
 
 	GEN_GETTER_BY_VAL(kind);
+};
+//--------
+
+//--------
+class InstParamOrArgList final: public ParamOrArgListBase
+{
+public:		// functions
+	InstParamOrArgList(Kind s_kind);
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(InstParamOrArgList);
+	virtual ~InstParamOrArgList();
+};
+
+class InstParamItemVar final: public VarEtcBase
+{
+public:		// functions
+	InstParamItemVar(const Data& s_data);
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(InstParamItemVar);
+	virtual ~InstParamItemVar();
+};
+
+class InstParamItemType final: public Base
+{
+public:		// functions
+};
+
+class InstArgItemVar final: public VarEtcBase
+{
+public:		// functions
+	InstArgItemVar(const Data& s_data);
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(InstArgItemVar);
+	virtual ~InstArgItemVar();
 };
 //--------
 
@@ -292,22 +357,22 @@ public:		// functions
 		memb_info));
 };
 
-class AliasModule final: public Base
+class AliasModnm final: public Base
 {
 public:		// types
 	using AccSpec = ast::AccSpec;
 
 private:		// variables
-	Symbol* _module = nullptr;
+	Symbol* _modnm = nullptr;
 	MembInfo _memb_info;
 
 public:		// functions
-	AliasModule(Symbol* s_module);
-	AliasModule(Symbol* s_module, AccSpec s_memb_info_acc_spec); 
-	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AliasModule);
-	virtual ~AliasModule();
+	AliasModnm(Symbol* s_modnm);
+	AliasModnm(Symbol* s_modnm, AccSpec s_memb_info_acc_spec); 
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AliasModnm);
+	virtual ~AliasModnm();
 
-	GEN_GETTER_BY_VAL(module);
+	GEN_GETTER_BY_VAL(modnm);
 	GEN_GETTER_BY_CON_REF(memb_info);
 };
 //--------
@@ -407,10 +472,10 @@ public:		// functions
 class InstModule final: public Base
 {
 private:		// variables
-	Symbol* _module = nullptr;
+	Symbol* _modnm = nullptr;
 
 public:		// functions
-	InstModule(Symbol* s_module);
+	InstModule(Symbol* s_modnm);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(InstModule);
 	virtual ~InstModule();
 };

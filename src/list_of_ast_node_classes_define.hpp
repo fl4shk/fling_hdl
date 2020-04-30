@@ -20,7 +20,7 @@
 	X(InstParamList_NamedItem) \
 	X(InstArgList_NamedItem) \
 	\
-	X(DeclModule) \
+	X(DeclModnm) \
 	\
 	X(InstModule) \
 	\
@@ -85,7 +85,7 @@
 	\
 	X(DeclAlias_Value) \
 	X(DeclAlias_Type) \
-	X(DeclAlias_Module) \
+	X(DeclAlias_Modnm) \
 	\
 	X(IdentList) \
 	X(ScopedIdent) \
