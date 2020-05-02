@@ -401,7 +401,7 @@ flingDeclConst:
 flingDeclType:
 	flingDeclEnum
 	| flingDeclClass
-	| flingDeclMixin
+	//| flingDeclMixin
 	;
 //--------
 
@@ -508,7 +508,7 @@ flingDeclClsOrMxn_AccessSpecifier:
 
 flingDeclClsOrMxn_Item_DeclSubprog:
 	flingDeclClsOrMxn_Item_DeclSubprog_FullDefn
-	| flingDeclClsOrMxn_Item_DeclSubprog_Abstract
+	//| flingDeclClsOrMxn_Item_DeclSubprog_Abstract
 	;
 flingDeclClsOrMxn_Item_DeclSubprog_FullDefn:
 	flingDeclClsOrMxn_AccessSpecifier?
@@ -517,71 +517,71 @@ flingDeclClsOrMxn_Item_DeclSubprog_FullDefn:
 			(flingDeclFunc | flingDeclTask | flingDeclProc)
 	)
 	;
-flingDeclClsOrMxn_Item_DeclSubprog_Abstract:
-	flingDeclClsOrMxn_AccessSpecifier?
-	KwAbstract KwConst?
-	(
-		flingDeclFunc_Header
-		| flingDeclTask_Header
-		| flingDeclProc_Header
-	)
-	';'
-	;
+//flingDeclClsOrMxn_Item_DeclSubprog_Abstract:
+//	flingDeclClsOrMxn_AccessSpecifier?
+//	KwAbstract KwConst?
+//	(
+//		flingDeclFunc_Header
+//		| flingDeclTask_Header
+//		| flingDeclProc_Header
+//	)
+//	';'
+//	;
 
-flingDeclMixin:
-	KwBase? KwMixin flingIdent flingDeclParamList?
-		flingDeclClsOrMxn_Extends?
-	'{'
-		flingDeclMixin_Item*
-	'}'
-	;
-flingDeclMixin_Item:
-	flingDeclMixin_Item_Gen 
-	| flingDeclClsOrMxn_Item
-	;
+//flingDeclMixin:
+//	KwMixin flingIdent flingDeclParamList?
+//		flingDeclClsOrMxn_Extends?
+//	'{'
+//		flingDeclMixin_Item*
+//	'}'
+//	;
+//flingDeclMixin_Item:
+//	flingDeclMixin_Item_Gen 
+//	| flingDeclClsOrMxn_Item
+//	;
 //--------
 
 //--------
-flingDeclMixin_Item_Gen:
-	flingDeclMixin_Item_Gen_If
-	| flingDeclMixin_Item_Gen_Switch
-	| flingDeclMixin_Item_Gen_For
-	;
-
-flingDeclMixin_Item_Gen_If:
-	KwGen KwIf flingExpr '{' flingDeclMixin_Item* '}'
-	flingDeclMixin_Item_Gen_If_Elif*
-	flingDeclMixin_Item_Gen_If_Else?
-	;
-flingDeclMixin_Item_Gen_If_Elif:
-	KwGen KwElif flingExpr '{' flingDeclMixin_Item* '}'
-	;
-flingDeclMixin_Item_Gen_If_Else:
-	KwGen KwElse '{' flingDeclMixin_Item* '}'
-	;
-
-flingDeclMixin_Item_Gen_Switch:
-	KwGen KwSwitch flingExpr
-	'{'
-		(
-			flingDeclMixin_Item_Gen_Switch_Default?
-				flingDeclMixin_Item_Gen_Switch_Case*
-			| flingDeclMixin_Item_Gen_Switch_Case+
-				flingDeclMixin_Item_Gen_Switch_Default
-		)
-	'}'
-	;
-flingDeclMixin_Item_Gen_Switch_Default:
-	KwDefault '{' flingDeclMixin_Item* '}'
-	;
-flingDeclMixin_Item_Gen_Switch_Case:
-	flingExprList '{' flingDeclMixin_Item* '}'
-	;
-
-flingDeclMixin_Item_Gen_For:
-	KwGen '[' flingIdent ']' KwFor flingIdent ':' flingExpr
-		'{' flingDeclMixin_Item* '}'
-	;
+//flingDeclMixin_Item_Gen:
+//	flingDeclMixin_Item_Gen_If
+//	| flingDeclMixin_Item_Gen_Switch
+//	| flingDeclMixin_Item_Gen_For
+//	;
+//
+//flingDeclMixin_Item_Gen_If:
+//	KwGen KwIf flingExpr '{' flingDeclMixin_Item* '}'
+//	flingDeclMixin_Item_Gen_If_Elif*
+//	flingDeclMixin_Item_Gen_If_Else?
+//	;
+//flingDeclMixin_Item_Gen_If_Elif:
+//	KwGen KwElif flingExpr '{' flingDeclMixin_Item* '}'
+//	;
+//flingDeclMixin_Item_Gen_If_Else:
+//	KwGen KwElse '{' flingDeclMixin_Item* '}'
+//	;
+//
+//flingDeclMixin_Item_Gen_Switch:
+//	KwGen KwSwitch flingExpr
+//	'{'
+//		(
+//			flingDeclMixin_Item_Gen_Switch_Default?
+//				flingDeclMixin_Item_Gen_Switch_Case*
+//			| flingDeclMixin_Item_Gen_Switch_Case+
+//				flingDeclMixin_Item_Gen_Switch_Default
+//		)
+//	'}'
+//	;
+//flingDeclMixin_Item_Gen_Switch_Default:
+//	KwDefault '{' flingDeclMixin_Item* '}'
+//	;
+//flingDeclMixin_Item_Gen_Switch_Case:
+//	flingExprList '{' flingDeclMixin_Item* '}'
+//	;
+//
+//flingDeclMixin_Item_Gen_For:
+//	KwGen '[' flingIdent ']' KwFor flingIdent ':' flingExpr
+//		'{' flingDeclMixin_Item* '}'
+//	;
 //--------
 
 //--------
@@ -889,11 +889,13 @@ flingTypenameOrModname:
 	| flingTypenameOrModname_Typeof
 	| flingTypenameOrModname_Builtin
 
-	| (KwDyn | KwWeakref)? (KwSelfT | KwRetT)
+	| //(KwDyn | KwWeakref)? 
+		(KwSelfT | KwRetT)
 	;
 
 flingTypenameOrModname_Cstm:
-	(KwDyn | KwWeakref)? flingTypenameOrModname_Cstm_Item
+	//(KwDyn | KwWeakref)?
+	flingTypenameOrModname_Cstm_Item
 	(PunctScopeAccess flingTypenameOrModname_Cstm_Item)*
 		flingTypenameOrModname_ArrDim*
 	;
@@ -908,11 +910,12 @@ flingTypenameOrModname_Cstm_Item:
 	;
 
 flingTypenameOrModname_ArrDim:
-	'[' (flingExpr | flingTypenameOrModname)? ']'
+	//'[' (flingExpr | flingTypenameOrModname)? ']'
+	'[' flingExpr ']'
 	;
 
 flingTypenameOrModname_Builtin:
-	(KwDyn | KwWeakref)?
+	//(KwDyn | KwWeakref)?
 	(
 		KwSigned? KwLogic flingInstParamList?
 

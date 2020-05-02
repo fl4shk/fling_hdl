@@ -10,15 +10,9 @@ Scope::Scope()
 	: Base()
 {
 }
-Scope::~Scope()
-{
-}
 
 Package::Package()
 	: Scope()
-{
-}
-Package::~Package()
 {
 }
 //--------

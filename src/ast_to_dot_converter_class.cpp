@@ -144,7 +144,7 @@ build(InstParamOrArgList_PosItemUnparpk, wrap(ident))
 build(InstParamList_NamedItem, wrap(ident))
 build(InstArgList_NamedItem, wrap(ident))
 
-build(DeclModnm, wrap(ident))
+build(DeclModule, wrap(ident))
 build(InstModule, wrap(ident))
 
 build(GenIf)
@@ -184,7 +184,7 @@ build(DeclConst)
 
 build(DeclEnum, wrap(ident))
 
-build(DeclMixin, wrap(is_base, ident))
+build(DeclMixin, wrap(ident))
 
 build(DeclClass, wrap(is_base, ident, is_signed, is_packed))
 
@@ -210,7 +210,7 @@ build(DeclProc_Header, wrap(ident))
 
 build(DeclAlias_Value)
 build(DeclAlias_Type)
-build(DeclAlias_Modnm)
+build(DeclAlias_Module)
 
 void AstToDotConverter::_build_label_map
 	(IdentList* n)
@@ -247,6 +247,7 @@ build(TypenameOrModname_Special, wrap(is_dyn, is_weakref),
 build(TypenameOrModname_Cstm, wrap(is_dyn, is_weakref))
 build(TypenameOrModname_Typeof)
 build(TypenameOrModname_Cstm_Item, wrap(is_dyn, is_weakref, ident))
+build(TypenameOrModname_ArrDim)
 build(TypenameOrModname_Builtin, wrap(is_dyn, is_weakref), wrap_conv(kind))
 
 #define X(basic_label) \

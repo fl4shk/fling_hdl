@@ -455,36 +455,36 @@ private:		// visitor functions
 		(Parser::FlingDeclClsOrMxn_Item_DeclSubprogContext *ctx);
 	antlrcpp::Any visitFlingDeclClsOrMxn_Item_DeclSubprog_FullDefn
 		(Parser::FlingDeclClsOrMxn_Item_DeclSubprog_FullDefnContext *ctx);
-	antlrcpp::Any visitFlingDeclClsOrMxn_Item_DeclSubprog_Abstract
-		(Parser::FlingDeclClsOrMxn_Item_DeclSubprog_AbstractContext *ctx);
+	//antlrcpp::Any visitFlingDeclClsOrMxn_Item_DeclSubprog_Abstract
+	//	(Parser::FlingDeclClsOrMxn_Item_DeclSubprog_AbstractContext *ctx);
 	//--------
 
 	//--------
-	antlrcpp::Any visitFlingDeclMixin
-		(Parser::FlingDeclMixinContext *ctx);
-	antlrcpp::Any visitFlingDeclMixin_Item
-		(Parser::FlingDeclMixin_ItemContext *ctx);
+	//antlrcpp::Any visitFlingDeclMixin
+	//	(Parser::FlingDeclMixinContext *ctx);
+	//antlrcpp::Any visitFlingDeclMixin_Item
+	//	(Parser::FlingDeclMixin_ItemContext *ctx);
 	//--------
 
 	//--------
-	antlrcpp::Any visitFlingDeclMixin_Item_Gen
-		(Parser::FlingDeclMixin_Item_GenContext *ctx);
-	antlrcpp::Any visitFlingDeclMixin_Item_Gen_If
-		(Parser::FlingDeclMixin_Item_Gen_IfContext *ctx);
-	antlrcpp::Any visitFlingDeclMixin_Item_Gen_If_Elif
-		(Parser::FlingDeclMixin_Item_Gen_If_ElifContext *ctx);
-	antlrcpp::Any visitFlingDeclMixin_Item_Gen_If_Else
-		(Parser::FlingDeclMixin_Item_Gen_If_ElseContext *ctx);
+	//antlrcpp::Any visitFlingDeclMixin_Item_Gen
+	//	(Parser::FlingDeclMixin_Item_GenContext *ctx);
+	//antlrcpp::Any visitFlingDeclMixin_Item_Gen_If
+	//	(Parser::FlingDeclMixin_Item_Gen_IfContext *ctx);
+	//antlrcpp::Any visitFlingDeclMixin_Item_Gen_If_Elif
+	//	(Parser::FlingDeclMixin_Item_Gen_If_ElifContext *ctx);
+	//antlrcpp::Any visitFlingDeclMixin_Item_Gen_If_Else
+	//	(Parser::FlingDeclMixin_Item_Gen_If_ElseContext *ctx);
 
-	antlrcpp::Any visitFlingDeclMixin_Item_Gen_Switch
-		(Parser::FlingDeclMixin_Item_Gen_SwitchContext *ctx);
-	antlrcpp::Any visitFlingDeclMixin_Item_Gen_Switch_Default
-		(Parser::FlingDeclMixin_Item_Gen_Switch_DefaultContext *ctx);
-	antlrcpp::Any visitFlingDeclMixin_Item_Gen_Switch_Case
-		(Parser::FlingDeclMixin_Item_Gen_Switch_CaseContext *ctx);
+	//antlrcpp::Any visitFlingDeclMixin_Item_Gen_Switch
+	//	(Parser::FlingDeclMixin_Item_Gen_SwitchContext *ctx);
+	//antlrcpp::Any visitFlingDeclMixin_Item_Gen_Switch_Default
+	//	(Parser::FlingDeclMixin_Item_Gen_Switch_DefaultContext *ctx);
+	//antlrcpp::Any visitFlingDeclMixin_Item_Gen_Switch_Case
+	//	(Parser::FlingDeclMixin_Item_Gen_Switch_CaseContext *ctx);
 
-	antlrcpp::Any visitFlingDeclMixin_Item_Gen_For
-		(Parser::FlingDeclMixin_Item_Gen_ForContext *ctx);
+	//antlrcpp::Any visitFlingDeclMixin_Item_Gen_For
+	//	(Parser::FlingDeclMixin_Item_Gen_ForContext *ctx);
 	//--------
 
 	//--------

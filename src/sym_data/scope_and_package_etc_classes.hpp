@@ -17,7 +17,7 @@ class Scope: public Base
 public:		// functions
 	Scope();
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(Scope);
-	virtual ~Scope();
+	virtual inline ~Scope() = default;
 };
 
 // Class for packages, which are the only kinds of symbols that `import`
@@ -27,7 +27,7 @@ class Package final: public Scope
 public:		// functions
 	Package();
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(Package);
-	virtual ~Package();
+	virtual inline ~Package() = default;
 };
 //--------
 

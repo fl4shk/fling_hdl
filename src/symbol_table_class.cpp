@@ -58,7 +58,7 @@ string Symbol::_inner_full_name(const sym_data::DeclParamItemVar& d) const
 string Symbol::_inner_full_name(const sym_data::DeclParamItemType& d) const
 {
 }
-string Symbol::_inner_full_name(const sym_data::DeclParamItemModnm& d)
+string Symbol::_inner_full_name(const sym_data::DeclParamItemModule& d)
 	const
 {
 }
@@ -74,15 +74,15 @@ string Symbol::_inner_full_name(const sym_data::AliasValue& d) const
 string Symbol::_inner_full_name(const sym_data::AliasType& d) const
 {
 }
-string Symbol::_inner_full_name(const sym_data::AliasModnm& d) const
+string Symbol::_inner_full_name(const sym_data::AliasModule& d) const
 {
 }
 //--------
 
 //--------
-string Symbol::_inner_full_name(const sym_data::Mixin& d) const
-{
-}
+//string Symbol::_inner_full_name(const sym_data::Mixin& d) const
+//{
+//}
 string Symbol::_inner_full_name(const sym_data::Class& d) const
 {
 }

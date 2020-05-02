@@ -18,7 +18,7 @@ public:		// functions
 	AliasValue(const Data& s_data);
 	AliasValue(const Data& s_data, AccSpec s_memb_info_acc_spec);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AliasValue);
-	virtual ~AliasValue();
+	virtual inline ~AliasValue() = default;
 };
 
 class AliasType final: public Base
@@ -34,14 +34,14 @@ public:		// functions
 	AliasType(const Typenm& s_typenm);
 	AliasType(const Typenm& s_typenm, AccSpec s_memb_info_acc_spec);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AliasType);
-	virtual ~AliasType();
+	virtual inline ~AliasType() = default;
 
 	EVAL(MAP(GEN_GETTER_BY_CON_REF, SEMICOLON,
 		typenm,
 		memb_info));
 };
 
-class AliasModnm final: public Base
+class AliasModule final: public Base
 {
 public:		// types
 	using AccSpec = ast::AccSpec;
@@ -51,10 +51,10 @@ private:		// variables
 	MembInfo _memb_info;
 
 public:		// functions
-	AliasModnm(Symbol* s_modnm);
-	AliasModnm(Symbol* s_modnm, AccSpec s_memb_info_acc_spec); 
-	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AliasModnm);
-	virtual ~AliasModnm();
+	AliasModule(Symbol* s_modnm);
+	AliasModule(Symbol* s_modnm, AccSpec s_memb_info_acc_spec); 
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AliasModule);
+	virtual inline ~AliasModule() = default;
 
 	GEN_GETTER_BY_VAL(modnm);
 	GEN_GETTER_BY_CON_REF(memb_info);

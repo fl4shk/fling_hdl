@@ -52,7 +52,7 @@ protected:		// variables
 public:		// functions
 	Mixin(const Data& s_data);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(Mixin);
-	virtual ~Mixin();
+	virtual inline ~Mixin() = default;
 
 	GEN_GETTER_BY_CON_REF(data);
 };
@@ -65,7 +65,7 @@ private:		// variables
 public:		// functions
 	Class(const Data& s_data, bool s_is_signed, bool s_is_packed);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(Class);
-	virtual ~Class();
+	virtual inline ~Class() = default;
 
 	EVAL(MAP(GEN_GETTER_BY_VAL, SEMICOLON,
 		is_signed,

@@ -137,7 +137,7 @@ public:		// types
 
 		ParpkVar,
 		ParpkType,
-		ParpkModnm
+		ParpkModule
 	};
 	static string conv_kind(Kind to_conv)
 	{
@@ -148,7 +148,7 @@ public:		// types
 
 			ParpkVar,
 			ParpkType,
-			ParpkModnm);
+			ParpkModule);
 	}
 
 public:		// variables
@@ -238,14 +238,14 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(InstArgList_NamedItem, Base);
 };
 
-class DeclModnm: public Base
+class DeclModule: public Base
 {
 public:		// variables
 	string ident;
 	BaseSptr opt_param_list, arg_list, opt_import_list;
 	BaseSptrList item_list;
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclModnm, Base);
+	SHARED_FUNC_CONTENTS(DeclModule, Base);
 };
 
 class InstModule: public Base
@@ -489,7 +489,6 @@ public:		// functions
 class DeclMixin: public Base
 {
 public:		// variables
-	bool is_base = false;
 	string ident;
 	BaseSptr opt_param_list;
 	BaseSptrList opt_extends, item_list;
@@ -499,7 +498,7 @@ public:		// functions
 class DeclClass: public DeclMixin
 {
 public:		// variables
-	bool is_signed = false, is_packed = false;
+	bool is_base = false, is_signed = false, is_packed = false;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclClass, DeclMixin);
 };
@@ -655,10 +654,10 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(DeclAlias_Type, Base);
 };
 
-class DeclAlias_Modnm: public DeclAlias_Type
+class DeclAlias_Module: public DeclAlias_Type
 {
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclAlias_Modnm, DeclAlias_Type);
+	SHARED_FUNC_CONTENTS(DeclAlias_Module, DeclAlias_Type);
 };
 
 class IdentList: public Base
@@ -735,6 +734,14 @@ public:		// variables
 	BaseSptr opt_param_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(TypenameOrModname_Cstm_Item, Base);
+};
+
+class TypenameOrModname_ArrDim: public Base
+{
+public:		// variables
+	BaseSptr opt_dim;
+public:		// functions
+	SHARED_FUNC_CONTENTS(TypenameOrModname_ArrDim, Base);
 };
 
 class TypenameOrModname_Builtin: public Base

@@ -12,14 +12,19 @@
 	\
 	X(DeclParamItemVar) \
 	X(DeclParamItemType) \
-	X(DeclParamItemModnm) \
+	X(DeclParamItemModule) \
 	X(DeclArgItemVar) \
+	\
+	X(InstParamItemVar) \
+	X(InstParamItemType) \
+	X(InstParamItemModule) \
+	X(InstArgItemVar) \
 	\
 	X(AliasValue) \
 	X(AliasType) \
-	X(AliasModnm) \
+	X(AliasModule) \
 	\
-	X(Mixin) \
+	/* X(Mixin) */ \
 	X(Class) \
 	\
 	X(Scope) \

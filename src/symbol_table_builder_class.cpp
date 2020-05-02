@@ -62,7 +62,7 @@ void SymbolTableBuilder::_build_sym_table
 {
 }
 void SymbolTableBuilder::_build_sym_table
-	(DeclModnm* n)
+	(DeclModule* n)
 {
 }
 void SymbolTableBuilder::_build_sym_table
@@ -164,7 +164,7 @@ void SymbolTableBuilder::_build_sym_table
 {
 }
 void SymbolTableBuilder::_build_sym_table
-	(DeclAlias_Modnm* n)
+	(DeclAlias_Module* n)
 {
 }
 void SymbolTableBuilder::_build_sym_table
@@ -184,6 +184,7 @@ blank(TypenameOrModname_Special)
 blank(TypenameOrModname_Cstm)
 blank(TypenameOrModname_Typeof)
 blank(TypenameOrModname_Cstm_Item)
+blank(TypenameOrModname_ArrDim)
 blank(TypenameOrModname_Builtin)
 blank(ExprMux)
 blank(ExprLogOr)

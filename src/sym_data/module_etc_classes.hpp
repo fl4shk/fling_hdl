@@ -16,7 +16,7 @@ class Module final: public Base
 public:		// functions
 	Module();
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(Module);
-	virtual ~Module();
+	virtual inline ~Module() = default;
 };
 
 class InstModule final: public Base
@@ -27,7 +27,7 @@ private:		// variables
 public:		// functions
 	InstModule(Symbol* s_modnm);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(InstModule);
-	virtual ~InstModule();
+	virtual inline ~InstModule() = default;
 };
 //--------
 

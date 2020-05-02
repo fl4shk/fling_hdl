@@ -23,7 +23,7 @@ public:		// types
 public:		// functions
 	Base();
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(Base);
-	virtual ~Base();
+	virtual inline ~Base() = default;
 };
 //--------
 
@@ -45,7 +45,7 @@ private:		// variables
 public:		// functions
 	Typenm(Symbol* s_partial_typenm, Kind s_kind);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(Typenm);
-	~Typenm();
+	~Typenm() = default;
 
 	EVAL(MAP(GEN_GETTER_BY_VAL, SEMICOLON,
 		partial_typenm,
@@ -69,7 +69,7 @@ public:		// functions
 
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(MembInfo);
 
-	~MembInfo();
+	~MembInfo() = default;
 
 	EVAL(MAP(GEN_GETTER_BY_VAL, SEMICOLON,
 		is_memb,
@@ -91,7 +91,7 @@ private:		// variables
 public:		// functions
 	VarEtcData(const Typenm& s_typenm, const AstBaseWptr& s_expr);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(VarEtcData);
-	~VarEtcData();
+	~VarEtcData() = default;
 
 	EVAL(MAP(GEN_GETTER_BY_CON_REF, SEMICOLON,
 		typenm,

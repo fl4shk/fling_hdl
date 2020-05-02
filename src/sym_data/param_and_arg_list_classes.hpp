@@ -27,7 +27,7 @@ protected:		// variables
 public:		// functions
 	ParamOrArgListBase(Kind s_kind);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(ParamOrArgListBase);
-	virtual ~ParamOrArgListBase();
+	virtual inline ~ParamOrArgListBase() = default;
 
 	GEN_GETTER_BY_VAL(kind);
 };
@@ -40,20 +40,20 @@ protected:		// variables
 public:		// functions
 	ParamItemTypeBase(const Typenm& s_typenm);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(ParamItemTypeBase);
-	virtual ~ParamItemTypeBase();
+	virtual inline ~ParamItemTypeBase() = default;
 
 	GEN_GETTER_BY_CON_REF(typenm);
 };
 
-class ParamItemModnmBase: public Base
+class ParamItemModuleBase: public Base
 {
 protected:		// variables
 	Symbol* _modnm = nullptr;
 
 public:		// functions
-	ParamItemModnmBase(Symbol* s_modnm);
-	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(ParamItemModnmBase);
-	virtual ~ParamItemModnmBase();
+	ParamItemModuleBase(Symbol* s_modnm);
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(ParamItemModuleBase);
+	virtual inline ~ParamItemModuleBase() = default;
 
 	GEN_GETTER_BY_VAL(modnm);
 };
@@ -71,7 +71,7 @@ private:		// variables
 public:		// functions
 	DeclParamOrArgList(Kind s_kind, OrderVec&& s_order_vec);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(DeclParamOrArgList);
-	virtual ~DeclParamOrArgList();
+	virtual inline ~DeclParamOrArgList() = default;
 
 	GEN_GETTER_BY_CON_REF(order_vec);
 };
@@ -92,12 +92,12 @@ private:		// variables
 public:		// functions
 	DeclParamItemVar(const Data& s_data, Kind s_kind);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(DeclParamItemVar);
-	virtual ~DeclParamItemVar();
+	virtual inline ~DeclParamItemVar() = default;
 
 	GEN_GETTER_BY_VAL(kind);
 };
 
-class DeclParamItemType final: public Base
+class DeclParamItemType final: public ParamItemTypeBase
 {
 public:		// types
 	enum class Kind
@@ -107,38 +107,34 @@ public:		// types
 	};
 
 private:		// variables
-	Typenm _typenm;
 	Kind _kind;
 
 public:		// functions
 	DeclParamItemType(const Typenm& s_typenm, Kind s_kind);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(DeclParamItemType);
-	virtual ~DeclParamItemType();
+	virtual inline ~DeclParamItemType() = default;
 
-	GEN_GETTER_BY_CON_REF(typenm);
 	GEN_GETTER_BY_VAL(kind);
 };
 
-class DeclParamItemModnm final: public Base
+class DeclParamItemModule final: public ParamItemModuleBase
 {
 public:		// types
 	enum class Kind
 	{
 		Module,
-		ParpkModnm,
+		ParpkModule,
 	};
 
 private:		// variables
-	Symbol* _modnm = nullptr;
 	Kind _kind;
 
 public:		// functions
-	DeclParamItemModnm(Symbol* s_modnm, Kind s_kind);
-	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(DeclParamItemModnm);
-	virtual ~DeclParamItemModnm();
+	DeclParamItemModule(Symbol* s_modnm, Kind s_kind);
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(DeclParamItemModule);
+	virtual inline ~DeclParamItemModule() = default;
 
 	EVAL(MAP(GEN_GETTER_BY_VAL, SEMICOLON,
-		modnm,
 		kind));
 };
 
@@ -154,7 +150,7 @@ private:		// variables
 public:		// functions
 	DeclArgItemVar(const Data& s_data, Kind s_kind);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(DeclArgItemVar);
-	virtual ~DeclArgItemVar();
+	virtual inline ~DeclArgItemVar() = default;
 
 	GEN_GETTER_BY_VAL(kind);
 };
@@ -166,7 +162,7 @@ class InstParamOrArgList final: public ParamOrArgListBase
 public:		// functions
 	InstParamOrArgList(Kind s_kind);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(InstParamOrArgList);
-	virtual ~InstParamOrArgList();
+	virtual inline ~InstParamOrArgList() = default;
 };
 
 class InstParamItemVar final: public VarEtcBase
@@ -174,12 +170,23 @@ class InstParamItemVar final: public VarEtcBase
 public:		// functions
 	InstParamItemVar(const Data& s_data);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(InstParamItemVar);
-	virtual ~InstParamItemVar();
+	virtual inline ~InstParamItemVar() = default;
 };
 
-class InstParamItemType final: public Base
+class InstParamItemType final: public ParamItemTypeBase
 {
 public:		// functions
+	InstParamItemType(const Typenm& s_typenm);
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(InstParamItemType);
+	virtual inline ~InstParamItemType() = default;
+};
+
+class InstParamItemModule final: public ParamItemModuleBase
+{
+public:		// functions
+	InstParamItemModule(Symbol* s_modnm);
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(InstParamItemModule);
+	virtual inline ~InstParamItemModule() = default;
 };
 
 class InstArgItemVar final: public VarEtcBase
@@ -187,7 +194,7 @@ class InstArgItemVar final: public VarEtcBase
 public:		// functions
 	InstArgItemVar(const Data& s_data);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(InstArgItemVar);
-	virtual ~InstArgItemVar();
+	virtual inline ~InstArgItemVar() = default;
 };
 //--------
 

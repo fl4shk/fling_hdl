@@ -26,7 +26,7 @@ public:		// functions
 	VarEtcBase(const Data& s_data);
 	VarEtcBase(const Data& s_data, AccSpec s_memb_info_acc_spec);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(VarEtcBase);
-	virtual ~VarEtcBase();
+	virtual inline ~VarEtcBase() = default;
 
 	EVAL(MAP(GEN_GETTER_BY_CON_REF, SEMICOLON,
 		data,
@@ -52,7 +52,7 @@ public:		// functions
 	VarEtc(const Data& s_data, Kind s_kind);
 	VarEtc(const Data& s_data, AccSpec s_acc_spec, Kind s_kind);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(VarEtc);
-	virtual ~VarEtc();
+	virtual inline ~VarEtc() = default;
 
 	GEN_GETTER_BY_VAL(kind);
 };
