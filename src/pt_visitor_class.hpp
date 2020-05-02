@@ -260,10 +260,10 @@ private:		// visitor functions
 		(Parser::FlingInstParamList_PosContext *ctx);
 	antlrcpp::Any visitFlingInstParamList_Pos_Item
 		(Parser::FlingInstParamList_Pos_ItemContext *ctx);
-	antlrcpp::Any visitFlingInstParamList_Pos_Item_Parpk
-		(Parser::FlingInstParamList_Pos_Item_ParpkContext *ctx);
-	antlrcpp::Any visitFlingInstParamList_Pos_Item_Unparpk
-		(Parser::FlingInstParamList_Pos_Item_UnparpkContext *ctx);
+	//antlrcpp::Any visitFlingInstParamList_Pos_Item_Parpk
+	//	(Parser::FlingInstParamList_Pos_Item_ParpkContext *ctx);
+	//antlrcpp::Any visitFlingInstParamList_Pos_Item_Unparpk
+	//	(Parser::FlingInstParamList_Pos_Item_UnparpkContext *ctx);
 	antlrcpp::Any visitFlingInstParamList_Named
 		(Parser::FlingInstParamList_NamedContext *ctx);
 	antlrcpp::Any visitFlingInstParamList_Named_Item
@@ -277,10 +277,10 @@ private:		// visitor functions
 		(Parser::FlingInstArgList_PosContext *ctx);
 	antlrcpp::Any visitFlingInstArgList_Pos_Item
 		(Parser::FlingInstArgList_Pos_ItemContext *ctx);
-	antlrcpp::Any visitFlingInstArgList_Pos_Item_Parpk
-		(Parser::FlingInstArgList_Pos_Item_ParpkContext *ctx);
-	antlrcpp::Any visitFlingInstArgList_Pos_Item_Unparpk
-		(Parser::FlingInstArgList_Pos_Item_UnparpkContext *ctx);
+	//antlrcpp::Any visitFlingInstArgList_Pos_Item_Parpk
+	//	(Parser::FlingInstArgList_Pos_Item_ParpkContext *ctx);
+	//antlrcpp::Any visitFlingInstArgList_Pos_Item_Unparpk
+	//	(Parser::FlingInstArgList_Pos_Item_UnparpkContext *ctx);
 	antlrcpp::Any visitFlingInstArgList_Named
 		(Parser::FlingInstArgList_NamedContext *ctx);
 	antlrcpp::Any visitFlingInstArgList_Named_Item

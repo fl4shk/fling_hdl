@@ -49,10 +49,13 @@ flingDeclParamList_Item:
 		(
 			flingTypenameOrModname ('=' flingExprList)?
 			| (KwType | KwModule) ('=' flingTypenameOrModnameList)?
-			| KwParpk '<' flingTypenameOrModname '>' 
-				('=' KwParpk '(' flingExprList ')')?
-			| KwParpk '<' (KwType | KwModule) '>'
-				('=' KwParpk '(' flingTypenameOrModnameList ')')?
+
+			//// Needs updated with allowing `KwUnparpk` inside the
+			//// parentherses
+			//| KwParpk '<' flingTypenameOrModname '>' 
+			//	('=' KwParpk '(' flingExprList ')')?
+			//| KwParpk '<' (KwType | KwModule) '>'
+			//	('=' KwParpk '(' flingTypenameOrModnameList ')')?
 		)
 	;
 
@@ -70,8 +73,8 @@ flingDeclArgList_Item:
 		(KwInput | KwOutput | KwInout | KwInterface)
 		(
 			flingTypenameOrModname ('=' flingExprList)?
-			| KwParpk '<' flingTypenameOrModname '>'
-				('=' KwParpk '(' flingExprList ')')?
+			//| KwParpk '<' flingTypenameOrModname '>'
+			//	('=' KwParpk '(' flingExprList ')')?
 		)
 	;
 //--------
@@ -93,17 +96,17 @@ flingInstParamList_Pos:
 flingInstParamList_Pos_Item:
 	flingExpr
 	| flingTypenameOrModname
-	| flingInstParamList_Pos_Item_Parpk
-	| flingInstParamList_Pos_Item_Unparpk
+	//| flingInstParamList_Pos_Item_Parpk
+	//| flingInstParamList_Pos_Item_Unparpk
 	;
 
 
-flingInstParamList_Pos_Item_Parpk:
-	KwParpk '(' (flingExprList | flingTypenameOrModnameList) ','? ')'
-	;
-flingInstParamList_Pos_Item_Unparpk:
-	KwUnparpk '(' flingIdent ')'
-	;
+//flingInstParamList_Pos_Item_Parpk:
+//	KwParpk '(' (flingExprList | flingTypenameOrModnameList) ','? ')'
+//	;
+//flingInstParamList_Pos_Item_Unparpk:
+//	KwUnparpk '(' flingIdent ')'
+//	;
 
 flingInstParamList_Named:
 	flingInstParamList_Named_Item
@@ -130,16 +133,16 @@ flingInstArgList_Pos:
 
 flingInstArgList_Pos_Item:
 	flingExpr
-	| flingInstArgList_Pos_Item_Parpk
-	| flingInstArgList_Pos_Item_Unparpk
+	//| flingInstArgList_Pos_Item_Parpk
+	//| flingInstArgList_Pos_Item_Unparpk
 	;
 
-flingInstArgList_Pos_Item_Parpk:
-	KwParpk '(' flingExprList ','? ')'
-	;
-flingInstArgList_Pos_Item_Unparpk:
-	KwUnparpk '(' flingIdent ')'
-	;
+//flingInstArgList_Pos_Item_Parpk:
+//	KwParpk '(' flingExprList ','? ')'
+//	;
+//flingInstArgList_Pos_Item_Unparpk:
+//	KwUnparpk '(' flingIdent ')'
+//	;
 
 flingInstArgList_Named:
 	flingInstArgList_Named_Item

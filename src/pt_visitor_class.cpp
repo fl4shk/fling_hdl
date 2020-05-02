@@ -252,11 +252,11 @@ antlrcpp::Any PtVisitor::visitFlingDeclParamList_Item
 
 	CHECK(flingTypenameOrModname)
 	{
-		if (ctx->KwParpk().size() > 0)
-		{
-			node->kind = Kind::ParpkVar;
-		}
-		else
+		//if (ctx->KwParpk().size() > 0)
+		//{
+		//	node->kind = Kind::ParpkVar;
+		//}
+		//else
 		{
 			node->kind = Kind::Var;
 		}
@@ -266,22 +266,22 @@ antlrcpp::Any PtVisitor::visitFlingDeclParamList_Item
 	}
 	else CHECK(KwType)
 	{
-		if (ctx->KwParpk().size() > 0)
-		{
-			node->kind = Kind::ParpkType;
-		}
-		else
+		//if (ctx->KwParpk().size() > 0)
+		//{
+		//	node->kind = Kind::ParpkType;
+		//}
+		//else
 		{
 			node->kind = Kind::Type;
 		}
 	}
 	else CHECK(KwModule)
 	{
-		if (ctx->KwParpk().size() > 0)
-		{
-			node->kind = Kind::ParpkModnm;
-		}
-		else
+		//if (ctx->KwParpk().size() > 0)
+		//{
+		//	node->kind = Kind::ParpkModnm;
+		//}
+		//else
 		{
 			node->kind = Kind::Module;
 		}
@@ -323,18 +323,18 @@ antlrcpp::Any PtVisitor::visitFlingDeclArgList_Item
 	JUST_ACCEPT_AND_POP_AST(node->ident_list, flingIdentList);
 
 	using Kind = DeclArgList_Item::Kind;
-	if (ctx->KwParpk().size() > 0)
-	{
-		if (!_conv_pt_to_enum(node->kind,
-			ctx->KwInput(), Kind::ParpkInput,
-			ctx->KwOutput(), Kind::ParpkOutput,
-			ctx->KwInout(), Kind::ParpkInout,
-			ctx->KwInterface(), Kind::ParpkInterface))
-		{
-			internal_err(visitFlingDeclArgList_Item);
-		}
-	}
-	else
+	//if (ctx->KwParpk().size() > 0)
+	//{
+	//	if (!_conv_pt_to_enum(node->kind,
+	//		ctx->KwInput(), Kind::ParpkInput,
+	//		ctx->KwOutput(), Kind::ParpkOutput,
+	//		ctx->KwInout(), Kind::ParpkInout,
+	//		ctx->KwInterface(), Kind::ParpkInterface))
+	//	{
+	//		internal_err(visitFlingDeclArgList_Item);
+	//	}
+	//}
+	//else
 	{
 		if (!_conv_pt_to_enum(node->kind,
 			ctx->KwInput(), Kind::Input,
@@ -385,39 +385,42 @@ antlrcpp::Any PtVisitor::visitFlingInstParamList_Pos
 antlrcpp::Any PtVisitor::visitFlingInstParamList_Pos_Item
 	(Parser::FlingInstParamList_Pos_ItemContext *ctx)
 {
+	//ACCEPT_IFELSE
+	//	(flingExpr,
+	//	flingTypenameOrModname,
+	//	flingInstParamList_Pos_Item_Parpk,
+	//	flingInstParamList_Pos_Item_Unparpk)
 	ACCEPT_IFELSE
 		(flingExpr,
-		flingTypenameOrModname,
-		flingInstParamList_Pos_Item_Parpk,
-		flingInstParamList_Pos_Item_Unparpk)
+		flingTypenameOrModname)
 	else
 	{
 		internal_err(visitFlingInstParamList_Pos_Item);
 	}
 	return nullptr;
 }
-antlrcpp::Any PtVisitor::visitFlingInstParamList_Pos_Item_Parpk
-	(Parser::FlingInstParamList_Pos_Item_ParpkContext *ctx)
-{
-	DEFER_PUSH(node, InstParamOrArgList_PosItemParpk);
-
-	ACCEPT_AND_POP_AST_LIST_IFELSE
-		(node->item_list, flingExprList,
-		node->item_list, flingTypenameOrModnameList)
-	else
-	{
-		internal_err(visitFlingInstParamList_Pos_Item_Parpk);
-	}
-	return nullptr;
-}
-antlrcpp::Any PtVisitor::visitFlingInstParamList_Pos_Item_Unparpk
-	(Parser::FlingInstParamList_Pos_Item_UnparpkContext *ctx)
-{
-	DEFER_PUSH(node, InstParamOrArgList_PosItemUnparpk);
-	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
-
-	return nullptr;
-}
+//antlrcpp::Any PtVisitor::visitFlingInstParamList_Pos_Item_Parpk
+//	(Parser::FlingInstParamList_Pos_Item_ParpkContext *ctx)
+//{
+//	DEFER_PUSH(node, InstParamOrArgList_PosItemParpk);
+//
+//	ACCEPT_AND_POP_AST_LIST_IFELSE
+//		(node->item_list, flingExprList,
+//		node->item_list, flingTypenameOrModnameList)
+//	else
+//	{
+//		internal_err(visitFlingInstParamList_Pos_Item_Parpk);
+//	}
+//	return nullptr;
+//}
+//antlrcpp::Any PtVisitor::visitFlingInstParamList_Pos_Item_Unparpk
+//	(Parser::FlingInstParamList_Pos_Item_UnparpkContext *ctx)
+//{
+//	DEFER_PUSH(node, InstParamOrArgList_PosItemUnparpk);
+//	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
+//
+//	return nullptr;
+//}
 antlrcpp::Any PtVisitor::visitFlingInstParamList_Named
 	(Parser::FlingInstParamList_NamedContext *ctx)
 {
@@ -477,34 +480,36 @@ antlrcpp::Any PtVisitor::visitFlingInstArgList_Pos
 antlrcpp::Any PtVisitor::visitFlingInstArgList_Pos_Item
 	(Parser::FlingInstArgList_Pos_ItemContext *ctx)
 {
+	//ACCEPT_IFELSE
+	//	(flingExpr,
+	//	flingInstArgList_Pos_Item_Parpk,
+	//	flingInstArgList_Pos_Item_Unparpk)
 	ACCEPT_IFELSE
-		(flingExpr,
-		flingInstArgList_Pos_Item_Parpk,
-		flingInstArgList_Pos_Item_Unparpk)
+		(flingExpr)
 	else
 	{
 		internal_err(visitFlingInstArgList_Pos_Item);
 	}
 	return nullptr;
 }
-antlrcpp::Any PtVisitor::visitFlingInstArgList_Pos_Item_Parpk
-	(Parser::FlingInstArgList_Pos_Item_ParpkContext *ctx)
-{
-	DEFER_PUSH(node, InstParamOrArgList_PosItemParpk);
-
-	JUST_ACCEPT_AND_POP_AST_LIST(node->item_list, flingExprList);
-
-	return nullptr;
-}
-antlrcpp::Any PtVisitor::visitFlingInstArgList_Pos_Item_Unparpk
-	(Parser::FlingInstArgList_Pos_Item_UnparpkContext *ctx)
-{
-	DEFER_PUSH(node, InstParamOrArgList_PosItemUnparpk);
-
-	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
-
-	return nullptr;
-}
+//antlrcpp::Any PtVisitor::visitFlingInstArgList_Pos_Item_Parpk
+//	(Parser::FlingInstArgList_Pos_Item_ParpkContext *ctx)
+//{
+//	DEFER_PUSH(node, InstParamOrArgList_PosItemParpk);
+//
+//	JUST_ACCEPT_AND_POP_AST_LIST(node->item_list, flingExprList);
+//
+//	return nullptr;
+//}
+//antlrcpp::Any PtVisitor::visitFlingInstArgList_Pos_Item_Unparpk
+//	(Parser::FlingInstArgList_Pos_Item_UnparpkContext *ctx)
+//{
+//	DEFER_PUSH(node, InstParamOrArgList_PosItemUnparpk);
+//
+//	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
+//
+//	return nullptr;
+//}
 antlrcpp::Any PtVisitor::visitFlingInstArgList_Named
 	(Parser::FlingInstArgList_NamedContext *ctx)
 {
