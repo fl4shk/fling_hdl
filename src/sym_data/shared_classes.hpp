@@ -3,7 +3,7 @@
 
 // src/sym_data/shared_classes.hpp
 
-#include "misc_includes.hpp"
+#include "../misc_includes.hpp"
 
 namespace fling_hdl
 {
