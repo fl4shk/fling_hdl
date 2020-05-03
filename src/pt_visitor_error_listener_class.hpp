@@ -18,7 +18,7 @@ public:		// functions
 		: _filename(s_filename)
 	{
 	}
-	virtual ~PtVisitorErrorListener();
+	virtual inline ~PtVisitorErrorListener() = default;
 
 	void syntaxError(antlr4::Recognizer *recognizer, 
 		antlr4::Token *offendingSymbol, size_t line, 

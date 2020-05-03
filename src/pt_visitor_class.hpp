@@ -163,7 +163,7 @@ private:		// misc functions
 
 public:		// functions
 	PtVisitor(set<string>* s_filename_set);
-	virtual ~PtVisitor();
+	virtual inline ~PtVisitor() = default;
 	int run();
 
 	GEN_GETTERS_BY_CON_REF_AND_REF(ast_etc_map_pair);
@@ -595,10 +595,10 @@ private:		// visitor functions
 	//--------
 
 	//--------
-	antlrcpp::Any visitFlingDeclProc
-		(Parser::FlingDeclProcContext *ctx);
-	antlrcpp::Any visitFlingDeclProc_Header
-		(Parser::FlingDeclProc_HeaderContext *ctx);
+	//antlrcpp::Any visitFlingDeclProc
+	//	(Parser::FlingDeclProcContext *ctx);
+	//antlrcpp::Any visitFlingDeclProc_Header
+	//	(Parser::FlingDeclProc_HeaderContext *ctx);
 	//--------
 
 	//--------

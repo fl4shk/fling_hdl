@@ -3,10 +3,6 @@
 namespace fling_hdl
 {
 
-PtVisitorErrorListener::~PtVisitorErrorListener()
-{
-}
-
 void PtVisitorErrorListener::syntaxError(antlr4::Recognizer *recognizer, 
 	antlr4::Token *offendingSymbol, size_t line, 
 	size_t charPositionInLine, const std::string &msg, 

@@ -172,8 +172,8 @@ flingDeclModule_Item:
 	flingInstModule
 	| flingDeclModule
 
-	// This is a `proc` call
-	| flingExpr ';'
+	//// This is a `proc` call
+	//| flingExpr ';'
 	| flingDeclModule_Gen
 	| flingContAssign
 	| flingImportList ';'
@@ -514,7 +514,8 @@ flingDeclClsOrMxn_Item_DeclSubprog_FullDefn:
 	flingDeclClsOrMxn_AccessSpecifier?
 	(
 		(KwVirtual | KwStatic)? KwConst?
-			(flingDeclFunc | flingDeclTask | flingDeclProc)
+			//(flingDeclFunc | flingDeclTask | flingDeclProc)
+			(flingDeclFunc | flingDeclTask)
 	)
 	;
 //flingDeclClsOrMxn_Item_DeclSubprog_Abstract:
@@ -588,7 +589,7 @@ flingDeclClsOrMxn_Item_DeclSubprog_FullDefn:
 flingDeclSubprog:
 	flingDeclFunc
 	| flingDeclTask
-	| flingDeclProc
+	//| flingDeclProc
 	;
 //--------
 
@@ -828,12 +829,12 @@ flingDeclTask_Item_While:
 	KwWhile flingExpr flingDeclTask_Scope
 	;
 
-flingDeclProc:
-	flingDeclProc_Header flingDeclModule_Scope
-	;
-flingDeclProc_Header:
-	KwProc flingIdent flingDeclParamList? flingDeclArgList
-	;
+//flingDeclProc:
+//	flingDeclProc_Header flingDeclModule_Scope
+//	;
+//flingDeclProc_Header:
+//	KwProc flingIdent flingDeclParamList? flingDeclArgList
+//	;
 //--------
 
 //--------

@@ -10,9 +10,6 @@ SymbolTableBuilder::SymbolTableBuilder(AstEtcMapPair* s_ast_etc_map_pair)
 	: MultiPassAstVisitor(s_ast_etc_map_pair)
 {
 }
-SymbolTableBuilder::~SymbolTableBuilder()
-{
-}
 
 bool SymbolTableBuilder::should_perf_ast_etc_map_move() const
 {

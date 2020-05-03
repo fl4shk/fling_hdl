@@ -12,9 +12,6 @@ Symbol::Symbol(const string& s_name, const AstBaseWptr& s_defn,
 	: _name(s_name), _defn(s_defn), _parent(s_parent)
 {
 }
-Symbol::~Symbol()
-{
-}
 
 SymbolTable* Symbol::scope() const
 {
@@ -110,9 +107,6 @@ string Symbol::_inner_full_name(const sym_data::InstModule& d) const
 //--------
 SymbolTable::SymbolTable(SymbolTable* s_parent)
 	: _parent(s_parent)
-{
-}
-SymbolTable::~SymbolTable()
 {
 }
 

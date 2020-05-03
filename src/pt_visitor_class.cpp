@@ -138,9 +138,6 @@ PtVisitor::PtVisitor(set<string>* s_filename_set)
 		_ast_etc_map_pair.second[s_filename] = AstEtc(s_filename);
 	}
 }
-PtVisitor::~PtVisitor()
-{
-}
 int PtVisitor::run()
 {
 	for (auto& p: _ast_etc_map_pair.second)
@@ -573,7 +570,7 @@ antlrcpp::Any PtVisitor::visitFlingDeclModule_Item
 {
 	ACCEPT_IFELSE
 		(flingInstModule,
-		flingExpr,
+		//flingExpr,
 		flingDeclModule_Gen,
 		flingContAssign,
 		flingImportList,
@@ -1511,10 +1508,13 @@ antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item_DeclSubprog_FullDefn
 	node->is_static = ctx->KwStatic();
 	node->is_const = ctx->KwConst();
 
+	//ACCEPT_AND_POP_AST_IFELSE
+	//	(node->subprog, flingDeclFunc,
+	//	node->subprog, flingDeclTask,
+	//	node->subprog, flingDeclProc)
 	ACCEPT_AND_POP_AST_IFELSE
 		(node->subprog, flingDeclFunc,
-		node->subprog, flingDeclTask,
-		node->subprog, flingDeclProc)
+		node->subprog, flingDeclTask)
 	else
 	{
 		internal_err(visitFlingDeclClsOrMxn_Item_DeclSubprog_FullDefn);
@@ -1738,10 +1738,13 @@ antlrcpp::Any PtVisitor::visitFlingDeclClsOrMxn_Item_DeclSubprog_FullDefn
 antlrcpp::Any PtVisitor::visitFlingDeclSubprog
 	(Parser::FlingDeclSubprogContext *ctx)
 {
+	//ACCEPT_IFELSE
+	//	(flingDeclFunc,
+	//	flingDeclTask,
+	//	flingDeclProc)
 	ACCEPT_IFELSE
 		(flingDeclFunc,
-		flingDeclTask,
-		flingDeclProc)
+		flingDeclTask)
 	else
 	{
 		internal_err(visitFlingDeclSubprog);
@@ -2429,27 +2432,27 @@ antlrcpp::Any PtVisitor::visitFlingDeclTask_Item_While
 //--------
 
 //--------
-antlrcpp::Any PtVisitor::visitFlingDeclProc
-	(Parser::FlingDeclProcContext *ctx)
-{
-	DEFER_PUSH(node, DeclProc);
-
-	JUST_ACCEPT_AND_POP_AST(node->header, flingDeclProc_Header);
-	JUST_ACCEPT_AND_POP_AST_LIST(node->item_list, flingDeclModule_Scope);
-
-	return nullptr;
-}
-antlrcpp::Any PtVisitor::visitFlingDeclProc_Header
-	(Parser::FlingDeclProc_HeaderContext *ctx)
-{
-	DEFER_PUSH(node, DeclProc_Header);
-
-	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
-	ACCEPT_AND_POP_AST_IF(node->opt_param_list, flingDeclParamList);
-	JUST_ACCEPT_AND_POP_AST(node->arg_list, flingDeclArgList);
-
-	return nullptr;
-}
+//antlrcpp::Any PtVisitor::visitFlingDeclProc
+//	(Parser::FlingDeclProcContext *ctx)
+//{
+//	DEFER_PUSH(node, DeclProc);
+//
+//	JUST_ACCEPT_AND_POP_AST(node->header, flingDeclProc_Header);
+//	JUST_ACCEPT_AND_POP_AST_LIST(node->item_list, flingDeclModule_Scope);
+//
+//	return nullptr;
+//}
+//antlrcpp::Any PtVisitor::visitFlingDeclProc_Header
+//	(Parser::FlingDeclProc_HeaderContext *ctx)
+//{
+//	DEFER_PUSH(node, DeclProc_Header);
+//
+//	JUST_ACCEPT_AND_POP_STR(node->ident, flingIdent);
+//	ACCEPT_AND_POP_AST_IF(node->opt_param_list, flingDeclParamList);
+//	JUST_ACCEPT_AND_POP_AST(node->arg_list, flingDeclArgList);
+//
+//	return nullptr;
+//}
 //--------
 
 //--------

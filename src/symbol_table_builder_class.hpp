@@ -22,7 +22,7 @@ private:		// variables
 
 public:		// functions
 	SymbolTableBuilder(AstEtcMapPair* s_ast_etc_map_pair);
-	~SymbolTableBuilder();
+	inline ~SymbolTableBuilder() = default;
 
 	GEN_GETTER_BY_CON_REF(sym_table);
 

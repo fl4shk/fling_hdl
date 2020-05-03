@@ -42,7 +42,7 @@ public:		// functions
 	Symbol(const string& s_name, const AstBaseWptr& s_defn,
 		SymbolTable* s_parent);
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(Symbol);
-	~Symbol();
+	inline ~Symbol() = default;
 
 	SymbolTable* scope() const;
 	SymTableMap* imported_scope_table() const;
@@ -94,7 +94,7 @@ private:		// variables
 public:		// functions
 	SymbolTable(SymbolTable* s_parent=nullptr);
 	GEN_MOVE_ONLY_CONSTRUCTORS_AND_ASSIGN(SymbolTable);
-	~SymbolTable();
+	inline ~SymbolTable() = default;
 
 	// Insert a new `Symbol` into this `SymbolTable`, possibly creating a
 	// scope and/or a linked scope table for it.
