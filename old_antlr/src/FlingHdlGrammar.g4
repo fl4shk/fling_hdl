@@ -513,7 +513,8 @@ flingDeclClsOrMxn_Item_DeclSubprog:
 flingDeclClsOrMxn_Item_DeclSubprog_FullDefn:
 	flingDeclClsOrMxn_AccessSpecifier?
 	(
-		(KwVirtual | KwStatic)? KwConst?
+		//(KwVirtual | KwStatic)? KwConst?
+		KwStatic? KwConst?
 			//(flingDeclFunc | flingDeclTask | flingDeclProc)
 			(flingDeclFunc | flingDeclTask)
 	)
