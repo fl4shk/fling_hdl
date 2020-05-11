@@ -70,8 +70,68 @@ flingDeclArgListItem:
 			| KwInout
 			//| KwModport
 			//| KwInterface
-		) 
+		)
 		flingTypenmOrModnm (PunctBlkAssign flingExprList)?
+	;
+//--------
+
+//--------
+flingInstParamList:
+	flingInstParamListPos
+	| flingInstParamListNamed
+	;
+flingInstParamListPos:
+	PunctCmpLt
+		(
+			flingInstParamListPosItem
+			(PunctComma flingInstParamListPosItem)*
+		)?
+	PunctCmpGt
+	;
+flingInstParamListPosItem:
+	// This might actually be a type name or module name if it's a
+	// specific variety of `flingIdentExpr`.  Semantic analysis will need
+	// to determine this.
+	flingExpr
+	;
+flingInstParamListNamed:
+	PunctCmpLt
+		(
+			flingInstParamListNamedItem
+			(PunctComma flingInstParamListNamedItem)*
+		)?
+	PunctCmpGt
+	;
+flingInstParamListNamedItem:
+	flingIdent PunctMapTo flingExpr
+	;
+
+
+flingInstArgList:
+	flingInstArgListPos
+	| flingInstArgListNamed
+	;
+flingInstArgListPos:
+	PunctLparen
+		(
+			flingInstArgListPosItem
+			(PunctComma flingInstArgListPosItem)*
+		)?
+	PunctRparen
+	;
+flingInstArgListPosItem:
+	flingExpr
+	;
+flingInstArgListNamed:
+	PunctLparen
+		(
+			flingInstArgListNamedItem
+			(PunctComma flingInstArgListNamedItem)*
+		)?
+	PunctRparen
+	;
+flingInstArgListNamedItem:
+	flingIdent PunctMapTo flingExpr
 	;
 //--------
 
@@ -82,9 +142,7 @@ flingDeclModule:
 		flingDeclArgList
 		flingDeclModuleScope
 	;
-//--------
 
-//--------
 flingDeclModuleScope:
 	PunctLbrace
 		flingDeclModuleItem*
@@ -92,7 +150,9 @@ flingDeclModuleScope:
 	;
 
 flingDeclModuleItem:
-	flingImport
+	flingModinst
+
+	| flingImport
 
 	| flingDeclConst
 	| flingDeclVar
@@ -109,6 +169,13 @@ flingDeclModuleItem:
 
 	| flingDeclModuleGen
 	| flingDeclModuleBehav
+	;
+//--------
+
+//--------
+flingModinst:
+	KwModinst flingIdent PunctColon flingTypenmOrModnm flingInstArgList
+		PunctSemicolon
 	;
 //--------
 
@@ -276,7 +343,7 @@ flingAnyBehavScopeItem:
 
 	| flingDeclSubprog
 
-	| flingExprCallSubprog PunctSemicolon
+	| flingCallSubprogExpr PunctSemicolon
 	;
 
 flingAnyBehavScopeItemAssign:
@@ -526,6 +593,16 @@ flingWireAssign:
 	KwAssign (flingIdentExpr | flingCatExpr) PunctBlkAssign
 		flingExpr PunctSemicolon
 	;
+
+flingDeclAlias:
+	KwAlias flingIdentList PunctColon
+		(
+			flingTypenmOrModnm PunctBlkAssign flingExprList
+			| (KwType | KwModule) flingTypenmOrModnmList
+			| (KwFunc | KwTask) flingSubprogIdent
+		)
+		PunctSemicolon
+	;
 //--------
 
 //--------
@@ -552,6 +629,126 @@ flingImportItem:
 	;
 flingImportItemList:
 	flingImportItem (PunctComma flingImportItemList)*
+	;
+//--------
+
+//--------
+flingExpr:
+	flingLogorExpr 
+	;
+
+flingLogorExpr:
+	flingLogandExpr (PunctLogor flingExpr)?
+	;
+
+flingLogandExpr:
+	flingCmpEqEtcExpr (PunctLogand flingExpr)?
+	;
+
+
+flingCmpEqEtcExpr:
+	flingCmpLtEtcExpr
+		(
+			(PunctCmpEq | PunctCmpNe | PunctCaseCmpEq | PunctCaseCmpNe)
+			flingExpr
+		)?
+	;
+
+flingCmpLtEtcExpr:
+	flingPlusMinusExpr
+		(
+			(PunctCmpLt | PunctCmpGt | PunctCmpLe | PunctCmpGe)
+			flingExpr
+		)?
+	;
+
+flingPlusMinusExpr:
+	flingMulDivModExpr
+		(
+			(PunctPlus | PunctMinus)
+			flingExpr
+		)?
+	;
+
+flingMulDivModExpr:
+	flingBitorBitnorExpr
+		(
+			(PunctMul | PunctDiv | PunctMod)
+			flingExpr
+		)?
+	;
+
+flingBitorBitnorExpr:
+	flingBitandBitnandExpr
+		(
+			(PunctBitor | PunctBitnor)
+			flingExpr
+		)?
+	;
+
+flingBitandBitnandExpr:
+	flingBitxorBitxnorExpr
+		(
+			(PunctBitand | PunctBitnand)
+			flingExpr
+		)?
+	;
+
+flingBitxorBitxnorExpr:
+	flingBitshiftExpr
+		(
+			(PunctBitxor | PunctBitxnor)
+			flingExpr
+		)?
+	;
+
+flingBitshiftExpr:
+	flingUnaryExpr
+		(
+			(KwLsl | KwLsr | KwAsr)
+			flingExpr
+		)?
+	;
+
+flingUnaryExpr:
+	(PunctPlus | PunctMinus | PunctBitnot | PunctLognot) flingExpr
+	| flingLowExpr
+	;
+
+flingLowExpr:
+	LitDecNum
+	| LitHexNum
+	| LitOctNum
+	| LitBinNum
+
+	| PunctLparen flingExpr PunctRparen
+
+	| flingCallDollarFuncExpr
+
+	| flingCallSubprogExpr
+
+	| flingIdentExpr
+	;
+
+flingCallDollarFuncExpr:
+	(
+		KwDollarSize
+		| KwDollarRange
+		| KwDollarHigh
+		| KwDollarLow
+
+		| KwDollarUnsigned
+		| KwDollarSigned
+	)
+		PunctLparen flingExpr PunctRparen
+	;
+
+flingCallSubprogExpr:
+	flingSubprogIdent flingInstArgList
+	;
+
+flingSubprogIdent:
+	flingScopedIdent flingInstParamList?
 	;
 //--------
 
@@ -623,8 +820,8 @@ PunctBlkAssign: '=' ;
 //--------
 
 //--------
-PunctLogOr: '||' ;
-PunctLogAnd: '&&' ;
+PunctLogor: '||' ;
+PunctLogand: '&&' ;
 
 PunctCmpEq: '==' ;
 PunctCmpNe: '!=' ;
@@ -644,21 +841,21 @@ PunctMul: '*' ;
 PunctDiv: '/' ;
 PunctMod: '%' ;
 
-PunctBitOr: '|' ;
-PunctBitNor: '~|' ;
+PunctBitor: '|' ;
+PunctBitnor: '~|' ;
 
-PunctBitAnd: '&' ;
-PunctBitNand: '~&' ;
+PunctBitand: '&' ;
+PunctBitnand: '~&' ;
 
-PunctBitXor: '^' ;
-PunctBitXnor: '^~' | '~^' ;
+PunctBitxor: '^' ;
+PunctBitxnor: '^~' | '~^' ;
 
 KwLsl: 'lsl' ;
 KwLsr: 'lsr' ;
 KwAsr: 'asr' ;
 
-PunctBitNot: '~' ;
-PunctLogNot: '!' ;
+PunctBitnot: '~' ;
+PunctLognot: '!' ;
 //--------
 
 //--------
@@ -691,6 +888,7 @@ KwImport: 'import' ;
 KwAll: 'all' ;
 
 KwModule: 'module' ;
+KwModinst: 'modinst' ;
 
 KwType: 'type' ;
 
@@ -756,13 +954,20 @@ KwRepl: 'repl' ;
 //--------
 
 //--------
-//KwDollarSize: '$size' ;
-////KwDollarRange: '$range' ;
-//KwDollarHigh: '$high' ;
-//KwDollarLow: '$low' ;
-//
+KwDollarSize: '$size' ;
+KwDollarRange: '$range' ;
+KwDollarHigh: '$high' ;
+KwDollarLow: '$low' ;
+
 //KwDollarHighel: '$highel' ;
 //KwDollarLowel: '$lowel' ;
+
+KwDollarUnsigned: '$unsigned' ;
+KwDollarSigned: '$signed' ;
+
+//KwDollarIsUnsigned: '$is_unsigned' ;
+//KwDollarIsSigned: '$is_signed' ;
+//KwDollarIsUnknown: '$is_unknown' ;
 //--------
 
 //--------
