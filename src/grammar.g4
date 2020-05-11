@@ -795,10 +795,8 @@ flingIdentExpr:
 
 		// Access a slice.
 		(
-			// The hash character looks like something has been sliced.
 			// It is used here to keep the grammar LL(1).
-			PunctHash
-			PunctLbracket
+			PunctSliceStart
 				(
 					// Regular range
 					flingRange
@@ -967,7 +965,8 @@ PunctMapTo: '=>' ;
 //--------
 
 //--------
-PunctHash: '#' ;
+// The hash character looks like something has been sliced.
+PunctSliceStart: '#[' ;
 //--------
 
 //--------
@@ -1004,12 +1003,12 @@ KwInput: 'input' ;
 KwOutput: 'output' ;
 KwInout: 'inout' ;
 
+//KwInterface: 'interface' ;
+//KwModport: 'modport' ;
+
 KwFunc: 'func' ;
 KwTask: 'task' ;
 //KwProc: 'proc' ;
-
-//KwInterface: 'interface' ;
-//KwModport: 'modport' ;
 
 //KwParpk: 'parpk' ;
 //KwUnparpk: 'unparpk' ;
@@ -1083,7 +1082,6 @@ KwDollarSigned: '$signed' ;
 
 KwDollarIsUnsigned: '$is_unsigned' ;
 KwDollarIsSigned: '$is_signed' ;
-
 //KwDollarIsUnknown: '$is_unknown' ;
 
 KwDollarPow: '$pow' ;
@@ -1098,9 +1096,9 @@ KwDollarPow: '$pow' ;
 //KwDollarIsformal: '$isformal' ;
 //
 //KwDollarStable: '$stable' ;
-//KwDollarFell: '$fell' ;
-//KwDollarRose: '$rose' ;
 //KwDollarPast: '$past' ;
+//KwDollarRose: '$rose' ;
+//KwDollarFell: '$fell' ;
 //--------
 
 
