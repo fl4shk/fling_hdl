@@ -50,6 +50,7 @@ flingDeclParamListItem:
 	(
 		flingTypenmOrModnm (PunctBlkAssign flingExprList)?
 		| (KwType | KwModule) (PunctBlkAssign flingTypenmOrModnmList)?
+		| KwRange (PunctBlkAssign flingRangeList)?
 	)
 	;
 
@@ -89,10 +90,14 @@ flingInstParamListPos:
 	PunctCmpGt
 	;
 flingInstParamListPosItem:
-	// This might actually be a type name or module name if it's a
-	// specific variety of `flingIdentExpr`.  Semantic analysis will need
-	// to determine this.
-	flingExpr
+	// This might actually be a type name or module name if it's a specific
+	// variety of `flingIdentExpr` (just an identifier).  Semantic analysis
+	// will need to determine this.
+	flingExprOrRange
+
+	// This will specifically be a typename or modname that is more complex
+	// than just an identifier.
+	| flingTypenmOrModnm
 	;
 flingInstParamListNamed:
 	PunctCmpLt
@@ -103,7 +108,7 @@ flingInstParamListNamed:
 	PunctCmpGt
 	;
 flingInstParamListNamedItem:
-	flingIdent PunctMapTo flingExpr
+	flingIdent PunctMapTo flingInstParamListPosItem
 	;
 
 
@@ -131,7 +136,7 @@ flingInstArgListNamed:
 	PunctRparen
 	;
 flingInstArgListNamedItem:
-	flingIdent PunctMapTo flingExpr
+	flingIdent PunctMapTo flingInstArgListPosItem
 	;
 //--------
 
@@ -214,7 +219,7 @@ flingDeclModuleGenSwitchEtcDefault:
 flingDeclModuleGenFor:
 	KwGen
 		PunctLbracket flingIdent PunctRbracket
-		KwFor flingIdent PunctColon flingExpr
+		KwFor flingIdent PunctColon flingRange
 		flingDeclModuleScope
 	;
 //--------
@@ -282,7 +287,7 @@ flingDeclModuleBehavScopeItemSwitchEtcDefault:
 	;
 
 flingDeclModuleBehavScopeItemFor:
-	KwFor flingIdent PunctColon flingExpr
+	KwFor flingIdent PunctColon flingRange
 		flingDeclModuleBehavScope
 	;
 
@@ -326,7 +331,7 @@ flingDeclModuleBehavScopeItemGenSwitchEtcDefault:
 flingDeclModuleBehavScopeItemGenFor:
 	KwGen
 		PunctLbracket flingIdent PunctRbracket
-		KwFor flingIdent PunctColon flingExpr
+		KwFor flingIdent PunctColon flingRange
 		flingDeclModuleBehavScope
 	;
 //--------
@@ -424,7 +429,7 @@ flingCompositeTypeStructItemGenSwitchEtcDefault:
 flingCompositeTypeStructItemGenFor:
 	KwGen
 		PunctLbracket flingIdent PunctRbracket
-		KwFor flingIdent PunctColon flingExpr
+		KwFor flingIdent PunctColon flingRange
 		flingDeclModuleScope
 	;
 //--------
@@ -519,7 +524,7 @@ flingDeclSubprogScopeItemSwitchEtcDefault:
 	;
 
 flingDeclSubprogScopeItemFor:
-	KwFor flingIdent PunctColon flingExpr
+	KwFor flingIdent PunctColon flingRange
 		flingDeclSubprogScope
 	;
 
@@ -564,7 +569,7 @@ flingDeclSubprogScopeItemGenSwitchEtcDefault:
 flingDeclSubprogScopeItemGenFor:
 	KwGen
 		PunctLbracket flingIdent PunctRbracket
-		KwFor flingIdent PunctColon flingExpr
+		KwFor flingIdent PunctColon flingRange
 		flingDeclSubprogScope
 	;
 //--------
@@ -599,7 +604,7 @@ flingDeclAlias:
 		(
 			flingTypenmOrModnm PunctBlkAssign flingExprList
 			| (KwType | KwModule) flingTypenmOrModnmList
-			| (KwFunc | KwTask) flingSubprogIdent
+			| (KwFunc | KwTask) flingSubprogIdentList
 		)
 		PunctSemicolon
 	;
@@ -617,9 +622,21 @@ flingIdentList:
 	flingIdent (PunctComma flingIdent)*
 	;
 
+flingSubprogIdentList:
+	flingSubprogIdent (PunctComma flingSubprogIdent)*
+	;
+
 flingExprList:
 	flingExpr (PunctComma flingExpr)*
 	;
+
+flingRangeList:
+	flingRange (PunctComma flingRange)*
+	;
+flingExprOrRangeList:
+	flingExprOrRange (PunctComma flingExprOrRange)*
+	;
+
 flingTypenmOrModnmList:
 	flingTypenmOrModnm (PunctComma flingTypenmOrModnm)*
 	;
@@ -728,17 +745,24 @@ flingLowExpr:
 	| flingCallSubprogExpr
 
 	| flingIdentExpr
+
+	| flingCatExpr
+
+	//| flingRange
 	;
 
 flingCallDollarFuncExpr:
 	(
 		KwDollarSize
-		| KwDollarRange
+		//| KwDollarRange
 		| KwDollarHigh
 		| KwDollarLow
 
 		| KwDollarUnsigned
 		| KwDollarSigned
+
+		| KwDollarIsUnsigned
+		| KwDollarIsSigned
 	)
 		PunctLparen flingExpr PunctRparen
 	;
@@ -749,6 +773,51 @@ flingCallSubprogExpr:
 
 flingSubprogIdent:
 	flingScopedIdent flingInstParamList?
+	;
+
+flingIdentExpr:
+	flingScopedIdent 
+		(
+			PunctMemberAccess flingIdent
+			| PunctLbracket flingExprOrRange PunctRbracket
+		)*
+	;
+
+// Semantic analysis will need to determine whether or not this is a valid
+// LHS for an assignment.
+flingCatExpr:
+	KwCat PunctLparen flingExprList PunctRparen
+	;
+
+flingRange:
+	flingNonSimpleRange
+	| flingExpr flingSimpleRangeSuffix
+	;
+
+flingNonSimpleRange:
+	KwDollarRange PunctLparen flingExpr PunctRparen
+	| KwRange PunctLparen flingExpr (PunctComma flingExpr)? PunctRparen
+	;
+
+flingSimpleRangeSuffix:
+	PunctRangeSeparator flingExpr
+	;
+
+flingExprOrRange:
+	flingExpr flingSimpleRangeSuffix?
+	| flingNonSimpleRange
+	;
+//--------
+
+//--------
+flingTypenmOrModnm:
+	(
+		flingScopedIdent flingInstParamList?
+			(PunctScopeAccess flingIdent flingInstParamList)*
+		| (KwUnsigned | KwSigned)? KwLogic flingInstParamList?
+		| KwInteger
+	)
+		(PunctLbracket flingExprOrRange PunctRbracket)*
 	;
 //--------
 
@@ -946,6 +1015,14 @@ KwMux: 'mux' ;
 KwCat: 'cat' ;
 KwRepl: 'repl' ;
 
+KwLogic: 'logic' ;
+KwUnsigned: 'unsigned' ;
+KwSigned: 'signed' ;
+
+KwInteger: 'integer' ;
+
+KwRange: 'range' ;
+
 //KwTypeof: 'typeof' ;
 //KwAuto: 'auto' ;
 
@@ -965,8 +1042,9 @@ KwDollarLow: '$low' ;
 KwDollarUnsigned: '$unsigned' ;
 KwDollarSigned: '$signed' ;
 
-//KwDollarIsUnsigned: '$is_unsigned' ;
-//KwDollarIsSigned: '$is_signed' ;
+KwDollarIsUnsigned: '$is_unsigned' ;
+KwDollarIsSigned: '$is_signed' ;
+
 //KwDollarIsUnknown: '$is_unknown' ;
 //--------
 
