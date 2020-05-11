@@ -28,6 +28,7 @@ using namespace liborangepower::strings;
 using namespace liborangepower::containers;
 using namespace liborangepower::bignum;
 using namespace liborangepower::arg_parse;
+using namespace liborangepower::lang;
 
 #include <stack>
 #include <vector>
