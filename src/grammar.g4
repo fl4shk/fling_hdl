@@ -651,7 +651,15 @@ flingImportItemList:
 
 //--------
 flingExpr:
-	flingLogorExpr 
+	flingMuxExpr 
+	;
+
+flingMuxExpr:
+	KwMux
+	PunctLparen 
+		flingExpr PunctComma flingExpr PunctComma flingExpr
+	PunctRparen
+	| flingLogorExpr
 	;
 
 flingLogorExpr:
@@ -742,19 +750,15 @@ flingLowExpr:
 
 	| flingCallDollarFuncExpr
 
-	| flingCallSubprogExpr
-
 	| flingIdentExpr
 
 	| flingCatExpr
-
-	//| flingRange
+	| flingReplExpr
 	;
 
 flingCallDollarFuncExpr:
 	(
 		KwDollarSize
-		//| KwDollarRange
 		| KwDollarHigh
 		| KwDollarLow
 
@@ -765,6 +769,8 @@ flingCallDollarFuncExpr:
 		| KwDollarIsSigned
 	)
 		PunctLparen flingExpr PunctRparen
+
+	| KwDollarPow PunctLparen flingExpr PunctComma flingExpr PunctRparen
 	;
 
 flingCallSubprogExpr:
@@ -776,12 +782,36 @@ flingSubprogIdent:
 	;
 
 flingIdentExpr:
-	flingScopedIdent 
+	flingScopedIdent
+
+		// Call a subprogram
+		(flingInstParamList? flingInstArgList)?
+
+		// Access members or array elements
 		(
 			PunctMemberAccess flingIdent
-			| PunctLbracket flingExprOrRange PunctRbracket
+			| PunctLbracket flingExpr PunctRbracket
 		)*
+
+		// Access a slice.
+		(
+			// The hash character looks like something has been sliced.
+			// It is used here to keep the grammar LL(1).
+			PunctHash
+			PunctLbracket
+				(
+					// Regular range
+					flingRange
+
+					// Indexed part select
+					| flingExpr
+						(PunctPlusColon | PunctMinusColon)
+						flingExpr
+				)
+			PunctRbracket
+		)?
 	;
+
 
 // Semantic analysis will need to determine whether or not this is a valid
 // LHS for an assignment.
@@ -789,6 +819,11 @@ flingCatExpr:
 	KwCat PunctLparen flingExprList PunctRparen
 	;
 
+flingReplExpr:
+	KwRepl
+//--------
+
+//--------
 flingRange:
 	flingNonSimpleRange
 	| flingExpr flingSimpleRangeSuffix
@@ -932,6 +967,10 @@ PunctMapTo: '=>' ;
 //--------
 
 //--------
+PunctHash: '#' ;
+//--------
+
+//--------
 PunctMemberAccess: '.' ;
 PunctScopeAccess: '::' ;
 //--------
@@ -1046,6 +1085,8 @@ KwDollarIsUnsigned: '$is_unsigned' ;
 KwDollarIsSigned: '$is_signed' ;
 
 //KwDollarIsUnknown: '$is_unknown' ;
+
+KwDollarPow: '$pow' ;
 //--------
 
 //--------
