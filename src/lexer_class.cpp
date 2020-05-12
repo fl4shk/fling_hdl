@@ -82,26 +82,26 @@ void Lexer::_inner_next_tok()
 	}
 	else if (c() == '.')
 	{
-		_set_ifelse_tok
+		_sel_set_tok
 			('.', Tok::PunctRangeSeparator,
 			Tok::PunctMemberAccess);
 	}
 	else if (c() == ':')
 	{
-		_set_ifelse_tok
+		_sel_set_tok
 			('=', Tok::PunctNonBlkAssign,
 			':', Tok::PunctScopeAccess,
 			Tok::PunctColon);
 	}
 	else if (c() == '|')
 	{
-		_set_ifelse_tok
+		_sel_set_tok
 			('|', Tok::PunctLogor,
 			Tok::PunctBitor);
 	}
 	else if (c() == '&')
 	{
-		_set_ifelse_tok
+		_sel_set_tok
 			('&', Tok::PunctLogand,
 			Tok::PunctBitand);
 	}
@@ -111,7 +111,7 @@ void Lexer::_inner_next_tok()
 
 		if (c() == '=')
 		{
-			_set_ifelse_tok
+			_sel_set_tok
 				('=', Tok::PunctCaseCmpEq,
 				Tok::PunctCmpEq);
 		}
@@ -131,7 +131,7 @@ void Lexer::_inner_next_tok()
 
 		if (c() == '=')
 		{
-			_set_ifelse_tok
+			_sel_set_tok
 				('=', Tok::PunctCaseCmpNe,
 				Tok::PunctCmpNe);
 		}
@@ -142,39 +142,39 @@ void Lexer::_inner_next_tok()
 	}
 	else if (c() == '<')
 	{
-		_set_ifelse_tok
+		_sel_set_tok
 			('=', Tok::PunctCmpLe,
 			Tok::PunctCmpLt);
 	}
 	else if (c() == '>')
 	{
-		_set_ifelse_tok
+		_sel_set_tok
 			('=', Tok::PunctCmpGe,
 			Tok::PunctCmpGt);
 	}
 	else if (c() == '+')
 	{
-		_set_ifelse_tok
+		_sel_set_tok
 			(':', Tok::PunctPlusColon,
 			Tok::PunctPlus);
 	}
 	else if (c() == '-')
 	{
-		_set_ifelse_tok
+		_sel_set_tok
 			(':', Tok::PunctMinusColon,
 			Tok::PunctMinus);
 	}
 	else if (c() == '*')
 	{
-		_set_ifelse_tok(Tok::PunctMul);
+		_sel_set_tok(Tok::PunctMul);
 	}
 	else if (c() == '%')
 	{
-		_set_ifelse_tok(Tok::PunctMod);
+		_sel_set_tok(Tok::PunctMod);
 	}
 	else if (c() == '~')
 	{
-		_set_ifelse_tok
+		_sel_set_tok
 			('|', Tok::PunctBitnor,
 			'&', Tok::PunctBitnand,
 			'^', Tok::PunctBitxnor,
@@ -182,47 +182,47 @@ void Lexer::_inner_next_tok()
 	}
 	else if (c() == '^')
 	{
-		_set_ifelse_tok
+		_sel_set_tok
 			('~', Tok::PunctBitxnor,
 			Tok::PunctBitxor);
 	}
 	else if (c() == '#')
 	{
-		_set_ifelse_tok
+		_sel_set_tok
 			('[', Tok::PunctSliceStart,
 			Tok::MiscOther);
 	}
 	else if (c() == '(')
 	{
-		_set_ifelse_tok(Tok::PunctLparen);
+		_sel_set_tok(Tok::PunctLparen);
 	}
 	else if (c() == ')')
 	{
-		_set_ifelse_tok(Tok::PunctRparen);
+		_sel_set_tok(Tok::PunctRparen);
 	}
 	else if (c() == '[')
 	{
-		_set_ifelse_tok(Tok::PunctLbracket);
+		_sel_set_tok(Tok::PunctLbracket);
 	}
 	else if (c() == ']')
 	{
-		_set_ifelse_tok(Tok::PunctRbracket);
+		_sel_set_tok(Tok::PunctRbracket);
 	}
 	else if (c() == '{')
 	{
-		_set_ifelse_tok(Tok::PunctLbrace);
+		_sel_set_tok(Tok::PunctLbrace);
 	}
 	else if (c() == '}')
 	{
-		_set_ifelse_tok(Tok::PunctRbrace);
+		_sel_set_tok(Tok::PunctRbrace);
 	}
 	else if (c() == ';')
 	{
-		_set_ifelse_tok(Tok::PunctRbrace);
+		_sel_set_tok(Tok::PunctRbrace);
 	}
 	else if (c() == ',')
 	{
-		_set_ifelse_tok(Tok::PunctComma);
+		_sel_set_tok(Tok::PunctComma);
 	}
 	else if (isalpha(c()) || (c() == '_'))
 	{
