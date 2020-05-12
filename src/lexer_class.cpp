@@ -258,7 +258,7 @@ void Lexer::_inner_next_tok()
 			}
 			state().set_s(n_s);
 
-			if (!_set_kw_tok(map<Tok, string>
+			if (!_kw_set_tok(map<Tok, string>
 				({
 					{Tok::KwPackage, "package"},
 
@@ -362,7 +362,7 @@ void Lexer::_inner_next_tok()
 		}
 		state().set_s(n_s);
 
-		if (!_set_kw_tok(map<Tok, string>
+		if (!_kw_set_tok(map<Tok, string>
 			({
 				{Tok::KwDollarSize, "$size"},
 				{Tok::KwDollarRange, "$range"},
