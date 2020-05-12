@@ -10,7 +10,11 @@ Lexer::Lexer(const string& s_filename, string* s_text)
 
 void Lexer::_inner_next_tok()
 {
-	if (c() == '/')
+	if (c() == EOF)
+	{
+		_set_tok(Tok::MiscDone);
+	}
+	else if (c() == '/')
 	{
 		_next_char();
 
@@ -19,39 +23,58 @@ void Lexer::_inner_next_tok()
 			_next_char();
 			_set_tok(Tok::LexLineComment);
 
-			while (c() != '\n')
+			while ((c() != '\n') && (c() != EOF))
 			{
 				_next_char();
 			}
+			//if (c() == EOF)
+			//{
+			//	_set_tok(Tok::MiscDone);
+			//}
 		}
 		else
 		{
 			_set_tok(Tok::PunctDiv);
 		}
 	}
-	else if (c() == '.')
+	if (c() == ':')
+	{
+		_set_ifelse_tok
+			('=', Tok::PunctNonBlkAssign,
+			':', Tok::PunctScopeAccess,
+			Tok::PunctColon);
+	}
+	else if (c() == '=')
 	{
 		_next_char();
 
-		if (c() == '.')
+		if (c() == '=')
 		{
-			_next_char();
-			_set_tok(Tok::PunctRangeSeparator);
+			_set_ifelse_tok
+				(Tok::Punct
 		}
 		else
 		{
-			_set_tok(Tok::PunctMemberAccess);
+			_set_tok(Tok::PunctBlkAssign);
 		}
+	}
+	else if (c() == '.')
+	{
+		_set_ifelse_tok
+			('.', Tok::PunctRangeSeparator,
+			Tok::PunctMemberAccess);
 	}
 	else if (c() == '|')
 	{
-		_next_char();
-
-		if (c() == '|')
-		{
-			_next_char();
-			_set_tok(Tok::PunctLogor);
-		}
+		_set_ifelse_tok
+			('|', Tok::PunctLogor,
+			Tok::PunctBitor);
+	}
+	else if (c() == '&')
+	{
+		_set_ifelse_tok
+			('&', Tok::PunctLogand,
+			Tok::PunctBitand);
 	}
 	else if (isdigit(c()))
 	{
