@@ -246,23 +246,25 @@ private:		// functions
 	inline void _inner_next_tok_when_lit_num(Tok tok, IsSomeDigitFunc func)
 	{
 		_next_char();
-		state()._s = "";
+		string n_s;
 
 		if (func(c()))
 		{
 			_set_tok(tok, true);
 
-			state()._s += static_cast<char>(c());
+			n_s += static_cast<char>(c());
 
 			while (func(c()))
 			{
 				_next_char();
-				state()._s += static_cast<char>(c());
+				n_s += static_cast<char>(c());
 			}
+
+			state().set_s(n_s);
 		}
 		else
 		{
-			_set_tok(Tok::MiscOther);
+			_set_tok(Tok::MiscOther, false);
 		}
 	}
 };

@@ -7,7 +7,7 @@ void Lexer::_inner_next_tok()
 {
 	if (c() == EOF)
 	{
-		_set_tok(Tok::MiscEof);
+		_set_tok(Tok::MiscEof, false);
 	}
 	else if (isdigit(c()))
 	{
@@ -35,25 +35,26 @@ void Lexer::_inner_next_tok()
 		else if ((first_c == '0') && (c() == 'b'))
 		{
 			_inner_next_tok_when_lit_num(Tok::LitBinNum,
-				[](char c) -> bool
+				[](int c) -> int
 				{
-					return (c() >= '0') && (c() <= '1');
+					return (c >= '0') && (c <= '1');
 				});
 		}
 
 		// Decimal number
 		else
 		{
-			_set_tok(Tok::LitDecNum);
+			_set_tok(Tok::LitDecNum, false);
 
-			state()._s = "";
-			state()._s += static_cast<char>(first_c);
+			string n_s;
+			n_s += static_cast<char>(first_c);
 
 			while (isdigit(c()))
 			{
-				state()._s += static_cast<char(c());
+				n_s += static_cast<char>(c());
 				_next_char();
 			}
+			state().set_s(n_s);
 		}
 	}
 	else if (c() == '/')
@@ -63,7 +64,7 @@ void Lexer::_inner_next_tok()
 		if (c() == '/')
 		{
 			_next_char();
-			_set_tok(Tok::LexLineComment);
+			_set_tok(Tok::LexLineComment, false);
 
 			while ((c() != '\n') && (c() != EOF))
 			{
@@ -71,12 +72,12 @@ void Lexer::_inner_next_tok()
 			}
 			//if (c() == EOF)
 			//{
-			//	_set_tok(Tok::MiscEof);
+			//	_set_tok(Tok::MiscEof, false);
 			//}
 		}
 		else
 		{
-			_set_tok(Tok::PunctDiv);
+			_set_tok(Tok::PunctDiv, false);
 		}
 	}
 	else if (c() == '.')
@@ -117,11 +118,11 @@ void Lexer::_inner_next_tok()
 		else if (c() == '>')
 		{
 			_next_char();
-			_set_tok(Tok::PunctMapTo);
+			_set_tok(Tok::PunctMapTo, false);
 		}
 		else
 		{
-			_set_tok(Tok::PunctBlkAssign);
+			_set_tok(Tok::PunctBlkAssign, false);
 		}
 	}
 	else if (c() == '!')
@@ -136,7 +137,7 @@ void Lexer::_inner_next_tok()
 		}
 		else
 		{
-			_set_tok(Tok::PunctLognot);
+			_set_tok(Tok::PunctLognot, false);
 		}
 	}
 	else if (c() == '<')
@@ -225,24 +226,26 @@ void Lexer::_inner_next_tok()
 	}
 	else if (isalpha(c()) || (c() == '_'))
 	{
-		state()._s = "";
-		state()._s += static_cast<char>(c());
+		string n_s;
+		n_s += static_cast<char>(c());
 
 		_next_char();
 
 		// Raw ident (allows you to use keywords)
 		if (c() == '#')
 		{
-			state()._s = "";
+			n_s = "";
 			_next_char();
 
-			_set_tok(Tok::MiscIdent);
+			_set_tok(Tok::MiscIdent, false);
 
 			while (isalnum(c()) || (c() == '_'))
 			{
-				state()._s += static_cast<char>(c());
+				n_s += static_cast<char>(c());
 				_next_char();
 			}
+
+			state().set_s(n_s);
 		}
 
 		// Basic ident
@@ -250,146 +253,148 @@ void Lexer::_inner_next_tok()
 		{
 			while (isalnum(c()) || (c() == '_'))
 			{
-				state()._s += static_cast<char>(c());
+				n_s += static_cast<char>(c());
 				_next_char();
 			}
+			state().set_s(n_s);
 
 			if (!_set_kw_tok(map<Tok, string>
 				({
-					Tok::KwPackage, "package",
+					{Tok::KwPackage, "package"},
 
-					Tok::KwImport, "import",
-					Tok::KwAll, "all",
+					{Tok::KwImport, "import"},
+					{Tok::KwAll, "all"},
 
-					Tok::KwModule, "module",
-					Tok::KwModinst, "modinst",
+					{Tok::KwModule, "module"},
+					{Tok::KwModinst, "modinst"},
 
-					Tok::KwType, "type",
+					{Tok::KwType, "type"},
 
-					Tok::KwInput, "input",
-					Tok::KwOutput, "output",
-					Tok::KwInout, "inout",
+					{Tok::KwInput, "input"},
+					{Tok::KwOutput, "output"},
+					{Tok::KwInout, "inout"},
 
-					Tok::KwInterface, "interface",
-					Tok::KwModport, "modport",
+					{Tok::KwInterface, "interface"},
+					{Tok::KwModport, "modport"},
 
-					Tok::KwFunc, "func",
-					Tok::KwTask, "task",
-					Tok::KwProc, "proc",
+					{Tok::KwFunc, "func"},
+					{Tok::KwTask, "task"},
+					{Tok::KwProc, "proc"},
 
-					Tok::KwParpk, "parpk",
-					Tok::KwUnparpk, "unparpk",
+					{Tok::KwParpk, "parpk"},
+					{Tok::KwUnparpk, "unparpk"},
 
-					Tok::KwGen, "gen",
-					Tok::KwIf, "if",
-					Tok::KwElse, "else",
+					{Tok::KwGen, "gen"},
+					{Tok::KwIf, "if"},
+					{Tok::KwElse, "else"},
 
-					Tok::KwSwitch, "switch",
-					Tok::KwSwitchz, "switchz",
-					Tok::KwCase, "case",
-					Tok::KwDefault, "default",
+					{Tok::KwSwitch, "switch"},
+					{Tok::KwSwitchz, "switchz"},
+					{Tok::KwCase, "case"},
+					{Tok::KwDefault, "default"},
 
-					Tok::KwFor, "for",
-					Tok::KwWhile, "while",
+					{Tok::KwFor, "for"},
+					{Tok::KwWhile, "while"},
 
-					Tok::KwBreak, "break",
-					Tok::KwContinue, "continue",
-					Tok::KwReturn, "return",
-
-
-					Tok::KwStruct, "struct",
-					Tok::KwPacked, "packed",
-					Tok::KwEnum, "enum",
+					{Tok::KwBreak, "break"},
+					{Tok::KwContinue, "continue"},
+					{Tok::KwReturn, "return"},
 
 
-					Tok::KwConst, "const",
-					Tok::KwVar, "var",
-					Tok::KwWire, "wire",
+					{Tok::KwStruct, "struct"},
+					{Tok::KwPacked, "packed"},
+					{Tok::KwEnum, "enum"},
 
-					Tok::KwAssign, "assign",
 
-					Tok::KwComb, "comb",
-					Tok::KwSeq, "seq",
+					{Tok::KwConst, "const"},
+					{Tok::KwVar, "var"},
+					{Tok::KwWire, "wire"},
 
-					Tok::KwPosedge, "posedge",
-					Tok::KwNegedge, "negedge",
+					{Tok::KwAssign, "assign"},
 
-					Tok::KwAlias, "alias",
+					{Tok::KwComb, "comb"},
+					{Tok::KwSeq, "seq"},
 
-					Tok::KwMux, "mux",
-					Tok::KwCat, "cat",
-					Tok::KwRepl, "repl",
+					{Tok::KwPosedge, "posedge"},
+					{Tok::KwNegedge, "negedge"},
 
-					Tok::KwLogic, "logic",
-					Tok::KwUnsigned, "unsigned",
-					Tok::KwSigned, "signed",
+					{Tok::KwAlias, "alias"},
 
-					Tok::KwInteger, "integer",
+					{Tok::KwMux, "mux"},
+					{Tok::KwCat, "cat"},
+					{Tok::KwRepl, "repl"},
 
-					Tok::KwRange, "range",
+					{Tok::KwLogic, "logic"},
+					{Tok::KwUnsigned, "unsigned"},
+					{Tok::KwSigned, "signed"},
 
-					Tok::KwTypeof, "typeof",
-					Tok::KwAuto, "auto",
+					{Tok::KwInteger, "integer"},
 
-					Tok::KwSelfT, "self_t",
-					Tok::KwRetT, "ret_t",
+					{Tok::KwRange, "range"},
 
-					Tok::KwAssert, "assert",
-					Tok::KwAssume, "assume",
-					Tok::KwCover, "cover",
-					Tok::KwProperty, "property",
+					{Tok::KwTypeof, "typeof"},
+					{Tok::KwAuto, "auto"},
+
+					{Tok::KwSelfT, "self_t"},
+					{Tok::KwRetT, "ret_t"},
+
+					{Tok::KwAssert, "assert"},
+					{Tok::KwAssume, "assume"},
+					{Tok::KwCover, "cover"},
+					{Tok::KwProperty, "property"}
 				})))
 			{
-				_set_tok(Tok::MiscIdent);
+				_set_tok(Tok::MiscIdent, false);
 			}
 		}
 	}
 	else if (c() == '$')
 	{
-		state()._s = "";
-		state()._s += static_cast<char>(c());
+		string n_s;
+		n_s += static_cast<char>(c());
 
 		_next_char();
 
 		while (isalnum(c()) || (c() == '_'))
 		{
-			state()._s += static_cast<char>(c());
+			n_s += static_cast<char>(c());
 			_next_char();
 		}
+		state().set_s(n_s);
 
 		if (!_set_kw_tok(map<Tok, string>
 			({
-				Tok::KwDollarSize, "$size",
-				Tok::KwDollarRange, "$range",
-				Tok::KwDollarHigh, "$high",
-				Tok::KwDollarLow, "$low",
+				{Tok::KwDollarSize, "$size"},
+				{Tok::KwDollarRange, "$range"},
+				{Tok::KwDollarHigh, "$high"},
+				{Tok::KwDollarLow, "$low"},
 
-				Tok::KwDollarHighel, "$highel",
-				Tok::KwDollarLowel, "$lowel",
+				{Tok::KwDollarHighel, "$highel"},
+				{Tok::KwDollarLowel, "$lowel"},
 
-				Tok::KwDollarUnsigned, "$unsigned",
-				Tok::KwDollarSigned, "$signed",
+				{Tok::KwDollarUnsigned, "$unsigned"},
+				{Tok::KwDollarSigned, "$signed"},
 
-				Tok::KwDollarIsUnsigned, "$is_unsigned",
-				Tok::KwDollarIsSigned, "$is_signed",
-				Tok::KwDollarIsUnknown, "$is_unknown",
+				{Tok::KwDollarIsUnsigned, "$is_unsigned"},
+				{Tok::KwDollarIsSigned, "$is_signed"},
+				{Tok::KwDollarIsUnknown, "$is_unknown"},
 
-				Tok::KwDollarPow, "$pow",
+				{Tok::KwDollarPow, "$pow"},
 
-				Tok::KwDollarIsformal, "$isformal",
+				{Tok::KwDollarIsformal, "$isformal"},
 
-				Tok::KwDollarStable, "$stable",
-				Tok::KwDollarPast, "$past",
-				Tok::KwDollarRose, "$rose",
-				Tok::KwDollarFell, "$fell",
+				{Tok::KwDollarStable, "$stable"},
+				{Tok::KwDollarPast, "$past"},
+				{Tok::KwDollarRose, "$rose"},
+				{Tok::KwDollarFell, "$fell"},
 			})))
 		{
-			_set_tok(Tok::MiscOther);
+			_set_tok(Tok::MiscOther, false);
 		}
 	}
 	else
 	{
-		_set_tok(Tok::MiscOther);
+		_set_tok(Tok::MiscOther, false);
 	}
 }
 
