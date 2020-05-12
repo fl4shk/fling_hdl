@@ -1,8 +1,7 @@
 //--------
 flingProgram:
-	flingDeclPackage
-	| flingDeclModule
-	| flingImport
+	flingDeclPackageItem*
+	EOF
 	;
 //--------
 
@@ -1093,7 +1092,7 @@ KwDollarPow: '$pow' ;
 //KwCover: 'cover' ;
 //KwProperty: 'property' ;
 //
-//KwDollarIsformal: '$isformal' ;
+//KwDollarIsFormal: '$is_formal' ;
 //
 //KwDollarStable: '$stable' ;
 //KwDollarPast: '$past' ;
