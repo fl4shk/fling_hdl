@@ -25,7 +25,7 @@ enum class Tok
 	LitBinNum,
 	LitFloatNum,
 
-	//LitString,
+	LitString,
 	//--------
 
 	//--------
@@ -113,15 +113,15 @@ enum class Tok
 	KwOutput,
 	KwInout,
 
-	//KwInterface,
-	//KwModport,
+	KwInterface,
+	KwModport,
 
 	KwFunc,
 	KwTask,
-	//KwProc,
+	KwProc,
 
-	//KwParpk,
-	//KwUnparpk,
+	KwParpk,
+	KwUnparpk,
 
 	KwGen,
 
@@ -136,12 +136,12 @@ enum class Tok
 	KwFor,
 	KwWhile,
 
-	//KwBreak,
-	//KwContinue,
-	//KwReturn,
+	KwBreak,
+	KwContinue,
+	KwReturn,
 
 	KwStruct,
-	//KwPacked,
+	KwPacked,
 	KwEnum,
 
 
@@ -171,11 +171,11 @@ enum class Tok
 
 	KwRange,
 
-	//KwTypeof,
-	//KwAuto,
+	KwTypeof,
+	KwAuto,
 
-	//KwSelfT,
-	//KwRetT,
+	KwSelfT,
+	KwRetT,
 	//--------
 
 	//--------
@@ -184,31 +184,31 @@ enum class Tok
 	KwDollarHigh,
 	KwDollarLow,
 
-	//KwDollarHighel,
-	//KwDollarLowel,
+	KwDollarHighel,
+	KwDollarLowel,
 
 	KwDollarUnsigned,
 	KwDollarSigned,
 
 	KwDollarIsUnsigned,
 	KwDollarIsSigned,
-	//KwDollarIsUnknown,
+	KwDollarIsUnknown,
 
 	KwDollarPow,
 	//--------
 
 	//--------
-	//KwAssert,
-	//KwAssume,
-	//KwCover,
-	//KwProperty,
+	KwAssert,
+	KwAssume,
+	KwCover,
+	KwProperty,
 
-	//KwDollarIsformal,
+	KwDollarIsformal,
 
-	//KwDollarStable,
-	//KwDollarPast,
-	//KwDollarRose,
-	//KwDollarFell,
+	KwDollarStable,
+	KwDollarPast,
+	KwDollarRose,
+	KwDollarFell,
 	//--------
 
 	//--------
@@ -217,19 +217,22 @@ enum class Tok
 	//--------
 
 	//--------
-	MiscDone,
+	MiscEof,
 	//--------
 };
 
-class Lexer final: public gLexerBase<Tok>
+class Lexer final: public LexerBase<Tok>
 {
 public:		// types
-	using Base = gLexerBase<Tok>;
+	using Base = LexerBase<Tok>;
 
 	typedef int (*IsSomeDigitFunc)(int);
 
 public:		// functions
-	Lexer(const string& s_filename, string* s_text);
+	inline Lexer(const string& s_filename, string* s_text)
+		: Base(s_filename, s_text)
+	{
+	}
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(Lexer);
 	virtual inline ~Lexer() = default;
 
@@ -247,7 +250,7 @@ private:		// functions
 
 		if (func(c()))
 		{
-			_set_tok(tok);
+			_set_tok(tok, true);
 
 			state()._s += static_cast<char>(c());
 

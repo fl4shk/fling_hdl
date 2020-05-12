@@ -1113,7 +1113,8 @@ KwDollarPow: '$pow' ;
 //	'`' [A-Za-z_] [A-Za-z0-9_]*
 //	;
 
-fragment FragBasicIdent: '_'* [A-Za-z] ('_'? [A-Za-z0-9])* '_'*  ;
+//fragment FragBasicIdent: '_'* [A-Za-z] ('_'? [A-Za-z0-9])* '_'*  ;
+fragment FragBasicIdent: [A-Za-z_] [A-Za-z_0-9]* ;
 fragment FragRawIdent: 'r#' [A-Za-z_0-9]+ ;
 
 MiscIdent: 
