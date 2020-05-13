@@ -2,15 +2,14 @@
 
 namespace fling_hdl
 {
-#define perf_rgr(func) \
-	_recrs_get_rules(this, &Parser::func, &rgr_ret)
+#define perf_recrs_parse(func) \
+	_recrs_get_rules(this, &Parser::func)
 
 void Parser::parseFlingProgram()
 {
 	while (_lexer->tok() != Tok::MiscEof)
 	{
-		RecrsGetRulesRet rgr_ret;
-		perf_rgr(_parseFlingDeclPackageItem);
+		perf_recrs_parse(_parseFlingDeclPackageItem);
 	}
 }
 void Parser::_parseFlingDeclPackage()
