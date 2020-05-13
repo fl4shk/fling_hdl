@@ -7,7 +7,7 @@ namespace fling_hdl
 
 void Parser::parseFlingProgram()
 {
-	while (_lexer->tok() != Tok::MiscEof)
+	while (lex_tok() != Tok::MiscEof)
 	{
 		perf_recrs_parse(_parseFlingDeclPackageItem);
 	}
