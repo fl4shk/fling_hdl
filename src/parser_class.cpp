@@ -16,8 +16,7 @@ void Parser::_parseFlingDeclPackage()
 {
 	if (just_rg_rules())
 	{
-		_rg_rules_ret_stack.top()
-		_rg_rules_ret()
+		_top_rg_rules_ret().first
 	}
 	else
 	{
