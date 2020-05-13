@@ -4,6 +4,15 @@ namespace fling_hdl
 {
 #define perf_recrs_parse(func) \
 	_recrs_parse(this, &Parser::func)
+#define rgr_insert(tok, func) \
+	/* Gurantee that the grammar is LL(1) */ \
+	if (_top_rgr_ret_map().count(tok) > 0) \
+	{ \
+		file_pos().err("rgr_insert():  ", strappcom2(#tok, #func), \
+			"Eek!\n"); \
+	} \
+	\
+	_top_rgr_ret_map()[tok] = &Parser::func
 
 void Parser::parseFlingProgram()
 {
@@ -16,7 +25,7 @@ void Parser::_parseFlingDeclPackage()
 {
 	if (just_rg_rules())
 	{
-		_top_rg_rules_ret().first
+		rgr_insert(Tok::KwPackage, _parseFlingDeclPackage);
 	}
 	else
 	{
