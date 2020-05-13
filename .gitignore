@@ -50,3 +50,4 @@ fling_hdl_debug
 *.v
 gen_src
 docs/*/build
+old_antlr/docs/*/build
