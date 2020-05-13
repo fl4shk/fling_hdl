@@ -96,13 +96,13 @@ private:		// functions
 		const bool old_just_recrs_get_rules = self->_just_recrs_get_rules;
 		self->_just_recrs_get_rules = true;
 
-		_recrs_get_rules_ret_stack.push(&ret);
+		_recrs_get_rules_ret_stack.push(ret);
 		(self->*parse_func)();
 		_recrs_get_rules_ret_stack.pop();
 
 		for (const auto& p: ret->first)
 		{
-			ret.second.insert(p.first);
+			ret->second.insert(p.first);
 		}
 
 		self->_just_recrs_get_rules = old_just_recrs_get_rules;
