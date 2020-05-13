@@ -3,6 +3,18 @@
 namespace fling_hdl
 {
 
+const Lexer::TokToStringMap Lexer::_TOK_TO_STRING_MAP
+= {
+	#define X(name, str) \
+		{Tok::name, str},
+	LIST_OF_TOKENS(X)
+	#undef X
+};
+
+const Lexer::TokToStringMap& Lexer::tok_to_string_map() const
+{
+	return _TOK_TO_STRING_MAP;
+}
 void Lexer::_inner_next_tok()
 {
 	if (c() == EOF)

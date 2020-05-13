@@ -24,6 +24,9 @@ public:		// types
 
 	using IsSomeDigitFunc = int (*)(int);
 
+private:		// variables
+	static const TokToStringMap _TOK_TO_STRING_MAP;
+
 public:		// functions
 	inline Lexer(const string& s_filename, string* s_text)
 		: Base(s_filename, s_text)
@@ -36,6 +39,8 @@ public:		// functions
 	{
 		_next_tok(Tok::LexLineComment);
 	}
+
+	virtual const TokToStringMap& tok_to_string_map() const;
 
 private:		// functions
 	virtual void _inner_next_tok();

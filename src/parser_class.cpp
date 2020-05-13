@@ -3,7 +3,7 @@
 namespace fling_hdl
 {
 #define perf_recrs_parse(func) \
-	_recrs_get_rules(this, &Parser::func)
+	_recrs_parse(this, &Parser::func)
 
 void Parser::parseFlingProgram()
 {
