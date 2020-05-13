@@ -14,6 +14,14 @@ void Parser::parseFlingProgram()
 }
 void Parser::_parseFlingDeclPackage()
 {
+	if (just_rg_rules())
+	{
+		_rg_rules_ret_stack.top()
+		_rg_rules_ret()
+	}
+	else
+	{
+	}
 }
 void Parser::_parseFlingDeclPackageItem()
 {
