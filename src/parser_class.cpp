@@ -2,30 +2,32 @@
 
 namespace fling_hdl
 {
-#define perf_recrs_parse(func) \
+#define PERF_RECRS_PARSE(func) \
 	_recrs_parse(this, &Parser::func)
-#define rgr_insert(tok, func) \
+#define _INNER_RGR_INSERT(tok, func) \
 	/* Gurantee that the grammar is LL(1) */ \
-	if (_top_rgr_ret_map().count(tok) > 0) \
+	if (_top_rgr_ret_map().count(Tok::tok) > 0) \
 	{ \
 		file_pos().err("rgr_insert():  ", strappcom2(#tok, #func), \
 			"Eek!\n"); \
 	} \
 	\
-	_top_rgr_ret_map()[tok] = &Parser::func
+	_top_rgr_ret_map()[Tok::tok] = &Parser::func
+#define RGR_INSERT(...) \
+	EVAL(MAP_PAIRS(_INNER_RGR_INSERT, SEMICOLON, __VA_ARGS__))
 
 void Parser::parseFlingProgram()
 {
 	while (lex_tok() != Tok::MiscEof)
 	{
-		perf_recrs_parse(_parseFlingDeclPackageItem);
+		PERF_RECRS_PARSE(_parseFlingDeclPackageItem);
 	}
 }
 void Parser::_parseFlingDeclPackage()
 {
 	if (just_rg_rules())
 	{
-		rgr_insert(Tok::KwPackage, _parseFlingDeclPackage);
+		RGR_INSERT(KwPackage, _parseFlingDeclPackage);
 	}
 	else
 	{
