@@ -1,0 +1,5 @@
+[0] Config.pm:304> INFO - This is Biber 2.13
+[0] Config.pm:307> INFO - Logfile is 'build/lang_impl_notes.blg'
+[15] biber:315> INFO - === Tue Apr 28, 2020, 12:46:04
+[23] Biber.pm:375> INFO - Reading 'build/lang_impl_notes.bcf'
+[64] Utils.pm:300> WARN - No data sources defined!
