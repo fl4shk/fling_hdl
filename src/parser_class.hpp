@@ -106,7 +106,6 @@ private:		// functions
 	void _parseFlingDeclWire();
 	void _parseFlingWireAssign();
 	void _parseFlingDeclAlias();
-	void _parseFlingIdent();
 	void _parseFlingScopedIdent();
 	void _parseFlingIdentList();
 	void _parseFlingSubprogIdentList();

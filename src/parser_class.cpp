@@ -19,6 +19,16 @@ namespace fling_hdl
 #define RGR_INSERT(...) \
 	EVAL(MAP_PAIRS(_INNER_RGR_INSERT, SEMICOLON, __VA_ARGS__))
 
+#define JUST_EXPECT(tok) \
+	_expect(Tok::tok)
+
+#define EXPECT_AND_GRAB_S(tok, name) \
+	JUST_EXPECT(tok); \
+	const auto& name = prev_lex_s()
+#define EXPECT_AND_GRAB_N(tok, name) \
+	JUST_EXPECT(tok); \
+	const auto& name = prev_lex_n()
+
 void Parser::parseFlingProgram()
 {
 	while (lex_tok() != Tok::MiscEof)
@@ -34,8 +44,16 @@ void Parser::_parseFlingDeclPackage()
 	}
 	else
 	{
-		PERF_RECRS_PARSE(_parseFlingIdent);
-		prev_lex_s();
+		EXPECT_AND_GRAB_S(MiscIdent, ident);
+
+		JUST_EXPECT(PunctLbrace);
+
+		while (lex_tok() != Tok::PunctRbrace)
+		{
+			PERF_RECRS_PARSE(_parseFlingDeclPackageItem);
+		}
+
+		JUST_EXPECT(PunctRbrace);
 	}
 }
 void Parser::_parseFlingDeclPackageItem()
@@ -276,9 +294,6 @@ void Parser::_parseFlingWireAssign()
 {
 }
 void Parser::_parseFlingDeclAlias()
-{
-}
-void Parser::_parseFlingIdent()
 {
 }
 void Parser::_parseFlingScopedIdent()

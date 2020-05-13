@@ -7,7 +7,7 @@ flingProgram:
 
 //--------
 flingDeclPackage:
-	KwPackage flingIdent
+	KwPackage MiscIdent
 	PunctLbrace
 		flingDeclPackageItem*
 	PunctRbrace
@@ -107,7 +107,7 @@ flingInstParamListNamed:
 	PunctCmpGt
 	;
 flingInstParamListNamedItem:
-	flingIdent PunctMapTo flingInstParamListPosItem
+	MiscIdent PunctMapTo flingInstParamListPosItem
 	;
 
 
@@ -135,13 +135,13 @@ flingInstArgListNamed:
 	PunctRparen
 	;
 flingInstArgListNamedItem:
-	flingIdent PunctMapTo flingInstArgListPosItem
+	MiscIdent PunctMapTo flingInstArgListPosItem
 	;
 //--------
 
 //--------
 flingDeclModule:
-	KwModule flingIdent
+	KwModule MiscIdent
 		flingDeclParamList?
 		flingDeclArgList
 		flingDeclModuleScope
@@ -178,7 +178,7 @@ flingDeclModuleItem:
 
 //--------
 flingModinst:
-	KwModinst flingIdent PunctColon flingTypenmOrModnm flingInstArgList
+	KwModinst MiscIdent PunctColon flingTypenmOrModnm flingInstArgList
 		PunctSemicolon
 	;
 //--------
@@ -217,8 +217,8 @@ flingDeclModuleGenSwitchEtcDefault:
 
 flingDeclModuleGenFor:
 	KwGen
-		PunctLbracket flingIdent PunctRbracket
-		KwFor flingIdent PunctColon flingRange
+		PunctLbracket MiscIdent PunctRbracket
+		KwFor MiscIdent PunctColon flingRange
 		flingDeclModuleScope
 	;
 //--------
@@ -286,7 +286,7 @@ flingDeclModuleBehavScopeItemSwitchEtcDefault:
 	;
 
 flingDeclModuleBehavScopeItemFor:
-	KwFor flingIdent PunctColon flingRange
+	KwFor MiscIdent PunctColon flingRange
 		flingDeclModuleBehavScope
 	;
 
@@ -329,8 +329,8 @@ flingDeclModuleBehavScopeItemGenSwitchEtcDefault:
 
 flingDeclModuleBehavScopeItemGenFor:
 	KwGen
-		PunctLbracket flingIdent PunctRbracket
-		KwFor flingIdent PunctColon flingRange
+		PunctLbracket MiscIdent PunctRbracket
+		KwFor MiscIdent PunctColon flingRange
 		flingDeclModuleBehavScope
 	;
 //--------
@@ -368,7 +368,7 @@ flingDeclCompositeType:
 
 //--------
 flingDeclCompositeTypeStruct:
-	KwStruct flingIdent flingDeclParamList?
+	KwStruct MiscIdent flingDeclParamList?
 
 	PunctLbrace
 		(
@@ -427,15 +427,15 @@ flingCompositeTypeStructItemGenSwitchEtcDefault:
 
 flingCompositeTypeStructItemGenFor:
 	KwGen
-		PunctLbracket flingIdent PunctRbracket
-		KwFor flingIdent PunctColon flingRange
+		PunctLbracket MiscIdent PunctRbracket
+		KwFor MiscIdent PunctColon flingRange
 		flingDeclModuleScope
 	;
 //--------
 
 //--------
 flingDeclEnum:
-	KwEnum flingIdent (PunctColon flingTypenmOrModnm)?
+	KwEnum MiscIdent (PunctColon flingTypenmOrModnm)?
 	PunctLbrace
 		(
 			flingDeclEnumItem
@@ -445,7 +445,7 @@ flingDeclEnum:
 	;
 
 flingDeclEnumItem:
-	flingIdent (PunctBlkAssign flingExpr)?
+	MiscIdent (PunctBlkAssign flingExpr)?
 	;
 //--------
 
@@ -461,14 +461,14 @@ flingDeclSubprog:
 
 //--------
 flingDeclSubprogFuncHeader:
-	KwFunc flingIdent
+	KwFunc MiscIdent
 		flingDeclParamList?
 		flingDeclArgList
 		PunctColon flingTypenmOrModnm
 	;
 
 flingDeclSubprogTaskHeader:
-	KwTask flingIdent
+	KwTask MiscIdent
 		flingDeclParamList?
 		flingDeclArgList
 	;
@@ -523,7 +523,7 @@ flingDeclSubprogScopeItemSwitchEtcDefault:
 	;
 
 flingDeclSubprogScopeItemFor:
-	KwFor flingIdent PunctColon flingRange
+	KwFor MiscIdent PunctColon flingRange
 		flingDeclSubprogScope
 	;
 
@@ -567,8 +567,8 @@ flingDeclSubprogScopeItemGenSwitchEtcDefault:
 
 flingDeclSubprogScopeItemGenFor:
 	KwGen
-		PunctLbracket flingIdent PunctRbracket
-		KwFor flingIdent PunctColon flingRange
+		PunctLbracket MiscIdent PunctRbracket
+		KwFor MiscIdent PunctColon flingRange
 		flingDeclSubprogScope
 	;
 //--------
@@ -610,15 +610,12 @@ flingDeclAlias:
 //--------
 
 //--------
-flingIdent:
-	MiscIdent
-	;
 flingScopedIdent:
-	flingIdent (PunctScopeAccess flingIdent)*
+	MiscIdent (PunctScopeAccess MiscIdent)*
 	;
 
 flingIdentList:
-	flingIdent (PunctComma flingIdent)*
+	MiscIdent (PunctComma MiscIdent)*
 	;
 
 flingSubprogIdentList:
@@ -791,7 +788,7 @@ flingIdentExpr:
 
 		// Access members or array elements
 		(
-			PunctMemberAccess flingIdent
+			PunctMemberAccess MiscIdent
 			| PunctLbracket flingExpr PunctRbracket
 		)*
 
@@ -848,7 +845,7 @@ flingExprOrRange:
 flingTypenmOrModnm:
 	(
 		flingScopedIdent flingInstParamList?
-			(PunctScopeAccess flingIdent flingInstParamList)*
+			(PunctScopeAccess MiscIdent flingInstParamList)*
 		| (KwUnsigned | KwSigned)? KwLogic flingInstParamList?
 		| KwInteger
 	)
