@@ -31,6 +31,25 @@ void Lexer::_inner_next_tok()
 		if ((first_c == '0') && (c() == 'x'))
 		{
 			_inner_next_tok_when_lit_num(Tok::LitHexNum, &isxdigit);
+
+			// Build `n()`
+			BigNum n_n = 0;
+			for (size_t i=0; i<s().size(); ++i)
+			{
+				if ((s().at(i) >= 'a') && (s().at(i) <= 'f'))
+				{
+					n_n = (n_n * 0x10) + (s().at(i) - 'f' + 0xa);
+				}
+				else if ((s().at(i) >= 'A') && (s().at(i) <= 'F'))
+				{
+					n_n = (n_n * 0x10) + (s().at(i) - 'F' + 0xA);
+				}
+				else // if (isdigit(s().at(i)))
+				{
+					n_n = (n_n * 0x10) + (s().at(i) - '0');
+				}
+			}
+			state().set_n(n_n);
 		}
 
 		// Octal number
@@ -41,6 +60,14 @@ void Lexer::_inner_next_tok()
 				{
 					return (c >= '0') && (c <= '7');
 				});
+
+			// Build `n()`
+			BigNum n_n = 0;
+			for (size_t i=0; i<s().size(); ++i)
+			{
+				n_n = (n_n * 8) + (s().at(i) - '0');
+			}
+			state().set_n(n_n);
 		}
 
 		// Binary number
@@ -51,6 +78,14 @@ void Lexer::_inner_next_tok()
 				{
 					return (c >= '0') && (c <= '1');
 				});
+
+			// Build `n()`
+			BigNum n_n = 0;
+			for (size_t i=0; i<s().size(); ++i)
+			{
+				n_n = (n_n * 0b10) + (s().at(i) - '0');
+			}
+			state().set_n(n_n);
 		}
 
 		// Decimal number
@@ -67,6 +102,14 @@ void Lexer::_inner_next_tok()
 				_next_char();
 			}
 			state().set_s(n_s);
+
+			// Build `n()`
+			BigNum n_n = 0;
+			for (size_t i=0; i<s().size(); ++i)
+			{
+				n_n = (n_n * 10) + (s().at(i) - '0');
+			}
+			state().set_n(n_n);
 		}
 	}
 	else if (c() == '/')

@@ -745,6 +745,9 @@ flingLowExpr:
 	| LitOctNum
 	| LitBinNum
 
+	| KwHighImped (PunctLparen flingExpr PunctRparen)?
+	| KwUnkn (PunctLparen flingExpr PunctRparen)?
+
 	| PunctLparen flingExpr PunctRparen
 
 	| flingCallDollarFuncExpr
@@ -1051,6 +1054,9 @@ KwAlias: 'alias' ;
 KwMux: 'mux' ;
 KwCat: 'cat' ;
 KwRepl: 'repl' ;
+
+KwHighImped: 'high_imped' ;
+KwUnkn: 'unkn' ;
 
 KwLogic: 'logic' ;
 KwUnsigned: 'unsigned' ;

@@ -32,6 +32,7 @@ void Parser::_parseFlingDeclPackage()
 	else
 	{
 		PERF_RECRS_PARSE(_parseFlingIdent);
+		prev_lex_s();
 	}
 }
 void Parser::_parseFlingDeclPackageItem()

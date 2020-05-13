@@ -77,6 +77,9 @@
 	X(KwCat, "cat") \
 	X(KwRepl, "repl") \
 	\
+	X(KwHighImped, "high_imped") \
+	X(KwUnkn, "unkn") \
+	\
 	X(KwLogic, "logic") \
 	X(KwUnsigned, "unsigned") \
 	X(KwSigned, "signed") \
