@@ -1,18 +1,21 @@
 #include "parser_class.hpp"
+#include "liborangepower_src/cpp_magic.hpp"
 
 namespace fling_hdl
 {
 #define PERF_RECRS_PARSE(func) \
 	_recrs_parse(this, &Parser::func)
+
 #define _INNER_RGR_INSERT(tok, func) \
 	/* Gurantee that the grammar is LL(1) */ \
 	if (_top_rgr_ret_map().count(Tok::tok) > 0) \
 	{ \
-		file_pos().err("rgr_insert():  ", strappcom2(#tok, #func), \
-			"Eek!\n"); \
+		lex_file_pos().err(sconcat("rgr_insert():  ", strappcom2(#tok, \
+			#func), "Eek!\n")); \
 	} \
 	\
 	_top_rgr_ret_map()[Tok::tok] = &Parser::func
+
 #define RGR_INSERT(...) \
 	EVAL(MAP_PAIRS(_INNER_RGR_INSERT, SEMICOLON, __VA_ARGS__))
 
