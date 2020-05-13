@@ -260,88 +260,10 @@ void Lexer::_inner_next_tok()
 
 			if (!_kw_set_tok(map<Tok, string>
 				({
-					{Tok::KwPackage, "package"},
-
-					{Tok::KwImport, "import"},
-					{Tok::KwAll, "all"},
-
-					{Tok::KwModule, "module"},
-					{Tok::KwModinst, "modinst"},
-
-					{Tok::KwType, "type"},
-
-					{Tok::KwInput, "input"},
-					{Tok::KwOutput, "output"},
-					{Tok::KwInout, "inout"},
-
-					{Tok::KwInterface, "interface"},
-					{Tok::KwModport, "modport"},
-
-					{Tok::KwFunc, "func"},
-					{Tok::KwTask, "task"},
-					{Tok::KwProc, "proc"},
-
-					{Tok::KwParpk, "parpk"},
-					{Tok::KwUnparpk, "unparpk"},
-
-					{Tok::KwGen, "gen"},
-					{Tok::KwIf, "if"},
-					{Tok::KwElse, "else"},
-
-					{Tok::KwSwitch, "switch"},
-					{Tok::KwSwitchz, "switchz"},
-					{Tok::KwCase, "case"},
-					{Tok::KwDefault, "default"},
-
-					{Tok::KwFor, "for"},
-					{Tok::KwWhile, "while"},
-
-					{Tok::KwBreak, "break"},
-					{Tok::KwContinue, "continue"},
-					{Tok::KwReturn, "return"},
-
-
-					{Tok::KwStruct, "struct"},
-					{Tok::KwPacked, "packed"},
-					{Tok::KwEnum, "enum"},
-
-
-					{Tok::KwConst, "const"},
-					{Tok::KwVar, "var"},
-					{Tok::KwWire, "wire"},
-
-					{Tok::KwAssign, "assign"},
-
-					{Tok::KwComb, "comb"},
-					{Tok::KwSeq, "seq"},
-
-					{Tok::KwPosedge, "posedge"},
-					{Tok::KwNegedge, "negedge"},
-
-					{Tok::KwAlias, "alias"},
-
-					{Tok::KwMux, "mux"},
-					{Tok::KwCat, "cat"},
-					{Tok::KwRepl, "repl"},
-
-					{Tok::KwLogic, "logic"},
-					{Tok::KwUnsigned, "unsigned"},
-					{Tok::KwSigned, "signed"},
-
-					{Tok::KwInteger, "integer"},
-
-					{Tok::KwRange, "range"},
-
-					{Tok::KwTypeof, "typeof"},
-					{Tok::KwAuto, "auto"},
-
-					{Tok::KwSelfT, "self_t"},
-					{Tok::KwRetT, "ret_t"},
-
-					{Tok::KwAssert, "assert"},
-					{Tok::KwAssume, "assume"},
-					{Tok::KwCover, "cover"},
-					{Tok::KwProperty, "property"}
+					#define X(name, str) \
+						{Tok::name, str},
+					LIST_OF_KW_TOKENS(X)
+					#undef X
 				})))
 			{
 				_set_tok(Tok::MiscIdent, false);
@@ -364,29 +286,10 @@ void Lexer::_inner_next_tok()
 
 		if (!_kw_set_tok(map<Tok, string>
 			({
-				{Tok::KwDollarSize, "$size"},
-				{Tok::KwDollarRange, "$range"},
-				{Tok::KwDollarHigh, "$high"},
-				{Tok::KwDollarLow, "$low"},
-
-				{Tok::KwDollarHighel, "$highel"},
-				{Tok::KwDollarLowel, "$lowel"},
-
-				{Tok::KwDollarUnsigned, "$unsigned"},
-				{Tok::KwDollarSigned, "$signed"},
-
-				{Tok::KwDollarIsUnsigned, "$is_unsigned"},
-				{Tok::KwDollarIsSigned, "$is_signed"},
-				{Tok::KwDollarIsUnknown, "$is_unknown"},
-
-				{Tok::KwDollarPow, "$pow"},
-
-				{Tok::KwDollarIsformal, "$isformal"},
-
-				{Tok::KwDollarStable, "$stable"},
-				{Tok::KwDollarPast, "$past"},
-				{Tok::KwDollarRose, "$rose"},
-				{Tok::KwDollarFell, "$fell"},
+				#define X(name, str) \
+					{Tok::name, str},
+				LIST_OF_KW_DOLLAR_TOKENS(X)
+				#undef X
 			})))
 		{
 			_set_tok(Tok::MiscOther, false);

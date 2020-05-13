@@ -5,93 +5,11 @@
 
 //#include "misc_includes.hpp"
 
-#define LIST_OF_TOKENS(X) \
+#define LIST_OF_KW_TOKENS(X) \
 	/* -------- */ \
-	X(LexLineComment, "<comment>") \
-	/* -------- */ \
-	\
-	/* -------- */ \
-	X(PunctRangeSeparator, "..") \
-	/* -------- */ \
-	\
-	/* -------- */ \
-	X(LitDecNum, "<literal decimal number>") \
-	X(LitHexNum, "<literal hexadecimal number>") \
-	X(LitOctNum, "<literal octal number>") \
-	X(LitBinNum, "<literal binary number>") \
-	X(LitFloatNum, "<literal floating point number>") \
-	\
-	X(LitString, "<literal string>") \
-	/* -------- */ \
-	\
-	/* -------- */ \
-	X(PunctNonBlkAssign, ":=") \
-	X(PunctBlkAssign, "=") \
-	/* -------- */ \
-	\
-	/* -------- */ \
-	X(PunctLogor, "||") \
-	X(PunctLogand, "&&") \
-	\
-	X(PunctCmpEq, "==") \
-	X(PunctCmpNe, "!=") \
-	X(PunctCaseCmpEq, "===") \
-	X(PunctCaseCmpNe, "!==") \
-	\
-	X(PunctCmpLt, "<") \
-	X(PunctCmpGt, ">" ) \
-	X(PunctCmpLe, "<=") \
-	X(PunctCmpGe, ">=") \
-	\
-	X(PunctPlus, "+") \
-	X(PunctMinus, "-") \
-	\
-	X(PunctMul, "*") \
-	X(PunctDiv, "div") \
-	X(PunctMod, "mod") \
-	\
-	X(PunctBitor, "|") \
-	X(PunctBitnor, "~|") \
-	\
-	X(PunctBitand, "&") \
-	X(PunctBitnand, "~&") \
-	\
-	X(PunctBitxor, "^") \
-	X(PunctBitxnor, "^~") \
-	\
 	X(KwLsl, "lsl") \
 	X(KwLsr, "lsr") \
 	X(KwAsr, "asr") \
-	\
-	X(PunctBitnot, "~") \
-	X(PunctLognot, "!") \
-	/* -------- */ \
-	\
-	/* -------- */ \
-	X(PunctMapTo, "=>") \
-	/* -------- */ \
-	\
-	/* -------- */ \
-	X(PunctSliceStart, "#[") \
-	/* -------- */ \
-	\
-	/* -------- */ \
-	X(PunctMemberAccess, ".") \
-	X(PunctScopeAccess, "::") \
-	/* -------- */ \
-	\
-	/* -------- */ \
-	X(PunctLparen, "(") \
-	X(PunctRparen, ")") \
-	X(PunctLbracket, "[") \
-	X(PunctRbracket, "]") \
-	X(PunctLbrace, "{") \
-	X(PunctRbrace, "}") \
-	X(PunctSemicolon, ";") \
-	X(PunctColon, ":") \
-	X(PunctPlusColon, "+:") \
-	X(PunctMinusColon, "-:") \
-	X(PunctComma, ",") \
 	/* -------- */ \
 	\
 	/* -------- */ \
@@ -175,6 +93,14 @@
 	/* -------- */ \
 	\
 	/* -------- */ \
+	X(KwAssert, "assert") \
+	X(KwAssume, "assume") \
+	X(KwCover, "cover") \
+	X(KwProperty, "property") \
+	/* -------- */ \
+
+#define LIST_OF_KW_DOLLAR_TOKENS(X) \
+	/* -------- */ \
 	X(KwDollarSize, "$size") \
 	X(KwDollarRange, "$range") \
 	X(KwDollarHigh, "$high") \
@@ -194,17 +120,97 @@
 	/* -------- */ \
 	\
 	/* -------- */ \
-	X(KwAssert, "assert") \
-	X(KwAssume, "assume") \
-	X(KwCover, "cover") \
-	X(KwProperty, "property") \
-	\
 	X(KwDollarIsFormal, "$is_formal") \
 	\
 	X(KwDollarStable, "$stable") \
 	X(KwDollarPast, "$past") \
 	X(KwDollarRose, "$rose") \
 	X(KwDollarFell, "$fell") \
+	/* -------- */ \
+
+#define LIST_OF_TOKENS(X) \
+	/* -------- */ \
+	X(LexLineComment, "<comment>") \
+	/* -------- */ \
+	\
+	/* -------- */ \
+	X(PunctRangeSeparator, "..") \
+	/* -------- */ \
+	\
+	/* -------- */ \
+	X(LitDecNum, "<literal decimal number>") \
+	X(LitHexNum, "<literal hexadecimal number>") \
+	X(LitOctNum, "<literal octal number>") \
+	X(LitBinNum, "<literal binary number>") \
+	X(LitFloatNum, "<literal floating point number>") \
+	\
+	X(LitString, "<literal string>") \
+	/* -------- */ \
+	\
+	/* -------- */ \
+	X(PunctNonBlkAssign, ":=") \
+	X(PunctBlkAssign, "=") \
+	/* -------- */ \
+	\
+	/* -------- */ \
+	X(PunctLogor, "||") \
+	X(PunctLogand, "&&") \
+	\
+	X(PunctCmpEq, "==") \
+	X(PunctCmpNe, "!=") \
+	X(PunctCaseCmpEq, "===") \
+	X(PunctCaseCmpNe, "!==") \
+	\
+	X(PunctCmpLt, "<") \
+	X(PunctCmpGt, ">" ) \
+	X(PunctCmpLe, "<=") \
+	X(PunctCmpGe, ">=") \
+	\
+	X(PunctPlus, "+") \
+	X(PunctMinus, "-") \
+	\
+	X(PunctMul, "*") \
+	X(PunctDiv, "div") \
+	X(PunctMod, "mod") \
+	\
+	X(PunctBitor, "|") \
+	X(PunctBitnor, "~|") \
+	\
+	X(PunctBitand, "&") \
+	X(PunctBitnand, "~&") \
+	\
+	X(PunctBitxor, "^") \
+	X(PunctBitxnor, "^~") \
+	\
+	X(PunctBitnot, "~") \
+	X(PunctLognot, "!") \
+	/* -------- */ \
+	\
+	/* -------- */ \
+	X(PunctMapTo, "=>") \
+	/* -------- */ \
+	\
+	/* -------- */ \
+	X(PunctSliceStart, "#[") \
+	/* -------- */ \
+	\
+	/* -------- */ \
+	X(PunctMemberAccess, ".") \
+	X(PunctScopeAccess, "::") \
+	/* -------- */ \
+	\
+	/* -------- */ \
+	X(PunctLparen, "(") \
+	X(PunctRparen, ")") \
+	X(PunctLbracket, "[") \
+	X(PunctRbracket, "]") \
+	X(PunctLbrace, "{") \
+	X(PunctRbrace, "}") \
+	X(PunctSemicolon, ";") \
+	X(PunctColon, ":") \
+	X(PunctPlusColon, "+:") \
+	X(PunctMinusColon, "-:") \
+	X(PunctComma, ",") \
 	/* -------- */ \
 	\
 	/* -------- */ \
@@ -216,5 +222,13 @@
 	X(MiscEof, "<end of file>") \
 	/* -------- */ \
 	\
+	/* -------- */ \
+	LIST_OF_KW_TOKENS(X) \
+	/* -------- */ \
+	\
+	/* -------- */ \
+	LIST_OF_KW_DOLLAR_TOKENS(X) \
+	/* -------- */ \
+
 
 //#endif		// src_list_of_tokens_define_hpp
