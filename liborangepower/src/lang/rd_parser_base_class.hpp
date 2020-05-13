@@ -64,10 +64,10 @@ public:		// functions
 			_text = misc_input::get_istream_as_str(f);
 		}
 		
-		_lexer.push_back(new LexerType(_filename, &_text));
+		_lexer.reset(new LexerType(_filename, &_text));
 		_next_tok();
 
-		//_lexer.push_back(new LexerType(_filename, _text));
+		//_lexer.reset(new LexerType(_filename, _text));
 		//_next_tok();
 	}
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(RdParserBase);
@@ -81,7 +81,6 @@ public:		// functions
 	GEN_GETTER_BY_CON_REF(filename);
 
 protected:		// functions
-
 	inline auto _next_tok()
 	{
 		return _lexer->next_tok();
