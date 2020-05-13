@@ -30,7 +30,7 @@ flingDeclPackageItem:
 	;
 
 flingImport:
-	KwImport flingImportItemList ';'
+	KwImport flingImportItemList PunctSemicolon
 	;
 //--------
 
