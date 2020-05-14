@@ -29,6 +29,7 @@ namespace fling_hdl
 	JUST_EXPECT(tok); \
 	const auto& name = prev_lex_n()
 
+
 void Parser::parseFlingProgram()
 {
 	while (lex_tok() != Tok::MiscEof)

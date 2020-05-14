@@ -1051,6 +1051,7 @@ KwAlias: 'alias' ;
 KwMux: 'mux' ;
 KwCat: 'cat' ;
 KwRepl: 'repl' ;
+KwSized: 'sized' ;
 
 KwHighImped: 'high_imped' ;
 KwUnkn: 'unkn' ;

@@ -76,6 +76,7 @@
 	X(KwMux, "mux") \
 	X(KwCat, "cat") \
 	X(KwRepl, "repl") \
+	X(KwSized, "sized") \
 	\
 	X(KwHighImped, "high_imped") \
 	X(KwUnkn, "unkn") \
