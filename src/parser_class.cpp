@@ -384,6 +384,9 @@ void Parser::_parseFlingCatExpr()
 void Parser::_parseFlingReplExpr()
 {
 }
+void Parser::_parseFlingSizedExpr()
+{
+}
 void Parser::_parseFlingRange()
 {
 }

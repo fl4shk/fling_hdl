@@ -135,6 +135,7 @@ private:		// functions
 	void _parseFlingIdentExpr();
 	void _parseFlingCatExpr();
 	void _parseFlingReplExpr();
+	void _parseFlingSizedExpr();
 	void _parseFlingRange();
 	void _parseFlingNonSimpleRange();
 	void _parseFlingSimpleRangeSuffix();

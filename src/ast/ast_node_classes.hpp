@@ -9,11 +9,12 @@
 namespace fling_hdl
 {
 
-class Symbol;
+//class Symbol;
 
 namespace ast
 {
 
+//--------
 #define SHARED_FUNC_CONTENTS_2(name, base_name) \
 	inline name() = default; \
 	inline name(Base* s_parent, const FilePos& s_fp) \
@@ -55,7 +56,9 @@ namespace ast
 		return "Eek!"; \
 	/* -------- */ \
 	}
+//--------
 
+//--------
 class Base;
 using BaseSptr = shared_ptr<Base>;
 using BaseSptrList = IndCircLinkList<BaseSptr>;
@@ -69,8 +72,8 @@ protected:		// variables
 	FilePos _fp;
 	size_t _level = 0;
 
-public:		// variables
-	Symbol* sym = nullptr;
+//public:		// variables
+//	Symbol* sym = nullptr;
 
 public:		// functions
 	inline Base() = default;
@@ -94,6 +97,78 @@ public:		// functions
 	GEN_GETTER_BY_VAL(level);
 
 };
+//--------
+
+//--------
+class Program: public Base
+{
+public:		// variables
+	BaseSptrList item_list;
+public:		// functions
+	SHARED_FUNC_CONTENTS(Program, Base);
+};
+//--------
+
+//--------
+class DeclPackage: public Base
+{
+public:		// variables
+	string ident;
+	BaseSptrList item_list;
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclPackage, Base);
+};
+
+class Import: public Base
+{
+public:		// variables
+	BaseSptrList item_list;
+public:		// functions
+	SHARED_FUNC_CONTENTS(Import, Base);
+};
+//--------
+
+//--------
+// This covers both declarations of parameter/argument lists and
+// instantions of parameter/argument lists
+class ParamOrArgList: public Base
+{
+public:		// variables
+	BaseSptrList item_list;
+public:		// functions
+	SHARED_FUNC_CONTENTS(ParamOrArgList, Base);
+};
+
+class DeclParamListItem: public Base
+{
+public:		// types
+	enum class Kind
+	{
+		Var,
+		Range,
+
+		Type,
+		Module,
+
+		Func,
+		Task,
+	};
+	static string conv_kind(Kind to_conv)
+	{
+		CONV_ENUM_SWITCH(CONV_KIND_CASE,
+			Var,
+			Range,
+
+			Type,
+			Module,
+
+			Func,
+			Task);
+	}
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclParamListItem, Base);
+};
+//--------
 
 
 } // namespace ast

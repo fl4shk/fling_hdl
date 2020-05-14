@@ -48,8 +48,9 @@ flingDeclParamListItem:
 	flingIdentList PunctColon 
 	(
 		flingTypenmOrModnm (PunctBlkAssign flingExprList)?
-		| (KwType | KwModule) (PunctBlkAssign flingTypenmOrModnmList)?
 		| KwRange (PunctBlkAssign flingRangeList)?
+		| (KwType | KwModule) (PunctBlkAssign flingTypenmOrModnmList)?
+		| (KwFunc | KwTask) (PunctBlkAssign flingSubprogIdentList)?
 	)
 	;
 
@@ -89,14 +90,9 @@ flingInstParamListPos:
 	PunctCmpGt
 	;
 flingInstParamListPosItem:
-	// This might actually be a type name or module name if it's a specific
-	// variety of `flingIdentExpr` (just an identifier).  Semantic analysis
-	// will need to determine this.
+	// This *may* actually indicate that we are dealing with a type name,
+	// module name, subprogram name, or range.
 	flingExprOrRange
-
-	// This will specifically be a typename or modname that is more complex
-	// than just an identifier.
-	| flingTypenmOrModnm
 	;
 flingInstParamListNamed:
 	PunctCmpLt
@@ -753,6 +749,7 @@ flingLowExpr:
 
 	| flingCatExpr
 	| flingReplExpr
+	| flingSizedExpr
 	;
 
 flingCallDollarFuncExpr:
@@ -782,9 +779,14 @@ flingSubprogIdent:
 
 flingIdentExpr:
 	flingScopedIdent
+		flingInstParamList?
+		(
+			// Typename or modname suffix
+			(PunctScopeAccess MiscIdent flingInstParamList?)+
 
-		// Call a subprogram
-		(flingInstParamList? flingInstArgList)?
+			// Call a subprogram (potentially located within a package)
+			| flingInstArgList
+		)?
 
 		// Access members or array elements
 		(
@@ -817,7 +819,20 @@ flingCatExpr:
 	;
 
 flingReplExpr:
-	KwRepl
+	KwRepl PunctLparen flingExpr PunctComma flingExpr PunctRparen
+	;
+flingSizedExpr:
+	KwSized 
+		PunctLparen 
+			flingExpr PunctComma
+			(
+				LitDecNum
+				| LitHexNum
+				| LitOctNum
+				| LitBinNum
+			)
+		PunctRparen
+	;
 //--------
 
 //--------
