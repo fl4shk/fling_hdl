@@ -399,6 +399,12 @@ void Parser::_parseFlingSimpleRangeSuffix()
 void Parser::_parseFlingExprOrRange()
 {
 }
+void Parser::_parseFlingTypenmOrModnmCstmStart()
+{
+}
+void Parser::_parseFlingTypenmOrModnmCstmChainItem()
+{
+}
 void Parser::_parseFlingTypenmOrModnm()
 {
 }

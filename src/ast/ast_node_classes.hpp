@@ -165,6 +165,11 @@ public:		// types
 			Func,
 			Task);
 	}
+public:		// variables
+	BaseSptr ident_list;
+	Kind kind;
+	BaseSptr opt_typenm_or_modnm;
+	BaseSptrList opt_def_val_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclParamListItem, Base);
 };

@@ -598,8 +598,9 @@ flingDeclAlias:
 	KwAlias flingIdentList PunctColon
 		(
 			flingTypenmOrModnm PunctBlkAssign flingExprList
-			| (KwType | KwModule) flingTypenmOrModnmList
-			| (KwFunc | KwTask) flingSubprogIdentList
+			| KwRange PunctBlkAssign flingRangeList
+			| (KwType | KwModule) PunctBlkAssign flingTypenmOrModnmList
+			| (KwFunc | KwTask)  PunctBlkAssignflingSubprogIdentList
 		)
 		PunctSemicolon
 	;
@@ -781,8 +782,7 @@ flingIdentExpr:
 	flingScopedIdent
 		flingInstParamList?
 		(
-			// Typename or modname suffix
-			(PunctScopeAccess MiscIdent flingInstParamList?)+
+			flingTypenmOrModnmCstmChainItem+
 
 			// Call a subprogram (potentially located within a package)
 			| flingInstArgList
@@ -843,7 +843,13 @@ flingRange:
 
 flingNonSimpleRange:
 	KwDollarRange PunctLparen flingExpr PunctRparen
-	| KwRange PunctLparen flingExpr (PunctComma flingExpr)? PunctRparen
+	| KwRange 
+		(
+			PunctLparen flingExpr (PunctComma flingExpr)? PunctRparen
+			| MiscIdent (flingInstParamList?
+				flingTypenmOrModnmCstmChainItem*
+				PunctScopeAccess MiscIdent)?
+		)
 	;
 
 flingSimpleRangeSuffix:
@@ -857,13 +863,20 @@ flingExprOrRange:
 //--------
 
 //--------
+flingTypenmOrModnmCstmStart:
+	MiscIdent flingInstParamList?
+	;
+flingTypenmOrModnmCstmChainItem:
+	PunctScopeAccess flingTypenmOrModnmCstmStart
+	;
 flingTypenmOrModnm:
 	(
-		flingScopedIdent flingInstParamList?
-			(PunctScopeAccess MiscIdent flingInstParamList)*
+		flingTypenmOrModnmCstmStart
+			flingTypenmOrModnmCstmChainItem*
 		| (KwUnsigned | KwSigned)? KwLogic flingInstParamList?
 		| KwInteger
 	)
+		// Array dimensions
 		(PunctLbracket flingExprOrRange PunctRbracket)*
 	;
 //--------

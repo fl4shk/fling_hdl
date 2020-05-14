@@ -140,6 +140,8 @@ private:		// functions
 	void _parseFlingNonSimpleRange();
 	void _parseFlingSimpleRangeSuffix();
 	void _parseFlingExprOrRange();
+	void _parseFlingTypenmOrModnmCstmStart();
+	void _parseFlingTypenmOrModnmCstmChainItem();
 	void _parseFlingTypenmOrModnm();
 };
 
