@@ -3,8 +3,8 @@
 
 namespace fling_hdl
 {
-#define PERF_RECRS_PARSE(func) \
-	_recrs_parse(this, &Parser::func)
+#define JUST_RG_RULES_PARSE(func) \
+	_rg_rules_parse(this, &Parser::func)
 
 #define _INNER_RGR_INSERT(tok, func) \
 	/* Gurantee that the grammar is LL(1) */ \
@@ -34,7 +34,7 @@ void Parser::parseFlingProgram()
 {
 	while (lex_tok() != Tok::MiscEof)
 	{
-		PERF_RECRS_PARSE(_parseFlingDeclPackageItem);
+		JUST_RG_RULES_PARSE(_parseFlingDeclPackageItem);
 	}
 }
 void Parser::_parseFlingDeclPackage()
