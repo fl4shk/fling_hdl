@@ -13,15 +13,15 @@ void Parser::parseFlingProgram()
 {
 	WHILE_NOT_TOK(MiscEof)
 	{
-		JUST_RG_RULES_PARSE(_parseFlingDeclPackageItem);
+		JUST_RG_RULES_PARSE(&Parser::parseFlingDeclPackageItem);
 	}
 	JUST_EXPECT(MiscEof);
 }
-void Parser::_parseFlingDeclPackage()
+void Parser::parseFlingDeclPackage()
 {
 	if (just_rg_rules())
 	{
-		RGR_INSERT(KwPackage, _parseFlingDeclPackage);
+		RGR_INSERT(KwPackage, parseFlingDeclPackage);
 	}
 	else
 	{
@@ -36,355 +36,355 @@ void Parser::_parseFlingDeclPackage()
 		JUST_EXPECT(PunctRbrace);
 	}
 }
-void Parser::_parseFlingDeclPackageItem()
+void Parser::parseFlingDeclPackageItem()
 {
 }
-void Parser::_parseFlingImport()
+void Parser::parseFlingImport()
 {
 }
-void Parser::_parseFlingDeclParamList()
+void Parser::parseFlingDeclParamList()
 {
 }
-void Parser::_parseFlingDeclParamListItem()
+void Parser::parseFlingDeclParamListItem()
 {
 }
-void Parser::_parseFlingDeclArgList()
+void Parser::parseFlingDeclArgList()
 {
 }
-void Parser::_parseFlingDeclArgListItem()
+void Parser::parseFlingDeclArgListItem()
 {
 }
-void Parser::_parseFlingInstParamList()
+void Parser::parseFlingInstParamList()
 {
 }
-void Parser::_parseFlingInstParamListPos()
+void Parser::parseFlingInstParamListPos()
 {
 }
-void Parser::_parseFlingInstParamListPosItem()
+void Parser::parseFlingInstParamListPosItem()
 {
 }
-void Parser::_parseFlingInstParamListNamed()
+void Parser::parseFlingInstParamListNamed()
 {
 }
-void Parser::_parseFlingInstParamListNamedItem()
+void Parser::parseFlingInstParamListNamedItem()
 {
 }
-void Parser::_parseFlingInstArgList()
+void Parser::parseFlingInstArgList()
 {
 }
-void Parser::_parseFlingInstArgListPos()
+void Parser::parseFlingInstArgListPos()
 {
 }
-void Parser::_parseFlingInstArgListPosItem()
+void Parser::parseFlingInstArgListPosItem()
 {
 }
-void Parser::_parseFlingInstArgListNamed()
+void Parser::parseFlingInstArgListNamed()
 {
 }
-void Parser::_parseFlingInstArgListNamedItem()
+void Parser::parseFlingInstArgListNamedItem()
 {
 }
-void Parser::_parseFlingDeclModule()
+void Parser::parseFlingDeclModule()
 {
 }
-void Parser::_parseFlingDeclModuleScope()
+void Parser::parseFlingDeclModuleScope()
 {
 }
-void Parser::_parseFlingDeclModuleItem()
+void Parser::parseFlingDeclModuleItem()
 {
 }
-void Parser::_parseFlingModinst()
+void Parser::parseFlingModinst()
 {
 }
-void Parser::_parseFlingDeclModuleGen()
+void Parser::parseFlingDeclModuleGen()
 {
 }
-void Parser::_parseFlingDeclModuleGenIf()
+void Parser::parseFlingDeclModuleGenIf()
 {
 }
-void Parser::_parseFlingDeclModuleGenSwitchEtc()
+void Parser::parseFlingDeclModuleGenSwitchEtc()
 {
 }
-void Parser::_parseFlingDeclModuleGenSwitchEtcCase()
+void Parser::parseFlingDeclModuleGenSwitchEtcCase()
 {
 }
-void Parser::_parseFlingDeclModuleGenSwitchEtcDefault()
+void Parser::parseFlingDeclModuleGenSwitchEtcDefault()
 {
 }
-void Parser::_parseFlingDeclModuleGenFor()
+void Parser::parseFlingDeclModuleGenFor()
 {
 }
-void Parser::_parseFlingDeclModuleBehav()
+void Parser::parseFlingDeclModuleBehav()
 {
 }
-void Parser::_parseFlingDeclModuleBehavComb()
+void Parser::parseFlingDeclModuleBehavComb()
 {
 }
-void Parser::_parseFlingDeclModuleBehavSeq()
+void Parser::parseFlingDeclModuleBehavSeq()
 {
 }
-void Parser::_parseFlingDeclModuleBehavSeqEdgeItem()
+void Parser::parseFlingDeclModuleBehavSeqEdgeItem()
 {
 }
-void Parser::_parseFlingDeclModuleBehavScope()
+void Parser::parseFlingDeclModuleBehavScope()
 {
 }
-void Parser::_parseFlingDeclModuleBehavScopeItem()
+void Parser::parseFlingDeclModuleBehavScopeItem()
 {
 }
-void Parser::_parseFlingDeclModuleBehavScopeItemIf()
+void Parser::parseFlingDeclModuleBehavScopeItemIf()
 {
 }
-void Parser::_parseFlingDeclModuleBehavScopeItemSwitchEtc()
+void Parser::parseFlingDeclModuleBehavScopeItemSwitchEtc()
 {
 }
-void Parser::_parseFlingDeclModuleBehavScopeItemSwitchEtcCase()
+void Parser::parseFlingDeclModuleBehavScopeItemSwitchEtcCase()
 {
 }
-void Parser::_parseFlingDeclModuleBehavScopeItemSwitchEtcDefault()
+void Parser::parseFlingDeclModuleBehavScopeItemSwitchEtcDefault()
 {
 }
-void Parser::_parseFlingDeclModuleBehavScopeItemFor()
+void Parser::parseFlingDeclModuleBehavScopeItemFor()
 {
 }
-void Parser::_parseFlingDeclModuleBehavScopeItemWhile()
+void Parser::parseFlingDeclModuleBehavScopeItemWhile()
 {
 }
-void Parser::_parseFlingDeclModuleBehavScopeItemGen()
+void Parser::parseFlingDeclModuleBehavScopeItemGen()
 {
 }
-void Parser::_parseFlingDeclModuleBehavScopeItemGenIf()
+void Parser::parseFlingDeclModuleBehavScopeItemGenIf()
 {
 }
-void Parser::_parseFlingDeclModuleBehavScopeItemGenSwitchEtc()
+void Parser::parseFlingDeclModuleBehavScopeItemGenSwitchEtc()
 {
 }
-void Parser::_parseFlingDeclModuleBehavScopeItemGenSwitchEtcCase()
+void Parser::parseFlingDeclModuleBehavScopeItemGenSwitchEtcCase()
 {
 }
-void Parser::_parseFlingDeclModuleBehavScopeItemGenSwitchEtcDefault()
+void Parser::parseFlingDeclModuleBehavScopeItemGenSwitchEtcDefault()
 {
 }
-void Parser::_parseFlingDeclModuleBehavScopeItemGenFor()
+void Parser::parseFlingDeclModuleBehavScopeItemGenFor()
 {
 }
-void Parser::_parseFlingAnyBehavScopeItem()
+void Parser::parseFlingAnyBehavScopeItem()
 {
 }
-void Parser::_parseFlingAnyBehavScopeItemAssign()
+void Parser::parseFlingAnyBehavScopeItemAssign()
 {
 }
-void Parser::_parseFlingDeclCompositeType()
+void Parser::parseFlingDeclCompositeType()
 {
 }
-void Parser::_parseFlingDeclCompositeTypeStruct()
+void Parser::parseFlingDeclCompositeTypeStruct()
 {
 }
-void Parser::_parseFlingDeclCompositeTypeStructItem()
+void Parser::parseFlingDeclCompositeTypeStructItem()
 {
 }
-void Parser::_parseFlingCompositeTypeStructItemGen()
+void Parser::parseFlingCompositeTypeStructItemGen()
 {
 }
-void Parser::_parseFlingCompositeTypeStructItemGenIf()
+void Parser::parseFlingCompositeTypeStructItemGenIf()
 {
 }
-void Parser::_parseFlingCompositeTypeStructItemGenSwitchEtc()
+void Parser::parseFlingCompositeTypeStructItemGenSwitchEtc()
 {
 }
-void Parser::_parseFlingCompositeTypeStructItemGenSwitchEtcCase()
+void Parser::parseFlingCompositeTypeStructItemGenSwitchEtcCase()
 {
 }
-void Parser::_parseFlingCompositeTypeStructItemGenSwitchEtcDefault()
+void Parser::parseFlingCompositeTypeStructItemGenSwitchEtcDefault()
 {
 }
-void Parser::_parseFlingCompositeTypeStructItemGenFor()
+void Parser::parseFlingCompositeTypeStructItemGenFor()
 {
 }
-void Parser::_parseFlingDeclEnum()
+void Parser::parseFlingDeclEnum()
 {
 }
-void Parser::_parseFlingDeclEnumItem()
+void Parser::parseFlingDeclEnumItem()
 {
 }
-void Parser::_parseFlingDeclSubprog()
+void Parser::parseFlingDeclSubprog()
 {
 }
-void Parser::_parseFlingDeclSubprogFuncHeader()
+void Parser::parseFlingDeclSubprogFuncHeader()
 {
 }
-void Parser::_parseFlingDeclSubprogTaskHeader()
+void Parser::parseFlingDeclSubprogTaskHeader()
 {
 }
-void Parser::_parseFlingDeclSubprogScope()
+void Parser::parseFlingDeclSubprogScope()
 {
 }
-void Parser::_parseFlingDeclSubprogScopeItem()
+void Parser::parseFlingDeclSubprogScopeItem()
 {
 }
-void Parser::_parseFlingDeclSubprogScopeItemIf()
+void Parser::parseFlingDeclSubprogScopeItemIf()
 {
 }
-void Parser::_parseFlingDeclSubprogScopeItemSwitchEtc()
+void Parser::parseFlingDeclSubprogScopeItemSwitchEtc()
 {
 }
-void Parser::_parseFlingDeclSubprogScopeItemSwitchEtcCase()
+void Parser::parseFlingDeclSubprogScopeItemSwitchEtcCase()
 {
 }
-void Parser::_parseFlingDeclSubprogScopeItemSwitchEtcDefault()
+void Parser::parseFlingDeclSubprogScopeItemSwitchEtcDefault()
 {
 }
-void Parser::_parseFlingDeclSubprogScopeItemFor()
+void Parser::parseFlingDeclSubprogScopeItemFor()
 {
 }
-void Parser::_parseFlingDeclSubprogScopeItemWhile()
+void Parser::parseFlingDeclSubprogScopeItemWhile()
 {
 }
-void Parser::_parseFlingDeclSubprogScopeItemGen()
+void Parser::parseFlingDeclSubprogScopeItemGen()
 {
 }
-void Parser::_parseFlingDeclSubprogScopeItemGenIf()
+void Parser::parseFlingDeclSubprogScopeItemGenIf()
 {
 }
-void Parser::_parseFlingDeclSubprogScopeItemGenSwitchEtc()
+void Parser::parseFlingDeclSubprogScopeItemGenSwitchEtc()
 {
 }
-void Parser::_parseFlingDeclSubprogScopeItemGenSwitchEtcCase()
+void Parser::parseFlingDeclSubprogScopeItemGenSwitchEtcCase()
 {
 }
-void Parser::_parseFlingDeclSubprogScopeItemGenSwitchEtcDefault()
+void Parser::parseFlingDeclSubprogScopeItemGenSwitchEtcDefault()
 {
 }
-void Parser::_parseFlingDeclSubprogScopeItemGenFor()
+void Parser::parseFlingDeclSubprogScopeItemGenFor()
 {
 }
-void Parser::_parseFlingDeclConst()
+void Parser::parseFlingDeclConst()
 {
 }
-void Parser::_parseFlingDeclVarNoInitVal()
+void Parser::parseFlingDeclVarNoInitVal()
 {
 }
-void Parser::_parseFlingDeclVar()
+void Parser::parseFlingDeclVar()
 {
 }
-void Parser::_parseFlingDeclWire()
+void Parser::parseFlingDeclWire()
 {
 }
-void Parser::_parseFlingWireAssign()
+void Parser::parseFlingWireAssign()
 {
 }
-void Parser::_parseFlingDeclAlias()
+void Parser::parseFlingDeclAlias()
 {
 }
-void Parser::_parseFlingScopedIdent()
+void Parser::parseFlingScopedIdent()
 {
 }
-void Parser::_parseFlingIdentList()
+void Parser::parseFlingIdentList()
 {
 }
-void Parser::_parseFlingSubprogIdentList()
+void Parser::parseFlingSubprogIdentList()
 {
 }
-void Parser::_parseFlingExprList()
+void Parser::parseFlingExprList()
 {
 }
-void Parser::_parseFlingRangeList()
+void Parser::parseFlingRangeList()
 {
 }
-void Parser::_parseFlingExprOrRangeList()
+void Parser::parseFlingExprOrRangeList()
 {
 }
-void Parser::_parseFlingTypenmOrModnmList()
+void Parser::parseFlingTypenmOrModnmList()
 {
 }
-void Parser::_parseFlingImportItem()
+void Parser::parseFlingImportItem()
 {
 }
-void Parser::_parseFlingImportItemList()
+void Parser::parseFlingImportItemList()
 {
 }
-void Parser::_parseFlingExpr()
+void Parser::parseFlingExpr()
 {
 }
-void Parser::_parseFlingMuxExpr()
+void Parser::parseFlingMuxExpr()
 {
 }
-void Parser::_parseFlingLogorExpr()
+void Parser::parseFlingLogorExpr()
 {
 }
-void Parser::_parseFlingLogandExpr()
+void Parser::parseFlingLogandExpr()
 {
 }
-void Parser::_parseFlingCmpEqEtcExpr()
+void Parser::parseFlingCmpEqEtcExpr()
 {
 }
-void Parser::_parseFlingCmpLtEtcExpr()
+void Parser::parseFlingCmpLtEtcExpr()
 {
 }
-void Parser::_parseFlingPlusMinusExpr()
+void Parser::parseFlingPlusMinusExpr()
 {
 }
-void Parser::_parseFlingMulDivModExpr()
+void Parser::parseFlingMulDivModExpr()
 {
 }
-void Parser::_parseFlingBitorBitnorExpr()
+void Parser::parseFlingBitorBitnorExpr()
 {
 }
-void Parser::_parseFlingBitandBitnandExpr()
+void Parser::parseFlingBitandBitnandExpr()
 {
 }
-void Parser::_parseFlingBitxorBitxnorExpr()
+void Parser::parseFlingBitxorBitxnorExpr()
 {
 }
-void Parser::_parseFlingBitshiftExpr()
+void Parser::parseFlingBitshiftExpr()
 {
 }
-void Parser::_parseFlingUnaryExpr()
+void Parser::parseFlingUnaryExpr()
 {
 }
-void Parser::_parseFlingLowExpr()
+void Parser::parseFlingLowExpr()
 {
 }
-void Parser::_parseFlingCallDollarFuncExpr()
+void Parser::parseFlingCallDollarFuncExpr()
 {
 }
-void Parser::_parseFlingCallSubprogExpr()
+void Parser::parseFlingCallSubprogExpr()
 {
 }
-void Parser::_parseFlingSubprogIdent()
+void Parser::parseFlingSubprogIdent()
 {
 }
-void Parser::_parseFlingIdentExpr()
+void Parser::parseFlingIdentExpr()
 {
 }
-void Parser::_parseFlingCatExpr()
+void Parser::parseFlingCatExpr()
 {
 }
-void Parser::_parseFlingReplExpr()
+void Parser::parseFlingReplExpr()
 {
 }
-void Parser::_parseFlingSizedExpr()
+void Parser::parseFlingSizedExpr()
 {
 }
-void Parser::_parseFlingRange()
+void Parser::parseFlingRange()
 {
 }
-void Parser::_parseFlingNonSimpleRange()
+void Parser::parseFlingNonSimpleRange()
 {
 }
-void Parser::_parseFlingSimpleRangeSuffix()
+void Parser::parseFlingSimpleRangeSuffix()
 {
 }
-void Parser::_parseFlingExprOrRange()
+void Parser::parseFlingExprOrRange()
 {
 }
-void Parser::_parseFlingTypenmOrModnmCstmStart()
+void Parser::parseFlingTypenmOrModnmCstmStart()
 {
 }
-void Parser::_parseFlingTypenmOrModnmCstmChainItem()
+void Parser::parseFlingTypenmOrModnmCstmChainItem()
 {
 }
-void Parser::_parseFlingTypenmOrModnm()
+void Parser::parseFlingTypenmOrModnm()
 {
 }
 

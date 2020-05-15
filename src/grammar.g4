@@ -1,7 +1,7 @@
 //--------
 flingProgram:
 	flingDeclPackageItem*
-	EOF
+	MiscEof
 	;
 //--------
 
@@ -1150,5 +1150,7 @@ fragment FragRawIdent: 'r#' [A-Za-z_0-9]+ ;
 
 MiscIdent: 
 	FragBasicIdent | FragRawIdent ;
+
+MiscEof: EOF ;
 MiscOther: . ;
 //--------

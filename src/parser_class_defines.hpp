@@ -18,8 +18,28 @@
 	_internal_err(ctx, #func)
 
 
-#define JUST_RG_RULES_PARSE(func, tok_set) \
-	_rg_rules_parse(this, &Parser::func, tok_set)
+#define _INNER_TOK_CSL(tok) \
+	Tok::tok
+#define TOK_CSL(...) \
+	EVAL(MAP(_INNER_TOK, COMMA, __VA_ARGS__))
+
+#define TOK_SET(...) \
+	TokSet({TOK_CSL(__VA_ARGS__)})
+
+#define JUST_EXPECT(...) \
+	_expect(TOK_CSL(__VA_ARGS__))
+
+#define EXPECT_AND_GRAB_TOK(name, ...) \
+	JUST_EXPECT(__VA_ARGS__); \
+	const auto name = prev_lex_tok()
+#define EXPECT_IDENT_AND_GRAB_S(name) \
+	JUST_EXPECT(MiscIdent); \
+	const auto& name = prev_lex_s()
+
+#define BASIC_RG_RULES_PARSE(arg) \
+	_rg_rules_parse(this, arg)
+#define FANCY_RG_RULES_PARSE(arg, ...) \
+	_rg_rules_parse(this, arg, TOK_SET(__VA_ARGS__))
 
 #define _INNER_RGR_INSERT(tok, func) \
 	/* Gurantee that the grammar is LL(1) */ \
@@ -29,25 +49,10 @@
 			#func), "Eek!\n")); \
 	} \
 	\
-	_rgr_ret_map()[Tok::tok] = &Parser::func
+	_rgr_ret_map()[Tok::tok] = func
 
 #define RGR_INSERT(...) \
 	EVAL(MAP_PAIRS(_INNER_RGR_INSERT, SEMICOLON, __VA_ARGS__))
-
-#define _INNER_JUST_EXPECT(tok) \
-	Tok::tok
-#define JUST_EXPECT(first_tok, ...) \
-	_expect(EVAL(MAP(_INNER_JUST_EXPECT, COMMA, first_tok, __VA_ARGS__)))
-
-#define EXPECT_AND_GRAB_TOK(name, first_tok, ...) \
-	JUST_EXPECT(first_tok, __VA_ARGS__); \
-	const auto name = prev_lex_tok()
-#define EXPECT_IDENT_AND_GRAB_S(name) \
-	JUST_EXPECT(MiscIdent); \
-	const auto& name = prev_lex_s()
-#define EXPECT_AND_GRAB_N(name, tok) \
-	JUST_EXPECT(tok); \
-	const auto& name = prev_lex_n()
 
 #define WHILE_NOT_TOK(tok) \
 	while (lex_tok() != Tok::tok)
