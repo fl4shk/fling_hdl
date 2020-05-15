@@ -3,39 +3,19 @@
 
 namespace fling_hdl
 {
-#define JUST_RG_RULES_PARSE(func) \
-	_rg_rules_parse(this, &Parser::func)
 
-#define _INNER_RGR_INSERT(tok, func) \
-	/* Gurantee that the grammar is LL(1) */ \
-	if (_top_rgr_ret_map().count(Tok::tok) > 0) \
-	{ \
-		lex_file_pos().err(sconcat("rgr_insert():  ", strappcom2(#tok, \
-			#func), "Eek!\n")); \
-	} \
-	\
-	_top_rgr_ret_map()[Tok::tok] = &Parser::func
+using namespace ast;
 
-#define RGR_INSERT(...) \
-	EVAL(MAP_PAIRS(_INNER_RGR_INSERT, SEMICOLON, __VA_ARGS__))
-
-#define JUST_EXPECT(tok) \
-	_expect(Tok::tok)
-
-#define EXPECT_AND_GRAB_S(tok, name) \
-	JUST_EXPECT(tok); \
-	const auto& name = prev_lex_s()
-#define EXPECT_AND_GRAB_N(tok, name) \
-	JUST_EXPECT(tok); \
-	const auto& name = prev_lex_n()
+#include "parser_class_defines.hpp"
 
 
 void Parser::parseFlingProgram()
 {
-	while (lex_tok() != Tok::MiscEof)
+	WHILE_NOT_TOK(MiscEof)
 	{
 		JUST_RG_RULES_PARSE(_parseFlingDeclPackageItem);
 	}
+	JUST_EXPECT(MiscEof);
 }
 void Parser::_parseFlingDeclPackage()
 {
@@ -45,13 +25,12 @@ void Parser::_parseFlingDeclPackage()
 	}
 	else
 	{
-		EXPECT_AND_GRAB_S(MiscIdent, ident);
+		EXPECT_IDENT_AND_GRAB_S(ident);
 
 		JUST_EXPECT(PunctLbrace);
 
-		while (lex_tok() != Tok::PunctRbrace)
+		WHILE_NOT_TOK(PunctRbrace)
 		{
-			PERF_RECRS_PARSE(_parseFlingDeclPackageItem);
 		}
 
 		JUST_EXPECT(PunctRbrace);

@@ -9,14 +9,64 @@
 namespace fling_hdl
 {
 
-class Parser: public RdParserBase<Lexer, Parser>
+class AstNodeDeferredPusher;
+class AstNodeListDeferredPusher;
+
+class Parser final: public RdParserBase<Lexer, Parser>
 {
+	friend class AstNodeDeferredPusher;
+	friend class AstNodeListDeferredPusher;
 public:		// types
-	using Base = RdParserBase<Lexer, Parser>;
+	using ParserBase = RdParserBase<Lexer, Parser>;
+
+private:		// variables
+	size_t _max_ast_level;
+	ast::Base* _curr_ast_parent = nullptr;
+
+	stack<unique_ptr<ast::BaseSptr>> _ast_stack;
+	stack<unique_ptr<ast::BaseSptrList>> _ast_list_stack;
+
+public:		// misc. functions
+	template<typename Type>
+	static inline Type* as(ast::BaseSptr& base_sptr)
+	{
+		return static_cast<Type*>(base_sptr.get());
+	}
+
+private:		// misc. functions
+	inline void _push_ast(ast::Base* to_push)
+	{
+		_ast_stack.push(unique_ptr<ast::BaseSptr>
+			(new ast::BaseSptr(to_push)));
+	}
+	inline void _pop_ast(ast::BaseSptr& to_set)
+	{
+		to_set = move(*_ast_stack.top());
+		_ast_stack.top().reset(nullptr);
+		_ast_stack.pop();
+	}
+
+	inline void _push_ast_list(ast::BaseSptrList&& to_push)
+	{
+		_ast_list_stack.push(unique_ptr<ast::BaseSptrList>
+			(new ast::BaseSptrList(move(to_push))));
+	}
+	inline void _pop_ast_list(ast::BaseSptrList& to_set)
+	{
+		to_set = move(*_ast_list_stack.top());
+		_ast_list_stack.top().reset(nullptr);
+		_ast_list_stack.pop();
+	}
+
+	inline void _internal_err(const string& func) const
+	{
+		lex_file_pos().err(sconcat("Parser::", func, "():  Internal ",
+			"error."));
+	}
 
 public:		// functions
 	inline Parser(const string& s_filename)
-		: Base(s_filename)
+		: ParserBase(s_filename)
 	{
 	}
 	GEN_NO_CM_CONSTRUCTORS_AND_ASSIGN(Parser);
@@ -24,7 +74,9 @@ public:		// functions
 
 	void parseFlingProgram();
 
-private:		// functions
+	GEN_GETTER_BY_VAL(max_ast_level);
+
+private:		// parsing functions
 	void _parseFlingDeclPackage();
 	void _parseFlingDeclPackageItem();
 	void _parseFlingImport();
@@ -143,6 +195,50 @@ private:		// functions
 	void _parseFlingTypenmOrModnmCstmStart();
 	void _parseFlingTypenmOrModnmCstmChainItem();
 	void _parseFlingTypenmOrModnm();
+};
+
+class AstNodeDeferredPusher final
+{
+private:		// variables
+	Parser* _parser = nullptr;
+	ast::Base * _node = nullptr,
+		* _prev_ast_parent = nullptr;
+public:		// functions
+	inline AstNodeDeferredPusher(Parser* s_parser, ast::Base* s_node)
+		: _parser(s_parser), _node(s_node)
+	{
+		_prev_ast_parent = _pt_visitor->_curr_ast_parent;
+		_parser->_curr_ast_parent = _node;
+
+		if (_parser->max_ast_level() < _node->level())
+		{
+			_parser->_max_ast_level = _node->level();
+		}
+	}
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AstNodeDeferredPusher);
+	inline ~AstNodeDeferredPusher()
+	{
+		_parser->_push_ast(_node);
+		_parser->_curr_ast_parent = _prev_ast_parent;
+	}
+};
+
+class AstNodeListDeferredPusher final
+{
+private:		// variables
+	Parser* _parser = nullptr;
+	ast::BaseSptrList* _node_list = nullptr;
+public:		// functions
+	inline AstNodeListDeferredPusher(Parser* s_parser,
+		ast::BaseSptrList* s_node_list)
+		: _parser(s_parser), _node_list(s_node_list)
+	{
+	}
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AstNodeListDeferredPusher);
+	inline ~AstNodeListDeferredPusher()
+	{
+		_parser->_push_ast_list(move(*_node_list));
+	}
 };
 
 } // namespace fling_hdl
