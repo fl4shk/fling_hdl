@@ -17,7 +17,7 @@
 #define PROLOGUE_AND_EPILOGUE(str) \
 	ParserBase::PrologueAndEpilogue prologue_and_epilogue (this, #str)
 #define CHECK_PARSE(func) \
-	_check_parse(&Parser::func, tok_set)
+	_check_parse(&Parser::func)
 
 
 
