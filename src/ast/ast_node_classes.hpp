@@ -166,17 +166,57 @@ public:		// types
 			Task);
 	}
 public:		// variables
-	BaseSptr ident_list;
+	string ident;
 	Kind kind;
 	BaseSptr opt_typenm_or_modnm;
+
+	// Default value list, the type of which is dependent upon the value of
+	// `kind`.
 	BaseSptrList opt_def_val_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclParamListItem, Base);
 };
+
+class DeclArgListItem: public Base
+{
+public:		// types
+	// This is just the port direction
+	enum class Kind
+	{
+		Input,
+		Output,
+		Inout,
+	};
+	static string conv_kind(Kind to_conv)
+	{
+		CONV_ENUM_SWITCH(CONV_KIND_CASE,
+			Input,
+			Output,
+			Inout);
+	}
+public:		// variables
+	string ident;
+	Kind kind;
+	BaseSptr typenm_or_modnm;
+	BaseSptrList opt_def_val_list;
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclArgListItem, Base);
+};
+//--------
+
+//--------
+//class InstParamListItem: public Base
 //--------
 
 
+
 } // namespace ast
+#undef SHARED_FUNC_CONTENTS
+#undef SHARED_FUNC_CONTENTS_2
+
+#undef CONV_ENUM_CASE
+#undef CONV_KIND_CASE
+#undef CONV_ENUM_SWITCH
 
 } // namespace fling_hdl
 

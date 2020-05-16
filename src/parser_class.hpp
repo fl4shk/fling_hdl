@@ -28,6 +28,7 @@ private:		// variables
 
 	stack<unique_ptr<ast::BaseSptr>> _ast_stack;
 	stack<unique_ptr<ast::BaseSptrList>> _ast_list_stack;
+	string _parse_func_str;
 
 public:		// misc. functions
 	template<typename Type>
@@ -61,10 +62,10 @@ private:		// misc. functions
 		_ast_list_stack.pop();
 	}
 
-	inline void _internal_err(const string& func) const
+	virtual inline void _internal_err(const string& func,
+		const string& msg="") const
 	{
-		lex_file_pos().err(sconcat("Parser::", func, "():  Internal ",
-			"error."));
+		ParserBase::_internal_err(sconcat("Parser::", func), msg);
 	}
 
 public:		// functions
@@ -208,6 +209,11 @@ public:		// parsing functions
 	void parseFlingTypenmOrModnmCstmStart();
 	void parseFlingTypenmOrModnmCstmChainItem();
 	void parseFlingTypenmOrModnm();
+
+	#define X(name, dummy_0) \
+		void parseTok##name();
+	LIST_OF_TOKENS(X)
+	#undef X
 };
 
 class AstNodeDeferredPusher final
@@ -251,6 +257,25 @@ public:		// functions
 	inline ~AstNodeListDeferredPusher()
 	{
 		_parser->_push_ast_list(move(*_node_list));
+	}
+};
+class ParseFuncStrDeferredRestorer final
+{
+private:		// variables
+	Parser* _parser = nullptr;
+	string _old_parse_func_str;
+public:		// functions
+	inline ParseFuncStrDeferredRestorer(Parser* s_parser,
+		string&& s_parse_func_str)
+		: _parser(s_parser)
+	{
+		_old_parse_func_str = move(_parser->_parse_func_str);
+		_parser->_parse_func_str = move(s_parse_func_str);
+	}
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(ParseFuncStrDeferredRestorer)
+	inline ~ParseFuncStrDeferredRestorer()
+	{
+		_parser->_parse_func_str = move(_old_parse_func_str);
 	}
 };
 

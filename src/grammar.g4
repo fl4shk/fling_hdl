@@ -802,10 +802,12 @@ flingIdentExpr:
 					// Regular range
 					flingRange
 
-					// Indexed part select
+					// Indexed part select or a slice
 					| flingExpr
-						(PunctPlusColon | PunctMinusColon)
-						flingExpr
+						(
+							(PunctPlusColon | PunctMinusColon)
+							flingExpr
+						)?
 				)
 			PunctRbracket
 		)?

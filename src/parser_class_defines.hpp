@@ -55,9 +55,14 @@
 	EVAL(MAP_PAIRS(_INNER_RGR_INSERT, SEMICOLON, __VA_ARGS__))
 
 #define BASIC_RG_RULES_PARSE(func) \
-	_rg_rules_parse(this, func)
-#define FANCY_RG_RULES_PARSE(arg, ...) \
-	_rg_rules_parse(this, func, TOK_SET(__VA_ARGS__))
+	_rg_rules_parse(&Parser::func)
+#define FANCY_RG_RULES_PARSE(func, ...) \
+	_rg_rules_parse(&Parser::func, TOK_SET(__VA_ARGS__))
+
+#define MAKE_BASIC_RG_RULES_PARSE(parse_ret, func) \
+	const auto& parse_ret = BASIC_RG_RULES_PARSE(func)
+#define MAKE_FANCY_RG_RULES_PARSE(parse_ret, func, ...) \
+	const auto& parse_ret = FANCY_RG_RULES_PARSE(func, __VA_ARGS__)
 
 
 
