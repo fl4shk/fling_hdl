@@ -78,15 +78,11 @@ public:		// functions
 	GEN_GETTER_BY_VAL(max_ast_level);
 
 private:		// functions
-	inline RgrParseRet _rg_rules_parse(const ParseFunc& parse_func)
+	virtual inline bool _check_parse(const ParseFunc& parse_func,
+		TokSet& wanted_tok_set)
 	{
-		return ParserBase::_rg_rules_parse(this, parse_func);
-	}
-	inline RgrParseRet _rg_rules_parse(const ParseFunc& parse_func,
-		const TokSet& extra_fail_tok_set)
-	{
-		return ParserBase::_rg_rules_parse(this, parse_func,
-			extra_fail_tok_set);
+		return ParserBase::_check_parse(this, parse_func, wanted_tok_set,
+			_parse_func_str);
 	}
 
 public:		// parsing functions
@@ -259,6 +255,7 @@ public:		// functions
 		_parser->_push_ast_list(move(*_node_list));
 	}
 };
+
 class ParseFuncStrDeferredRestorer final
 {
 private:		// variables
