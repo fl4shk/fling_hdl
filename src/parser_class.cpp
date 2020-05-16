@@ -25,10 +25,10 @@ auto Parser::_parseFlingProgram() -> ParseRet
 
 	while (CHECK_PARSE(_parseFlingDeclPackageItem))
 	{
-		found = true;
+		_found_tok = true;
 	}
 
-	_fail_if_not_found();
+	_fail_if_not_found_tok();
 
 	JUST_EXPECT(MiscEof);
 
