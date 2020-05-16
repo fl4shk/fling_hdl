@@ -19,7 +19,6 @@ int Parser::run()
 
 void Parser::parseFlingProgram()
 {
-	if (lex_tok() != Tok::MiscEof)
 	{
 		const auto& parse_ret = _rg_rules_parse
 			(&Parser::parseFlingDeclPackageItem, TOK_SET(MiscEof));
@@ -39,7 +38,7 @@ void Parser::parseFlingDeclPackage()
 
 		JUST_EXPECT(PunctLbrace);
 
-		if (lex_tok() != Tok::PunctRbrace)
+		if (CMP_LEX_TOK(PunctRbrace))
 		{
 		}
 

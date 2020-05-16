@@ -23,6 +23,11 @@
 #define TOK_CSL(...) \
 	EVAL(MAP(_INNER_TOK, COMMA, __VA_ARGS__))
 
+#define CMP_LEX_TOK(...) \
+	_cmp_lex_tok(TOK_CSL(__VA_ARGS__))
+#define CMP_PREV_LEX_TOK(...) \
+	_cmp_prev_lex_tok(TOK_CSL(__VA_ARGS__))
+
 #define TOK_SET(...) \
 	TokSet({TOK_CSL(__VA_ARGS__)})
 
@@ -53,6 +58,7 @@
 	_rg_rules_parse(this, func)
 #define FANCY_RG_RULES_PARSE(arg, ...) \
 	_rg_rules_parse(this, func, TOK_SET(__VA_ARGS__))
+
 
 
 
