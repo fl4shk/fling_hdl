@@ -16,17 +16,15 @@
 
 #define PROLOGUE_AND_EPILOGUE(str) \
 	ParserBase::PrologueAndEpilogue prologue_and_epilogue (this, #str)
+
 #define CHECK_PARSE(func) \
 	_check_parse(&Parser::func)
 
 
 
-#define internal_err(func) \
-	_internal_err(ctx, #func)
-
-
 #define _INNER_TOK_CSL(tok) \
 	Tok::tok
+
 #define TOK_CSL(...) \
 	EVAL(MAP(_INNER_TOK_CSL, COMMA, __VA_ARGS__))
 
@@ -42,7 +40,7 @@
 	parseTok##tok ()
 
 #define _INNER_INSERT_WANTED_TOK(tok) \
-	_wanted_tok_set.insert(TOK_CSL(tok)) 
+	_wanted_tok_set.insert(_INNER_TOK_CSL(tok))
 #define INSERT_WANTED_TOK(...) \
 	EVAL(MAP(_INNER_INSERT_WANTED_TOK, SEMICOLON, __VA_ARGS__))
 
