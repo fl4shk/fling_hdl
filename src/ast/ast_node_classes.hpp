@@ -1,10 +1,11 @@
-#ifndef src_ast_node_classes_hpp
-#define src_ast_node_classes_hpp
+#ifndef src_ast_ast_node_classes_hpp
+#define src_ast_ast_node_classes_hpp
 
-// src/ast_node_classes.hpp
+// src/ast/ast_node_classes.hpp
 
-#include "misc_includes.hpp"
-#include "liborangepower_src/cpp_magic.hpp"
+#include "../misc_includes.hpp"
+#include "../liborangepower_src/cpp_magic.hpp"
+#include "ast_visitor_class.hpp"
 
 namespace fling_hdl
 {
@@ -220,4 +221,4 @@ public:		// functions
 
 } // namespace fling_hdl
 
-#endif		// src_ast_node_classes_hpp
+#endif		// src_ast_ast_node_classes_hpp

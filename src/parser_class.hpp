@@ -5,17 +5,20 @@
 
 #include "misc_includes.hpp"
 #include "lexer_class.hpp"
+#include "ast/ast_node_classes.hpp"
 
 namespace fling_hdl
 {
 
 class AstNodeDeferredPusher;
 class AstNodeListDeferredPusher;
+class ParseFuncStrDeferredRestorer;
 
 class Parser final: public RdParserBase<Lexer, Parser>
 {
 	friend class AstNodeDeferredPusher;
 	friend class AstNodeListDeferredPusher;
+	friend class ParseFuncStrDeferredRestorer;
 public:		// types
 	using ParserBase = RdParserBase<Lexer, Parser>;
 

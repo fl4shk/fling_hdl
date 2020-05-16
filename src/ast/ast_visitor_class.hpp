@@ -1,7 +1,7 @@
-#ifndef src_ast_visitor_class_hpp
-#define src_ast_visitor_class_hpp
+#ifndef src_ast_ast_visitor_class_hpp
+#define src_ast_ast_visitor_class_hpp
 
-// src/ast_visitor_class.hpp
+// src/ast/ast_visitor_class.hpp
 
 #include "misc_includes.hpp"
 
@@ -58,4 +58,4 @@ protected:		// children acceptor functions
 
 } // namespace fling_hdl
 
-#endif		// src_ast_visitor_class_hpp
+#endif		// src_ast_ast_visitor_class_hpp

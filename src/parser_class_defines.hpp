@@ -24,7 +24,7 @@
 #define _INNER_TOK_CSL(tok) \
 	Tok::tok
 #define TOK_CSL(...) \
-	EVAL(MAP(_INNER_TOK, COMMA, __VA_ARGS__))
+	EVAL(MAP(_INNER_TOK_CSL, COMMA, __VA_ARGS__))
 
 #define CMP_LEX_TOK(...) \
 	_cmp_lex_tok(TOK_CSL(__VA_ARGS__))
