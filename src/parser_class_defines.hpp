@@ -14,8 +14,12 @@
 	BaseSptrList name; \
 	AstNodeListDeferredPusher deferred_pusher_ ## name (this, &name)
 
-#define PROLOGUE(str) \
-	ParseFuncStrDeferredRestorer deferred_restorer (this, #str); \
+#define PROLOGUE_AND_EPILOGUE(str) \
+	ParserBase::PrologueAndEpilogue prologue_and_epilogue (this, #str)
+#define CHECK_PARSE(func) \
+	_check_parse(&Parser::func, tok_set)
+
+
 
 #define internal_err(func) \
 	_internal_err(ctx, #func)
@@ -36,6 +40,11 @@
 
 #define TOK_PARSE_FUNC(tok) \
 	parseTok##tok ()
+
+#define _INNER_INSERT_WANTED_TOK(tok) \
+	_wanted_tok_set.insert(TOK_CSL(tok)) 
+#define INSERT_WANTED_TOK(...) \
+	EVAL(MAP(_INNER_INSERT_WANTED_TOK, SEMICOLON, __VA_ARGS__))
 
 #define JUST_EXPECT(...) \
 	_expect(TOK_CSL(__VA_ARGS__))

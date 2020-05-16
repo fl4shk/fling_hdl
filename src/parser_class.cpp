@@ -14,1796 +14,1801 @@ Parser::Parser(const string& s_filename)
 }
 int Parser::run()
 {
-	parseFlingProgram();
+	_parseFlingProgram();
 	return 0;
 }
 
-auto Parser::parseFlingProgram() -> ParseRet
+auto Parser::_parseFlingProgram() -> ParseRet
 {
-	PROLOGUE(parseFlingProgram);
+	PROLOGUE_AND_EPILOGUE(_parseFlingProgram);
+	INSERT_WANTED_TOK(MiscEof);
 
-	while (!CMP_LEX_TOK(MiscEof))
+	while (CHECK_PARSE(_parseFlingDeclPackageItem))
 	{
+		found = true;
 	}
+
+	_fail_if_not_found();
+
 	JUST_EXPECT(MiscEof);
 
 	return std::nullopt;
 }
-//auto Parser::parseFlingDeclPackage() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclPackage);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclPackageItem() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclPackageItem);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingImport() -> ParseRet
-//{
-//	PROLOGUE(parseFlingImport);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclParamList() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclParamList);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclParamListItem() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclParamListItem);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclArgList() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclArgList);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclArgListItem() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclArgListItem);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingInstParamList() -> ParseRet
-//{
-//	PROLOGUE(parseFlingInstParamList);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingInstParamListPos() -> ParseRet
-//{
-//	PROLOGUE(parseFlingInstParamListPos);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingInstParamListPosItem() -> ParseRet
-//{
-//	PROLOGUE(parseFlingInstParamListPosItem);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingInstParamListNamed() -> ParseRet
-//{
-//	PROLOGUE(parseFlingInstParamListNamed);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingInstParamListNamedItem() -> ParseRet
-//{
-//	PROLOGUE(parseFlingInstParamListNamedItem);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingInstArgList() -> ParseRet
-//{
-//	PROLOGUE(parseFlingInstArgList);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingInstArgListPos() -> ParseRet
-//{
-//	PROLOGUE(parseFlingInstArgListPos);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingInstArgListPosItem() -> ParseRet
-//{
-//	PROLOGUE(parseFlingInstArgListPosItem);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingInstArgListNamed() -> ParseRet
-//{
-//	PROLOGUE(parseFlingInstArgListNamed);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingInstArgListNamedItem() -> ParseRet
-//{
-//	PROLOGUE(parseFlingInstArgListNamedItem);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModule() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModule);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModuleScope() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModuleScope);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModuleItem() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModuleItem);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingModinst() -> ParseRet
-//{
-//	PROLOGUE(parseFlingModinst);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModuleGen() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModuleGen);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModuleGenIf() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModuleGenIf);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModuleGenSwitchEtc() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModuleGenSwitchEtc);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModuleGenSwitchEtcCase() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModuleGenSwitchEtcCase);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModuleGenSwitchEtcDefault() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModuleGenSwitchEtcDefault);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModuleGenFor() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModuleGenFor);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModuleBehav() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModuleBehav);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModuleBehavComb() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModuleBehavComb);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModuleBehavSeq() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModuleBehavSeq);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModuleBehavSeqEdgeItem() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModuleBehavSeqEdgeItem);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModuleBehavScope() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModuleBehavScope);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModuleBehavScopeItem() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModuleBehavScopeItem);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModuleBehavScopeItemIf() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModuleBehavScopeItemIf);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModuleBehavScopeItemSwitchEtc() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModuleBehavScopeItemSwitchEtc);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModuleBehavScopeItemSwitchEtcCase() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModuleBehavScopeItemSwitchEtcCase);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModuleBehavScopeItemSwitchEtcDefault() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModuleBehavScopeItemSwitchEtcDefault);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModuleBehavScopeItemFor() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModuleBehavScopeItemFor);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModuleBehavScopeItemWhile() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModuleBehavScopeItemWhile);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModuleBehavScopeItemGen() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModuleBehavScopeItemGen);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModuleBehavScopeItemGenIf() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModuleBehavScopeItemGenIf);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModuleBehavScopeItemGenSwitchEtc() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModuleBehavScopeItemGenSwitchEtc);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModuleBehavScopeItemGenSwitchEtcCase() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModuleBehavScopeItemGenSwitchEtcCase);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModuleBehavScopeItemGenSwitchEtcDefault() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModuleBehavScopeItemGenSwitchEtcDefault);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclModuleBehavScopeItemGenFor() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclModuleBehavScopeItemGenFor);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingAnyBehavScopeItem() -> ParseRet
-//{
-//	PROLOGUE(parseFlingAnyBehavScopeItem);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingAnyBehavScopeItemAssign() -> ParseRet
-//{
-//	PROLOGUE(parseFlingAnyBehavScopeItemAssign);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclCompositeType() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclCompositeType);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclCompositeTypeStruct() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclCompositeTypeStruct);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclCompositeTypeStructItem() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclCompositeTypeStructItem);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingCompositeTypeStructItemGen() -> ParseRet
-//{
-//	PROLOGUE(parseFlingCompositeTypeStructItemGen);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingCompositeTypeStructItemGenIf() -> ParseRet
-//{
-//	PROLOGUE(parseFlingCompositeTypeStructItemGenIf);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingCompositeTypeStructItemGenSwitchEtc() -> ParseRet
-//{
-//	PROLOGUE(parseFlingCompositeTypeStructItemGenSwitchEtc);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingCompositeTypeStructItemGenSwitchEtcCase() -> ParseRet
-//{
-//	PROLOGUE(parseFlingCompositeTypeStructItemGenSwitchEtcCase);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingCompositeTypeStructItemGenSwitchEtcDefault() -> ParseRet
-//{
-//	PROLOGUE(parseFlingCompositeTypeStructItemGenSwitchEtcDefault);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingCompositeTypeStructItemGenFor() -> ParseRet
-//{
-//	PROLOGUE(parseFlingCompositeTypeStructItemGenFor);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclEnum() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclEnum);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclEnumItem() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclEnumItem);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclSubprog() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclSubprog);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclSubprogFuncHeader() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclSubprogFuncHeader);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclSubprogTaskHeader() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclSubprogTaskHeader);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclSubprogScope() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclSubprogScope);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclSubprogScopeItem() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclSubprogScopeItem);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclSubprogScopeItemIf() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclSubprogScopeItemIf);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclSubprogScopeItemSwitchEtc() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclSubprogScopeItemSwitchEtc);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclSubprogScopeItemSwitchEtcCase() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclSubprogScopeItemSwitchEtcCase);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclSubprogScopeItemSwitchEtcDefault() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclSubprogScopeItemSwitchEtcDefault);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclSubprogScopeItemFor() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclSubprogScopeItemFor);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclSubprogScopeItemWhile() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclSubprogScopeItemWhile);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclSubprogScopeItemGen() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclSubprogScopeItemGen);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclSubprogScopeItemGenIf() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclSubprogScopeItemGenIf);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclSubprogScopeItemGenSwitchEtc() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclSubprogScopeItemGenSwitchEtc);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclSubprogScopeItemGenSwitchEtcCase() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclSubprogScopeItemGenSwitchEtcCase);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclSubprogScopeItemGenSwitchEtcDefault() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclSubprogScopeItemGenSwitchEtcDefault);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclSubprogScopeItemGenFor() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclSubprogScopeItemGenFor);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclConst() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclConst);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclVarNoInitVal() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclVarNoInitVal);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclVar() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclVar);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclWire() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclWire);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingWireAssign() -> ParseRet
-//{
-//	PROLOGUE(parseFlingWireAssign);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingDeclAlias() -> ParseRet
-//{
-//	PROLOGUE(parseFlingDeclAlias);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingScopedIdent() -> ParseRet
-//{
-//	PROLOGUE(parseFlingScopedIdent);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingIdentList() -> ParseRet
-//{
-//	PROLOGUE(parseFlingIdentList);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingSubprogIdentList() -> ParseRet
-//{
-//	PROLOGUE(parseFlingSubprogIdentList);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingExprList() -> ParseRet
-//{
-//	PROLOGUE(parseFlingExprList);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingRangeList() -> ParseRet
-//{
-//	PROLOGUE(parseFlingRangeList);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingExprOrRangeList() -> ParseRet
-//{
-//	PROLOGUE(parseFlingExprOrRangeList);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingTypenmOrModnmList() -> ParseRet
-//{
-//	PROLOGUE(parseFlingTypenmOrModnmList);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingImportItem() -> ParseRet
-//{
-//	PROLOGUE(parseFlingImportItem);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingImportItemList() -> ParseRet
-//{
-//	PROLOGUE(parseFlingImportItemList);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingExpr() -> ParseRet
-//{
-//	PROLOGUE(parseFlingExpr);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingMuxExpr() -> ParseRet
-//{
-//	PROLOGUE(parseFlingMuxExpr);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingLogorExpr() -> ParseRet
-//{
-//	PROLOGUE(parseFlingLogorExpr);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingLogandExpr() -> ParseRet
-//{
-//	PROLOGUE(parseFlingLogandExpr);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingCmpEqEtcExpr() -> ParseRet
-//{
-//	PROLOGUE(parseFlingCmpEqEtcExpr);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingCmpLtEtcExpr() -> ParseRet
-//{
-//	PROLOGUE(parseFlingCmpLtEtcExpr);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingPlusMinusExpr() -> ParseRet
-//{
-//	PROLOGUE(parseFlingPlusMinusExpr);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingMulDivModExpr() -> ParseRet
-//{
-//	PROLOGUE(parseFlingMulDivModExpr);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingBitorBitnorExpr() -> ParseRet
-//{
-//	PROLOGUE(parseFlingBitorBitnorExpr);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingBitandBitnandExpr() -> ParseRet
-//{
-//	PROLOGUE(parseFlingBitandBitnandExpr);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingBitxorBitxnorExpr() -> ParseRet
-//{
-//	PROLOGUE(parseFlingBitxorBitxnorExpr);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingBitshiftExpr() -> ParseRet
-//{
-//	PROLOGUE(parseFlingBitshiftExpr);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingUnaryExpr() -> ParseRet
-//{
-//	PROLOGUE(parseFlingUnaryExpr);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingLowExpr() -> ParseRet
-//{
-//	PROLOGUE(parseFlingLowExpr);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingCallDollarFuncExpr() -> ParseRet
-//{
-//	PROLOGUE(parseFlingCallDollarFuncExpr);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingCallSubprogExpr() -> ParseRet
-//{
-//	PROLOGUE(parseFlingCallSubprogExpr);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingSubprogIdent() -> ParseRet
-//{
-//	PROLOGUE(parseFlingSubprogIdent);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingIdentExpr() -> ParseRet
-//{
-//	PROLOGUE(parseFlingIdentExpr);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingCatExpr() -> ParseRet
-//{
-//	PROLOGUE(parseFlingCatExpr);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingReplExpr() -> ParseRet
-//{
-//	PROLOGUE(parseFlingReplExpr);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingSizedExpr() -> ParseRet
-//{
-//	PROLOGUE(parseFlingSizedExpr);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingRange() -> ParseRet
-//{
-//	PROLOGUE(parseFlingRange);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingNonSimpleRange() -> ParseRet
-//{
-//	PROLOGUE(parseFlingNonSimpleRange);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingSimpleRangeSuffix() -> ParseRet
-//{
-//	PROLOGUE(parseFlingSimpleRangeSuffix);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingExprOrRange() -> ParseRet
-//{
-//	PROLOGUE(parseFlingExprOrRange);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingTypenmOrModnmCstmStart() -> ParseRet
-//{
-//	PROLOGUE(parseFlingTypenmOrModnmCstmStart);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingTypenmOrModnmCstmChainItem() -> ParseRet
-//{
-//	PROLOGUE(parseFlingTypenmOrModnmCstmChainItem);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
-//auto Parser::parseFlingTypenmOrModnm() -> ParseRet
-//{
-//	PROLOGUE(parseFlingTypenmOrModnm);
-//
-//	if (just_get_valid_tokens())
-//	{
-//		TokSet ret;
-//
-//		return ret;
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
+auto Parser::_parseFlingDeclPackage() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclPackage);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclPackageItem() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclPackageItem);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingImport() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingImport);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclParamList() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclParamList);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclParamListItem() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclParamListItem);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclArgList() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclArgList);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclArgListItem() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclArgListItem);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingInstParamList() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingInstParamList);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingInstParamListPos() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingInstParamListPos);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingInstParamListPosItem() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingInstParamListPosItem);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingInstParamListNamed() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingInstParamListNamed);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingInstParamListNamedItem() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingInstParamListNamedItem);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingInstArgList() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingInstArgList);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingInstArgListPos() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingInstArgListPos);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingInstArgListPosItem() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingInstArgListPosItem);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingInstArgListNamed() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingInstArgListNamed);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingInstArgListNamedItem() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingInstArgListNamedItem);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModule() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModule);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModuleScope() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleScope);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModuleItem() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleItem);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingModinst() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingModinst);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModuleGen() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleGen);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModuleGenIf() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleGenIf);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModuleGenSwitchEtc() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleGenSwitchEtc);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModuleGenSwitchEtcCase() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleGenSwitchEtcCase);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModuleGenSwitchEtcDefault() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleGenSwitchEtcDefault);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModuleGenFor() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleGenFor);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModuleBehav() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehav);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModuleBehavComb() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavComb);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModuleBehavSeq() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavSeq);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModuleBehavSeqEdgeItem() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavSeqEdgeItem);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModuleBehavScope() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScope);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModuleBehavScopeItem() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItem);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModuleBehavScopeItemIf() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItemIf);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModuleBehavScopeItemSwitchEtc() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItemSwitchEtc);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModuleBehavScopeItemSwitchEtcCase() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItemSwitchEtcCase);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModuleBehavScopeItemSwitchEtcDefault() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItemSwitchEtcDefault);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModuleBehavScopeItemFor() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItemFor);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModuleBehavScopeItemWhile() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItemWhile);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModuleBehavScopeItemGen() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItemGen);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModuleBehavScopeItemGenIf() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItemGenIf);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModuleBehavScopeItemGenSwitchEtc() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItemGenSwitchEtc);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModuleBehavScopeItemGenSwitchEtcCase() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItemGenSwitchEtcCase);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModuleBehavScopeItemGenSwitchEtcDefault() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItemGenSwitchEtcDefault);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclModuleBehavScopeItemGenFor() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItemGenFor);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingAnyBehavScopeItem() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingAnyBehavScopeItem);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingAnyBehavScopeItemAssign() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingAnyBehavScopeItemAssign);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclCompositeType() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclCompositeType);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclCompositeTypeStruct() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclCompositeTypeStruct);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclCompositeTypeStructItem() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclCompositeTypeStructItem);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingCompositeTypeStructItemGen() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingCompositeTypeStructItemGen);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingCompositeTypeStructItemGenIf() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingCompositeTypeStructItemGenIf);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingCompositeTypeStructItemGenSwitchEtc() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingCompositeTypeStructItemGenSwitchEtc);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingCompositeTypeStructItemGenSwitchEtcCase() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingCompositeTypeStructItemGenSwitchEtcCase);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingCompositeTypeStructItemGenSwitchEtcDefault() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingCompositeTypeStructItemGenSwitchEtcDefault);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingCompositeTypeStructItemGenFor() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingCompositeTypeStructItemGenFor);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclEnum() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclEnum);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclEnumItem() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclEnumItem);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclSubprog() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprog);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclSubprogFuncHeader() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogFuncHeader);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclSubprogTaskHeader() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogTaskHeader);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclSubprogScope() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScope);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclSubprogScopeItem() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItem);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclSubprogScopeItemIf() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItemIf);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclSubprogScopeItemSwitchEtc() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItemSwitchEtc);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclSubprogScopeItemSwitchEtcCase() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItemSwitchEtcCase);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclSubprogScopeItemSwitchEtcDefault() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItemSwitchEtcDefault);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclSubprogScopeItemFor() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItemFor);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclSubprogScopeItemWhile() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItemWhile);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclSubprogScopeItemGen() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItemGen);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclSubprogScopeItemGenIf() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItemGenIf);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclSubprogScopeItemGenSwitchEtc() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItemGenSwitchEtc);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclSubprogScopeItemGenSwitchEtcCase() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItemGenSwitchEtcCase);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclSubprogScopeItemGenSwitchEtcDefault() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItemGenSwitchEtcDefault);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclSubprogScopeItemGenFor() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItemGenFor);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclConst() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclConst);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclVarNoInitVal() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclVarNoInitVal);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclVar() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclVar);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclWire() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclWire);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingWireAssign() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingWireAssign);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclAlias() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclAlias);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingScopedIdent() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingScopedIdent);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingIdentList() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingIdentList);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingSubprogIdentList() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingSubprogIdentList);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingExprList() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingExprList);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingRangeList() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingRangeList);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+//auto Parser::_parseFlingExprOrRangeList() -> ParseRet
+//{
+//	PROLOGUE_AND_EPILOGUE(_parseFlingExprOrRangeList);
+//
+//	if (just_get_valid_tokens())
+//	{
+//		TokSet ret;
+//
+//		return ret;
+//	}
+//	else // if (!just_get_valid_tokens())
+//	{
+//		return std::nullopt;
+//	}
+//}
+auto Parser::_parseFlingTypenmOrModnmList() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingTypenmOrModnmList);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingImportItem() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingImportItem);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingImportItemList() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingImportItemList);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingExpr() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingExpr);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingMuxExpr() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingMuxExpr);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingLogorExpr() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingLogorExpr);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingLogandExpr() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingLogandExpr);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingCmpEqEtcExpr() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingCmpEqEtcExpr);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingCmpLtEtcExpr() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingCmpLtEtcExpr);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingPlusMinusExpr() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingPlusMinusExpr);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingMulDivModExpr() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingMulDivModExpr);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingBitorBitnorExpr() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingBitorBitnorExpr);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingBitandBitnandExpr() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingBitandBitnandExpr);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingBitxorBitxnorExpr() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingBitxorBitxnorExpr);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingBitshiftExpr() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingBitshiftExpr);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingUnaryExpr() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingUnaryExpr);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingLowExpr() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingLowExpr);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingCallDollarFuncExpr() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingCallDollarFuncExpr);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingCallSubprogExpr() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingCallSubprogExpr);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingSubprogIdent() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingSubprogIdent);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingIdentExpr() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingIdentExpr);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingCatExpr() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingCatExpr);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingReplExpr() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingReplExpr);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingSizedExpr() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingSizedExpr);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingRange() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingRange);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingNonSimpleRange() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingNonSimpleRange);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingSimpleRangeSuffix() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingSimpleRangeSuffix);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingExprOrRange() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingExprOrRange);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingTypenmOrModnmCstmStart() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingTypenmOrModnmCstmStart);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingTypenmOrModnmCstmChainItem() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingTypenmOrModnmCstmChainItem);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingTypenmOrModnm() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingTypenmOrModnm);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
 
 #define X(name, dummy_0) \
 	auto Parser::parseTok##name() -> ParseRet \
 	{ \
-		PROLOGUE(parseTok##name); \
+		PROLOGUE_AND_EPILOGUE(parseTok##name); \
 		\
 		if (just_get_valid_tokens()) \
 		{ \

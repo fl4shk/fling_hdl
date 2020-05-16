@@ -206,7 +206,11 @@ public:		// functions
 //--------
 
 //--------
-//class InstParamListItem: public Base
+class InstParamOrArgListPosItem: public Base
+{
+public:		// variables
+public:		// functions
+};
 //--------
 
 

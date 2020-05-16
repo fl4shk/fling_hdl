@@ -626,9 +626,9 @@ flingExprList:
 flingRangeList:
 	flingRange (PunctComma flingRange)*
 	;
-flingExprOrRangeList:
-	flingExprOrRange (PunctComma flingExprOrRange)*
-	;
+//flingExprOrRangeList:
+//	flingExprOrRange (PunctComma flingExprOrRange)*
+//	;
 
 flingTypenmOrModnmList:
 	flingTypenmOrModnm (PunctComma flingTypenmOrModnm)*
@@ -797,7 +797,7 @@ flingIdentExpr:
 		// Access a slice.
 		(
 			// It is used here to keep the grammar LL(1).
-			PunctSliceStart
+			PunctVectorStart
 				(
 					// Regular range
 					flingRange
@@ -848,9 +848,14 @@ flingNonSimpleRange:
 	| KwRange 
 		(
 			PunctLparen flingExpr (PunctComma flingExpr)? PunctRparen
-			| MiscIdent (flingInstParamList?
-				flingTypenmOrModnmCstmChainItem*
-				PunctScopeAccess MiscIdent)?
+
+			//| MiscIdent (flingInstParamList?
+			//	flingTypenmOrModnmCstmChainItem*
+			//	PunctScopeAccess MiscIdent)?
+
+			// I don't remember what the stuff from above is supposed to
+			// be.
+			| MiscIdent
 		)
 	;
 
@@ -879,7 +884,10 @@ flingTypenmOrModnm:
 		| KwInteger
 	)
 		// Array dimensions
-		(PunctLbracket flingExprOrRange PunctRbracket)*
+		(PunctLbracket flingExpr PunctRbracket)*
+
+		// Vector dimensions
+		(PunctVectorStart flingExprOrRange PunctRbracket)?
 	;
 //--------
 
@@ -995,7 +1003,7 @@ PunctMapTo: '=>' ;
 
 //--------
 // The hash character looks like something has been sliced.
-PunctSliceStart: '#[' ;
+PunctVectorStart: '#[' ;
 //--------
 
 //--------
