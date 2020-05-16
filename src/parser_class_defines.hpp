@@ -14,8 +14,8 @@
 	BaseSptrList name; \
 	AstNodeListDeferredPusher deferred_pusher_ ## name (this, &name)
 
-#define DEFER_RESTORE_PARSE_FUNC_STR(str) \
-	ParseFuncStrDeferredRestorer deferred_restorer (this, #str)
+#define PROLOGUE(str) \
+	ParseFuncStrDeferredRestorer deferred_restorer (this, #str); \
 
 #define internal_err(func) \
 	_internal_err(ctx, #func)

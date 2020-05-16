@@ -17,7 +17,7 @@ int Parser::run()
 	parseFlingProgram();
 }
 
-void Parser::parseFlingProgram()
+auto Parser::parseFlingProgram() -> ParseRet
 {
 	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingProgram);
 
@@ -25,1080 +25,1792 @@ void Parser::parseFlingProgram()
 	{
 	}
 	JUST_EXPECT(MiscEof);
+
+	return std::nullopt;
 }
-void Parser::parseFlingDeclPackage()
+auto Parser::parseFlingDeclPackage() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclPackage);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclPackageItem()
+auto Parser::parseFlingDeclPackageItem() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclPackageItem);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingImport()
+auto Parser::parseFlingImport() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingImport);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclParamList()
+auto Parser::parseFlingDeclParamList() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclParamList);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclParamListItem()
+auto Parser::parseFlingDeclParamListItem() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclParamListItem);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclArgList()
+auto Parser::parseFlingDeclArgList() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclArgList);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclArgListItem()
+auto Parser::parseFlingDeclArgListItem() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclArgListItem);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingInstParamList()
+auto Parser::parseFlingInstParamList() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingInstParamList);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingInstParamListPos()
+auto Parser::parseFlingInstParamListPos() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingInstParamListPos);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingInstParamListPosItem()
+auto Parser::parseFlingInstParamListPosItem() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingInstParamListPosItem);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingInstParamListNamed()
+auto Parser::parseFlingInstParamListNamed() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingInstParamListNamed);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingInstParamListNamedItem()
+auto Parser::parseFlingInstParamListNamedItem() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingInstParamListNamedItem);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingInstArgList()
+auto Parser::parseFlingInstArgList() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingInstArgList);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingInstArgListPos()
+auto Parser::parseFlingInstArgListPos() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingInstArgListPos);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingInstArgListPosItem()
+auto Parser::parseFlingInstArgListPosItem() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingInstArgListPosItem);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingInstArgListNamed()
+auto Parser::parseFlingInstArgListNamed() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingInstArgListNamed);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingInstArgListNamedItem()
+auto Parser::parseFlingInstArgListNamedItem() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingInstArgListNamedItem);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModule()
+auto Parser::parseFlingDeclModule() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModule);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModuleScope()
+auto Parser::parseFlingDeclModuleScope() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleScope);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModuleItem()
+auto Parser::parseFlingDeclModuleItem() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleItem);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingModinst()
+auto Parser::parseFlingModinst() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingModinst);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModuleGen()
+auto Parser::parseFlingDeclModuleGen() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleGen);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModuleGenIf()
+auto Parser::parseFlingDeclModuleGenIf() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleGenIf);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModuleGenSwitchEtc()
+auto Parser::parseFlingDeclModuleGenSwitchEtc() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleGenSwitchEtc);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModuleGenSwitchEtcCase()
+auto Parser::parseFlingDeclModuleGenSwitchEtcCase() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleGenSwitchEtcCase);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModuleGenSwitchEtcDefault()
+auto Parser::parseFlingDeclModuleGenSwitchEtcDefault() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleGenSwitchEtcDefault);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModuleGenFor()
+auto Parser::parseFlingDeclModuleGenFor() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleGenFor);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModuleBehav()
+auto Parser::parseFlingDeclModuleBehav() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehav);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModuleBehavComb()
+auto Parser::parseFlingDeclModuleBehavComb() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavComb);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModuleBehavSeq()
+auto Parser::parseFlingDeclModuleBehavSeq() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavSeq);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModuleBehavSeqEdgeItem()
+auto Parser::parseFlingDeclModuleBehavSeqEdgeItem() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavSeqEdgeItem);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModuleBehavScope()
+auto Parser::parseFlingDeclModuleBehavScope() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScope);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModuleBehavScopeItem()
+auto Parser::parseFlingDeclModuleBehavScopeItem() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScopeItem);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModuleBehavScopeItemIf()
+auto Parser::parseFlingDeclModuleBehavScopeItemIf() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScopeItemIf);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModuleBehavScopeItemSwitchEtc()
+auto Parser::parseFlingDeclModuleBehavScopeItemSwitchEtc() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScopeItemSwitchEtc);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModuleBehavScopeItemSwitchEtcCase()
+auto Parser::parseFlingDeclModuleBehavScopeItemSwitchEtcCase() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScopeItemSwitchEtcCase);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModuleBehavScopeItemSwitchEtcDefault()
+auto Parser::parseFlingDeclModuleBehavScopeItemSwitchEtcDefault() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScopeItemSwitchEtcDefault);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModuleBehavScopeItemFor()
+auto Parser::parseFlingDeclModuleBehavScopeItemFor() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScopeItemFor);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModuleBehavScopeItemWhile()
+auto Parser::parseFlingDeclModuleBehavScopeItemWhile() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScopeItemWhile);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModuleBehavScopeItemGen()
+auto Parser::parseFlingDeclModuleBehavScopeItemGen() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScopeItemGen);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModuleBehavScopeItemGenIf()
+auto Parser::parseFlingDeclModuleBehavScopeItemGenIf() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScopeItemGenIf);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModuleBehavScopeItemGenSwitchEtc()
+auto Parser::parseFlingDeclModuleBehavScopeItemGenSwitchEtc() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScopeItemGenSwitchEtc);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModuleBehavScopeItemGenSwitchEtcCase()
+auto Parser::parseFlingDeclModuleBehavScopeItemGenSwitchEtcCase() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScopeItemGenSwitchEtcCase);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModuleBehavScopeItemGenSwitchEtcDefault()
+auto Parser::parseFlingDeclModuleBehavScopeItemGenSwitchEtcDefault() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScopeItemGenSwitchEtcDefault);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclModuleBehavScopeItemGenFor()
+auto Parser::parseFlingDeclModuleBehavScopeItemGenFor() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScopeItemGenFor);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingAnyBehavScopeItem()
+auto Parser::parseFlingAnyBehavScopeItem() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingAnyBehavScopeItem);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingAnyBehavScopeItemAssign()
+auto Parser::parseFlingAnyBehavScopeItemAssign() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingAnyBehavScopeItemAssign);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclCompositeType()
+auto Parser::parseFlingDeclCompositeType() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclCompositeType);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclCompositeTypeStruct()
+auto Parser::parseFlingDeclCompositeTypeStruct() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclCompositeTypeStruct);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclCompositeTypeStructItem()
+auto Parser::parseFlingDeclCompositeTypeStructItem() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclCompositeTypeStructItem);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingCompositeTypeStructItemGen()
+auto Parser::parseFlingCompositeTypeStructItemGen() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingCompositeTypeStructItemGen);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingCompositeTypeStructItemGenIf()
+auto Parser::parseFlingCompositeTypeStructItemGenIf() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingCompositeTypeStructItemGenIf);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingCompositeTypeStructItemGenSwitchEtc()
+auto Parser::parseFlingCompositeTypeStructItemGenSwitchEtc() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingCompositeTypeStructItemGenSwitchEtc);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingCompositeTypeStructItemGenSwitchEtcCase()
+auto Parser::parseFlingCompositeTypeStructItemGenSwitchEtcCase() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingCompositeTypeStructItemGenSwitchEtcCase);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingCompositeTypeStructItemGenSwitchEtcDefault()
+auto Parser::parseFlingCompositeTypeStructItemGenSwitchEtcDefault() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingCompositeTypeStructItemGenSwitchEtcDefault);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingCompositeTypeStructItemGenFor()
+auto Parser::parseFlingCompositeTypeStructItemGenFor() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingCompositeTypeStructItemGenFor);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclEnum()
+auto Parser::parseFlingDeclEnum() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclEnum);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclEnumItem()
+auto Parser::parseFlingDeclEnumItem() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclEnumItem);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclSubprog()
+auto Parser::parseFlingDeclSubprog() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprog);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclSubprogFuncHeader()
+auto Parser::parseFlingDeclSubprogFuncHeader() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogFuncHeader);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclSubprogTaskHeader()
+auto Parser::parseFlingDeclSubprogTaskHeader() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogTaskHeader);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclSubprogScope()
+auto Parser::parseFlingDeclSubprogScope() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScope);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclSubprogScopeItem()
+auto Parser::parseFlingDeclSubprogScopeItem() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScopeItem);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclSubprogScopeItemIf()
+auto Parser::parseFlingDeclSubprogScopeItemIf() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScopeItemIf);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclSubprogScopeItemSwitchEtc()
+auto Parser::parseFlingDeclSubprogScopeItemSwitchEtc() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScopeItemSwitchEtc);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclSubprogScopeItemSwitchEtcCase()
+auto Parser::parseFlingDeclSubprogScopeItemSwitchEtcCase() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScopeItemSwitchEtcCase);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclSubprogScopeItemSwitchEtcDefault()
+auto Parser::parseFlingDeclSubprogScopeItemSwitchEtcDefault() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScopeItemSwitchEtcDefault);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclSubprogScopeItemFor()
+auto Parser::parseFlingDeclSubprogScopeItemFor() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScopeItemFor);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclSubprogScopeItemWhile()
+auto Parser::parseFlingDeclSubprogScopeItemWhile() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScopeItemWhile);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclSubprogScopeItemGen()
+auto Parser::parseFlingDeclSubprogScopeItemGen() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScopeItemGen);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclSubprogScopeItemGenIf()
+auto Parser::parseFlingDeclSubprogScopeItemGenIf() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScopeItemGenIf);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclSubprogScopeItemGenSwitchEtc()
+auto Parser::parseFlingDeclSubprogScopeItemGenSwitchEtc() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScopeItemGenSwitchEtc);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclSubprogScopeItemGenSwitchEtcCase()
+auto Parser::parseFlingDeclSubprogScopeItemGenSwitchEtcCase() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScopeItemGenSwitchEtcCase);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclSubprogScopeItemGenSwitchEtcDefault()
+auto Parser::parseFlingDeclSubprogScopeItemGenSwitchEtcDefault() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScopeItemGenSwitchEtcDefault);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclSubprogScopeItemGenFor()
+auto Parser::parseFlingDeclSubprogScopeItemGenFor() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScopeItemGenFor);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclConst()
+auto Parser::parseFlingDeclConst() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclConst);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclVarNoInitVal()
+auto Parser::parseFlingDeclVarNoInitVal() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclVarNoInitVal);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclVar()
+auto Parser::parseFlingDeclVar() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclVar);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclWire()
+auto Parser::parseFlingDeclWire() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclWire);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingWireAssign()
+auto Parser::parseFlingWireAssign() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingWireAssign);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingDeclAlias()
+auto Parser::parseFlingDeclAlias() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclAlias);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingScopedIdent()
+auto Parser::parseFlingScopedIdent() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingScopedIdent);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingIdentList()
+auto Parser::parseFlingIdentList() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingIdentList);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingSubprogIdentList()
+auto Parser::parseFlingSubprogIdentList() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingSubprogIdentList);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingExprList()
+auto Parser::parseFlingExprList() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingExprList);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingRangeList()
+auto Parser::parseFlingRangeList() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingRangeList);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingExprOrRangeList()
+auto Parser::parseFlingExprOrRangeList() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingExprOrRangeList);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingTypenmOrModnmList()
+auto Parser::parseFlingTypenmOrModnmList() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingTypenmOrModnmList);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingImportItem()
+auto Parser::parseFlingImportItem() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingImportItem);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingImportItemList()
+auto Parser::parseFlingImportItemList() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingImportItemList);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingExpr()
+auto Parser::parseFlingExpr() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingExpr);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingMuxExpr()
+auto Parser::parseFlingMuxExpr() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingMuxExpr);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingLogorExpr()
+auto Parser::parseFlingLogorExpr() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingLogorExpr);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingLogandExpr()
+auto Parser::parseFlingLogandExpr() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingLogandExpr);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingCmpEqEtcExpr()
+auto Parser::parseFlingCmpEqEtcExpr() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingCmpEqEtcExpr);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingCmpLtEtcExpr()
+auto Parser::parseFlingCmpLtEtcExpr() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingCmpLtEtcExpr);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingPlusMinusExpr()
+auto Parser::parseFlingPlusMinusExpr() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingPlusMinusExpr);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingMulDivModExpr()
+auto Parser::parseFlingMulDivModExpr() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingMulDivModExpr);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingBitorBitnorExpr()
+auto Parser::parseFlingBitorBitnorExpr() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingBitorBitnorExpr);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingBitandBitnandExpr()
+auto Parser::parseFlingBitandBitnandExpr() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingBitandBitnandExpr);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingBitxorBitxnorExpr()
+auto Parser::parseFlingBitxorBitxnorExpr() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingBitxorBitxnorExpr);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingBitshiftExpr()
+auto Parser::parseFlingBitshiftExpr() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingBitshiftExpr);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingUnaryExpr()
+auto Parser::parseFlingUnaryExpr() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingUnaryExpr);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingLowExpr()
+auto Parser::parseFlingLowExpr() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingLowExpr);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingCallDollarFuncExpr()
+auto Parser::parseFlingCallDollarFuncExpr() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingCallDollarFuncExpr);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingCallSubprogExpr()
+auto Parser::parseFlingCallSubprogExpr() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingCallSubprogExpr);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingSubprogIdent()
+auto Parser::parseFlingSubprogIdent() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingSubprogIdent);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingIdentExpr()
+auto Parser::parseFlingIdentExpr() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingIdentExpr);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingCatExpr()
+auto Parser::parseFlingCatExpr() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingCatExpr);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingReplExpr()
+auto Parser::parseFlingReplExpr() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingReplExpr);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingSizedExpr()
+auto Parser::parseFlingSizedExpr() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingSizedExpr);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingRange()
+auto Parser::parseFlingRange() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingRange);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingNonSimpleRange()
+auto Parser::parseFlingNonSimpleRange() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingNonSimpleRange);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingSimpleRangeSuffix()
+auto Parser::parseFlingSimpleRangeSuffix() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingSimpleRangeSuffix);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingExprOrRange()
+auto Parser::parseFlingExprOrRange() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingExprOrRange);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingTypenmOrModnmCstmStart()
+auto Parser::parseFlingTypenmOrModnmCstmStart() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingTypenmOrModnmCstmStart);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingTypenmOrModnmCstmChainItem()
+auto Parser::parseFlingTypenmOrModnmCstmChainItem() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingTypenmOrModnmCstmChainItem);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
-void Parser::parseFlingTypenmOrModnm()
+auto Parser::parseFlingTypenmOrModnm() -> ParseRet
 {
-	if (just_test())
+	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingTypenmOrModnm);
+
+	if (just_get_valid_tokens())
 	{
+		JtParseRet ret;
+
+		return ret;
 	}
-	else // if (!just_test())
+	else // if (!just_get_valid_tokens())
 	{
+		return std::nullopt;
 	}
 }
 
 #define X(name, dummy_0) \
-	void Parser::parseTok##name() \
+	auto Parser::parseTok##name() -> ParseRet \
 	{ \
-		if (just_test()) \
+		DEFER_RESTORE_PARSE_FUNC_STR(parseTok##name); \
+		\
+		if (just_get_valid_tokens()) \
 		{ \
-			JustTestParseRet ret; \
+			JtParseRet ret; \
+			ret.first = TOK_SET(
 			return ret; \
 		} \
-		else /* if (!just_test()) */ \
+		else /* if (!just_get_valid_tokens()) */ \
 		{ \
 			JUST_EXPECT(name); \
 			return std::nullopt; \
