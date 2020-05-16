@@ -3,7 +3,7 @@
 
 // src/ast/ast_visitor_class.hpp
 
-#include "misc_includes.hpp"
+#include "../misc_includes.hpp"
 
 #include "list_of_ast_node_classes_define.hpp"
 
