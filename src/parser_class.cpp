@@ -19,7 +19,7 @@ int Parser::run()
 
 auto Parser::parseFlingProgram() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingProgram);
+	PROLOGUE(parseFlingProgram);
 
 	while (!CMP_LEX_TOK(MiscEof))
 	{
@@ -30,7 +30,7 @@ auto Parser::parseFlingProgram() -> ParseRet
 }
 auto Parser::parseFlingDeclPackage() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclPackage);
+	PROLOGUE(parseFlingDeclPackage);
 
 	if (just_get_valid_tokens())
 	{
@@ -45,7 +45,7 @@ auto Parser::parseFlingDeclPackage() -> ParseRet
 }
 auto Parser::parseFlingDeclPackageItem() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclPackageItem);
+	PROLOGUE(parseFlingDeclPackageItem);
 
 	if (just_get_valid_tokens())
 	{
@@ -60,7 +60,7 @@ auto Parser::parseFlingDeclPackageItem() -> ParseRet
 }
 auto Parser::parseFlingImport() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingImport);
+	PROLOGUE(parseFlingImport);
 
 	if (just_get_valid_tokens())
 	{
@@ -75,7 +75,7 @@ auto Parser::parseFlingImport() -> ParseRet
 }
 auto Parser::parseFlingDeclParamList() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclParamList);
+	PROLOGUE(parseFlingDeclParamList);
 
 	if (just_get_valid_tokens())
 	{
@@ -90,7 +90,7 @@ auto Parser::parseFlingDeclParamList() -> ParseRet
 }
 auto Parser::parseFlingDeclParamListItem() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclParamListItem);
+	PROLOGUE(parseFlingDeclParamListItem);
 
 	if (just_get_valid_tokens())
 	{
@@ -105,7 +105,7 @@ auto Parser::parseFlingDeclParamListItem() -> ParseRet
 }
 auto Parser::parseFlingDeclArgList() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclArgList);
+	PROLOGUE(parseFlingDeclArgList);
 
 	if (just_get_valid_tokens())
 	{
@@ -120,7 +120,7 @@ auto Parser::parseFlingDeclArgList() -> ParseRet
 }
 auto Parser::parseFlingDeclArgListItem() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclArgListItem);
+	PROLOGUE(parseFlingDeclArgListItem);
 
 	if (just_get_valid_tokens())
 	{
@@ -135,7 +135,7 @@ auto Parser::parseFlingDeclArgListItem() -> ParseRet
 }
 auto Parser::parseFlingInstParamList() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingInstParamList);
+	PROLOGUE(parseFlingInstParamList);
 
 	if (just_get_valid_tokens())
 	{
@@ -150,7 +150,7 @@ auto Parser::parseFlingInstParamList() -> ParseRet
 }
 auto Parser::parseFlingInstParamListPos() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingInstParamListPos);
+	PROLOGUE(parseFlingInstParamListPos);
 
 	if (just_get_valid_tokens())
 	{
@@ -165,7 +165,7 @@ auto Parser::parseFlingInstParamListPos() -> ParseRet
 }
 auto Parser::parseFlingInstParamListPosItem() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingInstParamListPosItem);
+	PROLOGUE(parseFlingInstParamListPosItem);
 
 	if (just_get_valid_tokens())
 	{
@@ -180,7 +180,7 @@ auto Parser::parseFlingInstParamListPosItem() -> ParseRet
 }
 auto Parser::parseFlingInstParamListNamed() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingInstParamListNamed);
+	PROLOGUE(parseFlingInstParamListNamed);
 
 	if (just_get_valid_tokens())
 	{
@@ -195,7 +195,7 @@ auto Parser::parseFlingInstParamListNamed() -> ParseRet
 }
 auto Parser::parseFlingInstParamListNamedItem() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingInstParamListNamedItem);
+	PROLOGUE(parseFlingInstParamListNamedItem);
 
 	if (just_get_valid_tokens())
 	{
@@ -210,7 +210,7 @@ auto Parser::parseFlingInstParamListNamedItem() -> ParseRet
 }
 auto Parser::parseFlingInstArgList() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingInstArgList);
+	PROLOGUE(parseFlingInstArgList);
 
 	if (just_get_valid_tokens())
 	{
@@ -225,7 +225,7 @@ auto Parser::parseFlingInstArgList() -> ParseRet
 }
 auto Parser::parseFlingInstArgListPos() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingInstArgListPos);
+	PROLOGUE(parseFlingInstArgListPos);
 
 	if (just_get_valid_tokens())
 	{
@@ -240,7 +240,7 @@ auto Parser::parseFlingInstArgListPos() -> ParseRet
 }
 auto Parser::parseFlingInstArgListPosItem() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingInstArgListPosItem);
+	PROLOGUE(parseFlingInstArgListPosItem);
 
 	if (just_get_valid_tokens())
 	{
@@ -255,7 +255,7 @@ auto Parser::parseFlingInstArgListPosItem() -> ParseRet
 }
 auto Parser::parseFlingInstArgListNamed() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingInstArgListNamed);
+	PROLOGUE(parseFlingInstArgListNamed);
 
 	if (just_get_valid_tokens())
 	{
@@ -270,7 +270,7 @@ auto Parser::parseFlingInstArgListNamed() -> ParseRet
 }
 auto Parser::parseFlingInstArgListNamedItem() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingInstArgListNamedItem);
+	PROLOGUE(parseFlingInstArgListNamedItem);
 
 	if (just_get_valid_tokens())
 	{
@@ -285,7 +285,7 @@ auto Parser::parseFlingInstArgListNamedItem() -> ParseRet
 }
 auto Parser::parseFlingDeclModule() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModule);
+	PROLOGUE(parseFlingDeclModule);
 
 	if (just_get_valid_tokens())
 	{
@@ -300,7 +300,7 @@ auto Parser::parseFlingDeclModule() -> ParseRet
 }
 auto Parser::parseFlingDeclModuleScope() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleScope);
+	PROLOGUE(parseFlingDeclModuleScope);
 
 	if (just_get_valid_tokens())
 	{
@@ -315,7 +315,7 @@ auto Parser::parseFlingDeclModuleScope() -> ParseRet
 }
 auto Parser::parseFlingDeclModuleItem() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleItem);
+	PROLOGUE(parseFlingDeclModuleItem);
 
 	if (just_get_valid_tokens())
 	{
@@ -330,7 +330,7 @@ auto Parser::parseFlingDeclModuleItem() -> ParseRet
 }
 auto Parser::parseFlingModinst() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingModinst);
+	PROLOGUE(parseFlingModinst);
 
 	if (just_get_valid_tokens())
 	{
@@ -345,7 +345,7 @@ auto Parser::parseFlingModinst() -> ParseRet
 }
 auto Parser::parseFlingDeclModuleGen() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleGen);
+	PROLOGUE(parseFlingDeclModuleGen);
 
 	if (just_get_valid_tokens())
 	{
@@ -360,7 +360,7 @@ auto Parser::parseFlingDeclModuleGen() -> ParseRet
 }
 auto Parser::parseFlingDeclModuleGenIf() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleGenIf);
+	PROLOGUE(parseFlingDeclModuleGenIf);
 
 	if (just_get_valid_tokens())
 	{
@@ -375,7 +375,7 @@ auto Parser::parseFlingDeclModuleGenIf() -> ParseRet
 }
 auto Parser::parseFlingDeclModuleGenSwitchEtc() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleGenSwitchEtc);
+	PROLOGUE(parseFlingDeclModuleGenSwitchEtc);
 
 	if (just_get_valid_tokens())
 	{
@@ -390,7 +390,7 @@ auto Parser::parseFlingDeclModuleGenSwitchEtc() -> ParseRet
 }
 auto Parser::parseFlingDeclModuleGenSwitchEtcCase() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleGenSwitchEtcCase);
+	PROLOGUE(parseFlingDeclModuleGenSwitchEtcCase);
 
 	if (just_get_valid_tokens())
 	{
@@ -405,7 +405,7 @@ auto Parser::parseFlingDeclModuleGenSwitchEtcCase() -> ParseRet
 }
 auto Parser::parseFlingDeclModuleGenSwitchEtcDefault() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleGenSwitchEtcDefault);
+	PROLOGUE(parseFlingDeclModuleGenSwitchEtcDefault);
 
 	if (just_get_valid_tokens())
 	{
@@ -420,7 +420,7 @@ auto Parser::parseFlingDeclModuleGenSwitchEtcDefault() -> ParseRet
 }
 auto Parser::parseFlingDeclModuleGenFor() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleGenFor);
+	PROLOGUE(parseFlingDeclModuleGenFor);
 
 	if (just_get_valid_tokens())
 	{
@@ -435,7 +435,7 @@ auto Parser::parseFlingDeclModuleGenFor() -> ParseRet
 }
 auto Parser::parseFlingDeclModuleBehav() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehav);
+	PROLOGUE(parseFlingDeclModuleBehav);
 
 	if (just_get_valid_tokens())
 	{
@@ -450,7 +450,7 @@ auto Parser::parseFlingDeclModuleBehav() -> ParseRet
 }
 auto Parser::parseFlingDeclModuleBehavComb() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavComb);
+	PROLOGUE(parseFlingDeclModuleBehavComb);
 
 	if (just_get_valid_tokens())
 	{
@@ -465,7 +465,7 @@ auto Parser::parseFlingDeclModuleBehavComb() -> ParseRet
 }
 auto Parser::parseFlingDeclModuleBehavSeq() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavSeq);
+	PROLOGUE(parseFlingDeclModuleBehavSeq);
 
 	if (just_get_valid_tokens())
 	{
@@ -480,7 +480,7 @@ auto Parser::parseFlingDeclModuleBehavSeq() -> ParseRet
 }
 auto Parser::parseFlingDeclModuleBehavSeqEdgeItem() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavSeqEdgeItem);
+	PROLOGUE(parseFlingDeclModuleBehavSeqEdgeItem);
 
 	if (just_get_valid_tokens())
 	{
@@ -495,7 +495,7 @@ auto Parser::parseFlingDeclModuleBehavSeqEdgeItem() -> ParseRet
 }
 auto Parser::parseFlingDeclModuleBehavScope() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScope);
+	PROLOGUE(parseFlingDeclModuleBehavScope);
 
 	if (just_get_valid_tokens())
 	{
@@ -510,7 +510,7 @@ auto Parser::parseFlingDeclModuleBehavScope() -> ParseRet
 }
 auto Parser::parseFlingDeclModuleBehavScopeItem() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScopeItem);
+	PROLOGUE(parseFlingDeclModuleBehavScopeItem);
 
 	if (just_get_valid_tokens())
 	{
@@ -525,7 +525,7 @@ auto Parser::parseFlingDeclModuleBehavScopeItem() -> ParseRet
 }
 auto Parser::parseFlingDeclModuleBehavScopeItemIf() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScopeItemIf);
+	PROLOGUE(parseFlingDeclModuleBehavScopeItemIf);
 
 	if (just_get_valid_tokens())
 	{
@@ -540,7 +540,7 @@ auto Parser::parseFlingDeclModuleBehavScopeItemIf() -> ParseRet
 }
 auto Parser::parseFlingDeclModuleBehavScopeItemSwitchEtc() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScopeItemSwitchEtc);
+	PROLOGUE(parseFlingDeclModuleBehavScopeItemSwitchEtc);
 
 	if (just_get_valid_tokens())
 	{
@@ -555,7 +555,7 @@ auto Parser::parseFlingDeclModuleBehavScopeItemSwitchEtc() -> ParseRet
 }
 auto Parser::parseFlingDeclModuleBehavScopeItemSwitchEtcCase() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScopeItemSwitchEtcCase);
+	PROLOGUE(parseFlingDeclModuleBehavScopeItemSwitchEtcCase);
 
 	if (just_get_valid_tokens())
 	{
@@ -570,7 +570,7 @@ auto Parser::parseFlingDeclModuleBehavScopeItemSwitchEtcCase() -> ParseRet
 }
 auto Parser::parseFlingDeclModuleBehavScopeItemSwitchEtcDefault() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScopeItemSwitchEtcDefault);
+	PROLOGUE(parseFlingDeclModuleBehavScopeItemSwitchEtcDefault);
 
 	if (just_get_valid_tokens())
 	{
@@ -585,7 +585,7 @@ auto Parser::parseFlingDeclModuleBehavScopeItemSwitchEtcDefault() -> ParseRet
 }
 auto Parser::parseFlingDeclModuleBehavScopeItemFor() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScopeItemFor);
+	PROLOGUE(parseFlingDeclModuleBehavScopeItemFor);
 
 	if (just_get_valid_tokens())
 	{
@@ -600,7 +600,7 @@ auto Parser::parseFlingDeclModuleBehavScopeItemFor() -> ParseRet
 }
 auto Parser::parseFlingDeclModuleBehavScopeItemWhile() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScopeItemWhile);
+	PROLOGUE(parseFlingDeclModuleBehavScopeItemWhile);
 
 	if (just_get_valid_tokens())
 	{
@@ -615,7 +615,7 @@ auto Parser::parseFlingDeclModuleBehavScopeItemWhile() -> ParseRet
 }
 auto Parser::parseFlingDeclModuleBehavScopeItemGen() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScopeItemGen);
+	PROLOGUE(parseFlingDeclModuleBehavScopeItemGen);
 
 	if (just_get_valid_tokens())
 	{
@@ -630,7 +630,7 @@ auto Parser::parseFlingDeclModuleBehavScopeItemGen() -> ParseRet
 }
 auto Parser::parseFlingDeclModuleBehavScopeItemGenIf() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScopeItemGenIf);
+	PROLOGUE(parseFlingDeclModuleBehavScopeItemGenIf);
 
 	if (just_get_valid_tokens())
 	{
@@ -645,7 +645,7 @@ auto Parser::parseFlingDeclModuleBehavScopeItemGenIf() -> ParseRet
 }
 auto Parser::parseFlingDeclModuleBehavScopeItemGenSwitchEtc() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScopeItemGenSwitchEtc);
+	PROLOGUE(parseFlingDeclModuleBehavScopeItemGenSwitchEtc);
 
 	if (just_get_valid_tokens())
 	{
@@ -660,7 +660,7 @@ auto Parser::parseFlingDeclModuleBehavScopeItemGenSwitchEtc() -> ParseRet
 }
 auto Parser::parseFlingDeclModuleBehavScopeItemGenSwitchEtcCase() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScopeItemGenSwitchEtcCase);
+	PROLOGUE(parseFlingDeclModuleBehavScopeItemGenSwitchEtcCase);
 
 	if (just_get_valid_tokens())
 	{
@@ -675,7 +675,7 @@ auto Parser::parseFlingDeclModuleBehavScopeItemGenSwitchEtcCase() -> ParseRet
 }
 auto Parser::parseFlingDeclModuleBehavScopeItemGenSwitchEtcDefault() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScopeItemGenSwitchEtcDefault);
+	PROLOGUE(parseFlingDeclModuleBehavScopeItemGenSwitchEtcDefault);
 
 	if (just_get_valid_tokens())
 	{
@@ -690,7 +690,7 @@ auto Parser::parseFlingDeclModuleBehavScopeItemGenSwitchEtcDefault() -> ParseRet
 }
 auto Parser::parseFlingDeclModuleBehavScopeItemGenFor() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclModuleBehavScopeItemGenFor);
+	PROLOGUE(parseFlingDeclModuleBehavScopeItemGenFor);
 
 	if (just_get_valid_tokens())
 	{
@@ -705,7 +705,7 @@ auto Parser::parseFlingDeclModuleBehavScopeItemGenFor() -> ParseRet
 }
 auto Parser::parseFlingAnyBehavScopeItem() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingAnyBehavScopeItem);
+	PROLOGUE(parseFlingAnyBehavScopeItem);
 
 	if (just_get_valid_tokens())
 	{
@@ -720,7 +720,7 @@ auto Parser::parseFlingAnyBehavScopeItem() -> ParseRet
 }
 auto Parser::parseFlingAnyBehavScopeItemAssign() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingAnyBehavScopeItemAssign);
+	PROLOGUE(parseFlingAnyBehavScopeItemAssign);
 
 	if (just_get_valid_tokens())
 	{
@@ -735,7 +735,7 @@ auto Parser::parseFlingAnyBehavScopeItemAssign() -> ParseRet
 }
 auto Parser::parseFlingDeclCompositeType() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclCompositeType);
+	PROLOGUE(parseFlingDeclCompositeType);
 
 	if (just_get_valid_tokens())
 	{
@@ -750,7 +750,7 @@ auto Parser::parseFlingDeclCompositeType() -> ParseRet
 }
 auto Parser::parseFlingDeclCompositeTypeStruct() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclCompositeTypeStruct);
+	PROLOGUE(parseFlingDeclCompositeTypeStruct);
 
 	if (just_get_valid_tokens())
 	{
@@ -765,7 +765,7 @@ auto Parser::parseFlingDeclCompositeTypeStruct() -> ParseRet
 }
 auto Parser::parseFlingDeclCompositeTypeStructItem() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclCompositeTypeStructItem);
+	PROLOGUE(parseFlingDeclCompositeTypeStructItem);
 
 	if (just_get_valid_tokens())
 	{
@@ -780,7 +780,7 @@ auto Parser::parseFlingDeclCompositeTypeStructItem() -> ParseRet
 }
 auto Parser::parseFlingCompositeTypeStructItemGen() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingCompositeTypeStructItemGen);
+	PROLOGUE(parseFlingCompositeTypeStructItemGen);
 
 	if (just_get_valid_tokens())
 	{
@@ -795,7 +795,7 @@ auto Parser::parseFlingCompositeTypeStructItemGen() -> ParseRet
 }
 auto Parser::parseFlingCompositeTypeStructItemGenIf() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingCompositeTypeStructItemGenIf);
+	PROLOGUE(parseFlingCompositeTypeStructItemGenIf);
 
 	if (just_get_valid_tokens())
 	{
@@ -810,7 +810,7 @@ auto Parser::parseFlingCompositeTypeStructItemGenIf() -> ParseRet
 }
 auto Parser::parseFlingCompositeTypeStructItemGenSwitchEtc() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingCompositeTypeStructItemGenSwitchEtc);
+	PROLOGUE(parseFlingCompositeTypeStructItemGenSwitchEtc);
 
 	if (just_get_valid_tokens())
 	{
@@ -825,7 +825,7 @@ auto Parser::parseFlingCompositeTypeStructItemGenSwitchEtc() -> ParseRet
 }
 auto Parser::parseFlingCompositeTypeStructItemGenSwitchEtcCase() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingCompositeTypeStructItemGenSwitchEtcCase);
+	PROLOGUE(parseFlingCompositeTypeStructItemGenSwitchEtcCase);
 
 	if (just_get_valid_tokens())
 	{
@@ -840,7 +840,7 @@ auto Parser::parseFlingCompositeTypeStructItemGenSwitchEtcCase() -> ParseRet
 }
 auto Parser::parseFlingCompositeTypeStructItemGenSwitchEtcDefault() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingCompositeTypeStructItemGenSwitchEtcDefault);
+	PROLOGUE(parseFlingCompositeTypeStructItemGenSwitchEtcDefault);
 
 	if (just_get_valid_tokens())
 	{
@@ -855,7 +855,7 @@ auto Parser::parseFlingCompositeTypeStructItemGenSwitchEtcDefault() -> ParseRet
 }
 auto Parser::parseFlingCompositeTypeStructItemGenFor() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingCompositeTypeStructItemGenFor);
+	PROLOGUE(parseFlingCompositeTypeStructItemGenFor);
 
 	if (just_get_valid_tokens())
 	{
@@ -870,7 +870,7 @@ auto Parser::parseFlingCompositeTypeStructItemGenFor() -> ParseRet
 }
 auto Parser::parseFlingDeclEnum() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclEnum);
+	PROLOGUE(parseFlingDeclEnum);
 
 	if (just_get_valid_tokens())
 	{
@@ -885,7 +885,7 @@ auto Parser::parseFlingDeclEnum() -> ParseRet
 }
 auto Parser::parseFlingDeclEnumItem() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclEnumItem);
+	PROLOGUE(parseFlingDeclEnumItem);
 
 	if (just_get_valid_tokens())
 	{
@@ -900,7 +900,7 @@ auto Parser::parseFlingDeclEnumItem() -> ParseRet
 }
 auto Parser::parseFlingDeclSubprog() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprog);
+	PROLOGUE(parseFlingDeclSubprog);
 
 	if (just_get_valid_tokens())
 	{
@@ -915,7 +915,7 @@ auto Parser::parseFlingDeclSubprog() -> ParseRet
 }
 auto Parser::parseFlingDeclSubprogFuncHeader() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogFuncHeader);
+	PROLOGUE(parseFlingDeclSubprogFuncHeader);
 
 	if (just_get_valid_tokens())
 	{
@@ -930,7 +930,7 @@ auto Parser::parseFlingDeclSubprogFuncHeader() -> ParseRet
 }
 auto Parser::parseFlingDeclSubprogTaskHeader() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogTaskHeader);
+	PROLOGUE(parseFlingDeclSubprogTaskHeader);
 
 	if (just_get_valid_tokens())
 	{
@@ -945,7 +945,7 @@ auto Parser::parseFlingDeclSubprogTaskHeader() -> ParseRet
 }
 auto Parser::parseFlingDeclSubprogScope() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScope);
+	PROLOGUE(parseFlingDeclSubprogScope);
 
 	if (just_get_valid_tokens())
 	{
@@ -960,7 +960,7 @@ auto Parser::parseFlingDeclSubprogScope() -> ParseRet
 }
 auto Parser::parseFlingDeclSubprogScopeItem() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScopeItem);
+	PROLOGUE(parseFlingDeclSubprogScopeItem);
 
 	if (just_get_valid_tokens())
 	{
@@ -975,7 +975,7 @@ auto Parser::parseFlingDeclSubprogScopeItem() -> ParseRet
 }
 auto Parser::parseFlingDeclSubprogScopeItemIf() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScopeItemIf);
+	PROLOGUE(parseFlingDeclSubprogScopeItemIf);
 
 	if (just_get_valid_tokens())
 	{
@@ -990,7 +990,7 @@ auto Parser::parseFlingDeclSubprogScopeItemIf() -> ParseRet
 }
 auto Parser::parseFlingDeclSubprogScopeItemSwitchEtc() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScopeItemSwitchEtc);
+	PROLOGUE(parseFlingDeclSubprogScopeItemSwitchEtc);
 
 	if (just_get_valid_tokens())
 	{
@@ -1005,7 +1005,7 @@ auto Parser::parseFlingDeclSubprogScopeItemSwitchEtc() -> ParseRet
 }
 auto Parser::parseFlingDeclSubprogScopeItemSwitchEtcCase() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScopeItemSwitchEtcCase);
+	PROLOGUE(parseFlingDeclSubprogScopeItemSwitchEtcCase);
 
 	if (just_get_valid_tokens())
 	{
@@ -1020,7 +1020,7 @@ auto Parser::parseFlingDeclSubprogScopeItemSwitchEtcCase() -> ParseRet
 }
 auto Parser::parseFlingDeclSubprogScopeItemSwitchEtcDefault() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScopeItemSwitchEtcDefault);
+	PROLOGUE(parseFlingDeclSubprogScopeItemSwitchEtcDefault);
 
 	if (just_get_valid_tokens())
 	{
@@ -1035,7 +1035,7 @@ auto Parser::parseFlingDeclSubprogScopeItemSwitchEtcDefault() -> ParseRet
 }
 auto Parser::parseFlingDeclSubprogScopeItemFor() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScopeItemFor);
+	PROLOGUE(parseFlingDeclSubprogScopeItemFor);
 
 	if (just_get_valid_tokens())
 	{
@@ -1050,7 +1050,7 @@ auto Parser::parseFlingDeclSubprogScopeItemFor() -> ParseRet
 }
 auto Parser::parseFlingDeclSubprogScopeItemWhile() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScopeItemWhile);
+	PROLOGUE(parseFlingDeclSubprogScopeItemWhile);
 
 	if (just_get_valid_tokens())
 	{
@@ -1065,7 +1065,7 @@ auto Parser::parseFlingDeclSubprogScopeItemWhile() -> ParseRet
 }
 auto Parser::parseFlingDeclSubprogScopeItemGen() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScopeItemGen);
+	PROLOGUE(parseFlingDeclSubprogScopeItemGen);
 
 	if (just_get_valid_tokens())
 	{
@@ -1080,7 +1080,7 @@ auto Parser::parseFlingDeclSubprogScopeItemGen() -> ParseRet
 }
 auto Parser::parseFlingDeclSubprogScopeItemGenIf() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScopeItemGenIf);
+	PROLOGUE(parseFlingDeclSubprogScopeItemGenIf);
 
 	if (just_get_valid_tokens())
 	{
@@ -1095,7 +1095,7 @@ auto Parser::parseFlingDeclSubprogScopeItemGenIf() -> ParseRet
 }
 auto Parser::parseFlingDeclSubprogScopeItemGenSwitchEtc() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScopeItemGenSwitchEtc);
+	PROLOGUE(parseFlingDeclSubprogScopeItemGenSwitchEtc);
 
 	if (just_get_valid_tokens())
 	{
@@ -1110,7 +1110,7 @@ auto Parser::parseFlingDeclSubprogScopeItemGenSwitchEtc() -> ParseRet
 }
 auto Parser::parseFlingDeclSubprogScopeItemGenSwitchEtcCase() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScopeItemGenSwitchEtcCase);
+	PROLOGUE(parseFlingDeclSubprogScopeItemGenSwitchEtcCase);
 
 	if (just_get_valid_tokens())
 	{
@@ -1125,7 +1125,7 @@ auto Parser::parseFlingDeclSubprogScopeItemGenSwitchEtcCase() -> ParseRet
 }
 auto Parser::parseFlingDeclSubprogScopeItemGenSwitchEtcDefault() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScopeItemGenSwitchEtcDefault);
+	PROLOGUE(parseFlingDeclSubprogScopeItemGenSwitchEtcDefault);
 
 	if (just_get_valid_tokens())
 	{
@@ -1140,7 +1140,7 @@ auto Parser::parseFlingDeclSubprogScopeItemGenSwitchEtcDefault() -> ParseRet
 }
 auto Parser::parseFlingDeclSubprogScopeItemGenFor() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclSubprogScopeItemGenFor);
+	PROLOGUE(parseFlingDeclSubprogScopeItemGenFor);
 
 	if (just_get_valid_tokens())
 	{
@@ -1155,7 +1155,7 @@ auto Parser::parseFlingDeclSubprogScopeItemGenFor() -> ParseRet
 }
 auto Parser::parseFlingDeclConst() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclConst);
+	PROLOGUE(parseFlingDeclConst);
 
 	if (just_get_valid_tokens())
 	{
@@ -1170,7 +1170,7 @@ auto Parser::parseFlingDeclConst() -> ParseRet
 }
 auto Parser::parseFlingDeclVarNoInitVal() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclVarNoInitVal);
+	PROLOGUE(parseFlingDeclVarNoInitVal);
 
 	if (just_get_valid_tokens())
 	{
@@ -1185,7 +1185,7 @@ auto Parser::parseFlingDeclVarNoInitVal() -> ParseRet
 }
 auto Parser::parseFlingDeclVar() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclVar);
+	PROLOGUE(parseFlingDeclVar);
 
 	if (just_get_valid_tokens())
 	{
@@ -1200,7 +1200,7 @@ auto Parser::parseFlingDeclVar() -> ParseRet
 }
 auto Parser::parseFlingDeclWire() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclWire);
+	PROLOGUE(parseFlingDeclWire);
 
 	if (just_get_valid_tokens())
 	{
@@ -1215,7 +1215,7 @@ auto Parser::parseFlingDeclWire() -> ParseRet
 }
 auto Parser::parseFlingWireAssign() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingWireAssign);
+	PROLOGUE(parseFlingWireAssign);
 
 	if (just_get_valid_tokens())
 	{
@@ -1230,7 +1230,7 @@ auto Parser::parseFlingWireAssign() -> ParseRet
 }
 auto Parser::parseFlingDeclAlias() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingDeclAlias);
+	PROLOGUE(parseFlingDeclAlias);
 
 	if (just_get_valid_tokens())
 	{
@@ -1245,7 +1245,7 @@ auto Parser::parseFlingDeclAlias() -> ParseRet
 }
 auto Parser::parseFlingScopedIdent() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingScopedIdent);
+	PROLOGUE(parseFlingScopedIdent);
 
 	if (just_get_valid_tokens())
 	{
@@ -1260,7 +1260,7 @@ auto Parser::parseFlingScopedIdent() -> ParseRet
 }
 auto Parser::parseFlingIdentList() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingIdentList);
+	PROLOGUE(parseFlingIdentList);
 
 	if (just_get_valid_tokens())
 	{
@@ -1275,7 +1275,7 @@ auto Parser::parseFlingIdentList() -> ParseRet
 }
 auto Parser::parseFlingSubprogIdentList() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingSubprogIdentList);
+	PROLOGUE(parseFlingSubprogIdentList);
 
 	if (just_get_valid_tokens())
 	{
@@ -1290,7 +1290,7 @@ auto Parser::parseFlingSubprogIdentList() -> ParseRet
 }
 auto Parser::parseFlingExprList() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingExprList);
+	PROLOGUE(parseFlingExprList);
 
 	if (just_get_valid_tokens())
 	{
@@ -1305,7 +1305,7 @@ auto Parser::parseFlingExprList() -> ParseRet
 }
 auto Parser::parseFlingRangeList() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingRangeList);
+	PROLOGUE(parseFlingRangeList);
 
 	if (just_get_valid_tokens())
 	{
@@ -1320,7 +1320,7 @@ auto Parser::parseFlingRangeList() -> ParseRet
 }
 auto Parser::parseFlingExprOrRangeList() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingExprOrRangeList);
+	PROLOGUE(parseFlingExprOrRangeList);
 
 	if (just_get_valid_tokens())
 	{
@@ -1335,7 +1335,7 @@ auto Parser::parseFlingExprOrRangeList() -> ParseRet
 }
 auto Parser::parseFlingTypenmOrModnmList() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingTypenmOrModnmList);
+	PROLOGUE(parseFlingTypenmOrModnmList);
 
 	if (just_get_valid_tokens())
 	{
@@ -1350,7 +1350,7 @@ auto Parser::parseFlingTypenmOrModnmList() -> ParseRet
 }
 auto Parser::parseFlingImportItem() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingImportItem);
+	PROLOGUE(parseFlingImportItem);
 
 	if (just_get_valid_tokens())
 	{
@@ -1365,7 +1365,7 @@ auto Parser::parseFlingImportItem() -> ParseRet
 }
 auto Parser::parseFlingImportItemList() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingImportItemList);
+	PROLOGUE(parseFlingImportItemList);
 
 	if (just_get_valid_tokens())
 	{
@@ -1380,7 +1380,7 @@ auto Parser::parseFlingImportItemList() -> ParseRet
 }
 auto Parser::parseFlingExpr() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingExpr);
+	PROLOGUE(parseFlingExpr);
 
 	if (just_get_valid_tokens())
 	{
@@ -1395,7 +1395,7 @@ auto Parser::parseFlingExpr() -> ParseRet
 }
 auto Parser::parseFlingMuxExpr() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingMuxExpr);
+	PROLOGUE(parseFlingMuxExpr);
 
 	if (just_get_valid_tokens())
 	{
@@ -1410,7 +1410,7 @@ auto Parser::parseFlingMuxExpr() -> ParseRet
 }
 auto Parser::parseFlingLogorExpr() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingLogorExpr);
+	PROLOGUE(parseFlingLogorExpr);
 
 	if (just_get_valid_tokens())
 	{
@@ -1425,7 +1425,7 @@ auto Parser::parseFlingLogorExpr() -> ParseRet
 }
 auto Parser::parseFlingLogandExpr() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingLogandExpr);
+	PROLOGUE(parseFlingLogandExpr);
 
 	if (just_get_valid_tokens())
 	{
@@ -1440,7 +1440,7 @@ auto Parser::parseFlingLogandExpr() -> ParseRet
 }
 auto Parser::parseFlingCmpEqEtcExpr() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingCmpEqEtcExpr);
+	PROLOGUE(parseFlingCmpEqEtcExpr);
 
 	if (just_get_valid_tokens())
 	{
@@ -1455,7 +1455,7 @@ auto Parser::parseFlingCmpEqEtcExpr() -> ParseRet
 }
 auto Parser::parseFlingCmpLtEtcExpr() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingCmpLtEtcExpr);
+	PROLOGUE(parseFlingCmpLtEtcExpr);
 
 	if (just_get_valid_tokens())
 	{
@@ -1470,7 +1470,7 @@ auto Parser::parseFlingCmpLtEtcExpr() -> ParseRet
 }
 auto Parser::parseFlingPlusMinusExpr() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingPlusMinusExpr);
+	PROLOGUE(parseFlingPlusMinusExpr);
 
 	if (just_get_valid_tokens())
 	{
@@ -1485,7 +1485,7 @@ auto Parser::parseFlingPlusMinusExpr() -> ParseRet
 }
 auto Parser::parseFlingMulDivModExpr() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingMulDivModExpr);
+	PROLOGUE(parseFlingMulDivModExpr);
 
 	if (just_get_valid_tokens())
 	{
@@ -1500,7 +1500,7 @@ auto Parser::parseFlingMulDivModExpr() -> ParseRet
 }
 auto Parser::parseFlingBitorBitnorExpr() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingBitorBitnorExpr);
+	PROLOGUE(parseFlingBitorBitnorExpr);
 
 	if (just_get_valid_tokens())
 	{
@@ -1515,7 +1515,7 @@ auto Parser::parseFlingBitorBitnorExpr() -> ParseRet
 }
 auto Parser::parseFlingBitandBitnandExpr() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingBitandBitnandExpr);
+	PROLOGUE(parseFlingBitandBitnandExpr);
 
 	if (just_get_valid_tokens())
 	{
@@ -1530,7 +1530,7 @@ auto Parser::parseFlingBitandBitnandExpr() -> ParseRet
 }
 auto Parser::parseFlingBitxorBitxnorExpr() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingBitxorBitxnorExpr);
+	PROLOGUE(parseFlingBitxorBitxnorExpr);
 
 	if (just_get_valid_tokens())
 	{
@@ -1545,7 +1545,7 @@ auto Parser::parseFlingBitxorBitxnorExpr() -> ParseRet
 }
 auto Parser::parseFlingBitshiftExpr() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingBitshiftExpr);
+	PROLOGUE(parseFlingBitshiftExpr);
 
 	if (just_get_valid_tokens())
 	{
@@ -1560,7 +1560,7 @@ auto Parser::parseFlingBitshiftExpr() -> ParseRet
 }
 auto Parser::parseFlingUnaryExpr() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingUnaryExpr);
+	PROLOGUE(parseFlingUnaryExpr);
 
 	if (just_get_valid_tokens())
 	{
@@ -1575,7 +1575,7 @@ auto Parser::parseFlingUnaryExpr() -> ParseRet
 }
 auto Parser::parseFlingLowExpr() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingLowExpr);
+	PROLOGUE(parseFlingLowExpr);
 
 	if (just_get_valid_tokens())
 	{
@@ -1590,7 +1590,7 @@ auto Parser::parseFlingLowExpr() -> ParseRet
 }
 auto Parser::parseFlingCallDollarFuncExpr() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingCallDollarFuncExpr);
+	PROLOGUE(parseFlingCallDollarFuncExpr);
 
 	if (just_get_valid_tokens())
 	{
@@ -1605,7 +1605,7 @@ auto Parser::parseFlingCallDollarFuncExpr() -> ParseRet
 }
 auto Parser::parseFlingCallSubprogExpr() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingCallSubprogExpr);
+	PROLOGUE(parseFlingCallSubprogExpr);
 
 	if (just_get_valid_tokens())
 	{
@@ -1620,7 +1620,7 @@ auto Parser::parseFlingCallSubprogExpr() -> ParseRet
 }
 auto Parser::parseFlingSubprogIdent() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingSubprogIdent);
+	PROLOGUE(parseFlingSubprogIdent);
 
 	if (just_get_valid_tokens())
 	{
@@ -1635,7 +1635,7 @@ auto Parser::parseFlingSubprogIdent() -> ParseRet
 }
 auto Parser::parseFlingIdentExpr() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingIdentExpr);
+	PROLOGUE(parseFlingIdentExpr);
 
 	if (just_get_valid_tokens())
 	{
@@ -1650,7 +1650,7 @@ auto Parser::parseFlingIdentExpr() -> ParseRet
 }
 auto Parser::parseFlingCatExpr() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingCatExpr);
+	PROLOGUE(parseFlingCatExpr);
 
 	if (just_get_valid_tokens())
 	{
@@ -1665,7 +1665,7 @@ auto Parser::parseFlingCatExpr() -> ParseRet
 }
 auto Parser::parseFlingReplExpr() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingReplExpr);
+	PROLOGUE(parseFlingReplExpr);
 
 	if (just_get_valid_tokens())
 	{
@@ -1680,7 +1680,7 @@ auto Parser::parseFlingReplExpr() -> ParseRet
 }
 auto Parser::parseFlingSizedExpr() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingSizedExpr);
+	PROLOGUE(parseFlingSizedExpr);
 
 	if (just_get_valid_tokens())
 	{
@@ -1695,7 +1695,7 @@ auto Parser::parseFlingSizedExpr() -> ParseRet
 }
 auto Parser::parseFlingRange() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingRange);
+	PROLOGUE(parseFlingRange);
 
 	if (just_get_valid_tokens())
 	{
@@ -1710,7 +1710,7 @@ auto Parser::parseFlingRange() -> ParseRet
 }
 auto Parser::parseFlingNonSimpleRange() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingNonSimpleRange);
+	PROLOGUE(parseFlingNonSimpleRange);
 
 	if (just_get_valid_tokens())
 	{
@@ -1725,7 +1725,7 @@ auto Parser::parseFlingNonSimpleRange() -> ParseRet
 }
 auto Parser::parseFlingSimpleRangeSuffix() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingSimpleRangeSuffix);
+	PROLOGUE(parseFlingSimpleRangeSuffix);
 
 	if (just_get_valid_tokens())
 	{
@@ -1740,7 +1740,7 @@ auto Parser::parseFlingSimpleRangeSuffix() -> ParseRet
 }
 auto Parser::parseFlingExprOrRange() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingExprOrRange);
+	PROLOGUE(parseFlingExprOrRange);
 
 	if (just_get_valid_tokens())
 	{
@@ -1755,7 +1755,7 @@ auto Parser::parseFlingExprOrRange() -> ParseRet
 }
 auto Parser::parseFlingTypenmOrModnmCstmStart() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingTypenmOrModnmCstmStart);
+	PROLOGUE(parseFlingTypenmOrModnmCstmStart);
 
 	if (just_get_valid_tokens())
 	{
@@ -1770,7 +1770,7 @@ auto Parser::parseFlingTypenmOrModnmCstmStart() -> ParseRet
 }
 auto Parser::parseFlingTypenmOrModnmCstmChainItem() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingTypenmOrModnmCstmChainItem);
+	PROLOGUE(parseFlingTypenmOrModnmCstmChainItem);
 
 	if (just_get_valid_tokens())
 	{
@@ -1785,7 +1785,7 @@ auto Parser::parseFlingTypenmOrModnmCstmChainItem() -> ParseRet
 }
 auto Parser::parseFlingTypenmOrModnm() -> ParseRet
 {
-	DEFER_RESTORE_PARSE_FUNC_STR(parseFlingTypenmOrModnm);
+	PROLOGUE(parseFlingTypenmOrModnm);
 
 	if (just_get_valid_tokens())
 	{
@@ -1802,7 +1802,7 @@ auto Parser::parseFlingTypenmOrModnm() -> ParseRet
 #define X(name, dummy_0) \
 	auto Parser::parseTok##name() -> ParseRet \
 	{ \
-		DEFER_RESTORE_PARSE_FUNC_STR(parseTok##name); \
+		PROLOGUE(parseTok##name); \
 		\
 		if (just_get_valid_tokens()) \
 		{ \

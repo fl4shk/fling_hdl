@@ -34,6 +34,9 @@
 #define TOK_SET(...) \
 	TokSet({TOK_CSL(__VA_ARGS__)})
 
+#define TOK_PARSE_FUNC(tok) \
+	parseTok##tok ()
+
 #define JUST_EXPECT(...) \
 	_expect(TOK_CSL(__VA_ARGS__))
 
