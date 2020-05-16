@@ -34,7 +34,7 @@ auto Parser::parseFlingDeclPackage() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -49,7 +49,7 @@ auto Parser::parseFlingDeclPackageItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -64,7 +64,7 @@ auto Parser::parseFlingImport() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -79,7 +79,7 @@ auto Parser::parseFlingDeclParamList() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -94,7 +94,7 @@ auto Parser::parseFlingDeclParamListItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -109,7 +109,7 @@ auto Parser::parseFlingDeclArgList() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -124,7 +124,7 @@ auto Parser::parseFlingDeclArgListItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -139,7 +139,7 @@ auto Parser::parseFlingInstParamList() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -154,7 +154,7 @@ auto Parser::parseFlingInstParamListPos() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -169,7 +169,7 @@ auto Parser::parseFlingInstParamListPosItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -184,7 +184,7 @@ auto Parser::parseFlingInstParamListNamed() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -199,7 +199,7 @@ auto Parser::parseFlingInstParamListNamedItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -214,7 +214,7 @@ auto Parser::parseFlingInstArgList() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -229,7 +229,7 @@ auto Parser::parseFlingInstArgListPos() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -244,7 +244,7 @@ auto Parser::parseFlingInstArgListPosItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -259,7 +259,7 @@ auto Parser::parseFlingInstArgListNamed() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -274,7 +274,7 @@ auto Parser::parseFlingInstArgListNamedItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -289,7 +289,7 @@ auto Parser::parseFlingDeclModule() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -304,7 +304,7 @@ auto Parser::parseFlingDeclModuleScope() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -319,7 +319,7 @@ auto Parser::parseFlingDeclModuleItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -334,7 +334,7 @@ auto Parser::parseFlingModinst() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -349,7 +349,7 @@ auto Parser::parseFlingDeclModuleGen() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -364,7 +364,7 @@ auto Parser::parseFlingDeclModuleGenIf() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -379,7 +379,7 @@ auto Parser::parseFlingDeclModuleGenSwitchEtc() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -394,7 +394,7 @@ auto Parser::parseFlingDeclModuleGenSwitchEtcCase() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -409,7 +409,7 @@ auto Parser::parseFlingDeclModuleGenSwitchEtcDefault() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -424,7 +424,7 @@ auto Parser::parseFlingDeclModuleGenFor() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -439,7 +439,7 @@ auto Parser::parseFlingDeclModuleBehav() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -454,7 +454,7 @@ auto Parser::parseFlingDeclModuleBehavComb() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -469,7 +469,7 @@ auto Parser::parseFlingDeclModuleBehavSeq() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -484,7 +484,7 @@ auto Parser::parseFlingDeclModuleBehavSeqEdgeItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -499,7 +499,7 @@ auto Parser::parseFlingDeclModuleBehavScope() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -514,7 +514,7 @@ auto Parser::parseFlingDeclModuleBehavScopeItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -529,7 +529,7 @@ auto Parser::parseFlingDeclModuleBehavScopeItemIf() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -544,7 +544,7 @@ auto Parser::parseFlingDeclModuleBehavScopeItemSwitchEtc() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -559,7 +559,7 @@ auto Parser::parseFlingDeclModuleBehavScopeItemSwitchEtcCase() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -574,7 +574,7 @@ auto Parser::parseFlingDeclModuleBehavScopeItemSwitchEtcDefault() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -589,7 +589,7 @@ auto Parser::parseFlingDeclModuleBehavScopeItemFor() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -604,7 +604,7 @@ auto Parser::parseFlingDeclModuleBehavScopeItemWhile() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -619,7 +619,7 @@ auto Parser::parseFlingDeclModuleBehavScopeItemGen() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -634,7 +634,7 @@ auto Parser::parseFlingDeclModuleBehavScopeItemGenIf() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -649,7 +649,7 @@ auto Parser::parseFlingDeclModuleBehavScopeItemGenSwitchEtc() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -664,7 +664,7 @@ auto Parser::parseFlingDeclModuleBehavScopeItemGenSwitchEtcCase() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -679,7 +679,7 @@ auto Parser::parseFlingDeclModuleBehavScopeItemGenSwitchEtcDefault() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -694,7 +694,7 @@ auto Parser::parseFlingDeclModuleBehavScopeItemGenFor() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -709,7 +709,7 @@ auto Parser::parseFlingAnyBehavScopeItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -724,7 +724,7 @@ auto Parser::parseFlingAnyBehavScopeItemAssign() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -739,7 +739,7 @@ auto Parser::parseFlingDeclCompositeType() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -754,7 +754,7 @@ auto Parser::parseFlingDeclCompositeTypeStruct() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -769,7 +769,7 @@ auto Parser::parseFlingDeclCompositeTypeStructItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -784,7 +784,7 @@ auto Parser::parseFlingCompositeTypeStructItemGen() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -799,7 +799,7 @@ auto Parser::parseFlingCompositeTypeStructItemGenIf() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -814,7 +814,7 @@ auto Parser::parseFlingCompositeTypeStructItemGenSwitchEtc() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -829,7 +829,7 @@ auto Parser::parseFlingCompositeTypeStructItemGenSwitchEtcCase() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -844,7 +844,7 @@ auto Parser::parseFlingCompositeTypeStructItemGenSwitchEtcDefault() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -859,7 +859,7 @@ auto Parser::parseFlingCompositeTypeStructItemGenFor() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -874,7 +874,7 @@ auto Parser::parseFlingDeclEnum() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -889,7 +889,7 @@ auto Parser::parseFlingDeclEnumItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -904,7 +904,7 @@ auto Parser::parseFlingDeclSubprog() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -919,7 +919,7 @@ auto Parser::parseFlingDeclSubprogFuncHeader() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -934,7 +934,7 @@ auto Parser::parseFlingDeclSubprogTaskHeader() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -949,7 +949,7 @@ auto Parser::parseFlingDeclSubprogScope() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -964,7 +964,7 @@ auto Parser::parseFlingDeclSubprogScopeItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -979,7 +979,7 @@ auto Parser::parseFlingDeclSubprogScopeItemIf() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -994,7 +994,7 @@ auto Parser::parseFlingDeclSubprogScopeItemSwitchEtc() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1009,7 +1009,7 @@ auto Parser::parseFlingDeclSubprogScopeItemSwitchEtcCase() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1024,7 +1024,7 @@ auto Parser::parseFlingDeclSubprogScopeItemSwitchEtcDefault() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1039,7 +1039,7 @@ auto Parser::parseFlingDeclSubprogScopeItemFor() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1054,7 +1054,7 @@ auto Parser::parseFlingDeclSubprogScopeItemWhile() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1069,7 +1069,7 @@ auto Parser::parseFlingDeclSubprogScopeItemGen() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1084,7 +1084,7 @@ auto Parser::parseFlingDeclSubprogScopeItemGenIf() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1099,7 +1099,7 @@ auto Parser::parseFlingDeclSubprogScopeItemGenSwitchEtc() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1114,7 +1114,7 @@ auto Parser::parseFlingDeclSubprogScopeItemGenSwitchEtcCase() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1129,7 +1129,7 @@ auto Parser::parseFlingDeclSubprogScopeItemGenSwitchEtcDefault() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1144,7 +1144,7 @@ auto Parser::parseFlingDeclSubprogScopeItemGenFor() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1159,7 +1159,7 @@ auto Parser::parseFlingDeclConst() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1174,7 +1174,7 @@ auto Parser::parseFlingDeclVarNoInitVal() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1189,7 +1189,7 @@ auto Parser::parseFlingDeclVar() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1204,7 +1204,7 @@ auto Parser::parseFlingDeclWire() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1219,7 +1219,7 @@ auto Parser::parseFlingWireAssign() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1234,7 +1234,7 @@ auto Parser::parseFlingDeclAlias() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1249,7 +1249,7 @@ auto Parser::parseFlingScopedIdent() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1264,7 +1264,7 @@ auto Parser::parseFlingIdentList() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1279,7 +1279,7 @@ auto Parser::parseFlingSubprogIdentList() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1294,7 +1294,7 @@ auto Parser::parseFlingExprList() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1309,7 +1309,7 @@ auto Parser::parseFlingRangeList() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1324,7 +1324,7 @@ auto Parser::parseFlingExprOrRangeList() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1339,7 +1339,7 @@ auto Parser::parseFlingTypenmOrModnmList() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1354,7 +1354,7 @@ auto Parser::parseFlingImportItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1369,7 +1369,7 @@ auto Parser::parseFlingImportItemList() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1384,7 +1384,7 @@ auto Parser::parseFlingExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1399,7 +1399,7 @@ auto Parser::parseFlingMuxExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1414,7 +1414,7 @@ auto Parser::parseFlingLogorExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1429,7 +1429,7 @@ auto Parser::parseFlingLogandExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1444,7 +1444,7 @@ auto Parser::parseFlingCmpEqEtcExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1459,7 +1459,7 @@ auto Parser::parseFlingCmpLtEtcExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1474,7 +1474,7 @@ auto Parser::parseFlingPlusMinusExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1489,7 +1489,7 @@ auto Parser::parseFlingMulDivModExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1504,7 +1504,7 @@ auto Parser::parseFlingBitorBitnorExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1519,7 +1519,7 @@ auto Parser::parseFlingBitandBitnandExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1534,7 +1534,7 @@ auto Parser::parseFlingBitxorBitxnorExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1549,7 +1549,7 @@ auto Parser::parseFlingBitshiftExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1564,7 +1564,7 @@ auto Parser::parseFlingUnaryExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1579,7 +1579,7 @@ auto Parser::parseFlingLowExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1594,7 +1594,7 @@ auto Parser::parseFlingCallDollarFuncExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1609,7 +1609,7 @@ auto Parser::parseFlingCallSubprogExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1624,7 +1624,7 @@ auto Parser::parseFlingSubprogIdent() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1639,7 +1639,7 @@ auto Parser::parseFlingIdentExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1654,7 +1654,7 @@ auto Parser::parseFlingCatExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1669,7 +1669,7 @@ auto Parser::parseFlingReplExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1684,7 +1684,7 @@ auto Parser::parseFlingSizedExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1699,7 +1699,7 @@ auto Parser::parseFlingRange() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1714,7 +1714,7 @@ auto Parser::parseFlingNonSimpleRange() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1729,7 +1729,7 @@ auto Parser::parseFlingSimpleRangeSuffix() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1744,7 +1744,7 @@ auto Parser::parseFlingExprOrRange() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1759,7 +1759,7 @@ auto Parser::parseFlingTypenmOrModnmCstmStart() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1774,7 +1774,7 @@ auto Parser::parseFlingTypenmOrModnmCstmChainItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1789,7 +1789,7 @@ auto Parser::parseFlingTypenmOrModnm() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		JtParseRet ret;
+		TokSet ret;
 
 		return ret;
 	}
@@ -1806,9 +1806,7 @@ auto Parser::parseFlingTypenmOrModnm() -> ParseRet
 		\
 		if (just_get_valid_tokens()) \
 		{ \
-			JtParseRet ret; \
-			ret.first = TOK_SET(
-			return ret; \
+			return TOK_SET(name); \
 		} \
 		else /* if (!just_get_valid_tokens()) */ \
 		{ \
