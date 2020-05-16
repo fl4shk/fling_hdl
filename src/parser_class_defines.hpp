@@ -17,8 +17,73 @@
 #define PROLOGUE_AND_EPILOGUE(str) \
 	ParserBase::PrologueAndEpilogue prologue_and_epilogue (this, #str)
 
+#define _INNER_PARSE_IFELSE(func) \
+	if (CHECK_PARSE(func)) \
+	{ \
+		_found_tok = true; \
+		func (); \
+	}
+#define PARSE_IFELSE(...) \
+	EVAL(MAP(_INNER_PARSE_IFELSE, ELSE, __VA_ARGS__))
+
 #define CHECK_PARSE(func) \
 	_check_parse(&Parser::func)
+
+#define _INNER_JUST_PARSE_AND_POP_AST(to_set, func) \
+	func (); \
+	_pop_ast(to_set);
+#define _INNER_PARSE_AND_POP_AST_IF(to_set, func) \
+	if (CHECK_PARSE(func)) \
+	{ \
+		_INNER_JUST_PARSE_AND_POP_AST(to_set, func); \
+	}
+#define JUST_PARSE_AND_POP_AST(...) \
+	EVAL(MAP_PAIRS(_INNER_JUST_PARSE_AND_POP_AST, SEMICOLON, __VA_ARGS__))
+#define _MULTI_PARSE_AND_POP_AST_IF(sep, ...) \
+	EVAL(MAP_PAIRS(_INNER_PARSE_AND_POP_AST_IF, sep, __VA_ARGS__))
+
+#define PARSE_AND_POP_AST_IFELSE(...) \
+	_MULTI_PARSE_AND_POP_AST_IF(ELSE, __VA_ARGS__)
+#define PARSE_AND_POP_AST_IF(...) \
+	_MULTI_PARSE_AND_POP_AST_IF(SEMICOLON, __VA_ARGS__)
+
+#define _INNER_JUST_PARSE_AND_POP_AST_LIST(to_set, func) \
+	func (); \
+	_pop_ast_list(to_set)
+#define _INNER_PARSE_AND_POP_AST_LIST_IF(to_set, func) \
+	if (CHECK_PARSE(func)) \
+	{ \
+		_INNER_JUST_PARSE_AND_POP_AST_LIST(to_set, func); \
+	}
+#define JUST_PARSE_AND_POP_AST_LIST(...) \
+	EVAL(MAP_PAIRS(_INNER_JUST_PARSE_AND_POP_AST_LIST, SEMICOLON, \
+		__VA_ARGS__))
+#define _MULTI_PARSE_AND_POP_AST_LIST_IF(sep, ...) \
+	EVAL(MAP_PAIRS(_INNER_PARSE_AND_POP_AST_LIST_IF, sep, __VA_ARGS__))
+#define PARSE_AND_POP_AST_LIST_IFELSE(...) \
+	_MULTI_PARSE_AND_POP_AST_LIST_IF(ELSE, __VA_ARGS__)
+#define PARSE_AND_POP_AST_LIST_IF(...) \
+	_MULTI_PARSE_AND_POP_AST_LIST_IF(SEMICOLON, __VA_ARGS__)
+
+#define _INNER_JUST_PARSE_AND_POP_STR_VEC(to_set, func) \
+	func (); \
+	_pop_str_vec(to_set)
+#define _INNER_PARSE_AND_POP_STR_VEC_IF(to_set, func) \
+	if (CHECK_PARSE(func)) \
+	{ \
+		_INNER_JUST_PARSE_AND_POP_STR_VEC(to_set, func); \
+	}
+#define JUST_PARSE_AND_POP_STR_VEC(...) \
+	EVAL(MAP_PAIRS(_INNER_JUST_PARSE_AND_POP_STR_VEC, SEMICOLON, \
+		__VA_ARGS__))
+#define _MULTI_PARSE_AND_POP_STR_VEC_IF(sep, ...) \
+	EVAL(MAP_PAIRS(_INNER_PARSE_AND_POP_STR_VEC_IF, sep, __VA_ARGS__))
+#define PARSE_AND_POP_STR_VEC_IFELSE(...) \
+	_MULTI_PARSE_AND_POP_STR_VEC_IF(ELSE, __VA_ARGS__)
+#define PARSE_AND_POP_STR_VEC_IF(...) \
+	_MULTI_PARSE_AND_POP_STR_VEC_IF(SEMICOLON, __VA_ARGS__)
+
+
 
 
 

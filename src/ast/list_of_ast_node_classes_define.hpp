@@ -12,5 +12,17 @@
 	X(ParamOrArgList) \
 	X(DeclParamListItem) \
 	X(DeclArgListItem) \
+	X(InstParamOrArgListNamedItem) \
+	\
+	X(DeclModule) \
+	X(DeclModuleScope) \
+	\
+	X(Modinst) \
+	\
+	X(GenIf) \
+	X(GenSwitchEtc) \
+	X(GenSwitchEtcCase) \
+	X(GenSwitchEtcDefault) \
+	X(GenFor) \
 
 //#endif		// src_ast_list_of_ast_node_classes_define_hpp

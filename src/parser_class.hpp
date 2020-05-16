@@ -12,15 +12,16 @@ namespace fling_hdl
 
 class AstNodeDeferredPusher;
 class AstNodeListDeferredPusher;
-class ParseFuncStrDeferredRestorer;
 
 class Parser final: public RdParserBase<Lexer, Parser>
 {
 	friend class AstNodeDeferredPusher;
 	friend class AstNodeListDeferredPusher;
-	friend class ParseFuncStrDeferredRestorer;
+	friend class StrVecDeferredPusher;
+
 public:		// types
 	using ParserBase = RdParserBase<Lexer, Parser>;
+	using StrVec = vector<string>;
 
 private:		// variables
 	size_t _max_ast_level;
@@ -29,6 +30,7 @@ private:		// variables
 	ast::Program* _ast_program = nullptr;
 	ast::Base* _curr_ast_parent = nullptr;
 
+	stack<unique_ptr<StrVec>> _str_vec_stack;
 	stack<unique_ptr<ast::BaseSptr>> _ast_stack;
 	stack<unique_ptr<ast::BaseSptrList>> _ast_list_stack;
 	string _parse_func_str;
@@ -41,6 +43,17 @@ public:		// misc. functions
 	}
 
 private:		// misc. functions
+	inline void _push_str_vec(StrVec&& to_push)
+	{
+		_str_vec_stack.push(unique_ptr<StrVec>(new StrVec(move(to_push))));
+	}
+	inline void _pop_str_vec(StrVec& to_set)
+	{
+		to_set = move(*_str_vec_stack.top());
+		_str_vec_stack.top().reset(nullptr);
+		_str_vec_stack.pop();
+	}
+
 	inline void _push_ast(ast::Base* to_push)
 	{
 		_ast_stack.push(unique_ptr<ast::BaseSptr>
@@ -248,6 +261,24 @@ public:		// functions
 	inline ~AstNodeListDeferredPusher()
 	{
 		_parser->_push_ast_list(move(*_node_list));
+	}
+};
+
+class StrVecDeferredPusher final
+{
+private:		// variables
+	Parser* _parser = nullptr;
+	Parser::StrVec* _vec = nullptr;
+public:		// functions
+	inline StrVecDeferredPusher(Parser* s_parser,
+		Parser::StrVec* s_vec)
+		: _parser(s_parser), _vec(s_vec)
+	{
+	}
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(StrVecDeferredPusher);
+	inline ~StrVecDeferredPusher()
+	{
+		_parser->_push_str_vec(move(*_vec));
 	}
 };
 

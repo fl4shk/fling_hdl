@@ -203,13 +203,104 @@ public:		// variables
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclArgListItem, Base);
 };
+
+class InstParamOrArgListNamedItem: public Base
+{
+public:		// variables
+	string ident;
+	BaseSptr item;
+public:		// functions
+	SHARED_FUNC_CONTENTS(InstParamOrArgListNamedItem, Base);
+};
 //--------
 
 //--------
-class InstParamOrArgListPosItem: public Base
+class DeclModule: public Base
 {
 public:		// variables
+	string ident;
+	BaseSptr opt_param_list, arg_list, scope;
 public:		// functions
+	SHARED_FUNC_CONTENTS(DeclModule, Base);
+};
+
+class DeclModuleScope: public Base
+{
+public:		// variables
+	BaseSptrList item_list;
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclModuleScope, Base);
+};
+//--------
+
+//--------
+class Modinst: public Base
+{
+public:		// variables
+	string ident;
+	BaseSptr typnm_or_modnm, arg_list;
+public:		// functions
+	SHARED_FUNC_CONTENTS(Modinst, Base);
+};
+//--------
+
+//--------
+class GenIf: public Base
+{
+public:		// variables
+	BaseSptr if_expr, if_scope;
+	BaseSptrList opt_else_if_expr_list, opt_else_if_scope_list;
+	BaseSptr opt_else_scope;
+public:		// functions
+	SHARED_FUNC_CONTENTS(GenIf, Base);
+};
+
+class GenSwitchEtc: public Base
+{
+public:		// types
+	enum class Kind
+	{
+		Switch,
+		Switchz,
+	};
+	static string conv_kind(Kind to_conv)
+	{
+		CONV_ENUM_SWITCH(CONV_KIND_CASE,
+			Switch,
+			Switchz);
+	}
+public:		// variables
+	Kind kind;
+	BaseSptr expr, opt_default;
+	BaseSptrList opt_case_list;
+public:		// functions
+	SHARED_FUNC_CONTENTS(GenSwitchEtc, Base);
+};
+
+class GenSwitchEtcCase: public Base
+{
+public:		// variables
+	BaseSptrList expr_list;
+	BaseSptr scope;
+public:		// functions
+	SHARED_FUNC_CONTENTS(GenSwitchEtcCase, Base);
+};
+
+class GenSwitchEtcDefault: public Base
+{
+public:		// variables
+	BaseSptr scope;
+public:		// functions
+	SHARED_FUNC_CONTENTS(GenSwitchEtcDefault, Base);
+};
+
+class GenFor: public Base
+{
+public:		// variables
+	string label, iter_ident;
+	BaseSptr range, scope;
+public:		// functions
+	SHARED_FUNC_CONTENTS(GenFor, Base);
 };
 //--------
 
