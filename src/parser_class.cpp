@@ -8,12 +8,26 @@ using namespace ast;
 
 #include "parser_class_defines.hpp"
 
+Parser::Parser(const string& s_filename)
+	: ParserBase(s_filename)
+{
+}
+int Parser::run()
+{
+	parseFlingProgram();
+}
 
 void Parser::parseFlingProgram()
 {
-	WHILE_NOT_TOK(MiscEof)
+	while (lex_tok() != Tok::MiscEof)
 	{
-		JUST_RG_RULES_PARSE(&Parser::parseFlingDeclPackageItem);
+		const auto& rgr_parse_ret = FANCY_RG_RULES_PARSE
+			(parseFlingDeclPackageItem, MiscEof);
+
+		if ((!rgr_parse_ret.second) && (lex_tok() != Tok::MiscEof))
+		{
+			_inner_expect_fail(rgr_parse_ret.first.second);
+		}
 	}
 	JUST_EXPECT(MiscEof);
 }
@@ -29,7 +43,7 @@ void Parser::parseFlingDeclPackage()
 
 		JUST_EXPECT(PunctLbrace);
 
-		WHILE_NOT_TOK(PunctRbrace)
+		while (lex_tok() != Tok::PunctRbrace)
 		{
 		}
 

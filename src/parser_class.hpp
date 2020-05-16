@@ -21,6 +21,9 @@ public:		// types
 
 private:		// variables
 	size_t _max_ast_level;
+
+	ast::BaseSptr _ast;
+	ast::Program* _ast_program = nullptr;
 	ast::Base* _curr_ast_parent = nullptr;
 
 	stack<unique_ptr<ast::BaseSptr>> _ast_stack;
@@ -65,12 +68,11 @@ private:		// misc. functions
 	}
 
 public:		// functions
-	inline Parser(const string& s_filename)
-		: ParserBase(s_filename)
-	{
-	}
+	Parser(const string& s_filename);
 	GEN_NO_CM_CONSTRUCTORS_AND_ASSIGN(Parser);
 	virtual inline ~Parser() = default;
+
+	int run();
 
 	GEN_GETTER_BY_VAL(max_ast_level);
 

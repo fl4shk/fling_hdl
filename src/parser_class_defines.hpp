@@ -36,11 +36,6 @@
 	JUST_EXPECT(MiscIdent); \
 	const auto& name = prev_lex_s()
 
-#define BASIC_RG_RULES_PARSE(arg) \
-	_rg_rules_parse(this, arg)
-#define FANCY_RG_RULES_PARSE(arg, ...) \
-	_rg_rules_parse(this, arg, TOK_SET(__VA_ARGS__))
-
 #define _INNER_RGR_INSERT(tok, func) \
 	/* Gurantee that the grammar is LL(1) */ \
 	if (_rgr_ret_map().count(Tok::tok) > 0) \
@@ -54,8 +49,11 @@
 #define RGR_INSERT(...) \
 	EVAL(MAP_PAIRS(_INNER_RGR_INSERT, SEMICOLON, __VA_ARGS__))
 
-#define WHILE_NOT_TOK(tok) \
-	while (lex_tok() != Tok::tok)
+#define BASIC_RG_RULES_PARSE(func) \
+	_rg_rules_parse(this, &Parser::func)
+#define FANCY_RG_RULES_PARSE(arg, ...) \
+	_rg_rules_parse(this, &Parser::func, TOK_SET(__VA_ARGS__))
+
 
 
 //#endif		// src_parser_class_defines_hpp
