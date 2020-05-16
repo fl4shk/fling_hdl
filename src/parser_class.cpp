@@ -19,15 +19,11 @@ int Parser::run()
 
 void Parser::parseFlingProgram()
 {
-	while (lex_tok() != Tok::MiscEof)
+	if (lex_tok() != Tok::MiscEof)
 	{
-		const auto& rgr_parse_ret = FANCY_RG_RULES_PARSE
-			(parseFlingDeclPackageItem, MiscEof);
-
-		if ((!rgr_parse_ret.second) && (lex_tok() != Tok::MiscEof))
-		{
-			_inner_expect_fail(rgr_parse_ret.first.second);
-		}
+		const auto& parse_ret = _rg_rules_parse
+			(&Parser::parseFlingDeclPackageItem, TOK_SET(MiscEof));
+		_post_rg_rules_parse(parse_ret);
 	}
 	JUST_EXPECT(MiscEof);
 }
@@ -35,7 +31,7 @@ void Parser::parseFlingDeclPackage()
 {
 	if (just_rg_rules())
 	{
-		RGR_INSERT(KwPackage, parseFlingDeclPackage);
+		RGR_INSERT(KwPackage, &Parser::parseFlingDeclPackage);
 	}
 	else
 	{
@@ -43,7 +39,7 @@ void Parser::parseFlingDeclPackage()
 
 		JUST_EXPECT(PunctLbrace);
 
-		while (lex_tok() != Tok::PunctRbrace)
+		if (lex_tok() != Tok::PunctRbrace)
 		{
 		}
 
