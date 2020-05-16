@@ -225,7 +225,7 @@ public:		// functions
 	inline AstNodeDeferredPusher(Parser* s_parser, ast::Base* s_node)
 		: _parser(s_parser), _node(s_node)
 	{
-		_prev_ast_parent = _pt_visitor->_curr_ast_parent;
+		_prev_ast_parent = _parser->_curr_ast_parent;
 		_parser->_curr_ast_parent = _node;
 
 		if (_parser->max_ast_level() < _node->level())
