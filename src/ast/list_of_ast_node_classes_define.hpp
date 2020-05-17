@@ -56,5 +56,14 @@
 	X(BinopExpr) \
 	X(UnopExpr) \
 	X(LitValExpr) \
+	X(CallDollarFuncExpr) \
+	X(IdentExpr) \
+	X(CatExpr) \
+	X(ReplExpr) \
+	X(SizedExpr) \
+	\
+	X(NonDollarFuncRange) \
+	\
+	X(TypenmOrModnm) \
 
 //#endif		// src_ast_list_of_ast_node_classes_define_hpp

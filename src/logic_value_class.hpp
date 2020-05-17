@@ -4,6 +4,7 @@
 // src/logic_value_class.hpp
 
 #include "misc_includes.hpp"
+#include "ast/ast_node_classes.hpp"
 
 namespace fling_hdl
 {
@@ -34,11 +35,20 @@ public:		// functions
 
 	optional<BigNum> to_bignum() const;
 
-	// This handles 
+	// This handles zero- and sign-extension.
 	void resize(size_t n_size);
 	inline size_t size() const
 	{
 		return vec().size();
+	}
+
+	inline auto& at(size_t index)
+	{
+		return _vec.at(index);
+	}
+	inline const auto& at(size_t index) const
+	{
+		return vec().at(index);
 	}
 
 	GEN_GETTER_BY_CON_REF(vec);

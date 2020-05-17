@@ -788,18 +788,19 @@ flingCallSubprogExpr:
 	;
 
 flingSubprogIdent:
-	flingScopedIdent flingInstParamList?
+	flingIdentExprStart flingTypenmOrModnmCstmChainItem*
+		flingInstParamList?
 	;
 
+flingIdentExprStart:
+	MiscIdent flingInstParamList?
+	;
 flingIdentExpr:
-	flingScopedIdent
-		flingInstParamList?
-		(
-			flingTypenmOrModnmCstmChainItem+
-
-			// Call a subprogram (potentially located within a package)
-			| flingInstArgList
-		)?
+	flingIdentExprStart
+		flingTypenmOrModnmCstmChainItem*
+		// Call a subprogram, which may be located inside of a package or
+		// inside of a type (via an `alias` in the latter's case).
+		flingInstArgList?
 
 		// Access members or array elements
 		(
@@ -807,15 +808,15 @@ flingIdentExpr:
 			| PunctLbracket flingExpr PunctRbracket
 		)*
 
-		// Access a slice.
+		// Access a slice or a single bit of a vector
 		(
-			// It is used here to keep the grammar LL(1).
-			PunctVectorStart
+			// This is used here to keep the grammar LL(1).
+			PunctVecDimStart
 				(
 					// Regular range
 					flingRange
 
-					// Indexed part select or a slice
+					// Indexed part select or a single bit
 					| flingExpr
 						(
 							(PunctPlusColon | PunctMinusColon)
@@ -837,15 +838,15 @@ flingReplExpr:
 	KwRepl PunctLparen flingExpr PunctComma flingExpr PunctRparen
 	;
 flingSizedExpr:
-	KwSized 
+	KwSized
 		PunctLparen 
-			flingExpr PunctComma
 			(
 				LitDecNum
 				| LitHexNum
 				| LitOctNum
 				| LitBinNum
 			)
+			PunctComma flingExpr 
 		PunctRparen
 	;
 //--------
@@ -862,13 +863,12 @@ flingNonSimpleRange:
 		(
 			PunctLparen flingExpr (PunctComma flingExpr)? PunctRparen
 
-			//| MiscIdent (flingInstParamList?
-			//	flingTypenmOrModnmCstmChainItem*
-			//	PunctScopeAccess MiscIdent)?
-
-			// I don't remember what the stuff from above is supposed to
-			// be.
-			| MiscIdent
+			// This is more complex than just a `MiscIdent` (all that's
+			// needed for a parameter list) because it includes support for
+			// `alias`es contained within custom types and packages.
+			| MiscIdent (flingInstParamList?
+				flingTypenmOrModnmCstmChainItem*
+				PunctScopeAccess MiscIdent)?
 		)
 	;
 
@@ -883,24 +883,20 @@ flingExprOrRange:
 //--------
 
 //--------
-flingTypenmOrModnmCstmStart:
-	MiscIdent flingInstParamList?
-	;
 flingTypenmOrModnmCstmChainItem:
-	PunctScopeAccess flingTypenmOrModnmCstmStart
+	PunctScopeAccess flingIdentExprStart
 	;
 flingTypenmOrModnm:
 	(
-		flingTypenmOrModnmCstmStart
+		flingIdentExprStart
 			flingTypenmOrModnmCstmChainItem*
-		| (KwUnsigned | KwSigned)? KwLogic flingInstParamList?
+		| (KwUnsigned | KwSigned)? KwLogic 
+			// Vector dimensions
+			(PunctVecDimStart flingExprOrRange PunctRbracket)?
 		| KwInteger
 	)
 		// Array dimensions
-		(PunctLbracket flingExpr PunctRbracket)*
-
-		// Vector dimensions
-		(PunctVectorStart flingExprOrRange PunctRbracket)?
+		(PunctLbracket flingExprOrRange PunctRbracket)*
 	;
 //--------
 
@@ -908,7 +904,7 @@ flingTypenmOrModnm:
 //--------
 LexWhitespace: (' ' | '\t' | '\r' | '\n') -> skip ;
 
-LexLineComment: ('//' ~('\n')+) -> skip ;
+LexLineComment: ('//' (~'\n')+) -> skip ;
 //--------
 
 //--------
@@ -1016,7 +1012,7 @@ PunctMapTo: '=>' ;
 
 //--------
 // The hash character looks like something has been sliced.
-PunctVectorStart: '#[' ;
+PunctVecDimStart: '#[' ;
 //--------
 
 //--------

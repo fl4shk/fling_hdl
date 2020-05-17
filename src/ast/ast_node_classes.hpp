@@ -553,7 +553,7 @@ public:		// functions
 class ExprBase: public Base
 {
 public:		// variables
-	LogicValue val;
+	//LogicValue val;
 public:		// functions
 	SHARED_FUNC_CONTENTS_2(ExprBase, Base);
 };
@@ -701,6 +701,13 @@ public:		// types
 		HighImped,
 		Unknown,
 	};
+	static string conv_kind(Kind to_conv)
+	{
+		CONV_ENUM_SWITCH(CONV_KIND_CASE,
+			Number,
+			HighImped,
+			Unknown);
+	}
 public:		// variables
 	Kind kind;
 	BaseSptr opt_expr;
@@ -708,6 +715,125 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(LitValExpr, ExprBase);
 };
 
+class CallDollarFuncExpr: public ExprBase
+{
+public:		// types
+	enum class Kind
+	{
+		Size,
+		Range,
+		High,
+		Low,
+
+		Unsigned,
+		Signed,
+		IsUnsigned,
+		IsSigned,
+
+		Pow,
+	};
+	static string conv_kind(Kind to_conv)
+	{
+		CONV_ENUM_SWITCH(CONV_KIND_CASE,
+			Size,
+			Range,
+			High,
+			Low,
+
+			Unsigned,
+			Signed,
+			IsUnsigned,
+			IsSigned,
+
+			Pow);
+	}
+public:		// variables
+	Kind kind;
+	BaseSptr arg, opt_second_arg;
+public:		// functions
+	SHARED_FUNC_CONTENTS(CallDollarFuncExpr, ExprBase);
+};
+
+class IdentExpr: public ExprBase
+{
+public:		// types
+	using MembOrArrIndex = variant<string, BaseSptr>;
+public:		// variables
+	BaseSptrList prologue_list;
+	BaseSptr opt_arg_list;
+
+	// Access members or array elements
+	IndCircLinkList<MembOrArrIndex> acc_memb_or_arr;
+
+	BaseSptr opt_range_etc;
+	bool part_sel_is_minus_colon = false;
+	BaseSptr opt_part_sel_right;
+public:		// functions
+	SHARED_FUNC_CONTENTS(IdentExpr, ExprBase);
+};
+
+class CatExpr: public ExprBase
+{
+public:		// variables
+	BaseSptrList item_list;
+public:		// functions
+	SHARED_FUNC_CONTENTS(CatExpr, ExprBase);
+};
+
+class ReplExpr: public ExprBase
+{
+public:		// variables
+	BaseSptr amount, to_repl;
+public:		// functions
+	SHARED_FUNC_CONTENTS(ReplExpr, ExprBase);
+};
+
+class SizedExpr: public ExprBase
+{
+public:		// variables
+	BaseSptr lit_num, width;
+public:		// functions
+	SHARED_FUNC_CONTENTS(SizedExpr, ExprBase);
+};
+//--------
+
+//--------
+class NonDollarFuncRange: public Base
+{
+public:		// variables
+	BaseSptr arg, opt_second_arg;
+public:		// functions
+	SHARED_FUNC_CONTENTS(NonDollarFuncRange, Base);
+};
+//--------
+
+//--------
+class TypenmOrModnm: public Base
+{
+public:		// types
+	enum class Kind
+	{
+		Cstm,
+		Logic,
+		SignedLogic,
+		Integer,
+	};
+	static string conv_kind(Kind to_conv)
+	{
+		CONV_ENUM_SWITCH(CONV_KIND_CASE,
+			Cstm,
+			Logic,
+			SignedLogic,
+			Integer);
+	}
+public:		// variables
+	Kind kind;
+	BaseSptr ident_expr;
+	BaseSptr opt_vec_dim;
+	BaseSptrList opt_arr_dim_list;
+public:		// functions
+	SHARED_FUNC_CONTENTS(TypenmOrModnm, Base);
+};
 //--------
 
 

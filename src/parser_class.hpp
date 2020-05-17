@@ -203,6 +203,7 @@ public:		// parsing functions
 	ParseRet _parseFlingCallDollarFuncExpr();
 	ParseRet _parseFlingCallSubprogExpr();
 	ParseRet _parseFlingSubprogIdent();
+	ParseRet _parseFlingIdentExprStart();
 	ParseRet _parseFlingIdentExpr();
 	ParseRet _parseFlingCatExpr();
 	ParseRet _parseFlingReplExpr();
@@ -211,7 +212,6 @@ public:		// parsing functions
 	ParseRet _parseFlingNonSimpleRange();
 	ParseRet _parseFlingSimpleRangeSuffix();
 	ParseRet _parseFlingExprOrRange();
-	ParseRet _parseFlingTypenmOrModnmCstmStart();
 	ParseRet _parseFlingTypenmOrModnmCstmChainItem();
 	ParseRet _parseFlingTypenmOrModnm();
 

@@ -1655,6 +1655,21 @@ auto Parser::_parseFlingSubprogIdent() -> ParseRet
 		return std::nullopt;
 	}
 }
+auto Parser::_parseFlingIdentExprStart() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingIdentExprStart);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
 auto Parser::_parseFlingIdentExpr() -> ParseRet
 {
 	PROLOGUE_AND_EPILOGUE(_parseFlingIdentExpr);
@@ -1763,21 +1778,6 @@ auto Parser::_parseFlingSimpleRangeSuffix() -> ParseRet
 auto Parser::_parseFlingExprOrRange() -> ParseRet
 {
 	PROLOGUE_AND_EPILOGUE(_parseFlingExprOrRange);
-
-	if (just_get_valid_tokens())
-	{
-		TokSet ret;
-
-		return ret;
-	}
-	else // if (!just_get_valid_tokens())
-	{
-		return std::nullopt;
-	}
-}
-auto Parser::_parseFlingTypenmOrModnmCstmStart() -> ParseRet
-{
-	PROLOGUE_AND_EPILOGUE(_parseFlingTypenmOrModnmCstmStart);
 
 	if (just_get_valid_tokens())
 	{
