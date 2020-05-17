@@ -187,34 +187,34 @@ flingDeclModuleGen:
 	;
 
 flingDeclModuleGenIf:
-	KwGen KwIf flingExpr flingDeclModuleScope
-	(KwElse KwGen KwIf flingExpr flingDeclModuleScope)*
-	(KwElse KwGen flingDeclModuleScope)?
+	KwGenIf flingExpr flingDeclModuleScope
+	(KwGenElif flingExpr flingDeclModuleScope)*
+	(KwGenElse flingDeclModuleScope)?
 	;
 
 flingDeclModuleGenSwitchEtc:
-	KwGen (KwSwitch | KwSwitchz) flingExpr
+	(KwGenSwitch | KwGenSwitchz) flingExpr
 	PunctLbrace
 		(
-			flingDeclModuleGenSwitchEtcCase*
-			flingDeclModuleGenSwitchEtcDefault?
-			| flingDeclModuleGenSwitchEtcDefault
-			flingDeclModuleGenSwitchEtcCase*
+			flingDeclModuleGenCase*
+			flingDeclModuleGenDefault?
+			| flingDeclModuleGenDefault
+			flingDeclModuleGenCase*
 		)?
 	PunctRbrace
 	;
 
-flingDeclModuleGenSwitchEtcCase:
-	KwCase flingExprList flingDeclModuleScope
+flingDeclModuleGenCase:
+	KwGenCase flingExprList flingDeclModuleScope
 	;
-flingDeclModuleGenSwitchEtcDefault:
-	KwDefault flingDeclModuleScope
+flingDeclModuleGenDefault:
+	KwGeDefault flingDeclModuleScope
 	;
 
 flingDeclModuleGenFor:
-	KwGen
+	KwGenFor
 		PunctLbracket MiscIdent PunctRbracket
-		KwFor MiscIdent PunctColon flingRange
+		MiscIdent PunctColon flingRange
 		flingDeclModuleScope
 	;
 //--------
@@ -258,7 +258,7 @@ flingDeclModuleBehavScopeItem:
 
 flingDeclModuleBehavScopeItemIf:
 	KwIf flingExpr flingDeclModuleBehavScope
-	(KwElse KwIf flingExpr flingDeclModuleBehavScope)*
+	(KwElif flingExpr flingDeclModuleBehavScope)*
 	(KwElse flingDeclModuleBehavScope)?
 	;
 
@@ -299,34 +299,34 @@ flingDeclModuleBehavScopeItemGen:
 	;
 
 flingDeclModuleBehavScopeItemGenIf:
-	KwGen KwIf flingExpr flingDeclModuleBehavScope
-	(KwElse KwGen KwIf flingExpr flingDeclModuleBehavScope)*
-	(KwElse KwGen flingDeclModuleBehavScope)?
+	KwGenIf flingExpr flingDeclModuleBehavScope
+	(KwGenElif flingExpr flingDeclModuleBehavScope)*
+	(KwGenElse flingDeclModuleBehavScope)?
 	;
 
 flingDeclModuleBehavScopeItemGenSwitchEtc:
-	KwGen (KwSwitch | KwSwitchz) flingExpr
+	(KwGenSwitch | KwGenSwitchz) flingExpr
 	PunctLbrace
 		(
-			flingDeclModuleBehavScopeItemGenSwitchEtcCase*
-			flingDeclModuleBehavScopeItemGenSwitchEtcDefault?
-			| flingDeclModuleBehavScopeItemGenSwitchEtcDefault
-			flingDeclModuleBehavScopeItemGenSwitchEtcCase*
+			flingDeclModuleBehavScopeItemGenCase*
+			flingDeclModuleBehavScopeItemGenDefault?
+			| flingDeclModuleBehavScopeItemGenDefault
+			flingDeclModuleBehavScopeItemGenCase*
 		)?
 	PunctRbrace
 	;
 
-flingDeclModuleBehavScopeItemGenSwitchEtcCase:
-	KwCase flingExprList flingDeclModuleBehavScope
+flingDeclModuleBehavScopeItemGenCase:
+	KwGenCase flingExprList flingDeclModuleBehavScope
 	;
-flingDeclModuleBehavScopeItemGenSwitchEtcDefault:
-	KwDefault flingDeclModuleBehavScope
+flingDeclModuleBehavScopeItemGenDefault:
+	KwGeDefault flingDeclModuleBehavScope
 	;
 
 flingDeclModuleBehavScopeItemGenFor:
-	KwGen
+	KwGenFor
 		PunctLbracket MiscIdent PunctRbracket
-		KwFor MiscIdent PunctColon flingRange
+		MiscIdent PunctColon flingRange
 		flingDeclModuleBehavScope
 	;
 //--------
@@ -357,75 +357,75 @@ flingAnyBehavScopeItemAssign:
 
 //--------
 flingDeclCompositeType:
-	flingDeclCompositeTypeStruct
-	//| flingDeclCompositeTypeClass
+	flingDeclStruct
+	//| flingDeclClass
 	;
 //--------
 
 //--------
-flingDeclCompositeTypeStruct:
+flingDeclStruct:
 	KwStruct MiscIdent flingDeclParamList?
+		flingDeclStructScope
+	;
 
+flingDeclStructScope:
 	PunctLbrace
-		(
-			flingDeclCompositeTypeStructItem
-			(PunctComma flingDeclCompositeTypeStructItem)*
-		)?
+		flingDeclStructScopeItem*
 	PunctRbrace
 	;
 
-flingDeclCompositeTypeStructItem:
+flingDeclStructScopeItem:
 	flingImport
 
 	| flingDeclConst
-	| flingDeclVarNoInitVal
+	| flingDeclVarNoDefVal
 
 	| flingDeclAlias
 
 	| flingDeclCompositeType
 	| flingDeclEnum
 
-	| flingCompositeTypeStructItemGen
+	| flingDeclStructScopeItemGen
 	;
 //--------
 
 //--------
-flingCompositeTypeStructItemGen:
-	flingCompositeTypeStructItemGenIf
-	| flingCompositeTypeStructItemGenSwitchEtc
-	| flingCompositeTypeStructItemGenFor
+flingDeclStructScopeItemGen:
+	flingDeclStructScopeItemGenIf
+	| flingDeclStructScopeItemGenSwitchEtc
+	| flingDeclStructScopeItemGenFor
 	;
 
-flingCompositeTypeStructItemGenIf:
-	KwGen KwIf flingExpr flingDeclModuleScope
-	(KwElse KwGen KwIf flingExpr flingDeclModuleScope)*
-	(KwElse KwGen flingDeclModuleScope)?
+flingDeclStructScopeItemGenIf:
+	KwGenIf flingExpr flingDeclStructScope
+	(KwGenElif flingExpr flingDeclStructScope)*
+	(KwGenElse flingDeclStructScope)?
 	;
 
-flingCompositeTypeStructItemGenSwitchEtc:
-	KwGen (KwSwitch | KwSwitchz) flingExpr
+flingDeclStructScopeItemGenSwitchEtc:
+	(KwGenSwitch | KwGenSwitchz) flingExpr
 	PunctLbrace
 		(
-			flingCompositeTypeStructItemGenSwitchEtcCase*
-			flingCompositeTypeStructItemGenSwitchEtcDefault?
-			| flingCompositeTypeStructItemGenSwitchEtcDefault
-			flingCompositeTypeStructItemGenSwitchEtcCase*
+			flingDeclStructScopeItemGenCase*
+			flingDeclStructScopeItemGenDefault?
+			| flingDeclStructScopeItemGenDefault
+			flingDeclStructScopeItemGenCase*
 		)?
 	PunctRbrace
 	;
 
-flingCompositeTypeStructItemGenSwitchEtcCase:
-	KwCase flingExprList flingDeclModuleScope
+flingDeclStructScopeItemGenCase:
+	KwGenCase flingExprList flingDeclStructScope
 	;
-flingCompositeTypeStructItemGenSwitchEtcDefault:
-	KwDefault flingDeclModuleScope
+flingDeclStructScopeItemGenDefault:
+	KwGeDefault flingDeclStructScope
 	;
 
-flingCompositeTypeStructItemGenFor:
-	KwGen
+flingDeclStructScopeItemGenFor:
+	KwGenFor
 		PunctLbracket MiscIdent PunctRbracket
-		KwFor MiscIdent PunctColon flingRange
-		flingDeclModuleScope
+		MiscIdent PunctColon flingRange
+		flingDeclStructScope
 	;
 //--------
 
@@ -448,22 +448,22 @@ flingDeclEnumItem:
 //--------
 flingDeclSubprog:
 	(
-		flingDeclSubprogFuncHeader
-		| flingDeclSubprogTaskHeader
+		flingDeclFuncHeader
+		| flingDeclTaskHeader
 	)
 		flingDeclSubprogScope
 	;
 //--------
 
 //--------
-flingDeclSubprogFuncHeader:
+flingDeclFuncHeader:
 	KwFunc MiscIdent
 		flingDeclParamList?
 		flingDeclArgList
 		PunctColon flingTypenmOrModnm
 	;
 
-flingDeclSubprogTaskHeader:
+flingDeclTaskHeader:
 	KwTask MiscIdent
 		flingDeclParamList?
 		flingDeclArgList
@@ -495,7 +495,7 @@ flingDeclSubprogScopeItem:
 
 flingDeclSubprogScopeItemIf:
 	KwIf flingExpr flingDeclSubprogScope
-	(KwElse KwIf flingExpr flingDeclSubprogScope)*
+	(KwElif flingExpr flingDeclSubprogScope)*
 	(KwElse flingDeclSubprogScope)?
 	;
 
@@ -537,34 +537,34 @@ flingDeclSubprogScopeItemGen:
 	;
 
 flingDeclSubprogScopeItemGenIf:
-	KwGen KwIf flingExpr flingDeclSubprogScope
-	(KwElse KwGen KwIf flingExpr flingDeclSubprogScope)*
-	(KwElse KwGen flingDeclSubprogScope)?
+	KwGenIf flingExpr flingDeclSubprogScope
+	(KwGenElif flingExpr flingDeclSubprogScope)*
+	(KwGenElse flingDeclSubprogScope)?
 	;
 
 flingDeclSubprogScopeItemGenSwitchEtc:
-	KwGen (KwSwitch | KwSwitchz) flingExpr
+	(KwGenSwitch | KwGenSwitchz) flingExpr
 	PunctLbrace
 		(
-			flingDeclSubprogScopeItemGenSwitchEtcCase*
-			flingDeclSubprogScopeItemGenSwitchEtcDefault?
-			| flingDeclSubprogScopeItemGenSwitchEtcDefault
-			flingDeclSubprogScopeItemGenSwitchEtcCase*
+			flingDeclSubprogScopeItemGenCase*
+			flingDeclSubprogScopeItemGenDefault?
+			| flingDeclSubprogScopeItemGenDefault
+			flingDeclSubprogScopeItemGenCase*
 		)?
 	PunctRbrace
 	;
 
-flingDeclSubprogScopeItemGenSwitchEtcCase:
-	KwCase flingExprList flingDeclSubprogScope
+flingDeclSubprogScopeItemGenCase:
+	KwGenCase flingExprList flingDeclSubprogScope
 	;
-flingDeclSubprogScopeItemGenSwitchEtcDefault:
-	KwDefault flingDeclSubprogScope
+flingDeclSubprogScopeItemGenDefault:
+	KwGeDefault flingDeclSubprogScope
 	;
 
 flingDeclSubprogScopeItemGenFor:
-	KwGen
+	KwGenFor
 		PunctLbracket MiscIdent PunctRbracket
-		KwFor MiscIdent PunctColon flingRange
+		MiscIdent PunctColon flingRange
 		flingDeclSubprogScope
 	;
 //--------
@@ -575,7 +575,7 @@ flingDeclConst:
 		PunctBlkAssign flingExprList PunctSemicolon
 	;
 
-flingDeclVarNoInitVal:
+flingDeclVarNoDefVal:
 	KwVar flingIdentList PunctColon flingTypenmOrModnm PunctSemicolon
 	;
 
@@ -600,7 +600,7 @@ flingDeclAlias:
 			flingTypenmOrModnm PunctBlkAssign flingExprList
 			| KwRange PunctBlkAssign flingRangeList
 			| (KwType | KwModule) PunctBlkAssign flingTypenmOrModnmList
-			| (KwFunc | KwTask)  PunctBlkAssignflingSubprogIdentList
+			| (KwFunc | KwTask) PunctBlkAssign flingSubprogIdentList
 		)
 		PunctSemicolon
 	;
@@ -635,7 +635,12 @@ flingTypenmOrModnmList:
 	;
 
 flingImportItem:
-	flingScopedIdent (PunctScopeAccess KwAll)?
+	//flingScopedIdent (PunctScopeAccess KwAll)?
+
+	// This needs special handling.
+	// This makes the grammar as a whole LL(2), which can be handled with
+	// my existing parsing infrastructure.
+	MiscIdent (PunctScopeAccess MiscIdent)* (PunctScopeAccess KwAll)?
 	;
 flingImportItemList:
 	flingImportItem (PunctComma flingImportItemList)*
@@ -729,7 +734,13 @@ flingBitshiftExpr:
 	;
 
 flingUnaryExpr:
-	(PunctPlus | PunctMinus | PunctBitnot | PunctLognot) flingExpr
+	(PunctPlus | PunctMinus
+		| PunctBitnot | PunctLognot
+		| PunctBitor | PunctBitnor
+		| PunctBitand | PunctBitnand
+		| PunctBitxor | PunctBitxnor)
+		flingExpr
+
 	| flingLowExpr
 	;
 
@@ -746,6 +757,8 @@ flingLowExpr:
 
 	| flingCallDollarFuncExpr
 
+	// This includes calling functions.  The AST builder will need to
+	// determine what kind of AST node this yields.
 	| flingIdentExpr
 
 	| flingCatExpr
@@ -1050,8 +1063,17 @@ KwTask: 'task' ;
 //KwParpk: 'parpk' ;
 //KwUnparpk: 'unparpk' ;
 
-KwGen: 'gen' ;
+KwGenIf: 'gen_if' ;
+KwGenElif: 'gen_elif' ;
+KwGenElse: 'gen_else' ;
+KwGenSwitch: 'gen_switch' ;
+KwGenSwitchz: 'gen_switchz' ;
+KwGenCase: 'gen_case' ;
+KwGenDefault: 'gen_default' ;
+KwGenFor: 'gen_for' ;
+
 KwIf: 'if' ;
+KwElif: 'elif' ;
 KwElse: 'else' ;
 
 KwSwitch: 'switch' ;

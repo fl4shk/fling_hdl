@@ -20,7 +20,7 @@
 #define _INNER_PARSE_IFELSE(func) \
 	if (CHECK_PARSE(func)) \
 	{ \
-		/*_found_tok = true;*/ \
+		_found_tok = true; \
 		func (); \
 	}
 #define PARSE_IFELSE(...) \
@@ -28,6 +28,8 @@
 
 #define CHECK_PARSE(func) \
 	_check_parse(&Parser::func)
+#define IF_PARSE(func) \
+	_if_parse(&Parser::func)
 
 #define _INNER_JUST_PARSE_AND_POP_AST(to_set, func) \
 	func (); \

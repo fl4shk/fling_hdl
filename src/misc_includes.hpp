@@ -21,6 +21,7 @@
 #include <string.h>
 #include <libgen.h>
 
+using std::pair;
 using std::stack;
 using std::vector;
 using std::string;

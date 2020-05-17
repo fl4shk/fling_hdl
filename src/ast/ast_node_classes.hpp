@@ -5,6 +5,7 @@
 
 #include "../misc_includes.hpp"
 #include "../liborangepower_src/cpp_magic.hpp"
+#include "../logic_value_class.hpp"
 #include "ast_visitor_class.hpp"
 
 namespace fling_hdl
@@ -127,6 +128,15 @@ public:		// variables
 public:		// functions
 	SHARED_FUNC_CONTENTS(Import, Base);
 };
+
+class ImportItem: public Base
+{
+public:		// variables
+	BaseSptrList item_list;
+	bool ends_with_all = false;
+public:		// functions
+	SHARED_FUNC_CONTENTS(ImportItem, Base);
+};
 //--------
 
 //--------
@@ -198,19 +208,19 @@ public:		// types
 public:		// variables
 	string ident;
 	Kind kind;
-	BaseSptr typenm_or_modnm;
+	BaseSptr typenm;
 	BaseSptrList opt_def_val_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclArgListItem, Base);
 };
 
-class InstParamOrArgListNamedItem: public Base
+class StrAndNode: public Base
 {
 public:		// variables
-	string ident;
-	BaseSptr item;
+	string str;
+	BaseSptr node;
 public:		// functions
-	SHARED_FUNC_CONTENTS(InstParamOrArgListNamedItem, Base);
+	SHARED_FUNC_CONTENTS(StrAndNode, Base);
 };
 //--------
 
@@ -224,12 +234,12 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(DeclModule, Base);
 };
 
-class DeclModuleScope: public Base
+class Scope: public Base
 {
 public:		// variables
 	BaseSptrList item_list;
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclModuleScope, Base);
+	SHARED_FUNC_CONTENTS(Scope, Base);
 };
 //--------
 
@@ -238,7 +248,7 @@ class Modinst: public Base
 {
 public:		// variables
 	string ident;
-	BaseSptr typnm_or_modnm, arg_list;
+	BaseSptr modnm, arg_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(Modinst, Base);
 };
@@ -249,7 +259,7 @@ class GenIf: public Base
 {
 public:		// variables
 	BaseSptr if_expr, if_scope;
-	BaseSptrList opt_else_if_expr_list, opt_else_if_scope_list;
+	BaseSptrList opt_elif_expr_list, opt_elif_scope_list;
 	BaseSptr opt_else_scope;
 public:		// functions
 	SHARED_FUNC_CONTENTS(GenIf, Base);
@@ -277,21 +287,21 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(GenSwitchEtc, Base);
 };
 
-class GenSwitchEtcCase: public Base
+class GenCase: public Base
 {
 public:		// variables
 	BaseSptrList expr_list;
 	BaseSptr scope;
 public:		// functions
-	SHARED_FUNC_CONTENTS(GenSwitchEtcCase, Base);
+	SHARED_FUNC_CONTENTS(GenCase, Base);
 };
 
-class GenSwitchEtcDefault: public Base
+class GenDefault: public Base
 {
 public:		// variables
 	BaseSptr scope;
 public:		// functions
-	SHARED_FUNC_CONTENTS(GenSwitchEtcDefault, Base);
+	SHARED_FUNC_CONTENTS(GenDefault, Base);
 };
 
 class GenFor: public Base
@@ -305,8 +315,400 @@ public:		// functions
 //--------
 
 //--------
+class DeclModuleBehavComb: public Base
+{
+public:		// variables
+	BaseSptr scope;
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclModuleBehavComb, Base);
+};
+
+class DeclModuleBehavSeq: public Base
+{
+public:		// variables
+	BaseSptrList edge_item_list;
+	BaseSptr scope;
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclModuleBehavSeq, Base);
+};
+class DeclModuleBehavSeqEdgeItem: public Base
+{
+public:		// types
+	enum class Kind
+	{
+		Posedge,
+		Negedge,
+	};
+	static string conv_kind(Kind to_conv)
+	{
+		CONV_ENUM_SWITCH(CONV_KIND_CASE,
+			Posedge,
+			Negedge);
+	}
+public:		// variables
+	Kind kind;
+	BaseSptr expr;
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclModuleBehavSeqEdgeItem, Base);
+};
 //--------
 
+//--------
+class BehavIf: public GenIf
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(BehavIf, GenIf);
+};
+
+class BehavSwitchEtc: public GenSwitchEtc
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(BehavSwitchEtc, GenSwitchEtc);
+};
+
+class BehavCase: public GenCase
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(BehavCase, GenCase);
+};
+
+class BehavDefault: public GenDefault
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(BehavDefault, GenDefault);
+};
+
+class BehavFor: public Base
+{
+public:		// variables
+	string ident;
+	BaseSptr range, scope;
+public:		// functions
+	SHARED_FUNC_CONTENTS(BehavFor, Base);
+};
+
+class BehavWhile: public Base
+{
+public:		// variables
+	BaseSptr range, scope;
+public:		// functions
+	SHARED_FUNC_CONTENTS(BehavWhile, Base);
+};
+//--------
+
+//--------
+class BehavAssign: public Base
+{
+public:		// types
+	enum class Kind
+	{
+		Blk,
+		NonBlk,
+	};
+	static string conv_kind(Kind to_conv)
+	{
+		CONV_ENUM_SWITCH(CONV_KIND_CASE,
+			Blk,
+			NonBlk);
+	}
+public:		// variables
+	BaseSptr lhs;
+	Kind kind;
+	BaseSptr rhs;
+public:		// functions
+	SHARED_FUNC_CONTENTS(BehavAssign, Base);
+};
+//--------
+
+//--------
+class DeclStruct: public Base
+{
+public:		// variables
+	string ident;
+	BaseSptr opt_param_list, scope;
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclStruct, Base);
+};
+//--------
+
+//--------
+class DeclEnum: public Base
+{
+public:		// variables
+	string ident;
+	BaseSptr opt_typenm;
+	BaseSptrList item_list;
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclEnum, Base);
+};
+//--------
+
+//--------
+class DeclSubprog: public Base
+{
+public:		// types
+	enum class Kind
+	{
+		Func,
+		Task
+	};
+	static string conv_kind(Kind to_conv)
+	{
+		CONV_ENUM_SWITCH(CONV_KIND_CASE,
+			Func,
+			Task);
+	}
+public:		// variables
+	Kind kind;
+	string ident;
+	BaseSptr opt_param_list, arg_list, opt_ret_typenm, scope;
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclSubprog, Base);
+};
+//--------
+
+//--------
+class DeclVarEtc: public Base
+{
+public:		// types
+	enum class Kind
+	{
+		Const,
+		Var,
+		Wire,
+	};
+	static string conv_kind(Kind to_conv)
+	{
+		CONV_ENUM_SWITCH(CONV_KIND_CASE,
+			Const,
+			Var,
+			Wire);
+	}
+public:		// variables
+	Kind kind;
+	string ident;
+	BaseSptr typenm, val;
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclVarEtc, Base);
+};
+
+class WireAssign: public Base
+{
+public:		// variables
+	BaseSptr lhs, rhs;
+public:		// functions
+	SHARED_FUNC_CONTENTS(WireAssign, Base);
+};
+//--------
+
+//--------
+class DeclAlias: public Base
+{
+public:		// types
+	enum class Kind
+	{
+		Var,
+		Range,
+
+		Type,
+		Module,
+
+		Func,
+		Task,
+	};
+	static string conv_kind(Kind to_conv)
+	{
+		CONV_ENUM_SWITCH(CONV_KIND_CASE,
+			Var,
+			Range,
+
+			Type,
+			Module,
+
+			Func,
+			Task)
+	}
+public:		// variables
+	string ident;
+	Kind kind;
+	BaseSptr rhs;
+public:		// functions
+	SHARED_FUNC_CONTENTS(DeclAlias, Base);
+};
+//--------
+
+//--------
+class NamedScope: public Base
+{
+public:		// variables
+	// Expected child type:  StrAndNode, where `node` is intended to be an
+	// instance `ParamOrArgList`
+	BaseSptrList item_list;
+public:		// functions
+	SHARED_FUNC_CONTENTS(NamedScope, Base);
+};
+//--------
+
+//--------
+class ExprBase: public Base
+{
+public:		// variables
+	LogicValue val;
+public:		// functions
+	SHARED_FUNC_CONTENTS_2(ExprBase, Base);
+};
+
+class MuxExpr: public ExprBase
+{
+public:		// variables
+	BaseSptr cond, when_true, when_false;
+public:		// functions
+	SHARED_FUNC_CONTENTS(MuxExpr, ExprBase);
+};
+
+class BinopExpr: public ExprBase
+{
+public:		// types
+	enum class Kind
+	{
+		Logor,
+		Logand,
+
+		CmpEq,
+		CmpNe,
+		CaseCmpEq,
+		CaseCmpNe,
+
+		CmpLt,
+		CmpGt,
+		CmpLe,
+		CmpGe,
+
+		Plus,
+		Minus,
+
+		Mul,
+		Div,
+		Mod,
+
+		Bitor,
+		Bitnor,
+
+		Bitand,
+		Bitnand,
+
+		Bitxor,
+		Bitxnor,
+
+		Lsl,
+		Lsr,
+		Asr,
+	};
+	static string conv_kind(Kind to_conv)
+	{
+		CONV_ENUM_SWITCH(CONV_KIND_CASE,
+			Logor,
+			Logand,
+
+			CmpEq,
+			CmpNe,
+			CaseCmpEq,
+			CaseCmpNe,
+
+			CmpLt,
+			CmpGt,
+			CmpLe,
+			CmpGe,
+
+			Plus,
+			Minus,
+
+			Mul,
+			Div,
+			Mod,
+
+			Bitor,
+			Bitnor,
+
+			Bitand,
+			Bitnand,
+
+			Bitxor,
+			Bitxnor,
+
+			Lsl,
+			Lsr,
+			Asr);
+	}
+public:		// variables
+	Kind kind;
+	BaseSptr left, right;
+public:		// functions
+	SHARED_FUNC_CONTENTS(BinopExpr, ExprBase);
+};
+
+class UnopExpr: public ExprBase
+{
+public:		// types
+	enum class Kind
+	{
+		Plus,
+		Minus,
+
+		Bitnot,
+		Lognot,
+
+		Bitor,
+		Bitnor,
+
+		Bitand,
+		Bitnand,
+
+		Bitxor,
+		Bitxnor,
+	};
+	static string conv_kind(Kind to_conv)
+	{
+		CONV_ENUM_SWITCH(CONV_KIND_CASE,
+			Plus,
+			Minus,
+
+			Bitnot,
+			Lognot,
+
+			Bitor,
+			Bitnor,
+
+			Bitand,
+			Bitnand,
+
+			Bitxor,
+			Bitxnor);
+	}
+public:		// variables
+	Kind kind;
+	BaseSptr arg;
+public:		// functions
+	SHARED_FUNC_CONTENTS(UnopExpr, ExprBase);
+};
+
+class LitValExpr: public ExprBase
+{
+public:		// types
+	enum class Kind
+	{
+		Number,
+		HighImped,
+		Unknown,
+	};
+public:		// variables
+	Kind kind;
+	BaseSptr opt_expr;
+public:		// functions
+	SHARED_FUNC_CONTENTS(LitValExpr, ExprBase);
+};
+
+//--------
 
 
 } // namespace ast

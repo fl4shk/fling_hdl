@@ -37,9 +37,17 @@
 	X(KwParpk, "parpk") \
 	X(KwUnparpk, "unparpk") \
 	\
-	X(KwGen, "gen") \
+	X(KwGenIf, "gen_if") \
+	X(KwGenElif, "gen_elif") \
+	X(KwGenElse, "gen_else") \
+	X(KwGenSwitch, "gen_switch") \
+	X(KwGenSwitchz, "gen_switchz") \
+	X(KwGenCase, "gen_case") \
+	X(KwGenDefault, "gen_default") \
+	X(KwGenFor, "gen_for") \
 	\
 	X(KwIf, "if") \
+	X(KwElif, "elif") \
 	X(KwElse, "else") \
 	\
 	X(KwSwitch, "switch") \

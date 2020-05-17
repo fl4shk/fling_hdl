@@ -395,9 +395,9 @@ auto Parser::_parseFlingDeclModuleGenSwitchEtc() -> ParseRet
 		return std::nullopt;
 	}
 }
-auto Parser::_parseFlingDeclModuleGenSwitchEtcCase() -> ParseRet
+auto Parser::_parseFlingDeclModuleGenCase() -> ParseRet
 {
-	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleGenSwitchEtcCase);
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleGenCase);
 
 	if (just_get_valid_tokens())
 	{
@@ -410,9 +410,9 @@ auto Parser::_parseFlingDeclModuleGenSwitchEtcCase() -> ParseRet
 		return std::nullopt;
 	}
 }
-auto Parser::_parseFlingDeclModuleGenSwitchEtcDefault() -> ParseRet
+auto Parser::_parseFlingDeclModuleGenDefault() -> ParseRet
 {
-	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleGenSwitchEtcDefault);
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleGenDefault);
 
 	if (just_get_valid_tokens())
 	{
@@ -560,9 +560,9 @@ auto Parser::_parseFlingDeclModuleBehavScopeItemSwitchEtc() -> ParseRet
 		return std::nullopt;
 	}
 }
-auto Parser::_parseFlingDeclModuleBehavScopeItemSwitchEtcCase() -> ParseRet
+auto Parser::_parseFlingDeclModuleBehavScopeItemCase() -> ParseRet
 {
-	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItemSwitchEtcCase);
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItemCase);
 
 	if (just_get_valid_tokens())
 	{
@@ -575,9 +575,9 @@ auto Parser::_parseFlingDeclModuleBehavScopeItemSwitchEtcCase() -> ParseRet
 		return std::nullopt;
 	}
 }
-auto Parser::_parseFlingDeclModuleBehavScopeItemSwitchEtcDefault() -> ParseRet
+auto Parser::_parseFlingDeclModuleBehavScopeItemDefault() -> ParseRet
 {
-	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItemSwitchEtcDefault);
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItemDefault);
 
 	if (just_get_valid_tokens())
 	{
@@ -665,9 +665,9 @@ auto Parser::_parseFlingDeclModuleBehavScopeItemGenSwitchEtc() -> ParseRet
 		return std::nullopt;
 	}
 }
-auto Parser::_parseFlingDeclModuleBehavScopeItemGenSwitchEtcCase() -> ParseRet
+auto Parser::_parseFlingDeclModuleBehavScopeItemGenCase() -> ParseRet
 {
-	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItemGenSwitchEtcCase);
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItemGenCase);
 
 	if (just_get_valid_tokens())
 	{
@@ -680,9 +680,9 @@ auto Parser::_parseFlingDeclModuleBehavScopeItemGenSwitchEtcCase() -> ParseRet
 		return std::nullopt;
 	}
 }
-auto Parser::_parseFlingDeclModuleBehavScopeItemGenSwitchEtcDefault() -> ParseRet
+auto Parser::_parseFlingDeclModuleBehavScopeItemGenDefault() -> ParseRet
 {
-	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItemGenSwitchEtcDefault);
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItemGenDefault);
 
 	if (just_get_valid_tokens())
 	{
@@ -755,9 +755,9 @@ auto Parser::_parseFlingDeclCompositeType() -> ParseRet
 		return std::nullopt;
 	}
 }
-auto Parser::_parseFlingDeclCompositeTypeStruct() -> ParseRet
+auto Parser::_parseFlingDeclStruct() -> ParseRet
 {
-	PROLOGUE_AND_EPILOGUE(_parseFlingDeclCompositeTypeStruct);
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclStruct);
 
 	if (just_get_valid_tokens())
 	{
@@ -770,9 +770,9 @@ auto Parser::_parseFlingDeclCompositeTypeStruct() -> ParseRet
 		return std::nullopt;
 	}
 }
-auto Parser::_parseFlingDeclCompositeTypeStructItem() -> ParseRet
+auto Parser::_parseFlingDeclStructScope() -> ParseRet
 {
-	PROLOGUE_AND_EPILOGUE(_parseFlingDeclCompositeTypeStructItem);
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclStructScope);
 
 	if (just_get_valid_tokens())
 	{
@@ -785,9 +785,9 @@ auto Parser::_parseFlingDeclCompositeTypeStructItem() -> ParseRet
 		return std::nullopt;
 	}
 }
-auto Parser::_parseFlingCompositeTypeStructItemGen() -> ParseRet
+auto Parser::_parseFlingDeclStructScopeItem() -> ParseRet
 {
-	PROLOGUE_AND_EPILOGUE(_parseFlingCompositeTypeStructItemGen);
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclStructScopeItem);
 
 	if (just_get_valid_tokens())
 	{
@@ -800,9 +800,9 @@ auto Parser::_parseFlingCompositeTypeStructItemGen() -> ParseRet
 		return std::nullopt;
 	}
 }
-auto Parser::_parseFlingCompositeTypeStructItemGenIf() -> ParseRet
+auto Parser::_parseFlingDeclStructScopeItemGen() -> ParseRet
 {
-	PROLOGUE_AND_EPILOGUE(_parseFlingCompositeTypeStructItemGenIf);
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclStructScopeItemGen);
 
 	if (just_get_valid_tokens())
 	{
@@ -815,9 +815,9 @@ auto Parser::_parseFlingCompositeTypeStructItemGenIf() -> ParseRet
 		return std::nullopt;
 	}
 }
-auto Parser::_parseFlingCompositeTypeStructItemGenSwitchEtc() -> ParseRet
+auto Parser::_parseFlingDeclStructScopeItemGenIf() -> ParseRet
 {
-	PROLOGUE_AND_EPILOGUE(_parseFlingCompositeTypeStructItemGenSwitchEtc);
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclStructScopeItemGenIf);
 
 	if (just_get_valid_tokens())
 	{
@@ -830,9 +830,9 @@ auto Parser::_parseFlingCompositeTypeStructItemGenSwitchEtc() -> ParseRet
 		return std::nullopt;
 	}
 }
-auto Parser::_parseFlingCompositeTypeStructItemGenSwitchEtcCase() -> ParseRet
+auto Parser::_parseFlingDeclStructScopeItemGenSwitchEtc() -> ParseRet
 {
-	PROLOGUE_AND_EPILOGUE(_parseFlingCompositeTypeStructItemGenSwitchEtcCase);
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclStructScopeItemGenSwitchEtc);
 
 	if (just_get_valid_tokens())
 	{
@@ -845,9 +845,9 @@ auto Parser::_parseFlingCompositeTypeStructItemGenSwitchEtcCase() -> ParseRet
 		return std::nullopt;
 	}
 }
-auto Parser::_parseFlingCompositeTypeStructItemGenSwitchEtcDefault() -> ParseRet
+auto Parser::_parseFlingDeclStructScopeItemGenCase() -> ParseRet
 {
-	PROLOGUE_AND_EPILOGUE(_parseFlingCompositeTypeStructItemGenSwitchEtcDefault);
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclStructScopeItemGenCase);
 
 	if (just_get_valid_tokens())
 	{
@@ -860,9 +860,24 @@ auto Parser::_parseFlingCompositeTypeStructItemGenSwitchEtcDefault() -> ParseRet
 		return std::nullopt;
 	}
 }
-auto Parser::_parseFlingCompositeTypeStructItemGenFor() -> ParseRet
+auto Parser::_parseFlingDeclStructScopeItemGenDefault() -> ParseRet
 {
-	PROLOGUE_AND_EPILOGUE(_parseFlingCompositeTypeStructItemGenFor);
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclStructScopeItemGenDefault);
+
+	if (just_get_valid_tokens())
+	{
+		TokSet ret;
+
+		return ret;
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingDeclStructScopeItemGenFor() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclStructScopeItemGenFor);
 
 	if (just_get_valid_tokens())
 	{
@@ -920,9 +935,9 @@ auto Parser::_parseFlingDeclSubprog() -> ParseRet
 		return std::nullopt;
 	}
 }
-auto Parser::_parseFlingDeclSubprogFuncHeader() -> ParseRet
+auto Parser::_parseFlingDeclFuncHeader() -> ParseRet
 {
-	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogFuncHeader);
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclFuncHeader);
 
 	if (just_get_valid_tokens())
 	{
@@ -935,9 +950,9 @@ auto Parser::_parseFlingDeclSubprogFuncHeader() -> ParseRet
 		return std::nullopt;
 	}
 }
-auto Parser::_parseFlingDeclSubprogTaskHeader() -> ParseRet
+auto Parser::_parseFlingDeclTaskHeader() -> ParseRet
 {
-	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogTaskHeader);
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclTaskHeader);
 
 	if (just_get_valid_tokens())
 	{
@@ -1010,9 +1025,9 @@ auto Parser::_parseFlingDeclSubprogScopeItemSwitchEtc() -> ParseRet
 		return std::nullopt;
 	}
 }
-auto Parser::_parseFlingDeclSubprogScopeItemSwitchEtcCase() -> ParseRet
+auto Parser::_parseFlingDeclSubprogScopeItemCase() -> ParseRet
 {
-	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItemSwitchEtcCase);
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItemCase);
 
 	if (just_get_valid_tokens())
 	{
@@ -1025,9 +1040,9 @@ auto Parser::_parseFlingDeclSubprogScopeItemSwitchEtcCase() -> ParseRet
 		return std::nullopt;
 	}
 }
-auto Parser::_parseFlingDeclSubprogScopeItemSwitchEtcDefault() -> ParseRet
+auto Parser::_parseFlingDeclSubprogScopeItemDefault() -> ParseRet
 {
-	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItemSwitchEtcDefault);
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItemDefault);
 
 	if (just_get_valid_tokens())
 	{
@@ -1115,9 +1130,9 @@ auto Parser::_parseFlingDeclSubprogScopeItemGenSwitchEtc() -> ParseRet
 		return std::nullopt;
 	}
 }
-auto Parser::_parseFlingDeclSubprogScopeItemGenSwitchEtcCase() -> ParseRet
+auto Parser::_parseFlingDeclSubprogScopeItemGenCase() -> ParseRet
 {
-	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItemGenSwitchEtcCase);
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItemGenCase);
 
 	if (just_get_valid_tokens())
 	{
@@ -1130,9 +1145,9 @@ auto Parser::_parseFlingDeclSubprogScopeItemGenSwitchEtcCase() -> ParseRet
 		return std::nullopt;
 	}
 }
-auto Parser::_parseFlingDeclSubprogScopeItemGenSwitchEtcDefault() -> ParseRet
+auto Parser::_parseFlingDeclSubprogScopeItemGenDefault() -> ParseRet
 {
-	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItemGenSwitchEtcDefault);
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItemGenDefault);
 
 	if (just_get_valid_tokens())
 	{
@@ -1175,9 +1190,9 @@ auto Parser::_parseFlingDeclConst() -> ParseRet
 		return std::nullopt;
 	}
 }
-auto Parser::_parseFlingDeclVarNoInitVal() -> ParseRet
+auto Parser::_parseFlingDeclVarNoDefVal() -> ParseRet
 {
-	PROLOGUE_AND_EPILOGUE(_parseFlingDeclVarNoInitVal);
+	PROLOGUE_AND_EPILOGUE(_parseFlingDeclVarNoDefVal);
 
 	if (just_get_valid_tokens())
 	{
