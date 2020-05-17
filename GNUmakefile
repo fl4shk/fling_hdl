@@ -4,6 +4,7 @@
 
 
 SHARED_SRC_DIRS:=src \
+	src/ast \
 
 CXX_DIRS:=$(SHARED_SRC_DIRS)
 C_DIRS:=$(SHARED_SRC_DIRS)
