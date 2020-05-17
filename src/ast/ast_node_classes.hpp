@@ -304,6 +304,9 @@ public:		// functions
 };
 //--------
 
+//--------
+//--------
+
 
 
 } // namespace ast

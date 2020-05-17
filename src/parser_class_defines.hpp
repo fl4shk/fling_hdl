@@ -20,7 +20,7 @@
 #define _INNER_PARSE_IFELSE(func) \
 	if (CHECK_PARSE(func)) \
 	{ \
-		_found_tok = true; \
+		/*_found_tok = true;*/ \
 		func (); \
 	}
 #define PARSE_IFELSE(...) \
