@@ -723,6 +723,8 @@ public:		// types
 	}
 public:		// variables
 	Kind kind;
+	string opt_num_str;
+	BigNum opt_num;
 	BaseSptr opt_expr;
 public:		// functions
 	SHARED_FUNC_CONTENTS(LitValExpr, ExprBase);

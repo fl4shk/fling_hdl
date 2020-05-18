@@ -3,6 +3,7 @@
 namespace fling_hdl
 {
 
+using namespace ast;
 
 void AstToDotConverter::convert(const string& dst_filename,
 	size_t max_ast_level, const ast::BaseSptr& ast_root)
@@ -129,6 +130,112 @@ void AstToDotConverter::_print_dot_wires(size_t level)
 	}
 
 
+//--------
+build(Program)
+//--------
 
+//--------
+build(DeclPackage, wrap(ident))
+
+build(Import)
+build(ImportItem, wrap(ends_with_all))
+//--------
+
+//--------
+build(ParamOrArgList)
+
+build(DeclParamListItem, wrap(ident), wrap_conv(kind))
+build(DeclArgListItem, wrap(ident), wrap_conv(kind))
+build(StrAndNode, wrap(str))
+//--------
+
+//--------
+build(DeclModule, wrap(ident))
+build(Scope)
+//--------
+
+//--------
+build(Modinst, wrap(ident))
+//--------
+
+//--------
+build(GenIf)
+build(GenElif)
+build(GenSwitchEtc, wrap_conv(kind))
+build(GenCase)
+build(GenDefault)
+build(GenFor, wrap(label, iter_ident))
+//--------
+
+//--------
+build(DeclModuleBehavComb)
+build(DeclModuleBehavSeq)
+build(DeclModuleBehavSeqEdgeItem, wrap_conv(kind))
+//--------
+
+//--------
+build(BehavIf)
+build(BehavElif)
+build(BehavSwitchEtc, wrap_conv(kind))
+build(BehavCase)
+build(BehavDefault)
+build(BehavFor, wrap(iter_ident))
+build(BehavWhile)
+//--------
+
+//--------
+build(BehavAssign, wrap_conv(kind))
+//--------
+
+//--------
+build(DeclStruct, wrap(ident))
+//--------
+
+//--------
+build(DeclEnum, wrap(ident))
+//--------
+
+//--------
+build(DeclSubprog, wrap_conv(kind), wrap(ident))
+//--------
+
+//--------
+build(DeclVarEtc, wrap_conv(kind), wrap(ident))
+build(WireAssign)
+//--------
+
+//--------
+build(DeclAlias, wrap(ident), wrap_conv(kind))
+//--------
+
+//--------
+build(NamedScope)
+//--------
+
+//--------
+build(MuxExpr, wrap(is_self_determined))
+build(BinopExpr, wrap_conv(kind))
+build(UnopExpr, wrap_conv(kind))
+
+build(LitValExpr, wrap_conv(kind), wrap(opt_num_str, opt_num))
+
+build(CallDollarFuncExpr, wrap_conv(kind))
+
+build(AccessMember, wrap(ident))
+build(IdentExpr)
+
+build(CatExpr)
+build(ReplExpr)
+
+build(SizedExpr)
+//--------
+
+//--------
+build(NonDollarFuncRange)
+//--------
+
+//--------
+build(TypenmOrModnm, wrap_conv(kind))
+//--------
 
 } // namespace fling_hdl
