@@ -25,7 +25,6 @@ auto Parser::_parseFlingProgram() -> ParseRet
 
 	while (CHECK_PARSE(_parseFlingDeclPackageItem))
 	{
-		_found_tok = true;
 		_parseFlingDeclPackageItem();
 	}
 
