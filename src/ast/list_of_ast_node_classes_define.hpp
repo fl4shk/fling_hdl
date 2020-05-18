@@ -21,6 +21,7 @@
 	X(Modinst) \
 	\
 	X(GenIf) \
+	X(GenElif) \
 	X(GenSwitchEtc) \
 	X(GenCase) \
 	X(GenDefault) \
@@ -31,6 +32,7 @@
 	X(DeclModuleBehavSeqEdgeItem) \
 	\
 	X(BehavIf) \
+	X(BehavElif) \
 	X(BehavSwitchEtc) \
 	X(BehavCase) \
 	X(BehavDefault) \
@@ -57,6 +59,7 @@
 	X(UnopExpr) \
 	X(LitValExpr) \
 	X(CallDollarFuncExpr) \
+	X(AccessMember) \
 	X(IdentExpr) \
 	X(CatExpr) \
 	X(ReplExpr) \

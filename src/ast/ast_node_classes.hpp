@@ -259,10 +259,17 @@ class GenIf: public Base
 {
 public:		// variables
 	BaseSptr if_expr, if_scope;
-	BaseSptrList opt_elif_expr_list, opt_elif_scope_list;
+	BaseSptrList opt_elif_list;
 	BaseSptr opt_else_scope;
 public:		// functions
 	SHARED_FUNC_CONTENTS(GenIf, Base);
+};
+class GenElif: public Base
+{
+public:		// variables
+	BaseSptr expr, scope;
+public:		// variables
+	SHARED_FUNC_CONTENTS(GenElif, Base);
 };
 
 class GenSwitchEtc: public Base
@@ -359,6 +366,11 @@ class BehavIf: public GenIf
 public:		// functions
 	SHARED_FUNC_CONTENTS(BehavIf, GenIf);
 };
+class BehavElif: public GenElif
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(BehavElif, GenElif);
+};
 
 class BehavSwitchEtc: public GenSwitchEtc
 {
@@ -381,7 +393,7 @@ public:		// functions
 class BehavFor: public Base
 {
 public:		// variables
-	string ident;
+	string iter_ident;
 	BaseSptr range, scope;
 public:		// functions
 	SHARED_FUNC_CONTENTS(BehavFor, Base);
@@ -390,7 +402,7 @@ public:		// functions
 class BehavWhile: public Base
 {
 public:		// variables
-	BaseSptr range, scope;
+	BaseSptr expr, scope;
 public:		// functions
 	SHARED_FUNC_CONTENTS(BehavWhile, Base);
 };
@@ -542,7 +554,7 @@ class NamedScope: public Base
 {
 public:		// variables
 	// Expected child type:  StrAndNode, where `node` is intended to be an
-	// instance `ParamOrArgList`
+	// instance of `ParamOrArgList`
 	BaseSptrList item_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(NamedScope, Base);
@@ -554,6 +566,7 @@ class ExprBase: public Base
 {
 public:		// variables
 	//LogicValue val;
+	bool is_self_determined;
 public:		// functions
 	SHARED_FUNC_CONTENTS_2(ExprBase, Base);
 };
@@ -754,16 +767,22 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(CallDollarFuncExpr, ExprBase);
 };
 
+class AccessMember: public Base
+{
+public:		// variables
+	string ident;
+public:		// functions
+	SHARED_FUNC_CONTENTS(AccessMember, Base);
+};
+
 class IdentExpr: public ExprBase
 {
-public:		// types
-	using MembOrArrIndex = variant<string, BaseSptr>;
 public:		// variables
 	BaseSptrList prologue_list;
 	BaseSptr opt_arg_list;
 
 	// Access members or array elements
-	IndCircLinkList<MembOrArrIndex> acc_memb_or_arr;
+	BaseSptrList acc_memb_or_arr_list;
 
 	BaseSptr opt_range_etc;
 	bool part_sel_is_minus_colon = false;
@@ -828,8 +847,7 @@ public:		// types
 	}
 public:		// variables
 	Kind kind;
-	BaseSptr ident_expr;
-	BaseSptr opt_vec_dim;
+	BaseSptr opt_ident_expr, opt_vec_dim;
 	BaseSptrList opt_arr_dim_list;
 public:		// functions
 	SHARED_FUNC_CONTENTS(TypenmOrModnm, Base);
