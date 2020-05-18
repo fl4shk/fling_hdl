@@ -23,11 +23,11 @@ auto Parser::_parseFlingProgram() -> ParseRet
 	PROLOGUE_AND_EPILOGUE(_parseFlingProgram);
 	INSERT_WANTED_TOK(MiscEof);
 
-	//while (CHECK_PARSE(_parseFlingDeclPackageItem))
-	//{
-	//	_found_tok = true;
-	//	_parseFlingDeclPackageItem();
-	//}
+	while (CHECK_PARSE(_parseFlingDeclPackageItem))
+	{
+		_found_tok = true;
+		_parseFlingDeclPackageItem();
+	}
 
 	_fail_if_not_found_wanted_tok();
 
