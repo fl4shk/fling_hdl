@@ -14,6 +14,9 @@ Parser::Parser(const string& s_filename)
 }
 int Parser::run()
 {
+	_max_ast_level = 0;
+	_ast_program = make_ast(Program);
+	_ast.reset(_ast_program);
 	_parseFlingProgram();
 	return 0;
 }
@@ -21,13 +24,17 @@ int Parser::run()
 auto Parser::_parseFlingProgram() -> ParseRet
 {
 	PROLOGUE_AND_EPILOGUE(_parseFlingProgram);
+
 	INSERT_WANTED_TOK(MiscEof);
 
 	while (ATTEMPT_PARSE(_parseFlingDeclPackageItem))
 	{
+		BaseSptr to_push;
+		_pop_ast(to_push);
+		_ast_program->item_list.push_back(move(to_push));
 	}
 
-	_fail_if_not_found_wanted_tok();
+	_expect_wanted_tok();
 
 	return std::nullopt;
 }
@@ -37,9 +44,7 @@ auto Parser::_parseFlingDeclPackage() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		TokSet ret;
-
-		return ret;
+		return TOK_SET(KwPackage);
 	}
 	else // if (!just_get_valid_tokens())
 	{

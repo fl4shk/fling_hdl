@@ -778,7 +778,7 @@ flingCallDollarFuncExpr:
 		| KwDollarIsUnsigned
 		| KwDollarIsSigned
 	)
-		PunctLparen flingExpr PunctRparen
+		(flingExpr | flingTypenmOrModnm)
 
 	| KwDollarPow PunctLparen flingExpr PunctComma flingExpr PunctRparen
 	;
@@ -858,7 +858,7 @@ flingRange:
 	;
 
 flingNonSimpleRange:
-	KwDollarRange PunctLparen flingExpr PunctRparen
+	KwDollarRange flingExpr
 	| KwRange 
 		(
 			PunctLparen flingExpr (PunctComma flingExpr)? PunctRparen
