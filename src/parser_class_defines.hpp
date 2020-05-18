@@ -20,7 +20,6 @@
 #define _INNER_PARSE_IFELSE(func) \
 	if (CHECK_PARSE(func)) \
 	{ \
-		_found_wanted_tok = true; \
 		func (); \
 	}
 #define PARSE_IFELSE(...) \
@@ -32,7 +31,6 @@
 	_attempt_parse(&Parser::func)
 
 #define _INNER_JUST_PARSE_AND_POP_AST(to_set, func) \
-	_found_wanted_tok = true; \
 	func (); \
 	_pop_ast(to_set)
 #define _INNER_PARSE_AND_POP_AST_IF(to_set, func) \
@@ -51,7 +49,6 @@
 	_MULTI_PARSE_AND_POP_AST_IF(SEMICOLON, __VA_ARGS__)
 
 #define _INNER_JUST_PARSE_AND_POP_AST_LIST(to_set, func) \
-	_found_wanted_tok = true;
 	func (); \
 	_pop_ast_list(to_set)
 #define _INNER_PARSE_AND_POP_AST_LIST_IF(to_set, func) \
@@ -70,7 +67,6 @@
 	_MULTI_PARSE_AND_POP_AST_LIST_IF(SEMICOLON, __VA_ARGS__)
 
 #define _INNER_JUST_PARSE_AND_POP_STR_VEC(to_set, func) \
-	_found_wanted_tok = true;
 	func (); \
 	_pop_str_vec(to_set)
 #define _INNER_PARSE_AND_POP_STR_VEC_IF(to_set, func) \
