@@ -29,8 +29,6 @@ auto Parser::_parseFlingProgram() -> ParseRet
 
 	_fail_if_not_found_wanted_tok();
 
-	JUST_EXPECT(MiscEof);
-
 	return std::nullopt;
 }
 auto Parser::_parseFlingDeclPackage() -> ParseRet
