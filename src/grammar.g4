@@ -78,60 +78,44 @@ flingDeclArgListItem:
 
 //--------
 flingInstParamList:
-	flingInstParamListPos
-	| flingInstParamListNamed
-	;
-flingInstParamListPos:
 	PunctCmpLt
 		(
-			flingInstParamListPosItem
-			(PunctComma flingInstParamListPosItem)*
+			flingInstParamListItem
+			(PunctComma flingInstParamListItem)*
 		)?
 	PunctCmpGt
 	;
-flingInstParamListPosItem:
+flingInstParamListItem:
+	flingInstParamListItemPos
+	| flingInstParamListItemNamed
+	;
+flingInstParamListItemPos:
 	// This *may* actually indicate that we are dealing with a type name,
 	// module name, subprogram name, or range.
 	flingExprOrRange
 	;
-flingInstParamListNamed:
-	PunctCmpLt
-		(
-			flingInstParamListNamedItem
-			(PunctComma flingInstParamListNamedItem)*
-		)?
-	PunctCmpGt
-	;
-flingInstParamListNamedItem:
-	MiscIdent PunctMapTo flingInstParamListPosItem
+flingInstParamListItemNamed:
+	PunctMemberAccess MiscIdent (PunctMapTo flingInstParamListItemPos)?
 	;
 
 
 flingInstArgList:
-	flingInstArgListPos
-	| flingInstArgListNamed
-	;
-flingInstArgListPos:
 	PunctLparen
 		(
-			flingInstArgListPosItem
-			(PunctComma flingInstArgListPosItem)*
+			flingInstArgListItem
+			(PunctComma flingInstArgListItem)*
 		)?
 	PunctRparen
 	;
-flingInstArgListPosItem:
+flingInstArgListItem:
+	flingInstArgListItemPos
+	| flingInstArgListItemNamed
+	;
+flingInstArgListItemPos:
 	flingExpr
 	;
-flingInstArgListNamed:
-	PunctLparen
-		(
-			flingInstArgListNamedItem
-			(PunctComma flingInstArgListNamedItem)*
-		)?
-	PunctRparen
-	;
-flingInstArgListNamedItem:
-	MiscIdent PunctMapTo flingInstArgListPosItem
+flingInstArgListItemNamed:
+	PunctMemberAccess MiscIdent (PunctMapTo flingInstArgListItemPos)?
 	;
 //--------
 
@@ -266,18 +250,18 @@ flingDeclModuleBehavScopeItemSwitchEtc:
 	(KwSwitch | KwSwitchz) flingExpr
 	PunctLbrace
 		(
-			flingDeclModuleBehavScopeItemSwitchEtcCase*
-			flingDeclModuleBehavScopeItemSwitchEtcDefault?
+			flingDeclModuleBehavScopeItemCase*
+			flingDeclModuleBehavScopeItemDefault?
 
-			| flingDeclModuleBehavScopeItemSwitchEtcDefault
-			flingDeclModuleBehavScopeItemSwitchEtcCase*
+			| flingDeclModuleBehavScopeItemDefault
+			flingDeclModuleBehavScopeItemCase*
 		)?
 	PunctRbrace
 
-flingDeclModuleBehavScopeItemSwitchEtcCase:
+flingDeclModuleBehavScopeItemCase:
 	KwCase flingExprList flingDeclModuleBehavScope
 	;
-flingDeclModuleBehavScopeItemSwitchEtcDefault:
+flingDeclModuleBehavScopeItemDefault:
 	KwDefault flingDeclModuleBehavScope
 	;
 
@@ -503,18 +487,18 @@ flingDeclSubprogScopeItemSwitchEtc:
 	(KwSwitch | KwSwitchz) flingExpr
 	PunctLbrace
 		(
-			flingDeclSubprogScopeItemSwitchEtcCase*
-			flingDeclSubprogScopeItemSwitchEtcDefault?
+			flingDeclSubprogScopeItemCase*
+			flingDeclSubprogScopeItemDefault?
 
-			| flingDeclSubprogScopeItemSwitchEtcDefault
-			flingDeclSubprogScopeItemSwitchEtcCase*
+			| flingDeclSubprogScopeItemDefault
+			flingDeclSubprogScopeItemCase*
 		)?
 	PunctRbrace
 
-flingDeclSubprogScopeItemSwitchEtcCase:
+flingDeclSubprogScopeItemCase:
 	KwCase flingExprList flingDeclSubprogScope
 	;
-flingDeclSubprogScopeItemSwitchEtcDefault:
+flingDeclSubprogScopeItemDefault:
 	KwDefault flingDeclSubprogScope
 	;
 
@@ -638,8 +622,6 @@ flingImportItem:
 	//flingScopedIdent (PunctScopeAccess KwAll)?
 
 	// This needs special handling.
-	// This makes the grammar as a whole LL(2), which can be handled with
-	// my existing parsing infrastructure.
 	MiscIdent (PunctScopeAccess MiscIdent)* (PunctScopeAccess KwAll)?
 	;
 flingImportItemList:

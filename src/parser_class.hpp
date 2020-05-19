@@ -94,34 +94,51 @@ public:		// functions
 	GEN_GETTER_BY_VAL(max_ast_level);
 
 public:		// parsing functions
+	//--------
 	ParseRet _parseFlingProgram();
+	//--------
+
+	//--------
 	ParseRet _parseFlingDeclPackage();
 	ParseRet _parseFlingDeclPackageItem();
 	ParseRet _parseFlingImport();
+	//--------
+
+	//--------
 	ParseRet _parseFlingDeclParamList();
 	ParseRet _parseFlingDeclParamListItem();
 	ParseRet _parseFlingDeclArgList();
 	ParseRet _parseFlingDeclArgListItem();
 	ParseRet _parseFlingInstParamList();
-	ParseRet _parseFlingInstParamListPos();
-	ParseRet _parseFlingInstParamListPosItem();
-	ParseRet _parseFlingInstParamListNamed();
-	ParseRet _parseFlingInstParamListNamedItem();
+	ParseRet _parseFlingInstParamListItem();
+	ParseRet _parseFlingInstParamListItemPos();
+	ParseRet _parseFlingInstParamListItemNamed();
 	ParseRet _parseFlingInstArgList();
-	ParseRet _parseFlingInstArgListPos();
-	ParseRet _parseFlingInstArgListPosItem();
-	ParseRet _parseFlingInstArgListNamed();
-	ParseRet _parseFlingInstArgListNamedItem();
+	ParseRet _parseFlingInstArgListItem();
+	ParseRet _parseFlingInstArgListItemPos();
+	ParseRet _parseFlingInstArgListItemNamed();
+	//--------
+
+	//--------
 	ParseRet _parseFlingDeclModule();
 	ParseRet _parseFlingDeclModuleScope();
 	ParseRet _parseFlingDeclModuleItem();
+	//--------
+
+	//--------
 	ParseRet _parseFlingModinst();
+	//--------
+
+	//--------
 	ParseRet _parseFlingDeclModuleGen();
 	ParseRet _parseFlingDeclModuleGenIf();
 	ParseRet _parseFlingDeclModuleGenSwitchEtc();
 	ParseRet _parseFlingDeclModuleGenCase();
 	ParseRet _parseFlingDeclModuleGenDefault();
 	ParseRet _parseFlingDeclModuleGenFor();
+	//--------
+
+	//--------
 	ParseRet _parseFlingDeclModuleBehav();
 	ParseRet _parseFlingDeclModuleBehavComb();
 	ParseRet _parseFlingDeclModuleBehavSeq();
@@ -134,29 +151,56 @@ public:		// parsing functions
 	ParseRet _parseFlingDeclModuleBehavScopeItemDefault();
 	ParseRet _parseFlingDeclModuleBehavScopeItemFor();
 	ParseRet _parseFlingDeclModuleBehavScopeItemWhile();
+	//--------
+
+	//--------
 	ParseRet _parseFlingDeclModuleBehavScopeItemGen();
 	ParseRet _parseFlingDeclModuleBehavScopeItemGenIf();
 	ParseRet _parseFlingDeclModuleBehavScopeItemGenSwitchEtc();
 	ParseRet _parseFlingDeclModuleBehavScopeItemGenCase();
 	ParseRet _parseFlingDeclModuleBehavScopeItemGenDefault();
 	ParseRet _parseFlingDeclModuleBehavScopeItemGenFor();
+	//--------
+
+	//--------
 	ParseRet _parseFlingAnyBehavScopeItem();
 	ParseRet _parseFlingAnyBehavScopeItemAssign();
+	//--------
+
+	//--------
 	ParseRet _parseFlingDeclCompositeType();
+	//--------
+
+	//--------
 	ParseRet _parseFlingDeclStruct();
 	ParseRet _parseFlingDeclStructScope();
 	ParseRet _parseFlingDeclStructScopeItem();
+	//--------
+
+	//--------
 	ParseRet _parseFlingDeclStructScopeItemGen();
 	ParseRet _parseFlingDeclStructScopeItemGenIf();
 	ParseRet _parseFlingDeclStructScopeItemGenSwitchEtc();
 	ParseRet _parseFlingDeclStructScopeItemGenCase();
 	ParseRet _parseFlingDeclStructScopeItemGenDefault();
 	ParseRet _parseFlingDeclStructScopeItemGenFor();
+	//--------
+
+	//--------
 	ParseRet _parseFlingDeclEnum();
 	ParseRet _parseFlingDeclEnumItem();
+	//--------
+
+	//--------
 	ParseRet _parseFlingDeclSubprog();
+	//--------
+
+	//--------
 	ParseRet _parseFlingDeclFuncHeader();
 	ParseRet _parseFlingDeclTaskHeader();
+	//--------
+
+	//--------
 	ParseRet _parseFlingDeclSubprogScope();
 	ParseRet _parseFlingDeclSubprogScopeItem();
 	ParseRet _parseFlingDeclSubprogScopeItemIf();
@@ -165,18 +209,27 @@ public:		// parsing functions
 	ParseRet _parseFlingDeclSubprogScopeItemDefault();
 	ParseRet _parseFlingDeclSubprogScopeItemFor();
 	ParseRet _parseFlingDeclSubprogScopeItemWhile();
+	//--------
+
+	//--------
 	ParseRet _parseFlingDeclSubprogScopeItemGen();
 	ParseRet _parseFlingDeclSubprogScopeItemGenIf();
 	ParseRet _parseFlingDeclSubprogScopeItemGenSwitchEtc();
 	ParseRet _parseFlingDeclSubprogScopeItemGenCase();
 	ParseRet _parseFlingDeclSubprogScopeItemGenDefault();
 	ParseRet _parseFlingDeclSubprogScopeItemGenFor();
+	//--------
+
+	//--------
 	ParseRet _parseFlingDeclConst();
 	ParseRet _parseFlingDeclVarNoDefVal();
 	ParseRet _parseFlingDeclVar();
 	ParseRet _parseFlingDeclWire();
 	ParseRet _parseFlingWireAssign();
 	ParseRet _parseFlingDeclAlias();
+	//--------
+
+	//--------
 	ParseRet _parseFlingScopedIdent();
 	ParseRet _parseFlingIdentList();
 	ParseRet _parseFlingSubprogIdentList();
@@ -186,6 +239,9 @@ public:		// parsing functions
 	ParseRet _parseFlingTypenmOrModnmList();
 	ParseRet _parseFlingImportItem();
 	ParseRet _parseFlingImportItemList();
+	//--------
+
+	//--------
 	ParseRet _parseFlingExpr();
 	ParseRet _parseFlingMuxExpr();
 	ParseRet _parseFlingLogorExpr();
@@ -208,12 +264,19 @@ public:		// parsing functions
 	ParseRet _parseFlingCatExpr();
 	ParseRet _parseFlingReplExpr();
 	ParseRet _parseFlingSizedExpr();
+	//--------
+
+	//--------
 	ParseRet _parseFlingRange();
 	ParseRet _parseFlingNonSimpleRange();
 	ParseRet _parseFlingSimpleRangeSuffix();
 	ParseRet _parseFlingExprOrRange();
+	//--------
+
+	//--------
 	ParseRet _parseFlingTypenmOrModnmCstmChainItem();
 	ParseRet _parseFlingTypenmOrModnm();
+	//--------
 
 	#define X(name, dummy_0) \
 		ParseRet parseTok##name();
