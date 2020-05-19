@@ -192,12 +192,12 @@ flingDeclModuleGenCase:
 	KwGenCase flingExprList flingDeclModuleScope
 	;
 flingDeclModuleGenDefault:
-	KwGeDefault flingDeclModuleScope
+	KwGenDefault flingDeclModuleScope
 	;
 
 flingDeclModuleGenFor:
 	KwGenFor
-		PunctLbracket MiscIdent PunctRbracket
+		(PunctLbracket MiscIdent PunctRbracket)?
 		MiscIdent PunctColon flingRange
 		flingDeclModuleScope
 	;
@@ -304,12 +304,12 @@ flingDeclModuleBehavScopeItemGenCase:
 	KwGenCase flingExprList flingDeclModuleBehavScope
 	;
 flingDeclModuleBehavScopeItemGenDefault:
-	KwGeDefault flingDeclModuleBehavScope
+	KwGenDefault flingDeclModuleBehavScope
 	;
 
 flingDeclModuleBehavScopeItemGenFor:
 	KwGenFor
-		PunctLbracket MiscIdent PunctRbracket
+		(PunctLbracket MiscIdent PunctRbracket)?
 		MiscIdent PunctColon flingRange
 		flingDeclModuleBehavScope
 	;
@@ -317,8 +317,6 @@ flingDeclModuleBehavScopeItemGenFor:
 
 //--------
 flingAnyBehavScopeItem:
-	flingAnyBehavScopeItemAssign
-
 	| flingDeclConst
 	| flingDeclVar
 
@@ -327,14 +325,21 @@ flingAnyBehavScopeItem:
 
 	| flingDeclSubprog
 
-	| flingCallSubprogExpr PunctSemicolon
-	;
-
-flingAnyBehavScopeItemAssign:
 	// Functions actually can't have non-blocking assignments in them, but
 	// we'll save that for semantic analysis.
-	(flingIdentExpr | flingCatExpr)
-		(PunctBlkAssign | PunctNonBlkAssign) flingExpr
+	| MiscIdent 
+		(
+			flingIdentExprSuffix flingAnyBehavScopeItemAssignSuffix
+			| flingInstParamList? flingTypenmOrModnmCstmChainItem* 
+				flingInstArgList PunctSemicolon
+		)
+	| flingAssignLhsCatExpr flingAnyBehavScopeItemAssignSuffix
+	;
+
+flingAnyBehavScopeItemAssignSuffix:
+	// Functions actually can't have non-blocking assignments in them, but
+	// we'll save that for semantic analysis.
+	(PunctBlkAssign | PunctNonBlkAssign) flingExpr
 		PunctSemicolon
 	;
 //--------
@@ -402,12 +407,12 @@ flingDeclStructScopeItemGenCase:
 	KwGenCase flingExprList flingDeclStructScope
 	;
 flingDeclStructScopeItemGenDefault:
-	KwGeDefault flingDeclStructScope
+	KwGenDefault flingDeclStructScope
 	;
 
 flingDeclStructScopeItemGenFor:
 	KwGenFor
-		PunctLbracket MiscIdent PunctRbracket
+		(PunctLbracket MiscIdent PunctRbracket)?
 		MiscIdent PunctColon flingRange
 		flingDeclStructScope
 	;
@@ -542,12 +547,12 @@ flingDeclSubprogScopeItemGenCase:
 	KwGenCase flingExprList flingDeclSubprogScope
 	;
 flingDeclSubprogScopeItemGenDefault:
-	KwGeDefault flingDeclSubprogScope
+	KwGenDefault flingDeclSubprogScope
 	;
 
 flingDeclSubprogScopeItemGenFor:
 	KwGenFor
-		PunctLbracket MiscIdent PunctRbracket
+		(PunctLbracket MiscIdent PunctRbracket)?
 		MiscIdent PunctColon flingRange
 		flingDeclSubprogScope
 	;
@@ -574,7 +579,8 @@ flingDeclWire:
 	;
 
 flingWireAssign:
-	KwAssign (flingIdentExpr | flingCatExpr) PunctBlkAssign
+	KwAssign (flingAssignLhsIdentExpr | flingAssignLhsCatExpr)
+		PunctBlkAssign
 		flingExpr PunctSemicolon
 	;
 
@@ -765,49 +771,66 @@ flingCallDollarFuncExpr:
 	| KwDollarPow PunctLparen flingExpr PunctComma flingExpr PunctRparen
 	;
 
-flingCallSubprogExpr:
-	flingSubprogIdent flingInstArgList
-	;
+//flingCallSubprogExpr:
+//	flingSubprogIdent flingInstArgList
+//	;
 
 flingSubprogIdent:
 	flingIdentExprStart flingTypenmOrModnmCstmChainItem*
 		flingInstParamList?
 	;
 
+flingAssignLhsIdentExpr:
+	MiscIdent flingIdentExprSuffix
+	;
+flingAssignLhsCatExpr:
+	KwCat
+		PunctLparen
+			flingAssignLhsIdentExpr
+			(PunctComma flingAssignLhsIdentExpr)*
+		PunctRparen
+	;
+flingIdentExprSuffix:
+	// Access members or array elements
+	(
+		PunctMemberAccess MiscIdent
+		| PunctLbracket flingExpr PunctRbracket
+	)*
+
+	// Access a slice or a single bit of a vector
+	(
+		// This is used here to keep the grammar LL(1).
+		PunctVecDimStart
+			(
+				flingExpr
+					(
+						// Indexed part select or a single bit
+						(
+							(PunctPlusColon | PunctMinusColon)
+							flingExpr
+						)
+						| flingSimpleRangeSuffix
+					)?
+
+				| flingNonSimpleRange
+			)
+		PunctRbracket
+	)?
+	;
+
 flingIdentExprStart:
 	MiscIdent flingInstParamList?
 	;
+
 flingIdentExpr:
-	flingIdentExprStart
+	MiscIdent flingInstParamList?
 		flingTypenmOrModnmCstmChainItem*
 		// Call a subprogram, which may be located inside of a package or
 		// inside of a type (via an `alias` in the latter's case).
 		flingInstArgList?
-
-		// Access members or array elements
-		(
-			PunctMemberAccess MiscIdent
-			| PunctLbracket flingExpr PunctRbracket
-		)*
-
-		// Access a slice or a single bit of a vector
-		(
-			// This is used here to keep the grammar LL(1).
-			PunctVecDimStart
-				(
-					// Regular range
-					flingRange
-
-					// Indexed part select or a single bit
-					| flingExpr
-						(
-							(PunctPlusColon | PunctMinusColon)
-							flingExpr
-						)?
-				)
-			PunctRbracket
-		)?
+		flingIdentExprSuffix
 	;
+
 
 
 // Semantic analysis will need to determine whether or not this is a valid

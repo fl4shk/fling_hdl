@@ -164,7 +164,7 @@ public:		// parsing functions
 
 	//--------
 	ParseRet _parseFlingAnyBehavScopeItem();
-	ParseRet _parseFlingAnyBehavScopeItemAssign();
+	ParseRet _parseFlingAnyBehavScopeItemAssignSuffix();
 	//--------
 
 	//--------
@@ -235,7 +235,6 @@ public:		// parsing functions
 	ParseRet _parseFlingSubprogIdentList();
 	ParseRet _parseFlingExprList();
 	ParseRet _parseFlingRangeList();
-	//ParseRet _parseFlingExprOrRangeList();
 	ParseRet _parseFlingTypenmOrModnmList();
 	ParseRet _parseFlingImportItem();
 	ParseRet _parseFlingImportItemList();
@@ -257,8 +256,10 @@ public:		// parsing functions
 	ParseRet _parseFlingUnaryExpr();
 	ParseRet _parseFlingLowExpr();
 	ParseRet _parseFlingCallDollarFuncExpr();
-	ParseRet _parseFlingCallSubprogExpr();
 	ParseRet _parseFlingSubprogIdent();
+	ParseRet _parseFlingAssignLhsIdentExpr();
+	ParseRet _parseFlingAssignLhsCatExpr();
+	ParseRet _parseFlingIdentExprSuffix();
 	ParseRet _parseFlingIdentExprStart();
 	ParseRet _parseFlingIdentExpr();
 	ParseRet _parseFlingCatExpr();

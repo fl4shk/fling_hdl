@@ -50,7 +50,10 @@ auto Parser::_parseFlingDeclPackage() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		return TOK_SET(KwPackage);
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwPackage)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -64,19 +67,21 @@ auto Parser::_parseFlingDeclPackageItem() -> ParseRet
 	if (just_get_valid_tokens())
 	{
 		return GET_VALID_TOK_SET
-			(_parseFlingImport,
-			_parseFlingDeclConst,
+			(
+				_parseFlingImport,
+				_parseFlingDeclConst,
 
-			_parseFlingDeclAlias,
+				_parseFlingDeclAlias,
 
-			_parseFlingDeclCompositeType,
-			_parseFlingDeclEnum,
+				_parseFlingDeclCompositeType,
+				_parseFlingDeclEnum,
 
-			_parseFlingDeclSubprog,
+				_parseFlingDeclSubprog,
 
-			_parseFlingDeclPackage,
+				_parseFlingDeclPackage,
 
-			_parseFlingDeclModule);
+				_parseFlingDeclModule
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -89,7 +94,10 @@ auto Parser::_parseFlingImport() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		return GET_VALID_TOK_SET(TOK_PARSE_FUNC(KwImport));
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwImport)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -105,7 +113,10 @@ auto Parser::_parseFlingDeclParamList() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		return GET_VALID_TOK_SET(TOK_PARSE_FUNC(PunctCmpLt));
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(PunctCmpLt)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -118,7 +129,10 @@ auto Parser::_parseFlingDeclParamListItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		return GET_VALID_TOK_SET(_parseFlingIdentList);
+		return GET_VALID_TOK_SET
+			(
+				_parseFlingIdentList
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -131,7 +145,10 @@ auto Parser::_parseFlingDeclArgList() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		return GET_VALID_TOK_SET(TOK_PARSE_FUNC(PunctLparen));
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(PunctLparen)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -144,7 +161,10 @@ auto Parser::_parseFlingDeclArgListItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		return GET_VALID_TOK_SET(_parseFlingIdentList);
+		return GET_VALID_TOK_SET
+			(
+				_parseFlingIdentList
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -157,7 +177,10 @@ auto Parser::_parseFlingInstParamList() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		return GET_VALID_TOK_SET(TOK_PARSE_FUNC(PunctLparen));
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(PunctLparen)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -171,8 +194,10 @@ auto Parser::_parseFlingInstParamListItem() -> ParseRet
 	if (just_get_valid_tokens())
 	{
 		return GET_VALID_TOK_SET
-			(_parseFlingInstParamListItemPos,
-			_parseFlingInstParamListItemNamed);
+			(
+				_parseFlingInstParamListItemPos,
+				_parseFlingInstParamListItemNamed
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -185,7 +210,10 @@ auto Parser::_parseFlingInstParamListItemPos() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		return GET_VALID_TOK_SET(_parseFlingExprOrRange);
+		return GET_VALID_TOK_SET
+			(
+				_parseFlingExprOrRange
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -198,7 +226,10 @@ auto Parser::_parseFlingInstParamListItemNamed() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		return GET_VALID_TOK_SET(TOK_PARSE_FUNC(PunctMemberAccess));
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(PunctMemberAccess)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -211,7 +242,10 @@ auto Parser::_parseFlingInstArgList() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(PunctLparen)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -224,7 +258,11 @@ auto Parser::_parseFlingInstArgListItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				_parseFlingInstArgListItemPos,
+				_parseFlingInstArgListItemNamed
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -237,7 +275,10 @@ auto Parser::_parseFlingInstArgListItemPos() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				_parseFlingExpr
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -250,7 +291,10 @@ auto Parser::_parseFlingInstArgListItemNamed() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(PunctMemberAccess)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -266,7 +310,10 @@ auto Parser::_parseFlingDeclModule() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwModule)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -279,7 +326,10 @@ auto Parser::_parseFlingDeclModuleScope() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(PunctLbrace)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -292,7 +342,28 @@ auto Parser::_parseFlingDeclModuleItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				_parseFlingModinst,
+
+				_parseFlingImport,
+
+				_parseFlingDeclConst,
+				_parseFlingDeclVar,
+				_parseFlingDeclWire,
+
+				_parseFlingWireAssign,
+
+				_parseFlingDeclAlias,
+
+				_parseFlingDeclCompositeType,
+				_parseFlingDeclEnum,
+
+				_parseFlingDeclSubprog,
+
+				_parseFlingDeclModuleGen,
+				_parseFlingDeclModuleBehav
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -308,7 +379,10 @@ auto Parser::_parseFlingModinst() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwModinst)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -324,7 +398,12 @@ auto Parser::_parseFlingDeclModuleGen() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				_parseFlingDeclModuleGenIf,
+				_parseFlingDeclModuleGenSwitchEtc,
+				_parseFlingDeclModuleGenFor
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -337,7 +416,10 @@ auto Parser::_parseFlingDeclModuleGenIf() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwGenIf)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -350,7 +432,11 @@ auto Parser::_parseFlingDeclModuleGenSwitchEtc() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwGenSwitch),
+				TOK_PARSE_FUNC(KwGenSwitchz)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -363,7 +449,10 @@ auto Parser::_parseFlingDeclModuleGenCase() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwGenCase)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -376,7 +465,10 @@ auto Parser::_parseFlingDeclModuleGenDefault() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwGenDefault)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -389,7 +481,10 @@ auto Parser::_parseFlingDeclModuleGenFor() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwGenFor)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -405,7 +500,11 @@ auto Parser::_parseFlingDeclModuleBehav() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				_parseFlingDeclModuleBehavComb,
+				_parseFlingDeclModuleBehavSeq
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -418,7 +517,10 @@ auto Parser::_parseFlingDeclModuleBehavComb() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwComb)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -431,7 +533,10 @@ auto Parser::_parseFlingDeclModuleBehavSeq() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwSeq)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -444,7 +549,11 @@ auto Parser::_parseFlingDeclModuleBehavSeqEdgeItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwPosedge),
+				TOK_PARSE_FUNC(KwNegedge)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -457,7 +566,10 @@ auto Parser::_parseFlingDeclModuleBehavScope() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(PunctLbrace)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -470,7 +582,19 @@ auto Parser::_parseFlingDeclModuleBehavScopeItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				_parseFlingDeclModuleBehavScope,
+
+				_parseFlingDeclModuleBehavScopeItemIf,
+				_parseFlingDeclModuleBehavScopeItemSwitchEtc,
+				_parseFlingDeclModuleBehavScopeItemFor,
+				_parseFlingDeclModuleBehavScopeItemWhile,
+
+				_parseFlingDeclModuleBehavScopeItemGen,
+
+				_parseFlingAnyBehavScopeItem
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -483,7 +607,7 @@ auto Parser::_parseFlingDeclModuleBehavScopeItemIf() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET(TOK_PARSE_FUNC(KwIf));
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -496,7 +620,11 @@ auto Parser::_parseFlingDeclModuleBehavScopeItemSwitchEtc() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwSwitch),
+				TOK_PARSE_FUNC(KwSwitchz)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -509,7 +637,10 @@ auto Parser::_parseFlingDeclModuleBehavScopeItemCase() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwCase)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -522,7 +653,10 @@ auto Parser::_parseFlingDeclModuleBehavScopeItemDefault() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwDefault)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -535,7 +669,7 @@ auto Parser::_parseFlingDeclModuleBehavScopeItemFor() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET(TOK_PARSE_FUNC(KwFor));
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -548,7 +682,7 @@ auto Parser::_parseFlingDeclModuleBehavScopeItemWhile() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET(TOK_PARSE_FUNC(KwWhile));
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -564,7 +698,12 @@ auto Parser::_parseFlingDeclModuleBehavScopeItemGen() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				_parseFlingDeclModuleBehavScopeItemGenIf,
+				_parseFlingDeclModuleBehavScopeItemGenSwitchEtc,
+				_parseFlingDeclModuleBehavScopeItemGenFor,
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -577,7 +716,10 @@ auto Parser::_parseFlingDeclModuleBehavScopeItemGenIf() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwGenIf)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -590,7 +732,11 @@ auto Parser::_parseFlingDeclModuleBehavScopeItemGenSwitchEtc() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwGenSwitch),
+				TOK_PARSE_FUNC(KwGenSwitchz)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -603,7 +749,10 @@ auto Parser::_parseFlingDeclModuleBehavScopeItemGenCase() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwGenCase)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -616,7 +765,10 @@ auto Parser::_parseFlingDeclModuleBehavScopeItemGenDefault() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwGenDefault)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -629,7 +781,10 @@ auto Parser::_parseFlingDeclModuleBehavScopeItemGenFor() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwGenFor)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -645,20 +800,36 @@ auto Parser::_parseFlingAnyBehavScopeItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				_parseFlingDeclConst,
+				_parseFlingDeclVar,
+
+				_parseFlingDeclCompositeType,
+				_parseFlingDeclEnum,
+
+				_parseFlingDeclSubprog,
+
+				TOK_PARSE_FUNC(MiscIdent),
+				_parseFlingAssignLhsCatExpr
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
 		return std::nullopt;
 	}
 }
-auto Parser::_parseFlingAnyBehavScopeItemAssign() -> ParseRet
+auto Parser::_parseFlingAnyBehavScopeItemAssignSuffix() -> ParseRet
 {
-	PROLOGUE_AND_EPILOGUE(_parseFlingAnyBehavScopeItemAssign);
+	PROLOGUE_AND_EPILOGUE(_parseFlingAnyBehavScopeItemAssignSuffix);
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(PunctBlkAssign),
+				TOK_PARSE_FUNC(PunctNonBlkAssign)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -674,7 +845,10 @@ auto Parser::_parseFlingDeclCompositeType() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				_parseFlingDeclStruct
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -690,7 +864,10 @@ auto Parser::_parseFlingDeclStruct() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwStruct)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -703,7 +880,10 @@ auto Parser::_parseFlingDeclStructScope() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(PunctLbrace)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -716,7 +896,20 @@ auto Parser::_parseFlingDeclStructScopeItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+				_parseFlingImport,
+
+				_parseFlingDeclConst,
+				_parseFlingDeclVarNoDefVal,
+
+				_parseFlingDeclAlias,
+
+				_parseFlingDeclCompositeType,
+				_parseFlingDeclEnum,
+
+				_parseFlingDeclStructScopeItemGen
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -732,7 +925,9 @@ auto Parser::_parseFlingDeclStructScopeItemGen() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -745,7 +940,9 @@ auto Parser::_parseFlingDeclStructScopeItemGenIf() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -758,7 +955,9 @@ auto Parser::_parseFlingDeclStructScopeItemGenSwitchEtc() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -771,7 +970,9 @@ auto Parser::_parseFlingDeclStructScopeItemGenCase() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -784,7 +985,9 @@ auto Parser::_parseFlingDeclStructScopeItemGenDefault() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -797,7 +1000,9 @@ auto Parser::_parseFlingDeclStructScopeItemGenFor() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -813,7 +1018,9 @@ auto Parser::_parseFlingDeclEnum() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -826,7 +1033,9 @@ auto Parser::_parseFlingDeclEnumItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -842,7 +1051,9 @@ auto Parser::_parseFlingDeclSubprog() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -858,7 +1069,9 @@ auto Parser::_parseFlingDeclFuncHeader() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -871,7 +1084,9 @@ auto Parser::_parseFlingDeclTaskHeader() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -887,7 +1102,9 @@ auto Parser::_parseFlingDeclSubprogScope() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -900,7 +1117,9 @@ auto Parser::_parseFlingDeclSubprogScopeItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -913,7 +1132,9 @@ auto Parser::_parseFlingDeclSubprogScopeItemIf() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -926,7 +1147,9 @@ auto Parser::_parseFlingDeclSubprogScopeItemSwitchEtc() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -939,7 +1162,9 @@ auto Parser::_parseFlingDeclSubprogScopeItemCase() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -952,7 +1177,9 @@ auto Parser::_parseFlingDeclSubprogScopeItemDefault() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -965,7 +1192,9 @@ auto Parser::_parseFlingDeclSubprogScopeItemFor() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -978,7 +1207,9 @@ auto Parser::_parseFlingDeclSubprogScopeItemWhile() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -994,7 +1225,9 @@ auto Parser::_parseFlingDeclSubprogScopeItemGen() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1007,7 +1240,9 @@ auto Parser::_parseFlingDeclSubprogScopeItemGenIf() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1020,7 +1255,9 @@ auto Parser::_parseFlingDeclSubprogScopeItemGenSwitchEtc() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1033,7 +1270,9 @@ auto Parser::_parseFlingDeclSubprogScopeItemGenCase() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1046,7 +1285,9 @@ auto Parser::_parseFlingDeclSubprogScopeItemGenDefault() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1059,7 +1300,9 @@ auto Parser::_parseFlingDeclSubprogScopeItemGenFor() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1075,7 +1318,9 @@ auto Parser::_parseFlingDeclConst() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1088,7 +1333,9 @@ auto Parser::_parseFlingDeclVarNoDefVal() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1101,7 +1348,9 @@ auto Parser::_parseFlingDeclVar() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1114,7 +1363,9 @@ auto Parser::_parseFlingDeclWire() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1127,7 +1378,9 @@ auto Parser::_parseFlingWireAssign() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1140,7 +1393,9 @@ auto Parser::_parseFlingDeclAlias() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1156,7 +1411,9 @@ auto Parser::_parseFlingScopedIdent() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1169,7 +1426,9 @@ auto Parser::_parseFlingIdentList() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1182,7 +1441,9 @@ auto Parser::_parseFlingSubprogIdentList() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1195,7 +1456,9 @@ auto Parser::_parseFlingExprList() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1208,33 +1471,24 @@ auto Parser::_parseFlingRangeList() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
 		return std::nullopt;
 	}
 }
-//auto Parser::_parseFlingExprOrRangeList() -> ParseRet
-//{
-//	PROLOGUE_AND_EPILOGUE(_parseFlingExprOrRangeList);
-//
-//	if (just_get_valid_tokens())
-//	{
-//return GET_VALID_TOK_SET();
-//	}
-//	else // if (!just_get_valid_tokens())
-//	{
-//		return std::nullopt;
-//	}
-//}
 auto Parser::_parseFlingTypenmOrModnmList() -> ParseRet
 {
 	PROLOGUE_AND_EPILOGUE(_parseFlingTypenmOrModnmList);
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1247,7 +1501,9 @@ auto Parser::_parseFlingImportItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1260,7 +1516,9 @@ auto Parser::_parseFlingImportItemList() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1276,7 +1534,9 @@ auto Parser::_parseFlingExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1289,7 +1549,9 @@ auto Parser::_parseFlingMuxExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1302,7 +1564,9 @@ auto Parser::_parseFlingLogorExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1315,7 +1579,9 @@ auto Parser::_parseFlingLogandExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1328,7 +1594,9 @@ auto Parser::_parseFlingCmpEqEtcExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1341,7 +1609,9 @@ auto Parser::_parseFlingCmpLtEtcExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1354,7 +1624,9 @@ auto Parser::_parseFlingPlusMinusExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1367,7 +1639,9 @@ auto Parser::_parseFlingMulDivModExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1380,7 +1654,9 @@ auto Parser::_parseFlingBitorBitnorExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1393,7 +1669,9 @@ auto Parser::_parseFlingBitandBitnandExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1406,7 +1684,9 @@ auto Parser::_parseFlingBitxorBitxnorExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1419,7 +1699,9 @@ auto Parser::_parseFlingBitshiftExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1432,7 +1714,9 @@ auto Parser::_parseFlingUnaryExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1445,7 +1729,9 @@ auto Parser::_parseFlingLowExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1458,20 +1744,9 @@ auto Parser::_parseFlingCallDollarFuncExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
-	}
-	else // if (!just_get_valid_tokens())
-	{
-		return std::nullopt;
-	}
-}
-auto Parser::_parseFlingCallSubprogExpr() -> ParseRet
-{
-	PROLOGUE_AND_EPILOGUE(_parseFlingCallSubprogExpr);
-
-	if (just_get_valid_tokens())
-	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1484,7 +1759,54 @@ auto Parser::_parseFlingSubprogIdent() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingAssignLhsIdentExpr() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingAssignLhsIdentExpr);
+
+	if (just_get_valid_tokens())
+	{
+		return GET_VALID_TOK_SET
+			(
+			);
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingAssignLhsCatExpr() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingAssignLhsCatExpr);
+
+	if (just_get_valid_tokens())
+	{
+		return GET_VALID_TOK_SET
+			(
+			);
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingIdentExprSuffix() -> ParseRet
+{
+	PROLOGUE_AND_EPILOGUE(_parseFlingIdentExprSuffix);
+
+	if (just_get_valid_tokens())
+	{
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1497,7 +1819,9 @@ auto Parser::_parseFlingIdentExprStart() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1510,7 +1834,9 @@ auto Parser::_parseFlingIdentExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1523,7 +1849,9 @@ auto Parser::_parseFlingCatExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1536,7 +1864,9 @@ auto Parser::_parseFlingReplExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1549,7 +1879,9 @@ auto Parser::_parseFlingSizedExpr() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1565,7 +1897,9 @@ auto Parser::_parseFlingRange() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1578,7 +1912,9 @@ auto Parser::_parseFlingNonSimpleRange() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1591,7 +1927,9 @@ auto Parser::_parseFlingSimpleRangeSuffix() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1604,7 +1942,9 @@ auto Parser::_parseFlingExprOrRange() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1620,7 +1960,9 @@ auto Parser::_parseFlingTypenmOrModnmCstmChainItem() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1633,7 +1975,9 @@ auto Parser::_parseFlingTypenmOrModnm() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET();
+		return GET_VALID_TOK_SET
+			(
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
