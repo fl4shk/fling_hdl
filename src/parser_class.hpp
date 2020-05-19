@@ -279,7 +279,7 @@ public:		// parsing functions
 	//--------
 
 	#define X(name, dummy_0) \
-		ParseRet parseTok##name();
+		ParseRet _parseTok##name();
 	LIST_OF_TOKENS(X)
 	#undef X
 };

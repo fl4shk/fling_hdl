@@ -33,7 +33,7 @@
 #define ATTEMPT_PARSE(func) \
 	_attempt_parse(_MEMB_FUNC(func))
 #define GET_VALID_TOK_SET(...) \
-	_get_valid_tok_set(EVAL(MAP(_MEMB_FUNC, COMMA, __VA_ARGS__))
+	_get_valid_tok_set(EVAL(MAP(_MEMB_FUNC, COMMA, __VA_ARGS__)))
 
 #define _INNER_JUST_PARSE_AND_POP_AST(to_set, func) \
 	func (); \
@@ -108,7 +108,7 @@
 	TokSet({TOK_CSL(__VA_ARGS__)})
 
 #define TOK_PARSE_FUNC(tok) \
-	_parseTok##tok ()
+	_parseTok##tok
 
 #define _INNER_INSERT_WANTED_TOK(tok) \
 	_wanted_tok_set.insert(_INNER_TOK_CSL(tok))
