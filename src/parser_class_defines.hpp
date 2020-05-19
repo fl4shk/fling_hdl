@@ -5,7 +5,7 @@
 
 
 #define make_ast(type) \
-	new type(_curr_ast_parent, FilePos(_filename, ctx));
+	new type(_curr_ast_parent, lex_file_pos())
 
 #define DEFER_PUSH(name, type) \
 	auto name = make_ast(type); \
