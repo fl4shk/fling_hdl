@@ -75,7 +75,7 @@ public:		// types
 	};
 	//--------
 
-private:		// variables
+protected:		// variables
 	std::string _filename, _text;
 	std::unique_ptr<LexerType> _lexer;
 
