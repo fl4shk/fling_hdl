@@ -59,7 +59,8 @@
 	X(UnopExpr) \
 	X(LitValExpr) \
 	X(CallDollarFuncExpr) \
-	X(AccessMember) \
+	X(String) \
+	X(IdentExprSuffix) \
 	X(IdentExpr) \
 	X(CatExpr) \
 	X(ReplExpr) \
@@ -67,6 +68,7 @@
 	\
 	X(NonDollarFuncRange) \
 	\
-	X(TypenmOrModnm) \
+	X(Typenm) \
+	X(Modnm) \
 
 //#endif		// src_ast_list_of_ast_node_classes_define_hpp

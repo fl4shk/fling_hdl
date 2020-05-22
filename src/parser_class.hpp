@@ -29,6 +29,7 @@ private:		// variables
 	ast::BaseSptr _ast;
 	ast::Program* _ast_program = nullptr;
 	ast::Base* _curr_ast_parent = nullptr;
+	ast::IdentExprSuffix _ident_expr_suffix;
 
 	stack<unique_ptr<StrVec>> _str_vec_stack;
 	stack<unique_ptr<ast::BaseSptr>> _ast_stack;
@@ -235,7 +236,8 @@ public:		// parsing functions
 	ParseRet _parseFlingSubprogIdentList();
 	ParseRet _parseFlingExprList();
 	ParseRet _parseFlingRangeList();
-	ParseRet _parseFlingTypenmOrModnmList();
+	ParseRet _parseFlingTypenmList();
+	ParseRet _parseFlingModnmList();
 	ParseRet _parseFlingImportItem();
 	ParseRet _parseFlingImportItemList();
 	//--------
@@ -275,8 +277,9 @@ public:		// parsing functions
 	//--------
 
 	//--------
-	ParseRet _parseFlingTypenmOrModnmCstmChainItem();
-	ParseRet _parseFlingTypenmOrModnm();
+	ParseRet _parseFlingTypenmCstmChainItem();
+	ParseRet _parseFlingTypenm();
+	ParseRet _parseFlingModnm();
 	//--------
 
 	#define X(name, dummy_0) \

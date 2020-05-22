@@ -221,7 +221,8 @@ build(LitValExpr, wrap_conv(kind), wrap(opt_num_str, opt_num))
 
 build(CallDollarFuncExpr, wrap_conv(kind))
 
-build(AccessMember, wrap(ident))
+build(String, wrap(data))
+build(IdentExprSuffix, wrap(part_sel_is_minus_colon))
 build(IdentExpr)
 
 build(CatExpr)
@@ -235,7 +236,8 @@ build(NonDollarFuncRange)
 //--------
 
 //--------
-build(TypenmOrModnm, wrap_conv(kind))
+build(Typenm, wrap_conv(kind))
+build(Modnm)
 //--------
 
 } // namespace fling_hdl

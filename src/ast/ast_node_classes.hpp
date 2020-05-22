@@ -179,7 +179,7 @@ public:		// types
 public:		// variables
 	string ident;
 	Kind kind;
-	BaseSptr opt_typenm_or_modnm;
+	BaseSptr opt_typenm;
 
 	// Default value list, the type of which is dependent upon the value of
 	// `kind`.
@@ -769,12 +769,25 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(CallDollarFuncExpr, ExprBase);
 };
 
-class AccessMember: public Base
+class String: public Base
 {
 public:		// variables
-	string ident;
+	string data;
 public:		// functions
 	SHARED_FUNC_CONTENTS(AccessMember, Base);
+};
+
+class IdentExprSuffix: public Base
+{
+public:		// variables
+	// Access members or array elements
+	BaseSptrList acc_memb_or_arr_list;
+
+	BaseSptr opt_range_etc;
+	bool part_sel_is_minus_colon = false;
+	BaseSptr opt_part_sel_right;
+public:		// functions
+	SHARED_FUNC_CONTENTS(IdentExprSuffix, Base);
 };
 
 class IdentExpr: public ExprBase
@@ -783,12 +796,7 @@ public:		// variables
 	BaseSptrList prologue_list;
 	BaseSptr opt_arg_list;
 
-	// Access members or array elements
-	BaseSptrList acc_memb_or_arr_list;
-
-	BaseSptr opt_range_etc;
-	bool part_sel_is_minus_colon = false;
-	BaseSptr opt_part_sel_right;
+	BaseSptr suffix;
 public:		// functions
 	SHARED_FUNC_CONTENTS(IdentExpr, ExprBase);
 };
@@ -829,7 +837,7 @@ public:		// functions
 //--------
 
 //--------
-class TypenmOrModnm: public Base
+class Typenm: public Base
 {
 public:		// types
 	enum class Kind
@@ -852,7 +860,13 @@ public:		// variables
 	BaseSptr opt_ident_expr, opt_vec_dim;
 	BaseSptrList opt_arr_dim_list;
 public:		// functions
-	SHARED_FUNC_CONTENTS(TypenmOrModnm, Base);
+	SHARED_FUNC_CONTENTS(Typenm, Base);
+};
+
+class Modnm: public IdentExpr
+{
+public:		// functions
+	SHARED_FUNC_CONTENTS(Modnm, IdentExpr);
 };
 //--------
 

@@ -47,9 +47,10 @@ flingDeclParamList:
 flingDeclParamListItem:
 	flingIdentList PunctColon 
 	(
-		flingTypenmOrModnm (PunctBlkAssign flingExprList)?
+		flingTypenm (PunctBlkAssign flingExprList)?
 		| KwRange (PunctBlkAssign flingRangeList)?
-		| (KwType | KwModule) (PunctBlkAssign flingTypenmOrModnmList)?
+		| KwType (PunctBlkAssign flingTypenmList)?
+		| KwModule (PunctBlkAssign flingModnmList)?
 		| (KwFunc | KwTask) (PunctBlkAssign flingSubprogIdentList)?
 	)
 	;
@@ -72,7 +73,7 @@ flingDeclArgListItem:
 			//| KwModport
 			//| KwInterface
 		)
-		flingTypenmOrModnm (PunctBlkAssign flingExprList)?
+		flingTypenm (PunctBlkAssign flingExprList)?
 	;
 //--------
 
@@ -158,7 +159,7 @@ flingDeclModuleItem:
 
 //--------
 flingModinst:
-	KwModinst MiscIdent PunctColon flingTypenmOrModnm flingInstArgList
+	KwModinst MiscIdent PunctColon flingModnm flingInstArgList
 		PunctSemicolon
 	;
 //--------
@@ -330,7 +331,7 @@ flingAnyBehavScopeItem:
 	| MiscIdent 
 		(
 			flingIdentExprSuffix flingAnyBehavScopeItemAssignSuffix
-			| flingInstParamList? flingTypenmOrModnmCstmChainItem* 
+			| flingInstParamList? flingTypenmCstmChainItem* 
 				flingInstArgList PunctSemicolon
 		)
 	| flingAssignLhsCatExpr flingAnyBehavScopeItemAssignSuffix
@@ -420,7 +421,7 @@ flingDeclStructScopeItemGenFor:
 
 //--------
 flingDeclEnum:
-	KwEnum MiscIdent (PunctColon flingTypenmOrModnm)?
+	KwEnum MiscIdent (PunctColon flingTypenm)?
 	PunctLbrace
 		(
 			flingDeclEnumItem
@@ -449,7 +450,7 @@ flingDeclFuncHeader:
 	KwFunc MiscIdent
 		flingDeclParamList?
 		flingDeclArgList
-		PunctColon flingTypenmOrModnm
+		PunctColon flingTypenm
 	;
 
 flingDeclTaskHeader:
@@ -560,21 +561,21 @@ flingDeclSubprogScopeItemGenFor:
 
 //--------
 flingDeclConst:
-	KwConst flingIdentList PunctColon flingTypenmOrModnm
+	KwConst flingIdentList PunctColon flingTypenm
 		PunctBlkAssign flingExprList PunctSemicolon
 	;
 
 flingDeclVarNoDefVal:
-	KwVar flingIdentList PunctColon flingTypenmOrModnm PunctSemicolon
+	KwVar flingIdentList PunctColon flingTypenm PunctSemicolon
 	;
 
 flingDeclVar:
-	KwVar flingIdentList PunctColon flingTypenmOrModnm
+	KwVar flingIdentList PunctColon flingTypenm
 		(PunctBlkAssign flingExprList)? PunctSemicolon
 	;
 
 flingDeclWire:
-	KwWire flingIdentList PunctColon flingTypenmOrModnm
+	KwWire flingIdentList PunctColon flingTypenm
 		(PunctBlkAssign flingExprList)? PunctSemicolon
 	;
 
@@ -587,9 +588,10 @@ flingWireAssign:
 flingDeclAlias:
 	KwAlias flingIdentList PunctColon
 		(
-			flingTypenmOrModnm PunctBlkAssign flingExprList
+			flingTypenm PunctBlkAssign flingExprList
 			| KwRange PunctBlkAssign flingRangeList
-			| (KwType | KwModule) PunctBlkAssign flingTypenmOrModnmList
+			| KwType PunctBlkAssign flingTypenmList
+			| KwModule PunctBlkAssign flingModnmList
 			| (KwFunc | KwTask) PunctBlkAssign flingSubprogIdentList
 		)
 		PunctSemicolon
@@ -620,8 +622,11 @@ flingRangeList:
 //	flingExprOrRange (PunctComma flingExprOrRange)*
 //	;
 
-flingTypenmOrModnmList:
-	flingTypenmOrModnm (PunctComma flingTypenmOrModnm)*
+flingTypenmList:
+	flingTypenm (PunctComma flingTypenm)*
+	;
+flingModnmList:
+	flingModnm (PunctComma flingModnm)*
 	;
 
 flingImportItem:
@@ -766,7 +771,7 @@ flingCallDollarFuncExpr:
 		| KwDollarIsUnsigned
 		| KwDollarIsSigned
 	)
-		(flingExpr | flingTypenmOrModnm)
+		(flingExpr | flingTypenm)
 
 	| KwDollarPow PunctLparen flingExpr PunctComma flingExpr PunctRparen
 	;
@@ -776,7 +781,7 @@ flingCallDollarFuncExpr:
 //	;
 
 flingSubprogIdent:
-	flingIdentExprStart flingTypenmOrModnmCstmChainItem*
+	flingIdentExprStart flingTypenmCstmChainItem*
 		flingInstParamList?
 	;
 
@@ -824,7 +829,7 @@ flingIdentExprStart:
 
 flingIdentExpr:
 	MiscIdent flingInstParamList?
-		flingTypenmOrModnmCstmChainItem*
+		flingTypenmCstmChainItem*
 		// Call a subprogram, which may be located inside of a package or
 		// inside of a type (via an `alias` in the latter's case).
 		flingInstArgList?
@@ -872,7 +877,7 @@ flingNonSimpleRange:
 			// needed for a parameter list) because it includes support for
 			// `alias`es contained within custom types and packages.
 			| MiscIdent (flingInstParamList?
-				flingTypenmOrModnmCstmChainItem*
+				flingTypenmCstmChainItem*
 				PunctScopeAccess MiscIdent)?
 		)
 	;
@@ -888,13 +893,13 @@ flingExprOrRange:
 //--------
 
 //--------
-flingTypenmOrModnmCstmChainItem:
+flingTypenmCstmChainItem:
 	PunctScopeAccess flingIdentExprStart
 	;
-flingTypenmOrModnm:
+flingTypenm:
 	(
 		flingIdentExprStart
-			flingTypenmOrModnmCstmChainItem*
+			flingTypenmCstmChainItem*
 		| (KwUnsigned | KwSigned)? KwLogic 
 			// Vector dimensions
 			(PunctVecDimStart flingExprOrRange PunctRbracket)?
@@ -903,6 +908,11 @@ flingTypenmOrModnm:
 		// Array dimensions
 		(PunctLbracket flingExprOrRange PunctRbracket)*
 	;
+
+flingModnm:
+	flingScopedIdent
+	;
+
 //--------
 
 // Lexer rules

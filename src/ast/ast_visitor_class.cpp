@@ -83,7 +83,7 @@ void AstVisitor::_accept_children
 void AstVisitor::_accept_children
 	(DeclParamListItem* n)
 {
-	ACCEPT(opt_typenm_or_modnm, opt_def_val_list);
+	ACCEPT(opt_typenm, opt_def_val_list);
 }
 void AstVisitor::_accept_children
 	(DeclArgListItem* n)
@@ -303,14 +303,18 @@ void AstVisitor::_accept_children
 	ACCEPT(arg, opt_second_arg);
 }
 void AstVisitor::_accept_children
-	(AccessMember* n)
+	(String* n)
 {
+}
+void AstVisitor::_accept_children
+	(IdentExprSuffix* n)
+{
+	ACCEPT(acc_memb_or_arr_list, opt_range_etc, opt_part_sel_right);
 }
 void AstVisitor::_accept_children
 	(IdentExpr* n)
 {
-	ACCEPT(prologue_list, opt_arg_list, acc_memb_or_arr_list,
-		opt_range_etc, opt_part_sel_right);
+	ACCEPT(prologue_list, opt_arg_list, suffix);
 }
 void AstVisitor::_accept_children
 	(CatExpr* n)
@@ -339,9 +343,14 @@ void AstVisitor::_accept_children
 
 //--------
 void AstVisitor::_accept_children
-	(TypenmOrModnm* n)
+	(Typenm* n)
 {
 	ACCEPT(opt_ident_expr, opt_vec_dim, opt_arr_dim_list);
+}
+void AstVisitor::_accept_children
+	(Modnm* n)
+{
+	_accept_children(static_cast<IdentExpr*>(n));
 }
 //--------
 
