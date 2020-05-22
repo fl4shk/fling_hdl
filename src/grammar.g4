@@ -330,7 +330,7 @@ flingAnyBehavScopeItem:
 	// we'll save that for semantic analysis.
 	| MiscIdent 
 		(
-			flingIdentExprSuffix flingAnyBehavScopeItemAssignSuffix
+			flingIdentExprSuffix? flingAnyBehavScopeItemAssignSuffix
 			| flingInstParamList? flingTypenmCstmChainItem* 
 				flingInstArgList PunctSemicolon
 		)
@@ -786,7 +786,7 @@ flingSubprogIdent:
 	;
 
 flingAssignLhsIdentExpr:
-	MiscIdent flingIdentExprSuffix
+	MiscIdent flingIdentExprSuffix?
 	;
 flingAssignLhsCatExpr:
 	KwCat
@@ -796,31 +796,38 @@ flingAssignLhsCatExpr:
 		PunctRparen
 	;
 flingIdentExprSuffix:
-	// Access members or array elements
 	(
-		PunctMemberAccess MiscIdent
-		| PunctLbracket flingExpr PunctRbracket
-	)*
-
-	// Access a slice or a single bit of a vector
-	(
-		// This is used here to keep the grammar LL(1).
-		PunctVecDimStart
+		// Access members or array elements
 			(
-				flingExpr
-					(
-						// Indexed part select or a single bit
-						(
-							(PunctPlusColon | PunctMinusColon)
-							flingExpr
-						)
-						| flingSimpleRangeSuffix
-					)?
+				PunctMemberAccess MiscIdent
+				| PunctLbracket flingExpr PunctRbracket
+			)*
 
-				| flingNonSimpleRange
+			// Access a slice or a single bit of a vector
+			(
+				PunctVecDimStart
+					(
+						flingExpr
+							(
+								// Indexed part select or a single bit
+								(
+									(PunctPlusColon | PunctMinusColon)
+									flingExpr
+								)
+								| flingSimpleRangeSuffix
+							)?
+
+						| flingNonSimpleRange
+					)
+				PunctRbracket
 			)
-		PunctRbracket
-	)?
+
+		| // Access members or array elements
+			(
+				PunctMemberAccess MiscIdent
+				| PunctLbracket flingExpr PunctRbracket
+			)+
+	)
 	;
 
 flingIdentExprStart:
@@ -833,13 +840,11 @@ flingIdentExpr:
 		// Call a subprogram, which may be located inside of a package or
 		// inside of a type (via an `alias` in the latter's case).
 		flingInstArgList?
-		flingIdentExprSuffix
+		flingIdentExprSuffix?
 	;
 
 
 
-// Semantic analysis will need to determine whether or not this is a valid
-// LHS for an assignment.
 flingCatExpr:
 	KwCat PunctLparen flingExprList PunctRparen
 	;
@@ -874,8 +879,9 @@ flingNonSimpleRange:
 			PunctLparen flingExpr (PunctComma flingExpr)? PunctRparen
 
 			// This is more complex than just a `MiscIdent` (all that's
-			// needed for a parameter list) because it includes support for
-			// `alias`es contained within custom types and packages.
+			// needed for a range that's from parameter list or is a local
+			// alias) because it includes support for `alias`es contained
+			// within custom types and packages.
 			| MiscIdent (flingInstParamList?
 				flingTypenmCstmChainItem*
 				PunctScopeAccess MiscIdent)?
@@ -900,7 +906,7 @@ flingTypenm:
 	(
 		flingIdentExprStart
 			flingTypenmCstmChainItem*
-		| (KwUnsigned | KwSigned)? KwLogic 
+		| KwLogic (KwUnsigned | KwSigned)? 
 			// Vector dimensions
 			(PunctVecDimStart flingExprOrRange PunctRbracket)?
 		| KwInteger

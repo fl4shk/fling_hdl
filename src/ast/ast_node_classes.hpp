@@ -774,7 +774,7 @@ class String: public Base
 public:		// variables
 	string data;
 public:		// functions
-	SHARED_FUNC_CONTENTS(AccessMember, Base);
+	SHARED_FUNC_CONTENTS(String, Base);
 };
 
 class IdentExprSuffix: public Base

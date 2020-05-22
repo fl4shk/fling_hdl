@@ -1611,7 +1611,7 @@ auto Parser::_parseFlingExpr() -> ParseRet
 	{
 		return GET_VALID_TOK_SET
 			(
-				flingMuxExpr
+				_parseFlingMuxExpr
 			);
 	}
 	else // if (!just_get_valid_tokens())
@@ -1627,8 +1627,8 @@ auto Parser::_parseFlingMuxExpr() -> ParseRet
 	{
 		return GET_VALID_TOK_SET
 			(
-				TOK_PARSE_FUNC(KwMux)
-				| _parseFlingLogorExpr
+				TOK_PARSE_FUNC(KwMux),
+				_parseFlingLogorExpr
 			);
 	}
 	else // if (!just_get_valid_tokens())
@@ -1939,10 +1939,13 @@ auto Parser::_parseFlingIdentExprSuffix() -> ParseRet
 
 	if (just_get_valid_tokens())
 	{
-		//return GET_VALID_TOK_SET
-		//	(
-		//	);
-		_internal_err
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(PunctMemberAccess),
+				TOK_PARSE_FUNC(PunctLbracket),
+
+				TOK_PARSE_FUNC(PunctVecDimStart)
+			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
@@ -1957,6 +1960,7 @@ auto Parser::_parseFlingIdentExprStart() -> ParseRet
 	{
 		return GET_VALID_TOK_SET
 			(
+				TOK_PARSE_FUNC(MiscIdent)
 			);
 	}
 	else // if (!just_get_valid_tokens())
@@ -1972,6 +1976,7 @@ auto Parser::_parseFlingIdentExpr() -> ParseRet
 	{
 		return GET_VALID_TOK_SET
 			(
+				TOK_PARSE_FUNC(MiscIdent)
 			);
 	}
 	else // if (!just_get_valid_tokens())
@@ -1987,6 +1992,7 @@ auto Parser::_parseFlingCatExpr() -> ParseRet
 	{
 		return GET_VALID_TOK_SET
 			(
+				TOK_PARSE_FUNC(KwCat)
 			);
 	}
 	else // if (!just_get_valid_tokens())
@@ -2002,6 +2008,7 @@ auto Parser::_parseFlingReplExpr() -> ParseRet
 	{
 		return GET_VALID_TOK_SET
 			(
+				TOK_PARSE_FUNC(KwRepl)
 			);
 	}
 	else // if (!just_get_valid_tokens())
@@ -2017,6 +2024,7 @@ auto Parser::_parseFlingSizedExpr() -> ParseRet
 	{
 		return GET_VALID_TOK_SET
 			(
+				TOK_PARSE_FUNC(KwSized)
 			);
 	}
 	else // if (!just_get_valid_tokens())
@@ -2035,6 +2043,8 @@ auto Parser::_parseFlingRange() -> ParseRet
 	{
 		return GET_VALID_TOK_SET
 			(
+				_parseFlingNonSimpleRange,
+				_parseFlingExpr
 			);
 	}
 	else // if (!just_get_valid_tokens())
@@ -2050,6 +2060,8 @@ auto Parser::_parseFlingNonSimpleRange() -> ParseRet
 	{
 		return GET_VALID_TOK_SET
 			(
+				TOK_PARSE_FUNC(KwDollarRange),
+				TOK_PARSE_FUNC(KwRange)
 			);
 	}
 	else // if (!just_get_valid_tokens())
@@ -2065,6 +2077,7 @@ auto Parser::_parseFlingSimpleRangeSuffix() -> ParseRet
 	{
 		return GET_VALID_TOK_SET
 			(
+				TOK_PARSE_FUNC(PunctRangeSeparator)
 			);
 	}
 	else // if (!just_get_valid_tokens())
@@ -2080,6 +2093,8 @@ auto Parser::_parseFlingExprOrRange() -> ParseRet
 	{
 		return GET_VALID_TOK_SET
 			(
+				_parseFlingExpr,
+				_parseFlingNonSimpleRange
 			);
 	}
 	else // if (!just_get_valid_tokens())
@@ -2098,6 +2113,7 @@ auto Parser::_parseFlingTypenmCstmChainItem() -> ParseRet
 	{
 		return GET_VALID_TOK_SET
 			(
+				TOK_PARSE_FUNC(PunctScopeAccess)
 			);
 	}
 	else // if (!just_get_valid_tokens())
@@ -2113,6 +2129,9 @@ auto Parser::_parseFlingTypenm() -> ParseRet
 	{
 		return GET_VALID_TOK_SET
 			(
+				_parseFlingIdentExprStart,
+				TOK_PARSE_FUNC(KwLogic),
+				TOK_PARSE_FUNC(KwInteger)
 			);
 	}
 	else // if (!just_get_valid_tokens())
@@ -2128,6 +2147,7 @@ auto Parser::_parseFlingModnm() -> ParseRet
 	{
 		return GET_VALID_TOK_SET
 			(
+				_parseFlingScopedIdent
 			);
 	}
 	else // if (!just_get_valid_tokens())

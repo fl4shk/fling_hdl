@@ -244,7 +244,7 @@ void Lexer::_inner_next_tok()
 	else if (c() == '#')
 	{
 		_sel_set_tok
-			('[', Tok::PunctVectorStart,
+			('[', Tok::PunctVecDimStart,
 			Tok::MiscOther);
 	}
 	else if (c() == '(')
