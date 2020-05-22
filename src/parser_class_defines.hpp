@@ -35,6 +35,7 @@
 #define GET_VALID_TOK_SET(...) \
 	_get_valid_tok_set(EVAL(MAP(_MEMB_FUNC, COMMA, __VA_ARGS__)))
 
+
 #define _INNER_JUST_PARSE_AND_POP_AST(to_set, func) \
 	func (); \
 	_pop_ast(to_set)
@@ -115,15 +116,23 @@
 #define INSERT_WANTED_TOK(...) \
 	EVAL(MAP(_INNER_INSERT_WANTED_TOK, SEMICOLON, __VA_ARGS__))
 
-#define JUST_EXPECT(...) \
+#define EXPECT(...) \
 	_expect(TOK_CSL(__VA_ARGS__))
 
 #define EXPECT_AND_GRAB_TOK(name, ...) \
-	JUST_EXPECT(__VA_ARGS__); \
+	EXPECT(__VA_ARGS__); \
 	const auto name = prev_lex_tok()
 #define EXPECT_IDENT_AND_GRAB_S(name) \
-	JUST_EXPECT(MiscIdent); \
-	const auto& name = prev_lex_s()
+	EXPECT(MiscIdent); \
+	name = prev_lex_s()
+
+#define MAKE_AST_NODE_AND_POP(name) \
+	BaseSptr name; \
+	_pop_ast(name)
+
+#define MAKE_AST_LIST_AND_POP(name) \
+	BaseSptrList name; \
+	_pop_ast_list(name)
 
 
 //#endif		// src_parser_class_defines_hpp

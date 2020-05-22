@@ -32,8 +32,7 @@ auto Parser::_parseFlingProgram() -> ParseRet
 
 	while (ATTEMPT_PARSE(_parseFlingDeclPackageItem))
 	{
-		BaseSptr to_push;
-		_pop_ast(to_push);
+		MAKE_AST_NODE_AND_POP(to_push);
 		_ast_program->item_list.push_back(move(to_push));
 	}
 
@@ -57,6 +56,22 @@ auto Parser::_parseFlingDeclPackage() -> ParseRet
 	}
 	else // if (!just_get_valid_tokens())
 	{
+		DEFER_PUSH(node, DeclPackage);
+
+		EXPECT(KwPackage);
+		EXPECT_IDENT_AND_GRAB_S(node->ident);
+		EXPECT(PunctLbrace);
+
+		INSERT_WANTED_TOK(PunctRbrace);
+
+		while (ATTEMPT_PARSE(_parseFlingDeclPackageItem))
+		{
+			MAKE_AST_NODE_AND_POP(to_push);
+			node->item_list.push_back(to_push);
+		}
+
+		_expect_wanted_tok();
+
 		return std::nullopt;
 	}
 }
@@ -64,29 +79,35 @@ auto Parser::_parseFlingDeclPackageItem() -> ParseRet
 {
 	PROLOGUE_AND_EPILOGUE(_parseFlingDeclPackageItem);
 
+	#define LIST(X) \
+		X \
+		( \
+			_parseFlingImport, \
+			_parseFlingDeclConst, \
+			\
+			_parseFlingDeclAlias, \
+			\
+			_parseFlingDeclCompositeType, \
+			_parseFlingDeclEnum, \
+			\
+			_parseFlingDeclSubprog, \
+			\
+			_parseFlingDeclPackage, \
+			\
+			_parseFlingDeclModule \
+		)
+
 	if (just_get_valid_tokens())
 	{
-		return GET_VALID_TOK_SET
-			(
-				_parseFlingImport,
-				_parseFlingDeclConst,
-
-				_parseFlingDeclAlias,
-
-				_parseFlingDeclCompositeType,
-				_parseFlingDeclEnum,
-
-				_parseFlingDeclSubprog,
-
-				_parseFlingDeclPackage,
-
-				_parseFlingDeclModule
-			);
+		return LIST(GET_VALID_TOK_SET);
 	}
 	else // if (!just_get_valid_tokens())
 	{
+		LIST(PARSE_IFELSE)
 		return std::nullopt;
 	}
+
+	#undef LIST
 }
 auto Parser::_parseFlingImport() -> ParseRet
 {
@@ -101,6 +122,13 @@ auto Parser::_parseFlingImport() -> ParseRet
 	}
 	else // if (!just_get_valid_tokens())
 	{
+		DEFER_PUSH(node, Import);
+
+		EXPECT(KwImport);
+		JUST_PARSE_AND_POP_AST_LIST
+			(node->item_list, _parseFlingImportItemList);
+		EXPECT(PunctSemicolon);
+
 		return std::nullopt;
 	}
 }
@@ -2168,7 +2196,7 @@ auto Parser::_parseFlingModnm() -> ParseRet
 		} \
 		else /* if (!just_get_valid_tokens()) */ \
 		{ \
-			JUST_EXPECT(name); \
+			EXPECT(name); \
 			return std::nullopt; \
 		} \
 	}
