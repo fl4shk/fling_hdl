@@ -127,11 +127,11 @@
 	name = prev_lex_s()
 
 #define MAKE_AST_NODE_AND_POP(name) \
-	BaseSptr name; \
+	BaseUptr name; \
 	_pop_ast(name)
 
 #define MAKE_AST_LIST_AND_POP(name) \
-	BaseSptrList name; \
+	BaseUptrList name; \
 	_pop_ast_list(name)
 
 

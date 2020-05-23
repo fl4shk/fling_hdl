@@ -19,8 +19,8 @@ LIST_OF_AST_NODE_CLASSES(X)
 #undef X
 
 class Base;
-using BaseSptr = shared_ptr<Base>;
-using BaseSptrList = IndCircLinkList<BaseSptr>;
+using BaseUptr = unique_ptr<Base>;
+using BaseUptrList = IndCircLinkList<BaseUptr>;
 
 }
 
@@ -42,10 +42,10 @@ public:		// functions
 
 private:		// functions
 	void _inner_accept_children(const string& memb_name, 
-		const ast::BaseSptr& node);
+		const ast::BaseUptr& node);
 
 	void _inner_accept_children(const string& memb_name,
-		const ast::BaseSptrList& node_list);
+		const ast::BaseUptrList& node_vec);
 
 protected:		// children acceptor functions
 	#define GEN_ACCEPT_CHILDREN(name) \

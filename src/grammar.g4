@@ -38,13 +38,13 @@ flingImport:
 flingDeclParamList:
 	PunctCmpLt
 		(
-			flingDeclParamListItem
-			(PunctComma flingDeclParamListItem)*
+			flingDeclParamSublist
+			(PunctComma flingDeclParamSublist)*
 		)?
 	PunctCmpGt
 	;
 
-flingDeclParamListItem:
+flingDeclParamSublist:
 	flingIdentList PunctColon 
 	(
 		flingTypenm (PunctBlkAssign flingExprList)?
@@ -58,13 +58,13 @@ flingDeclParamListItem:
 flingDeclArgList:
 	PunctLparen
 		(
-			flingDeclArgListItem
-			(PunctComma flingDeclArgListItem)*
+			flingDeclArgSublist
+			(PunctComma flingDeclArgSublist)*
 		)?
 	PunctRparen
 	;
 
-flingDeclArgListItem:
+flingDeclArgSublist:
 	flingIdentList PunctColon
 		(
 			KwInput

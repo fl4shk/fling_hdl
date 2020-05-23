@@ -16,7 +16,7 @@ using namespace ast;
 
 //--------
 void AstVisitor::_inner_accept_children(const string& memb_name, 
-	const BaseSptr& node)
+	const BaseUptr& node)
 {
 	//if (temp != nullptr)
 	//{
@@ -31,7 +31,7 @@ void AstVisitor::_inner_accept_children(const string& memb_name,
 }
 
 void AstVisitor::_inner_accept_children(const string& memb_name,
-	const BaseSptrList& node_list)
+	const BaseUptrList& node_list)
 {
 	//if (temp != nullptr)
 	//{
@@ -42,7 +42,7 @@ void AstVisitor::_inner_accept_children(const string& memb_name,
 	for (const auto& p: node_list)
 	{
 		_memb_name = sconcat(memb_name, "[", i, "]");
-		p.data->accept(this);
+		p->accept(this);
 		++i;
 	}
 }

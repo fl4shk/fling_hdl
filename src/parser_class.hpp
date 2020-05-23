@@ -26,19 +26,19 @@ public:		// types
 private:		// variables
 	size_t _max_ast_level;
 
-	ast::BaseSptr _ast;
+	ast::BaseUptr _ast;
 	ast::Program* _ast_program = nullptr;
 	ast::Base* _curr_ast_parent = nullptr;
 	//ast::IdentExprSuffix _ident_expr_suffix;
 
-	stack<unique_ptr<StrVec>> _str_vec_stack;
-	stack<unique_ptr<ast::BaseSptr>> _ast_stack;
-	stack<unique_ptr<ast::BaseSptrList>> _ast_list_stack;
+	stack<StrVec> _str_vec_stack;
+	stack<ast::BaseUptr> _ast_stack;
+	stack<ast::BaseUptrList> _ast_list_stack;
 	string _parse_func_str;
 
 public:		// misc. functions
 	template<typename Type>
-	static inline Type* as(ast::BaseSptr& base_sptr)
+	static inline Type* as(ast::BaseUptr& base_sptr)
 	{
 		return static_cast<Type*>(base_sptr.get());
 	}
@@ -46,36 +46,32 @@ public:		// misc. functions
 private:		// misc. functions
 	inline void _push_str_vec(StrVec&& to_push)
 	{
-		_str_vec_stack.push(unique_ptr<StrVec>(new StrVec(move(to_push))));
+		_str_vec_stack.push(move(to_push));
 	}
 	inline void _pop_str_vec(StrVec& to_set)
 	{
-		to_set = move(*_str_vec_stack.top());
-		_str_vec_stack.top().reset(nullptr);
+		to_set = move(_str_vec_stack.top());
 		_str_vec_stack.pop();
 	}
 
 	inline void _push_ast(ast::Base* to_push)
 	{
-		_ast_stack.push(unique_ptr<ast::BaseSptr>
-			(new ast::BaseSptr(to_push)));
+		_ast_stack.push(ast::BaseUptr(to_push));
 	}
-	inline void _pop_ast(ast::BaseSptr& to_set)
+	inline void _pop_ast(ast::BaseUptr& to_set)
 	{
-		to_set = move(*_ast_stack.top());
+		to_set = move(_ast_stack.top());
 		_ast_stack.top().reset(nullptr);
 		_ast_stack.pop();
 	}
 
-	inline void _push_ast_list(ast::BaseSptrList&& to_push)
+	inline void _push_ast_list(ast::BaseUptrList&& to_push)
 	{
-		_ast_list_stack.push(unique_ptr<ast::BaseSptrList>
-			(new ast::BaseSptrList(move(to_push))));
+		_ast_list_stack.push(move(to_push));
 	}
-	inline void _pop_ast_list(ast::BaseSptrList& to_set)
+	inline void _pop_ast_list(ast::BaseUptrList& to_set)
 	{
-		to_set = move(*_ast_list_stack.top());
-		_ast_list_stack.top().reset(nullptr);
+		to_set = move(_ast_list_stack.top());
 		_ast_list_stack.pop();
 	}
 
@@ -107,9 +103,9 @@ public:		// parsing functions
 
 	//--------
 	ParseRet _parseFlingDeclParamList();
-	ParseRet _parseFlingDeclParamListItem();
+	ParseRet _parseFlingDeclParamSublist();
 	ParseRet _parseFlingDeclArgList();
-	ParseRet _parseFlingDeclArgListItem();
+	ParseRet _parseFlingDeclArgSublist();
 	ParseRet _parseFlingInstParamList();
 	ParseRet _parseFlingInstParamListItem();
 	ParseRet _parseFlingInstParamListItemPos();
@@ -318,10 +314,10 @@ class AstNodeListDeferredPusher final
 {
 private:		// variables
 	Parser* _parser = nullptr;
-	ast::BaseSptrList* _node_list = nullptr;
+	ast::BaseUptrList* _node_list = nullptr;
 public:		// functions
 	inline AstNodeListDeferredPusher(Parser* s_parser,
-		ast::BaseSptrList* s_node_list)
+		ast::BaseUptrList* s_node_list)
 		: _parser(s_parser), _node_list(s_node_list)
 	{
 	}
