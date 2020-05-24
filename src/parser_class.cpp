@@ -166,7 +166,7 @@ auto Parser::_parseFlingDeclParamList() -> ParseRet
 			}
 
 			// This also inserts PunctComma into `_wanted_tok_set`.
-			if (!ATTEMPT_PARSE_IFELSE(PunctComma))
+			if (!ATTEMPT_PARSE_IFELSE(TOK_PARSE_FUNC(PunctComma)))
 			{
 				break;
 			}

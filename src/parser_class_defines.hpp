@@ -124,9 +124,6 @@
 #define INSERT_WANTED_TOK(...) \
 	EVAL(MAP(_INNER_INSERT_WANTED_TOK, SEMICOLON, __VA_ARGS__))
 
-#define _INNER_INSERT_PARENT_WANTED_TOK(tok) \
-	_
-
 #define EXPECT(...) \
 	_expect(TOK_CSL(__VA_ARGS__))
 
