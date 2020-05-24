@@ -399,7 +399,7 @@ private:		// functions
 
 protected:		// functions
 	template<typename... RemArgTypes>
-	void _expect(TokType first_tok, RemArgTypes&&... rem_args) const
+	void _expect(TokType first_tok, RemArgTypes&&... rem_args)
 	{
 		TokSet tok_set;
 
@@ -418,6 +418,11 @@ protected:		// functions
 		}
 
 		_wanted_tok_set.clear();
+	}
+	inline void _expect_wanted_tok(const TokSet& extra_wanted_tok_set)
+	{
+		_wanted_tok_set_merge(extra_wanted_tok_set);
+		_expect_wanted_tok();
 	}
 
 //private:		// functions
