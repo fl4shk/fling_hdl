@@ -7,6 +7,7 @@
 #include <stack>
 #include <vector>
 #include <stdint.h>
+#include <type_traits>
 #include "../gen_class_innards_defines.hpp"
 
 namespace liborangepower
@@ -637,23 +638,25 @@ public:		// functions
 	}
 
 	template<bool reverse=false, typename OtherType=Type>
-	inline NodeIterator<reverse> push_front(const OtherType& to_push)
+	inline UpdateByCopy<reverse, OtherType> push_front
+		(const OtherType& to_push)
 	{
 		return insert_after<reverse, OtherType>(HEAD_INDEX, to_push);
 	}
 	template<bool reverse=false, typename OtherType=Type>
-	inline NodeIterator<reverse> push_front(OtherType&& to_push)
+	inline UpdateByMove<reverse, OtherType> push_front(OtherType&& to_push)
 	{
 		return insert_after<reverse, OtherType>(HEAD_INDEX,
 			std::move(to_push));
 	}
 	template<bool reverse=false, typename OtherType=Type>
-	inline NodeIterator<reverse> push_back(const OtherType& to_push)
+	inline UpdateByCopy<reverse, OtherType> push_back
+		(const OtherType& to_push)
 	{
 		return insert_before<reverse, OtherType>(HEAD_INDEX, to_push);
 	}
 	template<bool reverse=false, typename OtherType=Type>
-	inline NodeIterator<reverse> push_back(OtherType&& to_push)
+	inline UpdateByMove<reverse, OtherType> push_back(OtherType&& to_push)
 	{
 		return insert_before<reverse, OtherType>(HEAD_INDEX,
 			std::move(to_push));
