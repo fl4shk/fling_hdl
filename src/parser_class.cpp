@@ -157,6 +157,7 @@ auto Parser::_parseFlingDeclParamList() -> ParseRet
 
 		INSERT_WANTED_TOK(PunctCmpGt);
 
+		bool found = false;
 		while (ATTEMPT_PARSE_IFELSE(_parseFlingDeclParamSublist))
 		{
 			MAKE_AST_LIST_AND_POP(sublist);
@@ -165,6 +166,7 @@ auto Parser::_parseFlingDeclParamList() -> ParseRet
 				node->item_list.push_back(move(item.data));
 			}
 
+			// This also inserts PunctComma into `_wanted_tok_set`.
 			if (!ATTEMPT_PARSE_IFELSE(PunctComma))
 			{
 				break;
@@ -199,11 +201,14 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 		{
 			if (ATTEMPT_PARSE_IFELSE(_parseFlingTypenm))
 			{
-				MAKE_AST_NODE_AND_POP(typenm)
-
+				MAKE_AST_NODE_AND_POP(typenm);
 			}
 			else if (ATTEMPT_PARSE_IFELSE(TOK_PARSE_FUNC(KwRange)))
 			{
+				SUB_P_AND_E
+				{
+					INSERT_WANTED_TOK(
+				}
 			}
 			else if (ATTEMPT_PARSE_IFELSE(TOK_PARSE_FUNC(KwType)))
 			{
