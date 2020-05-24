@@ -19,9 +19,6 @@
 
 #define PROLOGUE_AND_EPILOGUE(str) \
 	ParserBase::PrologueAndEpilogue p_and_e (this, #str)
-#define SUB_P_AND_E \
-	if (auto sub_p_and_e = ParserBase::PrologueAndEpilogue (this, \
-		_parse_func_str); true)
 
 #define _INNER_PARSE_IFELSE(func) \
 	if (CHECK_PARSE(func)) \
@@ -38,8 +35,8 @@
 	_check_parse(_MEMB_FUNC(func))
 #define ATTEMPT_PARSE_BASIC(func) \
 	_attempt_parse_basic(_MEMB_FUNC(func))
-#define ATTEMPT_PARSE_IFELSE(func) \
-	_attempt_parse_ifelse(_MEMB_FUNC(func))
+#define ATTEMPT_PARSE(func) \
+	_attempt_parse(_MEMB_FUNC(func))
 #define GET_VALID_TOK_SET(...) \
 	_get_valid_tok_set(EVAL(MAP(_MEMB_FUNC, COMMA, __VA_ARGS__)))
 

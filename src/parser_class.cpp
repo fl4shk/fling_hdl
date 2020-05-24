@@ -66,7 +66,7 @@ auto Parser::_parseFlingDeclPackage() -> ParseRet
 		{
 			INSERT_WANTED_TOK(PunctRbrace);
 
-			while (ATTEMPT_PARSE_IFELSE(_parseFlingDeclPackageItem))
+			while (ATTEMPT_PARSE(_parseFlingDeclPackageItem))
 			{
 				MAKE_AST_NODE_AND_POP(to_push);
 				node->item_list.push_back(move(to_push));
@@ -157,7 +157,7 @@ auto Parser::_parseFlingDeclParamList() -> ParseRet
 
 		INSERT_WANTED_TOK(PunctCmpGt);
 
-		while (ATTEMPT_PARSE_IFELSE(_parseFlingDeclParamSublist))
+		while (ATTEMPT_PARSE(_parseFlingDeclParamSublist))
 		{
 			MAKE_AST_LIST_AND_POP(sublist);
 			for (auto& item: sublist)
@@ -166,7 +166,7 @@ auto Parser::_parseFlingDeclParamList() -> ParseRet
 			}
 
 			// This also inserts PunctComma into `_wanted_tok_set`.
-			if (!ATTEMPT_PARSE_IFELSE(TOK_PARSE_FUNC(PunctComma)))
+			if (!ATTEMPT_PARSE(TOK_PARSE_FUNC(PunctComma)))
 			{
 				break;
 			}
@@ -196,31 +196,28 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 
 		EXPECT(PunctColon);
 
-		SUB_P_AND_E
+		if (ATTEMPT_PARSE(_parseFlingTypenm))
 		{
-			if (ATTEMPT_PARSE_IFELSE(_parseFlingTypenm))
-			{
-				MAKE_AST_NODE_AND_POP(typenm);
-			}
-			else if (ATTEMPT_PARSE_IFELSE(TOK_PARSE_FUNC(KwRange)))
-			{
-			}
-			else if (ATTEMPT_PARSE_IFELSE(TOK_PARSE_FUNC(KwType)))
-			{
-			}
-			else if (ATTEMPT_PARSE_IFELSE(TOK_PARSE_FUNC(KwModule)))
-			{
-			}
-			else if (ATTEMPT_PARSE_IFELSE(TOK_PARSE_FUNC(KwFunc)))
-			{
-			}
-			else if (ATTEMPT_PARSE_IFELSE(TOK_PARSE_FUNC(KwTask)))
-			{
-			}
-			else
-			{
-				_expect_wanted_tok();
-			}
+			MAKE_AST_NODE_AND_POP(typenm);
+		}
+		else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwRange)))
+		{
+		}
+		else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwType)))
+		{
+		}
+		else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwModule)))
+		{
+		}
+		else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwFunc)))
+		{
+		}
+		else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwTask)))
+		{
+		}
+		else
+		{
+			_expect_wanted_tok();
 		}
 
 		return std::nullopt;
