@@ -83,12 +83,12 @@ void AstVisitor::_accept_children
 void AstVisitor::_accept_children
 	(DeclParamListItem* n)
 {
-	ACCEPT(opt_typenm, opt_def_val_list);
+	ACCEPT(opt_typenm, opt_def_val);
 }
 void AstVisitor::_accept_children
 	(DeclArgListItem* n)
 {
-	ACCEPT(typenm, opt_def_val_list);
+	ACCEPT(typenm, opt_def_val);
 }
 //--------
 

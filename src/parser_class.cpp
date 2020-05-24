@@ -150,20 +150,20 @@ auto Parser::_parseFlingDeclParamList() -> ParseRet
 
 		INSERT_WANTED_TOK(PunctCmpGt);
 
-		while (ATTEMPT_PARSE_WTSM(_parseFlingDeclParamSublist))
-		{
-			MAKE_AST_LIST_AND_POP(sublist);
-			for (auto& item: sublist)
-			{
-				node->item_list.push_back(move(item.data));
-			}
+		//while (ATTEMPT_PARSE_WTSM(_parseFlingDeclParamSublist))
+		//{
+		//	MAKE_AST_LIST_AND_POP(sublist);
+		//	for (auto& item: sublist)
+		//	{
+		//		node->item_list.push_back(move(item.data));
+		//	}
 
-			// This also inserts PunctComma into `_wanted_tok_set`.
-			if (!ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(PunctComma)))
-			{
-				break;
-			}
-		}
+		//	// This also inserts PunctComma into `_wanted_tok_set`.
+		//	if (!ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(PunctComma)))
+		//	{
+		//		break;
+		//	}
+		//}
 
 		_expect_wanted_tok();
 
@@ -179,61 +179,79 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 				_parseFlingIdentList
 			);
 	}
-	else // if (!just_get_valid_tokens())
-	{
-		PROLOGUE_AND_EPILOGUE(_parseFlingDeclParamSublist);
-		DEFER_PUSH_LIST(sublist);
+	//else // if (!just_get_valid_tokens())
+	//{
+	//	PROLOGUE_AND_EPILOGUE(_parseFlingDeclParamSublist);
+	//	DEFER_PUSH_LIST(sublist);
 
-		StrList ident_list;
-		JUST_PARSE_AND_POP_STR_LIST(ident_list, _parseFlingIdentList);
+	//	using Kind = DeclParamListItem::Kind;
 
-		EXPECT(PunctColon);
+	//	StrList ident_list;
+	//	BaseUptr opt_typenm;
+	//	BaseUptrList opt_def_val_list;
+	//	Kind kind;
 
-		if (ATTEMPT_PARSE_WTSM(_parseFlingTypenm))
-		{
-			MAKE_AST_NODE_AND_POP(typenm);
+	//	JUST_PARSE_AND_POP_STR_LIST(ident_list, _parseFlingIdentList);
 
-			if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
-			{
-			}
-		}
-		else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwRange)))
-		{
-			if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
-			{
-			}
-		}
-		else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwType)))
-		{
-			if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
-			{
-			}
-		}
-		else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwModule)))
-		{
-			if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
-			{
-			}
-		}
-		else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwFunc)))
-		{
-			if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
-			{
-			}
-		}
-		else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwTask)))
-		{
-			if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
-			{
-			}
-		}
-		else
-		{
-			_expect_wanted_tok();
-		}
+	//	EXPECT(PunctColon);
 
-		return std::nullopt;
-	}
+	//	if (ATTEMPT_PARSE_WTSM(_parseFlingTypenm))
+	//	{
+	//		//MAKE_AST_NODE_AND_POP(typenm);
+	//		_pop_ast(opt_typenm);
+
+	//		if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
+	//		{
+	//			const auto file_pos = lex_file_pos();
+
+	//			JUST_PARSE_AND_POP_AST_LIST
+	//				(opt_def_val_list, _parseFlingExprList);
+	//		}
+	//	}
+	//	else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwRange)))
+	//	{
+	//		if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
+	//		{
+	//		}
+	//	}
+	//	else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwType)))
+	//	{
+	//		if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
+	//		{
+	//		}
+	//	}
+	//	else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwModule)))
+	//	{
+	//		if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
+	//		{
+	//		}
+	//	}
+	//	else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwFunc)))
+	//	{
+	//		if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
+	//		{
+	//		}
+	//	}
+	//	else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwTask)))
+	//	{
+	//		if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
+	//		{
+	//		}
+	//	}
+	//	else
+	//	{
+	//		_expect_wanted_tok();
+	//	}
+
+	//	if ((ident_list.size() != opt_def_val_list.size())
+	//		&& (opt_def_val_list.size() > 0))
+	//	{
+	//		err(file_pos, "Number of default values unequal to ",
+	//			"number of parameters in sublist.");
+	//	}
+
+	//	return std::nullopt;
+	//}
 }
 auto Parser::_parseFlingDeclArgList() -> ParseRet
 {

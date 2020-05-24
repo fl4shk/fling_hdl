@@ -150,7 +150,7 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(ParamOrArgList, Base);
 };
 
-class DeclParamListItem: public Base
+class DeclParamSublist: public Base
 {
 public:		// types
 	enum class Kind
@@ -177,7 +177,7 @@ public:		// types
 			Task);
 	}
 public:		// variables
-	string ident;
+	BaseUptrList ident_list;
 	Kind kind;
 	BaseUptr opt_typenm;
 
@@ -185,10 +185,10 @@ public:		// variables
 	// `kind`.
 	BaseUptrList opt_def_val_list;
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclParamListItem, Base);
+	SHARED_FUNC_CONTENTS(DeclParamSublist, Base);
 };
 
-class DeclArgListItem: public Base
+class DeclArgSublist: public Base
 {
 public:		// types
 	// This is just the port direction
@@ -206,12 +206,12 @@ public:		// types
 			Inout);
 	}
 public:		// variables
-	string ident;
+	BaseUptrList ident_list;
 	Kind kind;
 	BaseUptr typenm;
 	BaseUptrList opt_def_val_list;
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclArgListItem, Base);
+	SHARED_FUNC_CONTENTS(DeclArgSublist, Base);
 };
 
 class StrAndNode: public Base
