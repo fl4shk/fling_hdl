@@ -66,7 +66,7 @@ auto Parser::_parseFlingDeclPackage() -> ParseRet
 		while (ATTEMPT_PARSE(_parseFlingDeclPackageItem))
 		{
 			MAKE_AST_NODE_AND_POP(to_push);
-			node->item_list.push_back(to_push);
+			node->item_list.push_back(move(to_push));
 		}
 
 		_expect_wanted_tok();
