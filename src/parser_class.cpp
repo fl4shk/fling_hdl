@@ -157,7 +157,6 @@ auto Parser::_parseFlingDeclParamList() -> ParseRet
 
 		INSERT_WANTED_TOK(PunctCmpGt);
 
-		bool found = false;
 		while (ATTEMPT_PARSE_IFELSE(_parseFlingDeclParamSublist))
 		{
 			MAKE_AST_LIST_AND_POP(sublist);
@@ -205,10 +204,6 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 			}
 			else if (ATTEMPT_PARSE_IFELSE(TOK_PARSE_FUNC(KwRange)))
 			{
-				SUB_P_AND_E
-				{
-					INSERT_WANTED_TOK(
-				}
 			}
 			else if (ATTEMPT_PARSE_IFELSE(TOK_PARSE_FUNC(KwType)))
 			{
@@ -222,8 +217,10 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 			else if (ATTEMPT_PARSE_IFELSE(TOK_PARSE_FUNC(KwTask)))
 			{
 			}
-
-			_expect_wanted_tok();
+			else
+			{
+				_expect_wanted_tok();
+			}
 		}
 
 		return std::nullopt;

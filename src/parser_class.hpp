@@ -17,7 +17,7 @@ class Parser final: public RdParserBase<Lexer, Parser>
 {
 	friend class AstNodeDeferredPusher;
 	friend class AstNodeListDeferredPusher;
-	friend class StrVecDeferredPusher;
+	friend class StrListDeferredPusher;
 
 public:		// types
 	using ParserBase = RdParserBase<Lexer, Parser>;
@@ -328,19 +328,19 @@ public:		// functions
 	}
 };
 
-class StrVecDeferredPusher final
+class StrListDeferredPusher final
 {
 private:		// variables
 	Parser* _parser = nullptr;
-	Parser::StrVec* _vec = nullptr;
+	Parser::StrList* _vec = nullptr;
 public:		// functions
-	inline StrVecDeferredPusher(Parser* s_parser,
-		Parser::StrVec* s_vec)
+	inline StrListDeferredPusher(Parser* s_parser,
+		Parser::StrList* s_vec)
 		: _parser(s_parser), _vec(s_vec)
 	{
 	}
-	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(StrVecDeferredPusher);
-	inline ~StrVecDeferredPusher()
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(StrListDeferredPusher);
+	inline ~StrListDeferredPusher()
 	{
 		_parser->_push_str_vec(move(*_vec));
 	}

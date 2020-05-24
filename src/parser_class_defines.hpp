@@ -11,8 +11,11 @@
 	auto name = make_ast(type); \
 	AstNodeDeferredPusher deferred_pusher_ ## name (this, name)
 #define DEFER_PUSH_LIST(name) \
-	BaseSptrList name; \
+	BaseUptrList name; \
 	AstNodeListDeferredPusher deferred_pusher_ ## name (this, &name)
+#define DEFER_PUSH_STR_LIST(name) \
+	StrList name; \
+	StrListDeferredPusher deferred_pusher_ ## name (this, &name)
 
 #define PROLOGUE_AND_EPILOGUE(str) \
 	ParserBase::PrologueAndEpilogue p_and_e (this, #str)
@@ -120,6 +123,9 @@
 	_wanted_tok_set.insert(_INNER_TOK_CSL(tok))
 #define INSERT_WANTED_TOK(...) \
 	EVAL(MAP(_INNER_INSERT_WANTED_TOK, SEMICOLON, __VA_ARGS__))
+
+#define _INNER_INSERT_PARENT_WANTED_TOK(tok) \
+	_
 
 #define EXPECT(...) \
 	_expect(TOK_CSL(__VA_ARGS__))
