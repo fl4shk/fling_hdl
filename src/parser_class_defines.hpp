@@ -35,8 +35,10 @@
 	_check_parse(_MEMB_FUNC(func))
 #define ATTEMPT_PARSE_BASIC(func) \
 	_attempt_parse_basic(_MEMB_FUNC(func))
-#define ATTEMPT_PARSE(func) \
-	_attempt_parse(_MEMB_FUNC(func))
+#define ATTEMPT_PARSE_OPT(func) \
+	_attempt_parse_opt(_MEMB_FUNC(func))
+#define ATTEMPT_PARSE_WTSM(func) \
+	_attempt_parse_wtsm(_MEMB_FUNC(func))
 #define GET_VALID_TOK_SET(...) \
 	_get_valid_tok_set(EVAL(MAP(_MEMB_FUNC, COMMA, __VA_ARGS__)))
 

@@ -30,7 +30,7 @@ auto Parser::_parseFlingProgram() -> ParseRet
 
 	INSERT_WANTED_TOK(MiscEof);
 
-	while (ATTEMPT_PARSE(_parseFlingDeclPackageItem))
+	while (ATTEMPT_PARSE_WTSM(_parseFlingDeclPackageItem))
 	{
 		MAKE_AST_NODE_AND_POP(to_push);
 		_ast_program->item_list.push_back(move(to_push));
@@ -66,7 +66,7 @@ auto Parser::_parseFlingDeclPackage() -> ParseRet
 		{
 			INSERT_WANTED_TOK(PunctRbrace);
 
-			while (ATTEMPT_PARSE(_parseFlingDeclPackageItem))
+			while (ATTEMPT_PARSE_WTSM(_parseFlingDeclPackageItem))
 			{
 				MAKE_AST_NODE_AND_POP(to_push);
 				node->item_list.push_back(move(to_push));
@@ -157,7 +157,7 @@ auto Parser::_parseFlingDeclParamList() -> ParseRet
 
 		INSERT_WANTED_TOK(PunctCmpGt);
 
-		while (ATTEMPT_PARSE(_parseFlingDeclParamSublist))
+		while (ATTEMPT_PARSE_WTSM(_parseFlingDeclParamSublist))
 		{
 			MAKE_AST_LIST_AND_POP(sublist);
 			for (auto& item: sublist)
@@ -166,7 +166,7 @@ auto Parser::_parseFlingDeclParamList() -> ParseRet
 			}
 
 			// This also inserts PunctComma into `_wanted_tok_set`.
-			if (!ATTEMPT_PARSE(TOK_PARSE_FUNC(PunctComma)))
+			if (!ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(PunctComma)))
 			{
 				break;
 			}
@@ -196,23 +196,27 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 
 		EXPECT(PunctColon);
 
-		if (ATTEMPT_PARSE(_parseFlingTypenm))
+		if (ATTEMPT_PARSE_WTSM(_parseFlingTypenm))
 		{
 			MAKE_AST_NODE_AND_POP(typenm);
+
+			if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
+			{
+			}
 		}
-		else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwRange)))
+		else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwRange)))
 		{
 		}
-		else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwType)))
+		else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwType)))
 		{
 		}
-		else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwModule)))
+		else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwModule)))
 		{
 		}
-		else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwFunc)))
+		else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwFunc)))
 		{
 		}
-		else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwTask)))
+		else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwTask)))
 		{
 		}
 		else
