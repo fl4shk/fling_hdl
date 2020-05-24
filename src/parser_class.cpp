@@ -62,18 +62,14 @@ auto Parser::_parseFlingDeclPackage() -> ParseRet
 		EXPECT(PunctLbrace);
 
 
-		SUB_P_AND_E
+		while (ATTEMPT_PARSE_WTSM(_parseFlingDeclPackageItem))
 		{
-			INSERT_WANTED_TOK(PunctRbrace);
-
-			while (ATTEMPT_PARSE_WTSM(_parseFlingDeclPackageItem))
-			{
-				MAKE_AST_NODE_AND_POP(to_push);
-				node->item_list.push_back(move(to_push));
-			}
-
-			_expect_wanted_tok();
+			MAKE_AST_NODE_AND_POP(to_push);
+			node->item_list.push_back(move(to_push));
 		}
+
+		INSERT_WANTED_TOK(PunctRbrace);
+		_expect_wanted_tok();
 
 		return std::nullopt;
 	}
@@ -206,18 +202,33 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 		}
 		else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwRange)))
 		{
+			if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
+			{
+			}
 		}
 		else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwType)))
 		{
+			if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
+			{
+			}
 		}
 		else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwModule)))
 		{
+			if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
+			{
+			}
 		}
 		else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwFunc)))
 		{
+			if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
+			{
+			}
 		}
 		else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwTask)))
 		{
+			if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
+			{
+			}
 		}
 		else
 		{

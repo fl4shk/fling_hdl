@@ -332,17 +332,17 @@ class StrListDeferredPusher final
 {
 private:		// variables
 	Parser* _parser = nullptr;
-	Parser::StrList* _vec = nullptr;
+	Parser::StrList* _list = nullptr;
 public:		// functions
 	inline StrListDeferredPusher(Parser* s_parser,
-		Parser::StrList* s_vec)
-		: _parser(s_parser), _vec(s_vec)
+		Parser::StrList* s_list)
+		: _parser(s_parser), _list(s_list)
 	{
 	}
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(StrListDeferredPusher);
 	inline ~StrListDeferredPusher()
 	{
-		_parser->_push_str_vec(move(*_vec));
+		_parser->_push_str_list(move(*_list));
 	}
 };
 
