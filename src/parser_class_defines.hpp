@@ -17,8 +17,8 @@
 #define PROLOGUE_AND_EPILOGUE(str) \
 	ParserBase::PrologueAndEpilogue p_and_e (this, #str)
 #define SUB_P_AND_E \
-	auto sub_p_and_e = ParserBase::PrologueAndEpilogue (this, \
-		_parse_func_str)
+	if (auto sub_p_and_e = ParserBase::PrologueAndEpilogue (this, \
+		_parse_func_str); true)
 
 #define _INNER_PARSE_IFELSE(func) \
 	if (CHECK_PARSE(func)) \

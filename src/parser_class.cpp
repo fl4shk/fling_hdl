@@ -61,15 +61,19 @@ auto Parser::_parseFlingDeclPackage() -> ParseRet
 		EXPECT_IDENT_AND_GRAB_S(node->ident);
 		EXPECT(PunctLbrace);
 
-		INSERT_WANTED_TOK(PunctRbrace);
 
-		while (ATTEMPT_PARSE(_parseFlingDeclPackageItem))
+		SUB_P_AND_E
 		{
-			MAKE_AST_NODE_AND_POP(to_push);
-			node->item_list.push_back(move(to_push));
-		}
+			INSERT_WANTED_TOK(PunctRbrace);
 
-		_expect_wanted_tok();
+			while (ATTEMPT_PARSE_IFELSE(_parseFlingDeclPackageItem))
+			{
+				MAKE_AST_NODE_AND_POP(to_push);
+				node->item_list.push_back(move(to_push));
+			}
+
+			_expect_wanted_tok();
+		}
 
 		return std::nullopt;
 	}
@@ -153,12 +157,17 @@ auto Parser::_parseFlingDeclParamList() -> ParseRet
 
 		INSERT_WANTED_TOK(PunctCmpGt);
 
-		while (ATTEMPT_PARSE(_parseFlingDeclParamSublist))
+		while (ATTEMPT_PARSE_IFELSE(_parseFlingDeclParamSublist))
 		{
 			MAKE_AST_LIST_AND_POP(sublist);
 			for (auto& item: sublist)
 			{
 				node->item_list.push_back(move(item.data));
+			}
+
+			if (!ATTEMPT_PARSE_IFELSE(PunctComma))
+			{
+				break;
 			}
 		}
 
@@ -186,29 +195,30 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 
 		EXPECT(PunctColon);
 
-		zwith(SUB_P_AND_E)
+		SUB_P_AND_E
 		{
-			if (ATTEMPT_PARSE(_parseFlingTypenm))
+			if (ATTEMPT_PARSE_IFELSE(_parseFlingTypenm))
+			{
+				MAKE_AST_NODE_AND_POP(typenm)
+
+			}
+			else if (ATTEMPT_PARSE_IFELSE(TOK_PARSE_FUNC(KwRange)))
 			{
 			}
-			else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwRange)))
+			else if (ATTEMPT_PARSE_IFELSE(TOK_PARSE_FUNC(KwType)))
 			{
 			}
-			else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwType)))
+			else if (ATTEMPT_PARSE_IFELSE(TOK_PARSE_FUNC(KwModule)))
 			{
 			}
-			else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwModule)))
+			else if (ATTEMPT_PARSE_IFELSE(TOK_PARSE_FUNC(KwFunc)))
 			{
 			}
-			else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwFunc)))
+			else if (ATTEMPT_PARSE_IFELSE(TOK_PARSE_FUNC(KwTask)))
 			{
 			}
-			else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwTask)))
-			{
-			}
-			else
-			{
-			}
+
+			_expect_wanted_tok();
 		}
 
 		return std::nullopt;
