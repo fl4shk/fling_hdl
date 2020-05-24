@@ -37,7 +37,7 @@ public:		// functions
 	virtual ~AstToDotConverter() = default;
 
 	virtual void convert(const string& dst_filename,
-		size_t max_ast_level, const ast::BaseSptr& ast_root);
+		size_t max_ast_level, const ast::BaseUptr& ast_root);
 
 protected:		// misc. functions
 	void _print_dot_subgraph_cluster(size_t level);

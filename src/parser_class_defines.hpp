@@ -125,6 +125,8 @@
 
 #define EXPECT(...) \
 	_expect(TOK_CSL(__VA_ARGS__))
+#define EXPECT_WANTED_TOK(...) \
+	_expect_wanted_tok(TOK_SET(__VA_ARGS__))
 
 #define EXPECT_AND_GRAB_TOK(name, ...) \
 	EXPECT(__VA_ARGS__); \

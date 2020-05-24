@@ -6,7 +6,7 @@ namespace fling_hdl
 using namespace ast;
 
 void AstToDotConverter::convert(const string& dst_filename,
-	size_t max_ast_level, const ast::BaseSptr& ast_root)
+	size_t max_ast_level, const ast::BaseUptr& ast_root)
 {
 	_max_ast_level = max_ast_level;
 	_file.open(dst_filename, std::ios_base::out | std::ios_base::trunc);

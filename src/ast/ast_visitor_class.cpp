@@ -42,7 +42,7 @@ void AstVisitor::_inner_accept_children(const string& memb_name,
 	for (const auto& p: node_list)
 	{
 		_memb_name = sconcat(memb_name, "[", i, "]");
-		p->accept(this);
+		p.data->accept(this);
 		++i;
 	}
 }

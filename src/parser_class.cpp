@@ -28,15 +28,13 @@ auto Parser::_parseFlingProgram() -> ParseRet
 {
 	PROLOGUE_AND_EPILOGUE(_parseFlingProgram);
 
-	INSERT_WANTED_TOK(MiscEof);
-
 	while (ATTEMPT_PARSE_WTSM(_parseFlingDeclPackageItem))
 	{
 		MAKE_AST_NODE_AND_POP(to_push);
 		_ast_program->item_list.push_back(move(to_push));
 	}
 
-	_expect_wanted_tok();
+	EXPECT_WANTED_TOK(MiscEof);
 
 	return std::nullopt;
 }
@@ -68,8 +66,7 @@ auto Parser::_parseFlingDeclPackage() -> ParseRet
 			node->item_list.push_back(move(to_push));
 		}
 
-		INSERT_WANTED_TOK(PunctRbrace);
-		_expect_wanted_tok();
+		EXPECT_WANTED_TOK(PunctRbrace);
 
 		return std::nullopt;
 	}
