@@ -15,7 +15,10 @@
 	AstNodeListDeferredPusher deferred_pusher_ ## name (this, &name)
 
 #define PROLOGUE_AND_EPILOGUE(str) \
-	ParserBase::PrologueAndEpilogue prologue_and_epilogue (this, #str)
+	ParserBase::PrologueAndEpilogue p_and_e (this, #str)
+#define SUB_P_AND_E \
+	auto sub_p_and_e = ParserBase::PrologueAndEpilogue (this, \
+		_parse_func_str)
 
 #define _INNER_PARSE_IFELSE(func) \
 	if (CHECK_PARSE(func)) \
@@ -30,8 +33,10 @@
 
 #define CHECK_PARSE(func) \
 	_check_parse(_MEMB_FUNC(func))
-#define ATTEMPT_PARSE(func) \
-	_attempt_parse(_MEMB_FUNC(func))
+#define ATTEMPT_PARSE_BASIC(func) \
+	_attempt_parse_basic(_MEMB_FUNC(func))
+#define ATTEMPT_PARSE_IFELSE(func) \
+	_attempt_parse_ifelse(_MEMB_FUNC(func))
 #define GET_VALID_TOK_SET(...) \
 	_get_valid_tok_set(EVAL(MAP(_MEMB_FUNC, COMMA, __VA_ARGS__)))
 
@@ -72,23 +77,23 @@
 #define PARSE_AND_POP_AST_LIST_IF(...) \
 	_MULTI_PARSE_AND_POP_AST_LIST_IF(SEMICOLON, __VA_ARGS__)
 
-#define _INNER_JUST_PARSE_AND_POP_STR_VEC(to_set, func) \
+#define _INNER_JUST_PARSE_AND_POP_STR_LIST(to_set, func) \
 	func (); \
-	_pop_str_vec(to_set)
-#define _INNER_PARSE_AND_POP_STR_VEC_IF(to_set, func) \
+	_pop_str_list(to_set)
+#define _INNER_PARSE_AND_POP_STR_LIST_IF(to_set, func) \
 	if (CHECK_PARSE(func)) \
 	{ \
-		_INNER_JUST_PARSE_AND_POP_STR_VEC(to_set, func); \
+		_INNER_JUST_PARSE_AND_POP_STR_LIST(to_set, func); \
 	}
-#define JUST_PARSE_AND_POP_STR_VEC(...) \
-	EVAL(MAP_PAIRS(_INNER_JUST_PARSE_AND_POP_STR_VEC, SEMICOLON, \
+#define JUST_PARSE_AND_POP_STR_LIST(...) \
+	EVAL(MAP_PAIRS(_INNER_JUST_PARSE_AND_POP_STR_LIST, SEMICOLON, \
 		__VA_ARGS__))
-#define _MULTI_PARSE_AND_POP_STR_VEC_IF(sep, ...) \
-	EVAL(MAP_PAIRS(_INNER_PARSE_AND_POP_STR_VEC_IF, sep, __VA_ARGS__))
-#define PARSE_AND_POP_STR_VEC_IFELSE(...) \
-	_MULTI_PARSE_AND_POP_STR_VEC_IF(ELSE, __VA_ARGS__)
-#define PARSE_AND_POP_STR_VEC_IF(...) \
-	_MULTI_PARSE_AND_POP_STR_VEC_IF(SEMICOLON, __VA_ARGS__)
+#define _MULTI_PARSE_AND_POP_STR_LIST_IF(sep, ...) \
+	EVAL(MAP_PAIRS(_INNER_PARSE_AND_POP_STR_LIST_IF, sep, __VA_ARGS__))
+#define PARSE_AND_POP_STR_LIST_IFELSE(...) \
+	_MULTI_PARSE_AND_POP_STR_LIST_IF(ELSE, __VA_ARGS__)
+#define PARSE_AND_POP_STR_LIST_IF(...) \
+	_MULTI_PARSE_AND_POP_STR_LIST_IF(SEMICOLON, __VA_ARGS__)
 
 
 

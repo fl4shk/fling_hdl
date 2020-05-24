@@ -21,7 +21,7 @@ class Parser final: public RdParserBase<Lexer, Parser>
 
 public:		// types
 	using ParserBase = RdParserBase<Lexer, Parser>;
-	using StrVec = vector<string>;
+	using StrList = IndCircLinkList<string>;
 
 private:		// variables
 	size_t _max_ast_level;
@@ -31,7 +31,7 @@ private:		// variables
 	ast::Base* _curr_ast_parent = nullptr;
 	//ast::IdentExprSuffix _ident_expr_suffix;
 
-	stack<StrVec> _str_vec_stack;
+	stack<StrList> _str_list_stack;
 	stack<ast::BaseUptr> _ast_stack;
 	stack<ast::BaseUptrList> _ast_list_stack;
 	string _parse_func_str;
@@ -44,14 +44,14 @@ public:		// misc. functions
 	}
 
 private:		// misc. functions
-	inline void _push_str_vec(StrVec&& to_push)
+	inline void _push_str_list(StrList&& to_push)
 	{
-		_str_vec_stack.push(move(to_push));
+		_str_list_stack.push(move(to_push));
 	}
-	inline void _pop_str_vec(StrVec& to_set)
+	inline void _pop_str_list(StrList& to_set)
 	{
-		to_set = move(_str_vec_stack.top());
-		_str_vec_stack.pop();
+		to_set = move(_str_list_stack.top());
+		_str_list_stack.pop();
 	}
 
 	inline void _push_ast(ast::Base* to_push)

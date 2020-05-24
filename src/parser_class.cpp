@@ -179,6 +179,37 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclParamSublist);
+		DEFER_PUSH_LIST(sublist);
+
+		StrList ident_list;
+		JUST_PARSE_AND_POP_STR_LIST(ident_list, _parseFlingIdentList);
+
+		EXPECT(PunctColon);
+
+		zwith(SUB_P_AND_E)
+		{
+			if (ATTEMPT_PARSE(_parseFlingTypenm))
+			{
+			}
+			else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwRange)))
+			{
+			}
+			else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwType)))
+			{
+			}
+			else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwModule)))
+			{
+			}
+			else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwFunc)))
+			{
+			}
+			else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwTask)))
+			{
+			}
+			else
+			{
+			}
+		}
 
 		return std::nullopt;
 	}
