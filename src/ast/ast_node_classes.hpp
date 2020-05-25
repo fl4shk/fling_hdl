@@ -58,6 +58,14 @@ namespace ast
 		return "Eek!"; \
 	/* -------- */ \
 	}
+
+#define BUILD_KIND_OPERATOR_LSHIFT(type) \
+	inline std::ostream& operator << (std::ostream& os, \
+		type::Kind to_conv) \
+	{ \
+		os << type::conv_kind(to_conv); \
+		return os; \
+	}
 //--------
 
 //--------
@@ -95,7 +103,7 @@ public:		// functions
 	}
 
 	GEN_GETTER_BY_VAL(parent);
-	GEN_GETTER_AND_SETTER_BY_VAL(fp);
+	GEN_GETTER_AND_SETTER_BY_CON_REF(fp);
 	GEN_GETTER_BY_VAL(level);
 
 };
@@ -150,7 +158,7 @@ public:		// functions
 	SHARED_FUNC_CONTENTS(ParamOrArgList, Base);
 };
 
-class DeclParamSublist: public Base
+class DeclParamSublistItem: public Base
 {
 public:		// types
 	enum class Kind
@@ -177,18 +185,19 @@ public:		// types
 			Task);
 	}
 public:		// variables
-	BaseUptrList ident_list;
+	string ident;
 	Kind kind;
 	BaseUptr opt_typenm;
 
 	// Default value list, the type of which is dependent upon the value of
 	// `kind`.
-	BaseUptrList opt_def_val_list;
+	BaseUptrList opt_def_val;
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclParamSublist, Base);
+	SHARED_FUNC_CONTENTS(DeclParamSublistItem, Base);
 };
+BUILD_KIND_OPERATOR_LSHIFT(DeclParamSublistItem);
 
-class DeclArgSublist: public Base
+class DeclArgSublistItem: public Base
 {
 public:		// types
 	// This is just the port direction
@@ -206,13 +215,14 @@ public:		// types
 			Inout);
 	}
 public:		// variables
-	BaseUptrList ident_list;
+	string ident;
 	Kind kind;
 	BaseUptr typenm;
-	BaseUptrList opt_def_val_list;
+	BaseUptrList opt_def_val;
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclArgSublist, Base);
+	SHARED_FUNC_CONTENTS(DeclArgSublistItem, Base);
 };
+BUILD_KIND_OPERATOR_LSHIFT(DeclArgSublistItem);
 
 class StrAndNode: public Base
 {
@@ -293,6 +303,7 @@ public:		// variables
 public:		// functions
 	SHARED_FUNC_CONTENTS(GenSwitchEtc, Base);
 };
+BUILD_KIND_OPERATOR_LSHIFT(GenSwitchEtc);
 
 class GenCase: public Base
 {
@@ -358,6 +369,7 @@ public:		// variables
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclModuleBehavSeqEdgeItem, Base);
 };
+BUILD_KIND_OPERATOR_LSHIFT(DeclModuleBehavSeqEdgeItem);
 //--------
 
 //--------
@@ -430,6 +442,7 @@ public:		// variables
 public:		// functions
 	SHARED_FUNC_CONTENTS(BehavAssign, Base);
 };
+BUILD_KIND_OPERATOR_LSHIFT(BehavAssign);
 //--------
 
 //--------
@@ -477,6 +490,7 @@ public:		// variables
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclSubprog, Base);
 };
+BUILD_KIND_OPERATOR_LSHIFT(DeclSubprog);
 //--------
 
 //--------
@@ -503,6 +517,7 @@ public:		// variables
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclVarEtc, Base);
 };
+BUILD_KIND_OPERATOR_LSHIFT(DeclVarEtc);
 
 class WireAssign: public Base
 {
@@ -547,6 +562,7 @@ public:		// variables
 public:		// functions
 	SHARED_FUNC_CONTENTS(DeclAlias, Base);
 };
+BUILD_KIND_OPERATOR_LSHIFT(DeclAlias);
 //--------
 
 //--------
@@ -659,6 +675,7 @@ public:		// variables
 public:		// functions
 	SHARED_FUNC_CONTENTS(BinopExpr, ExprBase);
 };
+BUILD_KIND_OPERATOR_LSHIFT(BinopExpr);
 
 class UnopExpr: public ExprBase
 {
@@ -704,6 +721,7 @@ public:		// variables
 public:		// functions
 	SHARED_FUNC_CONTENTS(UnopExpr, ExprBase);
 };
+BUILD_KIND_OPERATOR_LSHIFT(UnopExpr);
 
 class LitValExpr: public ExprBase
 {
@@ -729,6 +747,7 @@ public:		// variables
 public:		// functions
 	SHARED_FUNC_CONTENTS(LitValExpr, ExprBase);
 };
+BUILD_KIND_OPERATOR_LSHIFT(LitValExpr);
 
 class CallDollarFuncExpr: public ExprBase
 {
@@ -768,6 +787,7 @@ public:		// variables
 public:		// functions
 	SHARED_FUNC_CONTENTS(CallDollarFuncExpr, ExprBase);
 };
+BUILD_KIND_OPERATOR_LSHIFT(CallDollarFuncExpr);
 
 class String: public Base
 {
@@ -862,6 +882,7 @@ public:		// variables
 public:		// functions
 	SHARED_FUNC_CONTENTS(Typenm, Base);
 };
+BUILD_KIND_OPERATOR_LSHIFT(Typenm);
 
 class Modnm: public IdentExpr
 {
@@ -878,6 +899,8 @@ public:		// functions
 #undef CONV_ENUM_CASE
 #undef CONV_KIND_CASE
 #undef CONV_ENUM_SWITCH
+
+#undef BUILD_KIND_OPERATOR_LSHIFT
 
 } // namespace fling_hdl
 

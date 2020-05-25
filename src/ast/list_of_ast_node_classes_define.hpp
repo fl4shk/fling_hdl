@@ -11,8 +11,8 @@
 	X(ImportItem) \
 	\
 	X(ParamOrArgList) \
-	X(DeclParamListItem) \
-	X(DeclArgListItem) \
+	X(DeclParamSublistItem) \
+	X(DeclArgSublistItem) \
 	X(StrAndNode) \
 	\
 	X(DeclModule) \

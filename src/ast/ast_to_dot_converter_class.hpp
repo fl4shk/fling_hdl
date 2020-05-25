@@ -81,8 +81,8 @@ protected:		// visitor functions
 		//	printout("testificate\n");
 		//}
 	}
-	#define GEN_VISIT_FUNCS(name) \
-		virtual inline void visit##name(ast::name* n) \
+	#define GEN_VISIT_FUNCS(type) \
+		virtual inline void visit##type(ast::type* n) \
 		{ \
 			switch (_state) \
 			{ \
@@ -101,7 +101,7 @@ protected:		// visitor functions
 			} \
 			_accept_children(n); \
 		} \
-		virtual void _build_label_map(ast::name* n);
+		virtual void _build_label_map(ast::type* n);
 	LIST_OF_AST_NODE_CLASSES(GEN_VISIT_FUNCS)
 	#undef GEN_VISIT_FUNCS
 };

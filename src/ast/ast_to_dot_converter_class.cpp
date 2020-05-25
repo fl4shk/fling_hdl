@@ -117,127 +117,20 @@ void AstToDotConverter::_print_dot_wires(size_t level)
 	EVAL(MAP(_INNER_WRAP_CONV_2, COMMA, __VA_ARGS__))
 
 
-#define build(type, ...) \
+#define BUILD_DATA(type, ...) \
 	void AstToDotConverter::_build_label_map(type* n) \
 	{ \
 		auto temp = sconcat(_memb_name, "\\n", "id:  ", n->id()); \
-		auto to_append = _strjoin2_raw_newline(__VA_ARGS__); \
-		if (to_append.size() != 0) \
-		{ \
+		\
+		IF(HAS_ARGS(__VA_ARGS__)) \
+		( \
+			auto to_append = _strjoin2_raw_newline(wrap(__VA_ARGS__)); \
 			temp += sconcat("\\n---- ---- ---- ----\\n", to_append); \
-		} \
+		) \
 		_label_map[n] = move(temp); \
 	}
 
+#include "ast_build_data_macro_calls.hpp"
 
-//--------
-build(Program)
-//--------
-
-//--------
-build(DeclPackage, wrap(ident))
-
-build(Import)
-build(ImportItem, wrap(ends_with_all))
-//--------
-
-//--------
-build(ParamOrArgList)
-
-build(DeclParamListItem, wrap(ident), wrap_conv(kind))
-build(DeclArgListItem, wrap(ident), wrap_conv(kind))
-build(StrAndNode, wrap(str))
-//--------
-
-//--------
-build(DeclModule, wrap(ident))
-build(Scope)
-//--------
-
-//--------
-build(Modinst, wrap(ident))
-//--------
-
-//--------
-build(GenIf)
-build(GenElif)
-build(GenSwitchEtc, wrap_conv(kind))
-build(GenCase)
-build(GenDefault)
-build(GenFor, wrap(label, iter_ident))
-//--------
-
-//--------
-build(DeclModuleBehavComb)
-build(DeclModuleBehavSeq)
-build(DeclModuleBehavSeqEdgeItem, wrap_conv(kind))
-//--------
-
-//--------
-build(BehavIf)
-build(BehavElif)
-build(BehavSwitchEtc, wrap_conv(kind))
-build(BehavCase)
-build(BehavDefault)
-build(BehavFor, wrap(iter_ident))
-build(BehavWhile)
-//--------
-
-//--------
-build(BehavAssign, wrap_conv(kind))
-//--------
-
-//--------
-build(DeclStruct, wrap(ident))
-//--------
-
-//--------
-build(DeclEnum, wrap(ident))
-//--------
-
-//--------
-build(DeclSubprog, wrap_conv(kind), wrap(ident))
-//--------
-
-//--------
-build(DeclVarEtc, wrap_conv(kind), wrap(ident))
-build(WireAssign)
-//--------
-
-//--------
-build(DeclAlias, wrap(ident), wrap_conv(kind))
-//--------
-
-//--------
-build(NamedScope)
-//--------
-
-//--------
-build(MuxExpr, wrap(is_self_determined))
-build(BinopExpr, wrap_conv(kind))
-build(UnopExpr, wrap_conv(kind))
-
-build(LitValExpr, wrap_conv(kind), wrap(opt_num_str, opt_num))
-
-build(CallDollarFuncExpr, wrap_conv(kind))
-
-build(String, wrap(data))
-build(IdentExprSuffix, wrap(part_sel_is_minus_colon))
-build(IdentExpr)
-
-build(CatExpr)
-build(ReplExpr)
-
-build(SizedExpr)
-//--------
-
-//--------
-build(NonDollarFuncRange)
-//--------
-
-//--------
-build(Typenm, wrap_conv(kind))
-build(Modnm)
-//--------
 
 } // namespace fling_hdl

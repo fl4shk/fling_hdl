@@ -29,6 +29,8 @@ using std::string;
 using std::variant;
 using std::optional;
 
+using std::ostream;
+
 using std::unique_ptr;
 using std::shared_ptr;
 using std::make_shared;
