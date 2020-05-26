@@ -122,7 +122,7 @@ void AstToDotConverter::_print_dot_wires(size_t level)
 	{ \
 		auto temp = sconcat(_memb_name, "\\n", "id:  ", n->id()); \
 		\
-		IF(HAS_ARGS(__VA_ARGS__)) \
+		IF (HAS_ARGS(__VA_ARGS__)) \
 		( \
 			auto to_append = _strjoin2_raw_newline(wrap(__VA_ARGS__)); \
 			temp += sconcat("\\n---- ---- ---- ----\\n", to_append); \

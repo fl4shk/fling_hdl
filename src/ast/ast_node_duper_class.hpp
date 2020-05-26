@@ -6,7 +6,6 @@
 #include "../misc_includes.hpp"
 #include "ast_visitor_class.hpp"
 #include "ast_node_classes.hpp"
-#include "liborangepower_src/make_deferred_restorer_class_define.hpp"
 
 namespace fling_hdl
 {
@@ -64,9 +63,9 @@ protected:		// dup and visitor functions
 
 	//--------
 	virtual inline void _inner_dup_children(BaseUptr& ret_item,
-		const BaseUptr& to_dup_item) const;
+		const BaseUptr& to_dup_item);
 	virtual inline void _inner_dup_children(BaseUptrList& ret_item,
-		const BaseUptrList& to_dup_item) const;
+		const BaseUptrList& to_dup_item);
 	//--------
 
 	//--------

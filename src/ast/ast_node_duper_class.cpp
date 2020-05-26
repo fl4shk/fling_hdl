@@ -1,5 +1,4 @@
 #include "ast_node_duper_class.hpp"
-#include "liborangepower_src/make_deferred_restorer_class_define.hpp"
 
 namespace fling_hdl
 {
@@ -7,23 +6,6 @@ namespace fling_hdl
 namespace ast
 {
 
-//class DeferredRestorer final
-//{
-//private:		// variables
-//	AstNodeDuper* _duper = nullptr;
-//	BaseUptr _saved_visit_node;
-//public:		// functions
-//	inline DeferredRestorer(AstNodeDuper* s_duper)
-//		: _duper(s_duper)
-//	{
-//		_saved_visit_node = move(_duper->_visit_node);
-//	}
-//	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(DeferredRestorer);
-//	inline ~DeferredRestorer()
-//	{
-//		_duper->_visit_node = move(_saved_visit_node);
-//	}
-//};
 
 //--------
 BaseUptr AstNodeDuper::_construct(Base* s_parent, const BaseUptr& to_dup)
@@ -43,7 +25,7 @@ BaseUptr AstNodeDuper::_construct(Base* s_parent, const BaseUptr& to_dup)
 
 //--------
 inline void AstNodeDuper::_inner_dup_children(BaseUptr& ret_item,
-	const BaseUptr& to_dup_item) const
+	const BaseUptr& to_dup_item)
 {
 	DeferredRestorer deferred_restorer(this);
 
@@ -52,14 +34,14 @@ inline void AstNodeDuper::_inner_dup_children(BaseUptr& ret_item,
 	ret_item = move(_visit_node);
 }
 inline void AstNodeDuper::_inner_dup_children(BaseUptrList& ret_item,
-	const BaseUptrList& to_dup_item) const
+	const BaseUptrList& to_dup_item)
 {
 	DeferredRestorer deferred_restorer(this);
 
 	for (const auto& item: to_dup_item)
 	{
-		_visit_node = _construct(_visit_node.get(), item);
-		item->accept(this);
+		_visit_node = _construct(_visit_node.get(), item.data);
+		item.data->accept(this);
 		ret_item.push_back(move(_visit_node));
 	}
 }
@@ -72,7 +54,7 @@ inline void AstNodeDuper::_inner_dup_children(BaseUptrList& ret_item,
 #define BUILD_DATA(type, ...) \
 	void AstNodeDuper::_dup_data(ast::type* to_dup) \
 	{ \
-		IF(HAS_ARGS(__VA_ARGS__)) \
+		IF (HAS_ARGS(__VA_ARGS__)) \
 		( \
 			ast::type* temp = static_cast<ast::type*>(_visit_node.get()); \
 			EVAL(MAP(_INNER_BUILD_DATA, SEMICOLON, __VA_ARGS__)); \
@@ -91,7 +73,7 @@ inline void AstNodeDuper::_inner_dup_children(BaseUptrList& ret_item,
 #define BUILD_CHILDREN(type, ...) \
 	void AstNodeDuper::_dup_children(ast::type* to_dup) \
 	{ \
-		IF(HAS_ARGS(__VA_ARGS__)) \
+		IF (HAS_ARGS(__VA_ARGS__)) \
 		( \
 			ast::type* temp = static_cast<ast::type*>(_visit_node.get()); \
 			EVAL(MAP(_INNER_BUILD_CHILDREN, SEMICOLON, __VA_ARGS__)); \

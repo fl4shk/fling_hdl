@@ -52,7 +52,7 @@ void AstVisitor::_inner_accept_children(const string& memb_name,
 	void AstVisitor::_accept_children \
 		(type* n) \
 	{ \
-		IF(HAS_ARGS(__VA_ARGS__)) \
+		IF (HAS_ARGS(__VA_ARGS__)) \
 		( \
 			ACCEPT(__VA_ARGS__); \
 		) \
