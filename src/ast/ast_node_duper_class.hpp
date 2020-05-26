@@ -6,6 +6,7 @@
 #include "../misc_includes.hpp"
 #include "ast_visitor_class.hpp"
 #include "ast_node_classes.hpp"
+#include "liborangepower_src/make_deferred_restorer_class_define.hpp"
 
 namespace fling_hdl
 {
@@ -16,10 +17,28 @@ namespace ast
 class AstNodeDuper: public AstVisitor
 {
 public:		// types
-	using Base = ast::Base;
+	friend class DeferredRestorer;
+
+	class DeferredRestorer final
+	{
+	private:		// variables
+		AstNodeDuper* _duper = nullptr;
+		BaseUptr _saved_visit_node;
+	public:		// functions
+		inline DeferredRestorer(AstNodeDuper* s_duper)
+			: _duper(s_duper)
+		{
+			_saved_visit_node = move(_duper->_visit_node);
+		}
+		GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(DeferredRestorer);
+		inline ~DeferredRestorer()
+		{
+			_duper->_visit_node = move(_saved_visit_node);
+		}
+	};
 
 protected:		// variables
-	BaseUptr _dup_ret;
+	BaseUptr _visit_node;
 
 public:		// functions
 	inline AstNodeDuper()
@@ -31,9 +50,9 @@ public:		// functions
 
 	virtual BaseUptr& dup(Base* s_parent, const BaseUptr& to_dup)
 	{
-		_dup_ret = _construct(s_parent, to_dup);
+		_visit_node = _construct(s_parent, to_dup);
 		to_dup->accept(this);
-		return _dup_ret;
+		return _visit_node;
 	}
 
 
@@ -41,17 +60,12 @@ protected:		// dup and visitor functions
 	//--------
 	virtual BaseUptr _construct(Base* s_parent, const BaseUptr& to_dup)
 		const;
-	virtual inline BaseUptr _construct(BaseUptr& s_parent,
-		const BaseUptr& to_dup) const
-	{
-		return _construct(s_parent.get(), to_dup);
-	}
 	//--------
 
 	//--------
-	virtual void _inner_dup_children(BaseUptr& ret_item,
+	virtual inline void _inner_dup_children(BaseUptr& ret_item,
 		const BaseUptr& to_dup_item) const;
-	virtual void _inner_dup_children(BaseUptrList& ret_item,
+	virtual inline void _inner_dup_children(BaseUptrList& ret_item,
 		const BaseUptrList& to_dup_item) const;
 	//--------
 
@@ -59,11 +73,11 @@ protected:		// dup and visitor functions
 	#define GEN_VISIT_FUNCS(type) \
 		virtual inline void visit##type(ast::type* to_dup) \
 		{ \
-			_dup_data(_dup_ret, to_dup); \
-			_dup_children(_dup_ret, to_dup); \
+			_dup_data(to_dup); \
+			_dup_children(to_dup); \
 		} \
-		virtual void _dup_data(BaseUptr& ret, ast::type* to_dup); \
-		virtual void _dup_children(BaseUptr& ret, ast::type* to_dup); 
+		virtual void _dup_data(ast::type* to_dup); \
+		virtual void _dup_children(ast::type* to_dup); 
 	LIST_OF_AST_NODE_CLASSES(GEN_VISIT_FUNCS)
 	#undef GEN_VISIT_FUNCS
 	//--------
