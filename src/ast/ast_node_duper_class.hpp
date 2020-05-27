@@ -1,3 +1,20 @@
+// This file is part of Fling HDL.
+//
+// Copyright 2020 Andrew Clark (FL4SHK)
+//
+// Fling HDL is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Fling HDL is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Fling HDL.  If not, see <https://www.gnu.org/licenses/>.
+
 #ifndef src_ast_ast_node_duper_class_hpp
 #define src_ast_ast_node_duper_class_hpp
 
@@ -36,24 +53,23 @@ public:		// types
 		}
 	};
 
+	//enum class State
+	//{
+	//};
+
 protected:		// variables
 	BaseUptr _visit_node;
 
 public:		// functions
-	inline AstNodeDuper()
-	{
-	}
-	virtual inline ~AstNodeDuper()
-	{
-	}
+	inline AstNodeDuper() = default;
+	virtual inline ~AstNodeDuper() = default;
 
-	virtual BaseUptr& dup(Base* s_parent, const BaseUptr& to_dup)
+	virtual BaseUptr dup(Base* s_parent, const BaseUptr& to_dup)
 	{
 		_visit_node = _construct(s_parent, to_dup);
 		to_dup->accept(this);
 		return _visit_node;
 	}
-
 
 protected:		// dup and visitor functions
 	//--------
@@ -62,21 +78,15 @@ protected:		// dup and visitor functions
 	//--------
 
 	//--------
-	virtual inline void _inner_dup_children(BaseUptr& ret_item,
-		const BaseUptr& to_dup_item);
-	virtual inline void _inner_dup_children(BaseUptrList& ret_item,
-		const BaseUptrList& to_dup_item);
+	//virtual inline void _inner_dup_children(BaseUptr& ret_item,
+	//	const BaseUptr& to_dup_item);
+	//virtual inline void _inner_dup_children(BaseUptrList& ret_item,
+	//	const BaseUptrList& to_dup_item);
 	//--------
 
 	//--------
 	#define GEN_VISIT_FUNCS(type) \
-		virtual inline void visit##type(ast::type* to_dup) \
-		{ \
-			_dup_data(to_dup); \
-			_dup_children(to_dup); \
-		} \
-		virtual void _dup_data(ast::type* to_dup); \
-		virtual void _dup_children(ast::type* to_dup); 
+		virtual void visit##type(ast::type* to_dup);
 	LIST_OF_AST_NODE_CLASSES(GEN_VISIT_FUNCS)
 	#undef GEN_VISIT_FUNCS
 	//--------

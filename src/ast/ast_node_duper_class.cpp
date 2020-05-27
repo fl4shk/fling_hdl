@@ -1,3 +1,20 @@
+// This file is part of Fling HDL.
+//
+// Copyright 2020 Andrew Clark (FL4SHK)
+//
+// Fling HDL is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Fling HDL is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Fling HDL.  If not, see <https://www.gnu.org/licenses/>.
+
 #include "ast_node_duper_class.hpp"
 
 namespace fling_hdl
@@ -24,30 +41,31 @@ BaseUptr AstNodeDuper::_construct(Base* s_parent, const BaseUptr& to_dup)
 //--------
 
 //--------
-inline void AstNodeDuper::_inner_dup_children(BaseUptr& ret_item,
-	const BaseUptr& to_dup_item)
-{
-	DeferredRestorer deferred_restorer(this);
-
-	_visit_node = _construct(_visit_node.get(), to_dup_item);
-	to_dup_item->accept(this);
-	ret_item = move(_visit_node);
-}
-inline void AstNodeDuper::_inner_dup_children(BaseUptrList& ret_item,
-	const BaseUptrList& to_dup_item)
-{
-	DeferredRestorer deferred_restorer(this);
-
-	for (const auto& item: to_dup_item)
-	{
-		_visit_node = _construct(_visit_node.get(), item.data);
-		item.data->accept(this);
-		ret_item.push_back(move(_visit_node));
-	}
-}
+//inline void AstNodeDuper::_inner_dup_children(BaseUptr& ret_item,
+//	const BaseUptr& to_dup_item)
+//{
+//	DeferredRestorer deferred_restorer(this);
+//
+//	_visit_node = _construct(_visit_node.get(), to_dup_item);
+//	to_dup_item->accept(this);
+//	ret_item = move(_visit_node);
+//}
+//inline void AstNodeDuper::_inner_dup_children(BaseUptrList& ret_item,
+//	const BaseUptrList& to_dup_item)
+//{
+//	DeferredRestorer deferred_restorer(this);
+//
+//	for (const auto& item: to_dup_item)
+//	{
+//		_visit_node = _construct(_visit_node.get(), item.data);
+//		item.data->accept(this);
+//		ret_item.push_back(move(_visit_node));
+//	}
+//}
 //--------
 
 //--------
+/*
 #define _INNER_BUILD_DATA(item) \
 	temp->item = to_dup->item
 
@@ -61,12 +79,14 @@ inline void AstNodeDuper::_inner_dup_children(BaseUptrList& ret_item,
 		) \
 	}
 
-#include "ast_build_data_macro_calls.hpp"
+//#include "ast_build_data_macro_calls.hpp"
 #undef _INNER_BUILD_DATA
 #undef BUILD_DATA
+*/
 //--------
 
 //--------
+/*
 #define _INNER_BUILD_CHILDREN(item) \
 	_inner_dup_children(temp->item, to_dup->item)
 
@@ -80,9 +100,18 @@ inline void AstNodeDuper::_inner_dup_children(BaseUptrList& ret_item,
 		) \
 	}
 
-#include "ast_build_children_macro_calls.hpp"
+//#include "ast_build_children_macro_calls.hpp"
 #undef _INNER_BUILD_CHILDREN
 #undef BUILD_CHILDREN
+*/
+//--------
+
+//--------
+#define X(name) \
+	void AstNodeDuper::visit##name(ast::name* 
+
+LIST_OF_AST_NODE_CLASSES(X)
+#undef X
 //--------
 
 } // namespace ast
