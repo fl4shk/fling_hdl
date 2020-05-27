@@ -85,10 +85,10 @@ protected:		// dup and visitor functions
 	//--------
 
 	//--------
-	#define GEN_VISIT_FUNCS(type) \
-		virtual void visit##type(ast::type* to_dup);
-	LIST_OF_AST_NODE_CLASSES(GEN_VISIT_FUNCS)
-	#undef GEN_VISIT_FUNCS
+	#define GEN_VISIT_FUNC(type) \
+		virtual void visit##type(type* to_dup);
+	LIST_OF_AST_NODE_CLASSES(GEN_VISIT_FUNC)
+	#undef GEN_VISIT_FUNC
 	//--------
 };
 

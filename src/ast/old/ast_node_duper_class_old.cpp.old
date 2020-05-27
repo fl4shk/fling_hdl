@@ -40,29 +40,6 @@ BaseUptr AstNodeDuper::_construct(Base* s_parent, const BaseUptr& to_dup)
 }
 //--------
 
-//--------
-//inline void AstNodeDuper::_inner_dup_children(BaseUptr& ret_item,
-//	const BaseUptr& to_dup_item)
-//{
-//	DeferredRestorer deferred_restorer(this);
-//
-//	_visit_node = _construct(_visit_node.get(), to_dup_item);
-//	to_dup_item->accept(this);
-//	ret_item = move(_visit_node);
-//}
-//inline void AstNodeDuper::_inner_dup_children(BaseUptrList& ret_item,
-//	const BaseUptrList& to_dup_item)
-//{
-//	DeferredRestorer deferred_restorer(this);
-//
-//	for (const auto& item: to_dup_item)
-//	{
-//		_visit_node = _construct(_visit_node.get(), item.data);
-//		item.data->accept(this);
-//		ret_item.push_back(move(_visit_node));
-//	}
-//}
-//--------
 
 //--------
 /*
@@ -107,11 +84,38 @@ BaseUptr AstNodeDuper::_construct(Base* s_parent, const BaseUptr& to_dup)
 //--------
 
 //--------
-#define X(name) \
-	void AstNodeDuper::visit##name(ast::name* 
+//inline void AstNodeDuper::_inner_dup_children(BaseUptr& ret_item,
+//	const BaseUptr& to_dup_item)
+//{
+//	DeferredRestorer deferred_restorer(this);
+//
+//	_visit_node = _construct(_visit_node.get(), to_dup_item);
+//	to_dup_item->accept(this);
+//	ret_item = move(_visit_node);
+//}
+//inline void AstNodeDuper::_inner_dup_children(BaseUptrList& ret_item,
+//	const BaseUptrList& to_dup_item)
+//{
+//	DeferredRestorer deferred_restorer(this);
+//
+//	for (const auto& item: to_dup_item)
+//	{
+//		_visit_node = _construct(_visit_node.get(), item.data);
+//		item.data->accept(this);
+//		ret_item.push_back(move(_visit_node));
+//	}
+//}
+//--------
 
-LIST_OF_AST_NODE_CLASSES(X)
-#undef X
+//--------
+#define GEN_VISIT_FUNC(type) \
+	void AstNodeDuper::visit##name(type* to_dup) \
+	{ \
+		type* temp = static_cast<type*>(_visit_node.get()); \
+		_visit_node->copy_data(to_dup);
+	}
+LIST_OF_AST_NODE_CLASSES(GEN_VISIT_FUNC)
+#undef GEN_VISIT_FUNC
 //--------
 
 } // namespace ast

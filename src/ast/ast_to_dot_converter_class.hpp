@@ -26,12 +26,12 @@
 
 namespace fling_hdl
 {
+namespace ast
+{
 
 class AstToDotConverter: public AstVisitor
 {
 public:		// types
-	using Base = ast::Base;
-
 	enum class State
 	{
 		BuildNodeVec,
@@ -54,7 +54,7 @@ public:		// functions
 	virtual ~AstToDotConverter() = default;
 
 	virtual void convert(const string& dst_filename,
-		size_t max_ast_level, const ast::BaseUptr& ast_root);
+		size_t max_ast_level, const BaseUptr& ast_root);
 
 protected:		// misc. functions
 	void _print_dot_subgraph_cluster(size_t level);
@@ -87,42 +87,15 @@ protected:		// misc. functions
 	}
 
 protected:		// visitor functions
-	virtual inline void _build_conn_map(ast::Base* n)
-	{
-		if (n->parent() != nullptr)
-		{
-			_conn_map[n->parent()].push_back(n);
-		}
-		//else
-		//{
-		//	printout("testificate\n");
-		//}
-	}
-	#define GEN_VISIT_FUNCS(type) \
-		virtual inline void visit##type(ast::type* n) \
-		{ \
-			switch (_state) \
-			{ \
-			/* -------- */ \
-			case State::BuildNodeVec: \
-				_update_node_vec_size(n); \
-				_node_vec.at(n->level()).push_back(n); \
-				break; \
-			case State::BuildLabelMap: \
-				_build_label_map(n); \
-				break; \
-			case State::BuildConnMap: \
-				_build_conn_map(n); \
-				break; \
-			/* -------- */ \
-			} \
-			_accept_children(n); \
-		} \
-		virtual void _build_label_map(ast::type* n);
-	LIST_OF_AST_NODE_CLASSES(GEN_VISIT_FUNCS)
-	#undef GEN_VISIT_FUNCS
+	virtual void _build_label_map(Base* n);
+	virtual void _build_conn_map(Base* n);
+	#define GEN_VISIT_FUNC(type) \
+		virtual void visit##type(type* n);
+	LIST_OF_AST_NODE_CLASSES(GEN_VISIT_FUNC)
+	#undef GEN_VISIT_FUNC
 };
 
+} // namespace ast
 } // namespace fling_hdl
 
 #endif		// src_ast_ast_to_dot_converter_class_hpp

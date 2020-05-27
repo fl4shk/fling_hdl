@@ -40,25 +40,35 @@ namespace ast
 #define MEMB_VAR(type, name) \
 	type name
 #define COPY_MEMB_VAR(type, name) \
-	name = to_copy_ptr->name
+	name = casted_to_copy->name
+#define INNER_WRAP_DATA(type, name) \
+	ret += sconcat(#name, ":  ", name) 
+
+#define PLUS_RAW_NEWLINE() + "\\n";
 
 #define DATA(...) \
 	IF (HAS_ARGS(__VA_ARGS__)) \
 	( \
 		EVAL(MAP_PAIRS(MEMB_VAR, SEMICOLON, __VA_ARGS__)); \
 		\
-		virtual inline void copy_data(BaseUptr& to_copy) \
+		virtual inline void copy_data(Base* to_copy) \
 		{ \
-			decltype(this) to_copy_ptr = static_cast<decltype(this)> \
-				(to_copy.get()); \
+			Self* casted_to_copy = static_cast<Self*>(to_copy); \
 			EVAL(MAP_PAIRS(COPY_MEMB_VAR, SEMICOLON, __VA_ARGS__)); \
+		} \
+		virtual inline string wrap_data() const \
+		{ \
+			string ret; \
+			EVAL(MAP_PAIRS(INNER_WRAP_DATA, PLUS_RAW_NEWLINE, \
+				__VA_ARGS__)); \
+			return ret; \
 		} \
 	)
 
 #define INNER_ACCEPT_CHILDREN(type, name) \
 	_inner_accept_children(visitor, #name, name)
-#define INNER_ACCEPT_CHILDREN_WITH_OTHER(type, name) \
-	_inner_accept_children(visitor, #name, name, other_ptr->name)
+#define INNER_DUP(type, name) \
+	_inner_dup(ret_ptr, ret_ptr->name, name)
 
 #define CHILDREN(...) \
 	IF (HAS_ARGS(__VA_ARGS__)) \
@@ -71,13 +81,13 @@ namespace ast
 				__VA_ARGS__)); \
 		} \
 		\
-		virtual inline void accept_children(AstVisitor* visitor, \
-			const BaseUptr& other) \
+		virtual inline BaseUptr dup(Base* s_parent) const \
 		{ \
-			decltype(this) other_ptr = static_cast<decltype(this)> \
-				(other.get()); \
-			EVAL(MAP_PAIRS(INNER_ACCEPT_CHILDREN_WITH_OTHER, SEMICOLON, \
-				__VA_ARGS__)); \
+			Self* ret_ptr = new Self(s_parent, fp()); \
+			\
+			EVAL(MAP_PAIRS(INNER_DUP, SEMICOLON, __VA_ARGS__)); \
+			\
+			return BaseUptr(ret_ptr); \
 		} \
 	)
 
@@ -101,8 +111,9 @@ namespace ast
 	virtual inline string id() const \
 	{ \
 		return string(#name); \
-	}
-#define SHARED_FUNC_CONTENTS(name, base_name) \
+	} \
+	using Self = name;
+#define SHARED_CONTENTS(name, base_name) \
 	SHARED_FUNC_CONTENTS_2(name, base_name) \
 	virtual void accept(AstVisitor* visitor) \
 	{ \
@@ -162,22 +173,28 @@ public:		// functions
 	{
 		return string("Base");
 	}
+
+	// Derived classes should fill these in
 	virtual inline void accept(AstVisitor* visitor)
 	{
-		// Derived classes should fill this in
 	}
 	virtual inline void copy_data(BaseUptr& to_copy)
 	{
-		// Derived classes should fill this in
+	}
+	virtual inline string wrap_data() const
+	{
+		return "";
+	}
+	virtual inline BaseUptr dup(Base* s_parent) const
+	{
+		return BaseUptr(nullptr);
 	}
 	virtual inline void accept_children(AstVisitor* visitor)
 	{
-		// Derived classes should fill this in
 	}
 	virtual inline void accept_children(AstVisitor* visitor,
 		const BaseUptr& other)
 	{
-		// Derived classes should fill this in
 	}
 
 	GEN_GETTER_BY_VAL(parent);
@@ -206,28 +223,21 @@ protected:		// functions
 		}
 	}
 
-	static inline void _inner_accept_children(AstVisitor* visitor,
-		const string& memb_name, BaseUptr& child, BaseUptr& other_child)
+	static inline void _inner_dup(Base* s_parent, BaseUptr& item,
+		const BaseUptr& other_item)
 	{
-		AstVisitor::AstChild saved_visitor_child = move(visitor->_child);
-		auto saved_child = move(child);
-
-		_inner_accept_children(visitor, memb_name, other_child);
-
-		child = move(saved_child);
-		visitor->_child = move(saved_visitor_child);
+		if (other_item)
+		{
+			item = other_item->dup(s_parent);
+		}
 	}
-	static inline void _inner_accept_children(AstVisitor* visitor,
-		const string& memb_name, BaseUptrList& child,
-			BaseUptrList& other_child)
+	static inline void _inner_dup(Base* s_parent, BaseUptrList& item_list,
+		const BaseUptrList& other_item_list)
 	{
-		AstVisitor::AstChild saved_visitor_child = move(visitor->_child);
-		auto saved_child = move(child);
-
-		_inner_accept_children(visitor, memb_name, other_child);
-
-		child = move(saved_child);
-		visitor->_child = move(saved_visitor_child);
+		for (const auto& other_item: other_item_list)
+		{
+			item_list.push_back(other_item.data->dup(s_parent));
+		}
 	}
 };
 //--------
@@ -241,7 +251,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptrList, item_list)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(Program, Base);
+	SHARED_CONTENTS(Program, Base);
 };
 //--------
 
@@ -259,7 +269,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptrList, item_list)
 	)
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclPackage, Base);
+	SHARED_CONTENTS(DeclPackage, Base);
 };
 
 class Import: public Base
@@ -270,7 +280,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptrList, item_list)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(Import, Base);
+	SHARED_CONTENTS(Import, Base);
 };
 
 class ImportItem: public Base
@@ -286,7 +296,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptrList, item_list)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(ImportItem, Base);
+	SHARED_CONTENTS(ImportItem, Base);
 };
 //--------
 
@@ -301,7 +311,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptrList, item_list)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(ParamOrArgList, Base);
+	SHARED_CONTENTS(ParamOrArgList, Base);
 };
 
 class DeclParamSublistItem: public Base
@@ -346,7 +356,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptrList, opt_def_val)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclParamSublistItem, Base);
+	SHARED_CONTENTS(DeclParamSublistItem, Base);
 };
 BUILD_KIND_OPERATOR_LSHIFT(DeclParamSublistItem);
 
@@ -380,7 +390,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptrList, opt_def_val)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclArgSublistItem, Base);
+	SHARED_CONTENTS(DeclArgSublistItem, Base);
 };
 BUILD_KIND_OPERATOR_LSHIFT(DeclArgSublistItem);
 
@@ -397,7 +407,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptr, node)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(StrAndNode, Base);
+	SHARED_CONTENTS(StrAndNode, Base);
 };
 //--------
 
@@ -417,7 +427,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptr, scope)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclModule, Base);
+	SHARED_CONTENTS(DeclModule, Base);
 };
 
 class Scope: public Base
@@ -428,7 +438,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptrList, item_list)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(Scope, Base);
+	SHARED_CONTENTS(Scope, Base);
 };
 //--------
 
@@ -447,7 +457,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptr, arg_list)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(Modinst, Base);
+	SHARED_CONTENTS(Modinst, Base);
 };
 //--------
 
@@ -458,19 +468,19 @@ public:		// variables
 	CHILDREN
 	(
 		CTAGS_MEMB_VAR(BaseUptr, if_expr),
-		CTAGS_MEMB_VAR(BaseUptr, if_scope);
+		CTAGS_MEMB_VAR(BaseUptr, if_scope),
 		CTAGS_MEMB_VAR(BaseUptrList, opt_elif_list),
 		CTAGS_MEMB_VAR(BaseUptr, opt_else_scope)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(GenIf, Base);
+	SHARED_CONTENTS(GenIf, Base);
 };
 class GenElif: public Base
 {
 public:		// variables
 	BaseUptr expr, scope;
 public:		// variables
-	SHARED_FUNC_CONTENTS(GenElif, Base);
+	SHARED_CONTENTS(GenElif, Base);
 };
 
 class GenSwitchEtc: public Base
@@ -500,7 +510,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptrList, opt_case_list)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(GenSwitchEtc, Base);
+	SHARED_CONTENTS(GenSwitchEtc, Base);
 };
 BUILD_KIND_OPERATOR_LSHIFT(GenSwitchEtc);
 
@@ -513,7 +523,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptr, scope)
 	)
 public:		// functions
-	SHARED_FUNC_CONTENTS(GenCase, Base);
+	SHARED_CONTENTS(GenCase, Base);
 };
 
 class GenDefault: public Base
@@ -524,7 +534,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptr, scope)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(GenDefault, Base);
+	SHARED_CONTENTS(GenDefault, Base);
 };
 
 class GenFor: public Base
@@ -542,7 +552,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptr, scope)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(GenFor, Base);
+	SHARED_CONTENTS(GenFor, Base);
 };
 //--------
 
@@ -555,7 +565,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptr, scope)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclModuleBehavComb, Base);
+	SHARED_CONTENTS(DeclModuleBehavComb, Base);
 };
 
 class DeclModuleBehavSeq: public Base
@@ -567,7 +577,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptr, scope)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclModuleBehavSeq, Base);
+	SHARED_CONTENTS(DeclModuleBehavSeq, Base);
 };
 class DeclModuleBehavSeqEdgeItem: public Base
 {
@@ -594,7 +604,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptr, expr)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclModuleBehavSeqEdgeItem, Base);
+	SHARED_CONTENTS(DeclModuleBehavSeqEdgeItem, Base);
 };
 BUILD_KIND_OPERATOR_LSHIFT(DeclModuleBehavSeqEdgeItem);
 //--------
@@ -603,30 +613,30 @@ BUILD_KIND_OPERATOR_LSHIFT(DeclModuleBehavSeqEdgeItem);
 class BehavIf: public GenIf
 {
 public:		// functions
-	SHARED_FUNC_CONTENTS(BehavIf, GenIf);
+	SHARED_CONTENTS(BehavIf, GenIf);
 };
 class BehavElif: public GenElif
 {
 public:		// functions
-	SHARED_FUNC_CONTENTS(BehavElif, GenElif);
+	SHARED_CONTENTS(BehavElif, GenElif);
 };
 
 class BehavSwitchEtc: public GenSwitchEtc
 {
 public:		// functions
-	SHARED_FUNC_CONTENTS(BehavSwitchEtc, GenSwitchEtc);
+	SHARED_CONTENTS(BehavSwitchEtc, GenSwitchEtc);
 };
 
 class BehavCase: public GenCase
 {
 public:		// functions
-	SHARED_FUNC_CONTENTS(BehavCase, GenCase);
+	SHARED_CONTENTS(BehavCase, GenCase);
 };
 
 class BehavDefault: public GenDefault
 {
 public:		// functions
-	SHARED_FUNC_CONTENTS(BehavDefault, GenDefault);
+	SHARED_CONTENTS(BehavDefault, GenDefault);
 };
 
 class BehavFor: public Base
@@ -643,7 +653,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptr, scope)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(BehavFor, Base);
+	SHARED_CONTENTS(BehavFor, Base);
 };
 
 class BehavWhile: public Base
@@ -655,7 +665,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptr, scope)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(BehavWhile, Base);
+	SHARED_CONTENTS(BehavWhile, Base);
 };
 //--------
 
@@ -682,11 +692,11 @@ public:		// variables
 
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, lhs)
+		CTAGS_MEMB_VAR(BaseUptr, lhs),
 		CTAGS_MEMB_VAR(BaseUptr, rhs)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(BehavAssign, Base);
+	SHARED_CONTENTS(BehavAssign, Base);
 };
 BUILD_KIND_OPERATOR_LSHIFT(BehavAssign);
 //--------
@@ -706,7 +716,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptr, scope)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclStruct, Base);
+	SHARED_CONTENTS(DeclStruct, Base);
 };
 //--------
 
@@ -725,7 +735,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptrList, item_list)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclEnum, Base);
+	SHARED_CONTENTS(DeclEnum, Base);
 };
 //--------
 
@@ -753,13 +763,13 @@ public:		// variables
 
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr opt_param_list),
+		CTAGS_MEMB_VAR(BaseUptr, opt_param_list),
 		CTAGS_MEMB_VAR(BaseUptr, arg_list),
 		CTAGS_MEMB_VAR(BaseUptr, opt_ret_typenm),
 		CTAGS_MEMB_VAR(BaseUptr, scope)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclSubprog, Base);
+	SHARED_CONTENTS(DeclSubprog, Base);
 };
 BUILD_KIND_OPERATOR_LSHIFT(DeclSubprog);
 //--------
@@ -794,7 +804,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptr, val)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclVarEtc, Base);
+	SHARED_CONTENTS(DeclVarEtc, Base);
 };
 BUILD_KIND_OPERATOR_LSHIFT(DeclVarEtc);
 
@@ -808,7 +818,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptr, rhs)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(WireAssign, Base);
+	SHARED_CONTENTS(WireAssign, Base);
 };
 //--------
 
@@ -851,7 +861,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptr, rhs)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(DeclAlias, Base);
+	SHARED_CONTENTS(DeclAlias, Base);
 };
 BUILD_KIND_OPERATOR_LSHIFT(DeclAlias);
 //--------
@@ -867,7 +877,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptrList, item_list)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(NamedScope, Base);
+	SHARED_CONTENTS(NamedScope, Base);
 };
 //--------
 
@@ -894,7 +904,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptr, when_false)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(MuxExpr, ExprBase);
+	SHARED_CONTENTS(MuxExpr, ExprBase);
 };
 
 class BinopExpr: public ExprBase
@@ -983,7 +993,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptr, right)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(BinopExpr, ExprBase);
+	SHARED_CONTENTS(BinopExpr, ExprBase);
 };
 BUILD_KIND_OPERATOR_LSHIFT(BinopExpr);
 
@@ -1036,7 +1046,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptr, arg)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(UnopExpr, ExprBase);
+	SHARED_CONTENTS(UnopExpr, ExprBase);
 };
 BUILD_KIND_OPERATOR_LSHIFT(UnopExpr);
 
@@ -1069,7 +1079,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptr, opt_expr)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(LitValExpr, ExprBase);
+	SHARED_CONTENTS(LitValExpr, ExprBase);
 };
 BUILD_KIND_OPERATOR_LSHIFT(LitValExpr);
 
@@ -1117,7 +1127,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptr, opt_second_arg)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(CallDollarFuncExpr, ExprBase);
+	SHARED_CONTENTS(CallDollarFuncExpr, ExprBase);
 };
 BUILD_KIND_OPERATOR_LSHIFT(CallDollarFuncExpr);
 
@@ -1129,7 +1139,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(string, data)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(String, Base);
+	SHARED_CONTENTS(String, Base);
 };
 
 class IdentExprSuffix: public Base
@@ -1149,7 +1159,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptr, opt_part_sel_right)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(IdentExprSuffix, Base);
+	SHARED_CONTENTS(IdentExprSuffix, Base);
 };
 
 class IdentExpr: public ExprBase
@@ -1163,7 +1173,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptr, suffix)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(IdentExpr, ExprBase);
+	SHARED_CONTENTS(IdentExpr, ExprBase);
 };
 
 class CatExpr: public ExprBase
@@ -1174,7 +1184,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptrList, item_list)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(CatExpr, ExprBase);
+	SHARED_CONTENTS(CatExpr, ExprBase);
 };
 
 class ReplExpr: public ExprBase
@@ -1187,7 +1197,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptr, to_repl)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(ReplExpr, ExprBase);
+	SHARED_CONTENTS(ReplExpr, ExprBase);
 };
 
 class SizedExpr: public ExprBase
@@ -1199,7 +1209,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptr, width)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(SizedExpr, ExprBase);
+	SHARED_CONTENTS(SizedExpr, ExprBase);
 };
 //--------
 
@@ -1213,7 +1223,7 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptr, opt_second_arg)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(NonDollarFuncRange, Base);
+	SHARED_CONTENTS(NonDollarFuncRange, Base);
 };
 //--------
 
@@ -1249,14 +1259,14 @@ public:		// variables
 		CTAGS_MEMB_VAR(BaseUptrList, opt_arr_dim_list)
 	);
 public:		// functions
-	SHARED_FUNC_CONTENTS(Typenm, Base);
+	SHARED_CONTENTS(Typenm, Base);
 };
 BUILD_KIND_OPERATOR_LSHIFT(Typenm);
 
 class Modnm: public IdentExpr
 {
 public:		// functions
-	SHARED_FUNC_CONTENTS(Modnm, IdentExpr);
+	SHARED_CONTENTS(Modnm, IdentExpr);
 };
 //--------
 
@@ -1266,13 +1276,15 @@ public:		// functions
 #undef CTAGS_MEMB_VAR
 #undef MEMB_VAR
 #undef COPY_MEMB_VAR
+#undef INNER_WRAP_DATA
+#undef PLUS_RAW_NEWLINE
 #undef DATA
 
 #undef INNER_ACCEPT_CHILDREN
-#undef INNER_ACCEPT_CHILDREN_WITH_OTHER
+#undef INNER_DUP
 #undef CHILDREN
 
-#undef SHARED_FUNC_CONTENTS
+#undef SHARED_CONTENTS
 #undef SHARED_FUNC_CONTENTS_2
 
 #undef CONV_ENUM_CASE

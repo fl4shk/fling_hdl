@@ -19,11 +19,11 @@
 
 namespace fling_hdl
 {
-
-using namespace ast;
+namespace ast
+{
 
 void AstToDotConverter::convert(const string& dst_filename,
-	size_t max_ast_level, const ast::BaseUptr& ast_root)
+	size_t max_ast_level, const BaseUptr& ast_root)
 {
 	_max_ast_level = max_ast_level;
 	_file.open(dst_filename, std::ios_base::out | std::ios_base::trunc);
@@ -116,38 +116,54 @@ void AstToDotConverter::_print_dot_wires(size_t level)
 		"\n");
 }
 
+void AstToDotConverter::_build_label_map(Base* n)
+{
+	auto temp = sconcat(_memb_name, "\\n", "id:  ", n->id()); \
 
-#define _INNER_WRAP(item) \
-	sconcat(#item, ":  ", n->item)
-#define wrap(...) \
-	EVAL(MAP(_INNER_WRAP, COMMA, __VA_ARGS__))
+	const auto wrapped_data = n->wrap_data();
 
-
-#define _INNER_WRAP_CONV(item) \
-	sconcat(#item, ":  ", n->conv_##item(n->item))
-#define wrap_conv(...) \
-	EVAL(MAP(_INNER_WRAP_CONV, COMMA, __VA_ARGS__))
-
-#define _INNER_WRAP_CONV_2(item, ...) \
-	sconcat(#item, ":  ", conv_##item(n->item))
-#define wrap_conv_2(...) \
-	EVAL(MAP(_INNER_WRAP_CONV_2, COMMA, __VA_ARGS__))
-
-
-#define BUILD_DATA(type, ...) \
-	void AstToDotConverter::_build_label_map(type* n) \
-	{ \
-		auto temp = sconcat(_memb_name, "\\n", "id:  ", n->id()); \
-		\
-		IF (HAS_ARGS(__VA_ARGS__)) \
-		( \
-			auto to_append = _strjoin2_raw_newline(wrap(__VA_ARGS__)); \
-			temp += sconcat("\\n---- ---- ---- ----\\n", to_append); \
-		) \
-		_label_map[n] = move(temp); \
+	if (wrapped_data.size() > 0)
+	{
+		temp += sconcat("\\n---- ---- ---- ----\\n", wrapped_data); \
 	}
 
-//#include "ast_build_data_macro_calls.hpp"
+	_label_map[n] = move(temp);
+}
 
+void AstToDotConverter::_build_conn_map(Base* n)
+{
+	if (n->parent() != nullptr)
+	{
+		_conn_map[n->parent()].push_back(n);
+	}
+	//else
+	//{
+	//	printout("testificate\n");
+	//}
+}
 
+#define GEN_VISIT_FUNC(type) \
+	void AstToDotConverter::visit##type(type* n) \
+	{ \
+		switch (_state) \
+		{ \
+		/* -------- */ \
+		case State::BuildNodeVec: \
+			_update_node_vec_size(n); \
+			_node_vec.at(n->level()).push_back(n); \
+			break; \
+		case State::BuildLabelMap: \
+			_build_label_map(n); \
+			break; \
+		case State::BuildConnMap: \
+			_build_conn_map(n); \
+			break; \
+		/* -------- */ \
+		} \
+		n->accept_children(this); \
+	}
+LIST_OF_AST_NODE_CLASSES(GEN_VISIT_FUNC)
+#undef GEN_VISIT_FUNC
+
+} // namespace ast
 } // namespace fling_hdl
