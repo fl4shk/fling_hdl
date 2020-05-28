@@ -148,7 +148,7 @@
 #define EXPECT_AND_GRAB_TOK(name, ...) \
 	EXPECT(__VA_ARGS__); \
 	const auto name = prev_lex_tok()
-#define EXPECT_IDENT_AND_GRAB_S(name) \
+#define EXPECT_IDENT_AND_GRAB_S(name, ...) \
 	EXPECT(MiscIdent); \
 	name = prev_lex_s()
 
