@@ -152,6 +152,10 @@
 	EXPECT(MiscIdent); \
 	name = prev_lex_s()
 
+#define MAKE_FP_LIST_AND_POP(name) \
+	FpList name; \
+	_pop_fp_list(name)
+
 #define MAKE_AST_NODE_AND_POP(name) \
 	BaseUptr name; \
 	_pop_ast(name)

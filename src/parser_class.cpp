@@ -167,20 +167,20 @@ auto Parser::_parseFlingDeclParamList() -> ParseRet
 
 		INSERT_WANTED_TOK(PunctCmpGt);
 
-		//while (ATTEMPT_PARSE_WTSM(_parseFlingDeclParamSublist))
-		//{
-		//	MAKE_AST_LIST_AND_POP(sublist);
-		//	for (auto& item: sublist)
-		//	{
-		//		node->item_list.push_back(move(item.data));
-		//	}
+		while (ATTEMPT_PARSE_WTSM(_parseFlingDeclParamSublist))
+		{
+			MAKE_AST_LIST_AND_POP(sublist);
+			for (auto& item: sublist)
+			{
+				node->item_list.push_back(move(item.data));
+			}
 
-		//	// This also inserts PunctComma into `_wanted_tok_set`.
-		//	if (!ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(PunctComma)))
-		//	{
-		//		break;
-		//	}
-		//}
+			// This also inserts PunctComma into `_wanted_tok_set`.
+			if (!ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(PunctComma)))
+			{
+				break;
+			}
+		}
 
 		_expect_wanted_tok();
 
@@ -196,79 +196,165 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 				_parseFlingIdentList
 			);
 	}
-	//else // if (!just_get_valid_tokens())
-	//{
-	//	PROLOGUE_AND_EPILOGUE(_parseFlingDeclParamSublist);
-	//	DEFER_PUSH_LIST(sublist);
+	else // if (!just_get_valid_tokens())
+	{
+		PROLOGUE_AND_EPILOGUE(_parseFlingDeclParamSublist);
+		DEFER_PUSH_LIST(sublist);
 
-	//	using Kind = DeclParamListItem::Kind;
+		using Kind = DeclParamSublistItem::Kind;
 
-	//	StrList ident_list;
-	//	BaseUptr opt_typenm;
-	//	BaseUptrList opt_def_val_list;
-	//	Kind kind;
+		StrList ident_list;
+		JUST_PARSE_AND_POP_STR_LIST(ident_list, _parseFlingIdentList);
+		MAKE_FP_LIST_AND_POP(ident_fp_list);
 
-	//	JUST_PARSE_AND_POP_STR_LIST(ident_list, _parseFlingIdentList);
+		EXPECT(PunctColon);
 
-	//	EXPECT(PunctColon);
+		Kind kind = Kind::Var;
+		BaseUptr opt_typenm;
+		BaseUptrList opt_def_val_list;
+		FilePos err_file_pos;
 
-	//	if (ATTEMPT_PARSE_WTSM(_parseFlingTypenm))
-	//	{
-	//		//MAKE_AST_NODE_AND_POP(typenm);
-	//		_pop_ast(opt_typenm);
+		if (ATTEMPT_PARSE_WTSM(_parseFlingTypenm))
+		{
+			_pop_ast(opt_typenm);
+			kind = Kind::Var;
 
-	//		if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
-	//		{
-	//			const auto file_pos = lex_file_pos();
+			if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
+			{
+				err_file_pos = lex_file_pos();
+				JUST_PARSE_AND_POP_AST_LIST
+					(opt_def_val_list, _parseFlingExprList);
+			}
+		}
+		else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwRange)))
+		{
+			kind = Kind::Range;
 
-	//			JUST_PARSE_AND_POP_AST_LIST
-	//				(opt_def_val_list, _parseFlingExprList);
-	//		}
-	//	}
-	//	else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwRange)))
-	//	{
-	//		if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
-	//		{
-	//		}
-	//	}
-	//	else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwType)))
-	//	{
-	//		if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
-	//		{
-	//		}
-	//	}
-	//	else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwModule)))
-	//	{
-	//		if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
-	//		{
-	//		}
-	//	}
-	//	else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwFunc)))
-	//	{
-	//		if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
-	//		{
-	//		}
-	//	}
-	//	else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwTask)))
-	//	{
-	//		if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
-	//		{
-	//		}
-	//	}
-	//	else
-	//	{
-	//		_expect_wanted_tok();
-	//	}
+			if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
+			{
+				err_file_pos = lex_file_pos();
+				JUST_PARSE_AND_POP_AST_LIST
+					(opt_def_val_list, _parseFlingRangeList);
+			}
+		}
+		else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwType)))
+		{
+			kind = Kind::Type;
 
-	//	if ((ident_list.size() != opt_def_val_list.size())
-	//		&& (opt_def_val_list.size() > 0))
-	//	{
-	//		err(file_pos, "Number of default values unequal to ",
-	//			"number of parameters in sublist.");
-	//	}
+			if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
+			{
+				err_file_pos = lex_file_pos();
 
-	//	return std::nullopt;
-	//}
+				JUST_PARSE_AND_POP_AST_LIST
+					(opt_def_val_list, _parseFlingTypenmList);
+			}
+		}
+		else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwModule)))
+		{
+			kind = Kind::Module;
+
+			if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
+			{
+				err_file_pos = lex_file_pos();
+
+				JUST_PARSE_AND_POP_AST_LIST
+					(opt_def_val_list, _parseFlingModnmList);
+			}
+		}
+		else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwFunc)))
+		{
+			kind = Kind::Func;
+
+			if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
+			{
+				err_file_pos = lex_file_pos();
+
+				JUST_PARSE_AND_POP_AST_LIST
+					(opt_def_val_list, _parseFlingSubprogIdentList);
+			}
+		}
+		else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwTask)))
+		{
+			kind = Kind::Task;
+
+			if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
+			{
+				err_file_pos = lex_file_pos();
+
+				JUST_PARSE_AND_POP_AST_LIST
+					(opt_def_val_list, _parseFlingSubprogIdentList);
+			}
+		}
+		else
+		{
+			_expect_wanted_tok();
+		}
+
+
+		struct Triple
+		{
+			string ident;
+			FilePos ident_fp;
+			BaseUptr opt_def_val;
+		};
+
+		vector<Triple> triple_vec;
+
+		{
+			for (auto& node: ident_list)
+			{
+				Triple to_push;
+
+				// It's okay to do a `move` here because we don't need
+				// to keep `ident_list` itself around.
+				to_push.ident = move(node.data);
+				triple_vec.push_back(move(to_push));
+			}
+
+			size_t i = 0;
+			for (auto& node: ident_fp_list)
+			{
+				triple_vec.at(i).ident_fp = move(node.data);
+				++i;
+			}
+		}
+
+		if (opt_def_val_list.size() > 0)
+		{
+			if (ident_list.size() != opt_def_val_list.size())
+			{
+				_err(err_file_pos, "Number of default values unequal to ",
+					"number of parameters in sublist.");
+			}
+
+			size_t i = 0;
+			for (auto& node: opt_def_val_list)
+			{
+				triple_vec.at(i).opt_def_val = move(node.data);
+				++i;
+			}
+		}
+		for (auto& triple: triple_vec)
+		{
+			auto to_push = new DeclParamSublistItem(_curr_ast_parent,
+				triple.ident_fp);
+
+			to_push->ident = move(triple.ident);
+			to_push->kind = kind;
+
+			if (opt_typenm)
+			{
+				to_push->opt_typenm = opt_typenm->dup
+					(opt_typenm->parent());
+			}
+
+			to_push->opt_def_val = move(triple.opt_def_val);
+
+			sublist.push_back(BaseUptr(to_push));
+		}
+
+		return std::nullopt;
+	}
 }
 auto Parser::_parseFlingDeclArgList() -> ParseRet
 {

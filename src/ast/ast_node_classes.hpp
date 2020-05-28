@@ -187,7 +187,7 @@ public:		// functions
 	}
 	virtual inline BaseUptr dup(Base* s_parent) const
 	{
-		return BaseUptr(nullptr);
+		return BaseUptr();
 	}
 	virtual inline void accept_children(AstVisitor* visitor)
 	{
@@ -353,7 +353,7 @@ public:		// variables
 
 		// Default value list, the type of which is dependent upon the
 		// value of `kind`.
-		CTAGS_MEMB_VAR(BaseUptrList, opt_def_val)
+		CTAGS_MEMB_VAR(BaseUptr, opt_def_val)
 	);
 public:		// functions
 	SHARED_CONTENTS(DeclParamSublistItem, Base);
@@ -387,7 +387,7 @@ public:		// variables
 	CHILDREN
 	(
 		CTAGS_MEMB_VAR(BaseUptr, typenm),
-		CTAGS_MEMB_VAR(BaseUptrList, opt_def_val)
+		CTAGS_MEMB_VAR(BaseUptr, opt_def_val)
 	);
 public:		// functions
 	SHARED_CONTENTS(DeclArgSublistItem, Base);
