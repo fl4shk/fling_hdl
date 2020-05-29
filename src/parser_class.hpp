@@ -34,12 +34,11 @@ class Parser final: public RdParserBase<Lexer, Parser>
 {
 	friend class AstNodeDeferredPusher;
 	friend class AstNodeListDeferredPusher;
-	friend class StrListDeferredPusher;
+	friend class IdentListDeferredPusher;
 
 public:		// types
 	using ParserBase = RdParserBase<Lexer, Parser>;
-	using StrList = IndCircLinkList<string>;
-	using FpList = IndCircLinkList<FilePos>;
+	using IdentList = IndCircLinkList<pair<string, FilePos>>;
 
 private:		// variables
 	size_t _max_ast_level;
@@ -49,8 +48,7 @@ private:		// variables
 	ast::Base* _curr_ast_parent = nullptr;
 	//ast::IdentExprSuffix _ident_expr_suffix;
 
-	stack<StrList> _str_list_stack;
-	stack<FpList> _fp_list_stack;
+	stack<IdentList> _ident_list_stack;
 	stack<ast::BaseUptr> _ast_stack;
 	stack<ast::BaseUptrList> _ast_list_stack;
 	string _parse_func_str;
@@ -63,35 +61,19 @@ public:		// misc. functions
 	}
 
 private:		// misc. functions
-	inline void _push_str_list(StrList&& to_push)
+	inline void _push_ident_list(IdentList&& to_push)
 	{
-		_str_list_stack.push(move(to_push));
+		_ident_list_stack.push(move(to_push));
 	}
-	inline void _pop_str_list(StrList& to_set)
+	inline void _pop_ident_list(IdentList& to_set)
 	{
-		to_set = move(_str_list_stack.top());
-		_str_list_stack.pop();
+		to_set = move(_ident_list_stack.top());
+		_ident_list_stack.pop();
 	}
-	inline StrList _pop_str_list()
+	inline IdentList _pop_ident_list()
 	{
-		StrList ret;
-		_pop_str_list(ret);
-		return ret;
-	}
-
-	inline void _push_fp_list(FpList&& to_push)
-	{
-		_fp_list_stack.push(move(to_push));
-	}
-	inline void _pop_fp_list(FpList& to_set)
-	{
-		to_set = move(_fp_list_stack.top());
-		_fp_list_stack.pop();
-	}
-	inline FpList _pop_fp_list()
-	{
-		FpList ret;
-		_pop_fp_list(ret);
+		IdentList ret;
+		_pop_ident_list(ret);
 		return ret;
 	}
 
@@ -381,21 +363,21 @@ public:		// functions
 	}
 };
 
-class StrListDeferredPusher final
+class IdentListDeferredPusher final
 {
 private:		// variables
 	Parser* _parser = nullptr;
-	Parser::StrList* _list = nullptr;
+	Parser::IdentList* _list = nullptr;
 public:		// functions
-	inline StrListDeferredPusher(Parser* s_parser,
-		Parser::StrList* s_list)
+	inline IdentListDeferredPusher(Parser* s_parser,
+		Parser::IdentList* s_list)
 		: _parser(s_parser), _list(s_list)
 	{
 	}
-	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(StrListDeferredPusher);
-	inline ~StrListDeferredPusher()
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(IdentListDeferredPusher);
+	inline ~IdentListDeferredPusher()
 	{
-		_parser->_push_str_list(move(*_list));
+		_parser->_push_ident_list(move(*_list));
 	}
 };
 

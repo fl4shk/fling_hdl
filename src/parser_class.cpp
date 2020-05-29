@@ -199,9 +199,8 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 
 		using Kind = DeclParamSublistItem::Kind;
 
-		StrList ident_list;
-		JUST_PARSE_AND_POP_STR_LIST(ident_list, _parseFlingIdentList);
-		auto ident_fp_list = _pop_fp_list();
+		IdentList ident_list;
+		JUST_PARSE_AND_POP_IDENT_LIST(ident_list, _parseFlingIdentList);
 
 		EXPECT(PunctColon);
 
@@ -293,7 +292,6 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 			_expect_wanted_tok();
 		}
 
-
 		struct Triple
 		{
 			string ident;
@@ -310,15 +308,9 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 
 				// It's okay to do a `move` here because we don't need
 				// to keep `ident_list` itself around.
-				to_push.ident = move(node.data);
+				to_push.ident = move(node.data.first);
+				to_push.ident_fp = move(node.data.second);
 				triple_vec.push_back(move(to_push));
-			}
-
-			size_t i = 0;
-			for (auto& node: ident_fp_list)
-			{
-				triple_vec.at(i).ident_fp = move(node.data);
-				++i;
 			}
 		}
 
@@ -371,6 +363,27 @@ auto Parser::_parseFlingDeclArgList() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclArgList);
+		DEFER_PUSH(node, ParamOrArgList);
+
+		EXPECT(PunctLparen);
+
+		while (ATTEMPT_PARSE(_parseFlingDeclArgSublist))
+		{
+			auto sublist = _pop_ast_list();
+
+			for (auto& item: sublist)
+			{
+				node->item_list.push_back(move(item.data));
+			}
+
+			// This also inserts PunctComma into `_wanted_tok_set`.
+			if (!ATTEMPT_PARSE(TOK_PARSE_FUNC(PunctComma)))
+			{
+				break;
+			}
+		}
+
+		EXPECT(PunctRparen);
 
 		return std::nullopt;
 	}
@@ -387,6 +400,12 @@ auto Parser::_parseFlingDeclArgSublist() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclArgSublist);
+		DEFER_PUSH_LIST(sublist);
+
+		using Kind = DeclArgSublistItem::Kind;
+
+		IdentList ident_list;
+		JUST_PARSE_AND_POP_IDENT_LIST(ident_list, _parseFlingIdentList);
 
 		return std::nullopt;
 	}

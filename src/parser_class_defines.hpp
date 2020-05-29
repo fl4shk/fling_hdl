@@ -30,9 +30,9 @@
 #define DEFER_PUSH_LIST(name) \
 	BaseUptrList name; \
 	AstNodeListDeferredPusher deferred_pusher_ ## name (this, &name)
-#define DEFER_PUSH_STR_LIST(name) \
-	StrList name; \
-	StrListDeferredPusher deferred_pusher_ ## name (this, &name)
+#define DEFER_PUSH_IDENT_LIST(name) \
+	IdentList name; \
+	IdentListDeferredPusher deferred_pusher_ ## name (this, &name)
 
 #define PROLOGUE_AND_EPILOGUE(str) \
 	ParserBase::PrologueAndEpilogue p_and_e (this, #str)
@@ -92,23 +92,23 @@
 #define PARSE_AND_POP_AST_LIST_IF(...) \
 	_MULTI_PARSE_AND_POP_AST_LIST_IF(SEMICOLON, __VA_ARGS__)
 
-#define _INNER_JUST_PARSE_AND_POP_STR_LIST(to_set, func) \
+#define _INNER_JUST_PARSE_AND_POP_IDENT_LIST(to_set, func) \
 	func (); \
-	to_set = _pop_str_list()
-#define _INNER_PARSE_AND_POP_STR_LIST_IF(to_set, func) \
+	to_set = _pop_ident_list()
+#define _INNER_PARSE_AND_POP_IDENT_LIST_IF(to_set, func) \
 	if (CHECK_PARSE(func)) \
 	{ \
-		_INNER_JUST_PARSE_AND_POP_STR_LIST(to_set, func); \
+		_INNER_JUST_PARSE_AND_POP_IDENT_LIST(to_set, func); \
 	}
-#define JUST_PARSE_AND_POP_STR_LIST(...) \
-	EVAL(MAP_PAIRS(_INNER_JUST_PARSE_AND_POP_STR_LIST, SEMICOLON, \
+#define JUST_PARSE_AND_POP_IDENT_LIST(...) \
+	EVAL(MAP_PAIRS(_INNER_JUST_PARSE_AND_POP_IDENT_LIST, SEMICOLON, \
 		__VA_ARGS__))
-#define _MULTI_PARSE_AND_POP_STR_LIST_IF(sep, ...) \
-	EVAL(MAP_PAIRS(_INNER_PARSE_AND_POP_STR_LIST_IF, sep, __VA_ARGS__))
-#define PARSE_AND_POP_STR_LIST_IFELSE(...) \
-	_MULTI_PARSE_AND_POP_STR_LIST_IF(ELSE, __VA_ARGS__)
-#define PARSE_AND_POP_STR_LIST_IF(...) \
-	_MULTI_PARSE_AND_POP_STR_LIST_IF(SEMICOLON, __VA_ARGS__)
+#define _MULTI_PARSE_AND_POP_IDENT_LIST_IF(sep, ...) \
+	EVAL(MAP_PAIRS(_INNER_PARSE_AND_POP_IDENT_LIST_IF, sep, __VA_ARGS__))
+#define PARSE_AND_POP_IDENT_LIST_IFELSE(...) \
+	_MULTI_PARSE_AND_POP_IDENT_LIST_IF(ELSE, __VA_ARGS__)
+#define PARSE_AND_POP_IDENT_LIST_IF(...) \
+	_MULTI_PARSE_AND_POP_IDENT_LIST_IF(SEMICOLON, __VA_ARGS__)
 
 
 
