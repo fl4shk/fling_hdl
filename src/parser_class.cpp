@@ -51,7 +51,7 @@ auto Parser::_parseFlingProgram() -> ParseRet
 		_ast_program->item_list.push_back(move(to_push));
 	}
 
-	EXPECT_WANTED_TOK(MiscEof);
+	EXPECT(MiscEof);
 
 	return std::nullopt;
 }
@@ -83,7 +83,7 @@ auto Parser::_parseFlingDeclPackage() -> ParseRet
 			node->item_list.push_back(move(to_push));
 		}
 
-		EXPECT_WANTED_TOK(PunctRbrace);
+		EXPECT(PunctRbrace);
 
 		return std::nullopt;
 	}
