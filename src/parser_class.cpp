@@ -45,7 +45,7 @@ auto Parser::_parseFlingProgram() -> ParseRet
 {
 	PROLOGUE_AND_EPILOGUE(_parseFlingProgram);
 
-	while (ATTEMPT_PARSE_WTSM(_parseFlingDeclPackageItem))
+	while (ATTEMPT_PARSE(_parseFlingDeclPackageItem))
 	{
 		MAKE_AST_NODE_AND_POP(to_push);
 		_ast_program->item_list.push_back(move(to_push));
@@ -77,7 +77,7 @@ auto Parser::_parseFlingDeclPackage() -> ParseRet
 		EXPECT(PunctLbrace);
 
 
-		while (ATTEMPT_PARSE_WTSM(_parseFlingDeclPackageItem))
+		while (ATTEMPT_PARSE(_parseFlingDeclPackageItem))
 		{
 			MAKE_AST_NODE_AND_POP(to_push);
 			node->item_list.push_back(move(to_push));
@@ -165,9 +165,7 @@ auto Parser::_parseFlingDeclParamList() -> ParseRet
 
 		EXPECT(PunctCmpLt);
 
-		INSERT_WANTED_TOK(PunctCmpGt);
-
-		while (ATTEMPT_PARSE_WTSM(_parseFlingDeclParamSublist))
+		while (ATTEMPT_PARSE(_parseFlingDeclParamSublist))
 		{
 			MAKE_AST_LIST_AND_POP(sublist);
 			for (auto& item: sublist)
@@ -176,13 +174,13 @@ auto Parser::_parseFlingDeclParamList() -> ParseRet
 			}
 
 			// This also inserts PunctComma into `_wanted_tok_set`.
-			if (!ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(PunctComma)))
+			if (!ATTEMPT_PARSE(TOK_PARSE_FUNC(PunctComma)))
 			{
 				break;
 			}
 		}
 
-		_expect_wanted_tok();
+		EXPECT(PunctCmpGt);
 
 		return std::nullopt;
 	}
@@ -214,34 +212,41 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 		BaseUptrList opt_def_val_list;
 		FilePos err_file_pos;
 
-		if (ATTEMPT_PARSE_WTSM(_parseFlingTypenm))
+		if (ATTEMPT_PARSE(_parseFlingTypenm))
 		{
 			_pop_ast(opt_typenm);
 			kind = Kind::Var;
 
-			if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
+			// We only add `PunctBlkAssign` to `_wanted_tok_set` if we
+			// don't actually find `PunctBlkAssign`.  Because it's an
+			// optional token at this point, it will be added to the list
+			// of valid tokens at this point upon a parse failure.
+			//
+			// Actually, since `_expect()` wipes out `_wanted_tok_set`, it
+			// may be unnecessary to only optionally add
+			if (ATTEMPT_PARSE(TOK_PARSE_FUNC(PunctBlkAssign)))
 			{
 				err_file_pos = lex_file_pos();
 				JUST_PARSE_AND_POP_AST_LIST
 					(opt_def_val_list, _parseFlingExprList);
 			}
 		}
-		else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwRange)))
+		else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwRange)))
 		{
 			kind = Kind::Range;
 
-			if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
+			if (ATTEMPT_PARSE(TOK_PARSE_FUNC(PunctBlkAssign)))
 			{
 				err_file_pos = lex_file_pos();
 				JUST_PARSE_AND_POP_AST_LIST
 					(opt_def_val_list, _parseFlingRangeList);
 			}
 		}
-		else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwType)))
+		else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwType)))
 		{
 			kind = Kind::Type;
 
-			if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
+			if (ATTEMPT_PARSE(TOK_PARSE_FUNC(PunctBlkAssign)))
 			{
 				err_file_pos = lex_file_pos();
 
@@ -249,11 +254,11 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 					(opt_def_val_list, _parseFlingTypenmList);
 			}
 		}
-		else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwModule)))
+		else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwModule)))
 		{
 			kind = Kind::Module;
 
-			if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
+			if (ATTEMPT_PARSE(TOK_PARSE_FUNC(PunctBlkAssign)))
 			{
 				err_file_pos = lex_file_pos();
 
@@ -261,11 +266,11 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 					(opt_def_val_list, _parseFlingModnmList);
 			}
 		}
-		else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwFunc)))
+		else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwFunc)))
 		{
 			kind = Kind::Func;
 
-			if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
+			if (ATTEMPT_PARSE(TOK_PARSE_FUNC(PunctBlkAssign)))
 			{
 				err_file_pos = lex_file_pos();
 
@@ -273,11 +278,11 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 					(opt_def_val_list, _parseFlingSubprogIdentList);
 			}
 		}
-		else if (ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(KwTask)))
+		else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwTask)))
 		{
 			kind = Kind::Task;
 
-			if (ATTEMPT_PARSE_OPT(TOK_PARSE_FUNC(PunctBlkAssign)))
+			if (ATTEMPT_PARSE(TOK_PARSE_FUNC(PunctBlkAssign)))
 			{
 				err_file_pos = lex_file_pos();
 
