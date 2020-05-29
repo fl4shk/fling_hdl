@@ -47,8 +47,7 @@ auto Parser::_parseFlingProgram() -> ParseRet
 
 	while (ATTEMPT_PARSE(_parseFlingDeclPackageItem))
 	{
-		MAKE_AST_NODE_AND_POP(to_push);
-		_ast_program->item_list.push_back(move(to_push));
+		_ast_program->item_list.push_back(_pop_ast());
 	}
 
 	EXPECT(MiscEof);
@@ -79,8 +78,7 @@ auto Parser::_parseFlingDeclPackage() -> ParseRet
 
 		while (ATTEMPT_PARSE(_parseFlingDeclPackageItem))
 		{
-			MAKE_AST_NODE_AND_POP(to_push);
-			node->item_list.push_back(move(to_push));
+			node->item_list.push_back(_pop_ast());
 		}
 
 		EXPECT(PunctRbrace);
@@ -167,7 +165,7 @@ auto Parser::_parseFlingDeclParamList() -> ParseRet
 
 		while (ATTEMPT_PARSE(_parseFlingDeclParamSublist))
 		{
-			MAKE_AST_LIST_AND_POP(sublist);
+			auto sublist = _pop_ast_list();
 			for (auto& item: sublist)
 			{
 				node->item_list.push_back(move(item.data));
@@ -203,7 +201,7 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 
 		StrList ident_list;
 		JUST_PARSE_AND_POP_STR_LIST(ident_list, _parseFlingIdentList);
-		MAKE_FP_LIST_AND_POP(ident_fp_list);
+		auto ident_fp_list = _pop_fp_list();
 
 		EXPECT(PunctColon);
 

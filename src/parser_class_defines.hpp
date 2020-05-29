@@ -58,7 +58,7 @@
 
 #define _INNER_JUST_PARSE_AND_POP_AST(to_set, func) \
 	func (); \
-	_pop_ast(to_set)
+	to_set = _pop_ast()
 #define _INNER_PARSE_AND_POP_AST_IF(to_set, func) \
 	if (CHECK_PARSE(func)) \
 	{ \
@@ -76,7 +76,7 @@
 
 #define _INNER_JUST_PARSE_AND_POP_AST_LIST(to_set, func) \
 	func (); \
-	_pop_ast_list(to_set)
+	to_set = _pop_ast_list()
 #define _INNER_PARSE_AND_POP_AST_LIST_IF(to_set, func) \
 	if (CHECK_PARSE(func)) \
 	{ \
@@ -94,7 +94,7 @@
 
 #define _INNER_JUST_PARSE_AND_POP_STR_LIST(to_set, func) \
 	func (); \
-	_pop_str_list(to_set)
+	to_set = _pop_str_list()
 #define _INNER_PARSE_AND_POP_STR_LIST_IF(to_set, func) \
 	if (CHECK_PARSE(func)) \
 	{ \
@@ -146,18 +146,6 @@
 #define EXPECT_IDENT_AND_GRAB_S(name, ...) \
 	EXPECT(MiscIdent); \
 	name = prev_lex_s()
-
-#define MAKE_FP_LIST_AND_POP(name) \
-	FpList name; \
-	_pop_fp_list(name)
-
-#define MAKE_AST_NODE_AND_POP(name) \
-	BaseUptr name; \
-	_pop_ast(name)
-
-#define MAKE_AST_LIST_AND_POP(name) \
-	BaseUptrList name; \
-	_pop_ast_list(name)
 
 
 //#endif		// src_parser_class_defines_hpp

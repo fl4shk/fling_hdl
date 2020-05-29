@@ -72,6 +72,12 @@ private:		// misc. functions
 		to_set = move(_str_list_stack.top());
 		_str_list_stack.pop();
 	}
+	inline StrList _pop_str_list()
+	{
+		StrList ret;
+		_pop_str_list(ret);
+		return ret;
+	}
 
 	inline void _push_fp_list(FpList&& to_push)
 	{
@@ -81,6 +87,12 @@ private:		// misc. functions
 	{
 		to_set = move(_fp_list_stack.top());
 		_fp_list_stack.pop();
+	}
+	inline FpList _pop_fp_list()
+	{
+		FpList ret;
+		_pop_fp_list(ret);
+		return ret;
 	}
 
 	inline void _push_ast(ast::Base* to_push)
@@ -93,6 +105,12 @@ private:		// misc. functions
 		_ast_stack.top().reset(nullptr);
 		_ast_stack.pop();
 	}
+	inline ast::BaseUptr _pop_ast()
+	{
+		ast::BaseUptr ret;
+		_pop_ast(ret);
+		return ret;
+	}
 
 	inline void _push_ast_list(ast::BaseUptrList&& to_push)
 	{
@@ -102,6 +120,12 @@ private:		// misc. functions
 	{
 		to_set = move(_ast_list_stack.top());
 		_ast_list_stack.pop();
+	}
+	inline ast::BaseUptrList _pop_ast_list()
+	{
+		ast::BaseUptrList ret;
+		_pop_ast_list(ret);
+		return ret;
 	}
 
 	virtual inline void _internal_err(const string& func,
