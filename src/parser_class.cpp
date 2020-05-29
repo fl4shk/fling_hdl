@@ -407,6 +407,13 @@ auto Parser::_parseFlingDeclArgSublist() -> ParseRet
 		IdentList ident_list;
 		JUST_PARSE_AND_POP_IDENT_LIST(ident_list, _parseFlingIdentList);
 
+		EXPECT(PunctColon);
+
+		EXPECT_AND_GRAB_TOK(k_tok,
+			KwInput,
+			KwOutput,
+			KwInout);
+
 		return std::nullopt;
 	}
 }
