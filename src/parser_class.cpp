@@ -896,6 +896,32 @@ auto Parser::_parseFlingDeclModuleGenIf() -> ParseRet
 		DEFER_PUSH_NODE(node, GenIf);
 
 		EXPECT(KwGenIf);
+		JUST_PARSE_AND_POP_AST_NODE
+		(
+			node->if_expr, _parseFlingExpr,
+			node->if_scope, _parseFlingDeclModuleScope
+		);
+
+		while (ATTEMPT_TOK_PARSE(KwGenElif))
+		{
+			{
+				DEFER_PUSH_NODE(gen_elif_node, GenElif);
+				JUST_PARSE_AND_POP_AST_NODE
+				(
+					gen_elif_node->expr, _parseFlingExpr,
+					gen_elif_node->scope, _parseFlingDeclModuleScope
+				);
+			}
+			node->opt_elif_list.push_back(_pop_ast_node());
+		}
+
+		if (ATTEMPT_TOK_PARSE(KwGenElse))
+		{
+			JUST_PARSE_AND_POP_AST_NODE
+			(
+				node->opt_else_scope, _parseFlingDeclModuleScope
+			);
+		}
 
 		return std::nullopt;
 	}
@@ -913,6 +939,9 @@ auto Parser::_parseFlingDeclModuleGenSwitchEtc() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleGenSwitchEtc);
+		DEFER_PUSH_NODE(node, GenSwitchEtc);
+
+		if (ATTEMPT_TOK_PARSE(KwGenSwitch))
 
 		return std::nullopt;
 	}
