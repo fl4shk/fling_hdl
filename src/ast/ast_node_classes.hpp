@@ -40,7 +40,7 @@ namespace ast
 #define MEMB_VAR(type, name) \
 	type name
 #define COPY_MEMB_VAR(type, name) \
-	name = casted_to_copy->name
+	casted_dst->name = name
 #define INNER_WRAP_DATA(type, name) \
 	ret += sconcat(#name, ":  ", name) 
 
@@ -51,9 +51,9 @@ namespace ast
 	( \
 		EVAL(MAP_PAIRS(MEMB_VAR, SEMICOLON, __VA_ARGS__)); \
 		\
-		virtual inline void copy_data(Base* to_copy) \
+		virtual inline void dup_data(Base* dst) const \
 		{ \
-			Self* casted_to_copy = static_cast<Self*>(to_copy); \
+			Self* casted_dst = static_cast<Self*>(dst); \
 			EVAL(MAP_PAIRS(COPY_MEMB_VAR, SEMICOLON, __VA_ARGS__)); \
 		} \
 		virtual inline string wrap_data() const \
@@ -83,11 +83,13 @@ namespace ast
 		\
 		virtual inline BaseUptr dup(Base* s_parent) const \
 		{ \
-			Self* ret_ptr = new Self(s_parent, fp()); \
+			BaseUptr ret(new Self(s_parent, fp())); \
+			auto ret_ptr = static_cast<Self*>(ret.get()); \
 			\
+			this->dup_data(ret_ptr); \
 			EVAL(MAP_PAIRS(INNER_DUP, SEMICOLON, __VA_ARGS__)); \
 			\
-			return BaseUptr(ret_ptr); \
+			return ret; \
 		} \
 	)
 
@@ -178,7 +180,7 @@ public:		// functions
 	virtual inline void accept(AstVisitor* visitor)
 	{
 	}
-	virtual inline void copy_data(BaseUptr& to_copy)
+	virtual inline void dup_data(Base* dst) const
 	{
 	}
 	virtual inline string wrap_data() const
@@ -872,8 +874,8 @@ class NamedScope: public Base
 public:		// variables
 	CHILDREN
 	(
-		// Expected child type:  StrAndNode, where `node` is intended to be
-		// an instance of `ParamOrArgList`
+		// Expected child type:  `StrAndNode`, where `node` is intended to
+		// be an instance of `ParamOrArgList`
 		CTAGS_MEMB_VAR(BaseUptrList, item_list)
 	);
 public:		// functions

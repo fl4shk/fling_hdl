@@ -69,7 +69,7 @@ auto Parser::_parseFlingDeclPackage() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclPackage);
-		DEFER_PUSH(node, DeclPackage);
+		DEFER_PUSH_NODE(node, DeclPackage);
 
 		EXPECT(KwPackage);
 		EXPECT_IDENT_AND_GRAB_S(node->ident);
@@ -116,6 +116,10 @@ auto Parser::_parseFlingDeclPackageItem() -> ParseRet
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclPackageItem);
 
 		LIST(PARSE_IFELSE)
+		else
+		{
+			_expect_wanted_tok();
+		}
 
 		return std::nullopt;
 	}
@@ -134,7 +138,7 @@ auto Parser::_parseFlingImport() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingImport);
-		DEFER_PUSH(node, Import);
+		DEFER_PUSH_NODE(node, Import);
 
 		EXPECT(KwImport);
 		JUST_PARSE_AND_POP_AST_LIST
@@ -159,7 +163,7 @@ auto Parser::_parseFlingDeclParamList() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclParamList);
-		DEFER_PUSH(node, ParamOrArgList);
+		DEFER_PUSH_NODE(node, ParamOrArgList);
 
 		EXPECT(PunctCmpLt);
 
@@ -172,7 +176,7 @@ auto Parser::_parseFlingDeclParamList() -> ParseRet
 			}
 
 			// This also inserts PunctComma into `_wanted_tok_set`.
-			if (!ATTEMPT_PARSE(TOK_PARSE_FUNC(PunctComma)))
+			if (!ATTEMPT_TOK_PARSE(PunctComma))
 			{
 				break;
 			}
@@ -214,36 +218,29 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 			_pop_ast(opt_typenm);
 			kind = Kind::Var;
 
-			// We only add `PunctBlkAssign` to `_wanted_tok_set` if we
-			// don't actually find `PunctBlkAssign`.  Because it's an
-			// optional token at this point, it will be added to the list
-			// of valid tokens at this point upon a parse failure.
-			//
-			// Actually, since `_expect()` wipes out `_wanted_tok_set`, it
-			// may be unnecessary to only optionally add
-			if (ATTEMPT_PARSE(TOK_PARSE_FUNC(PunctBlkAssign)))
+			if (ATTEMPT_TOK_PARSE(PunctBlkAssign))
 			{
 				err_file_pos = lex_file_pos();
 				JUST_PARSE_AND_POP_AST_LIST
 					(opt_def_val_list, _parseFlingExprList);
 			}
 		}
-		else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwRange)))
+		else if (ATTEMPT_TOK_PARSE(KwRange))
 		{
 			kind = Kind::Range;
 
-			if (ATTEMPT_PARSE(TOK_PARSE_FUNC(PunctBlkAssign)))
+			if (ATTEMPT_TOK_PARSE(PunctBlkAssign))
 			{
 				err_file_pos = lex_file_pos();
 				JUST_PARSE_AND_POP_AST_LIST
 					(opt_def_val_list, _parseFlingRangeList);
 			}
 		}
-		else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwType)))
+		else if (ATTEMPT_TOK_PARSE(KwType))
 		{
 			kind = Kind::Type;
 
-			if (ATTEMPT_PARSE(TOK_PARSE_FUNC(PunctBlkAssign)))
+			if (ATTEMPT_TOK_PARSE(PunctBlkAssign))
 			{
 				err_file_pos = lex_file_pos();
 
@@ -251,11 +248,11 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 					(opt_def_val_list, _parseFlingTypenmList);
 			}
 		}
-		else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwModule)))
+		else if (ATTEMPT_TOK_PARSE(KwModule))
 		{
 			kind = Kind::Module;
 
-			if (ATTEMPT_PARSE(TOK_PARSE_FUNC(PunctBlkAssign)))
+			if (ATTEMPT_TOK_PARSE(PunctBlkAssign))
 			{
 				err_file_pos = lex_file_pos();
 
@@ -263,11 +260,11 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 					(opt_def_val_list, _parseFlingModnmList);
 			}
 		}
-		else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwFunc)))
+		else if (ATTEMPT_TOK_PARSE(KwFunc))
 		{
 			kind = Kind::Func;
 
-			if (ATTEMPT_PARSE(TOK_PARSE_FUNC(PunctBlkAssign)))
+			if (ATTEMPT_TOK_PARSE(PunctBlkAssign))
 			{
 				err_file_pos = lex_file_pos();
 
@@ -275,11 +272,11 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 					(opt_def_val_list, _parseFlingSubprogIdentList);
 			}
 		}
-		else if (ATTEMPT_PARSE(TOK_PARSE_FUNC(KwTask)))
+		else if (ATTEMPT_TOK_PARSE(KwTask))
 		{
 			kind = Kind::Task;
 
-			if (ATTEMPT_PARSE(TOK_PARSE_FUNC(PunctBlkAssign)))
+			if (ATTEMPT_TOK_PARSE(PunctBlkAssign))
 			{
 				err_file_pos = lex_file_pos();
 
@@ -301,17 +298,15 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 
 		vector<Triple> triple_vec;
 
+		for (auto& node: ident_list)
 		{
-			for (auto& node: ident_list)
-			{
-				Triple to_push;
+			Triple to_push;
 
-				// It's okay to do a `move` here because we don't need
-				// to keep `ident_list` itself around.
-				to_push.ident = move(node.data.first);
-				to_push.ident_fp = move(node.data.second);
-				triple_vec.push_back(move(to_push));
-			}
+			// It's okay to do a `move` here because we don't need
+			// to keep `ident_list` itself around.
+			to_push.ident = move(node.data.first);
+			to_push.ident_fp = move(node.data.second);
+			triple_vec.push_back(move(to_push));
 		}
 
 		if (opt_def_val_list.size() > 0)
@@ -331,21 +326,23 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 		}
 		for (auto& triple: triple_vec)
 		{
-			auto to_push = new DeclParamSublistItem(_curr_ast_parent,
-				triple.ident_fp);
+			using AstNodeType = DeclParamSublistItem;
+			BaseUptr to_push(new AstNodeType(_curr_ast_parent,
+				triple.ident_fp));
+			auto to_push_ptr = static_cast<AstNodeType*>(to_push.get());
 
-			to_push->ident = move(triple.ident);
-			to_push->kind = kind;
+			to_push_ptr->ident = move(triple.ident);
+			to_push_ptr->kind = kind;
 
 			if (opt_typenm)
 			{
-				to_push->opt_typenm = opt_typenm->dup
+				to_push_ptr->opt_typenm = opt_typenm->dup
 					(opt_typenm->parent());
 			}
 
-			to_push->opt_def_val = move(triple.opt_def_val);
+			to_push_ptr->opt_def_val = move(triple.opt_def_val);
 
-			sublist.push_back(BaseUptr(to_push));
+			sublist.push_back(move(to_push));
 		}
 
 		return std::nullopt;
@@ -363,7 +360,7 @@ auto Parser::_parseFlingDeclArgList() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclArgList);
-		DEFER_PUSH(node, ParamOrArgList);
+		DEFER_PUSH_NODE(node, ParamOrArgList);
 
 		EXPECT(PunctLparen);
 
@@ -377,7 +374,7 @@ auto Parser::_parseFlingDeclArgList() -> ParseRet
 			}
 
 			// This also inserts PunctComma into `_wanted_tok_set`.
-			if (!ATTEMPT_PARSE(TOK_PARSE_FUNC(PunctComma)))
+			if (!ATTEMPT_TOK_PARSE(PunctComma))
 			{
 				break;
 			}
@@ -409,10 +406,88 @@ auto Parser::_parseFlingDeclArgSublist() -> ParseRet
 
 		EXPECT(PunctColon);
 
-		EXPECT_AND_GRAB_TOK(k_tok,
-			KwInput,
-			KwOutput,
-			KwInout);
+		Kind kind = Kind::Input;
+
+		if (ATTEMPT_TOK_PARSE(KwInput))
+		{
+			kind = Kind::Input;
+		}
+		else if (ATTEMPT_TOK_PARSE(KwOutput))
+		{
+			kind = Kind::Output;
+		}
+		else if (ATTEMPT_TOK_PARSE(KwInout))
+		{
+			kind = Kind::Inout;
+		}
+		else
+		{
+			_expect_wanted_tok();
+		}
+
+		BaseUptr typenm;
+		JUST_PARSE_AND_POP_AST_NODE(typenm, _parseFlingTypenm);
+
+		FilePos err_file_pos;
+		BaseUptrList opt_def_val_list;
+
+		if (ATTEMPT_TOK_PARSE(PunctBlkAssign))
+		{
+			err_file_pos = lex_file_pos();
+			JUST_PARSE_AND_POP_AST_LIST
+				(opt_def_val_list, _parseFlingExprList);
+		}
+
+		struct Triple
+		{
+			string ident;
+			FilePos ident_fp;
+			BaseUptr opt_def_val;
+		};
+
+		vector<Triple> triple_vec;
+
+		for (auto& node: ident_list)
+		{
+			Triple to_push;
+
+			to_push.ident = move(node.data.first);
+			to_push.ident_fp = move(node.data.second);
+			triple_vec.push_back(move(to_push));
+		}
+
+		if (opt_def_val_list.size() > 0)
+		{
+			if (ident_list.size() != opt_def_val_list.size())
+			{
+				_err(err_file_pos, "Number of default values unequal to ",
+					"number of parameters in sublist.");
+			}
+
+			size_t i = 0;
+			for (auto& node: opt_def_val_list)
+			{
+				triple_vec.at(i).opt_def_val = move(node.data);
+				++i;
+			}
+		}
+
+		for (auto& triple: triple_vec)
+		{
+			using AstNodeType = DeclArgSublistItem;
+			BaseUptr to_push(new AstNodeType(_curr_ast_parent,
+				triple.ident_fp));
+			auto to_push_ptr = static_cast<AstNodeType*>(to_push.get());
+
+			to_push_ptr->ident = move(triple.ident);
+			to_push_ptr->kind = kind;
+
+			to_push_ptr->typenm = typenm->dup(typenm->parent());
+
+			to_push_ptr->opt_def_val = move(triple.opt_def_val);
+
+			sublist.push_back(move(to_push));
+		}
 
 		return std::nullopt;
 	}
@@ -423,12 +498,27 @@ auto Parser::_parseFlingInstParamList() -> ParseRet
 	{
 		return GET_VALID_TOK_SET
 			(
-				TOK_PARSE_FUNC(PunctLparen)
+				TOK_PARSE_FUNC(PunctCmpLt)
 			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingInstParamList);
+		DEFER_PUSH_NODE(node, ParamOrArgList);
+
+		EXPECT(PunctCmpLt);
+
+		while (ATTEMPT_PARSE(_parseFlingInstParamListItem))
+		{
+			node->item_list.push_back(_pop_ast());
+
+			if (!ATTEMPT_TOK_PARSE(PunctComma))
+			{
+				break;
+			}
+		}
+
+		EXPECT(PunctCmpGt);
 
 		return std::nullopt;
 	}
@@ -447,6 +537,16 @@ auto Parser::_parseFlingInstParamListItem() -> ParseRet
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingInstParamListItem);
 
+		PARSE_IFELSE
+		(
+			_parseFlingInstParamListItemPos,
+			_parseFlingInstParamListItemNamed
+		)
+		else
+		{
+			_expect_wanted_tok();
+		}
+
 		return std::nullopt;
 	}
 }
@@ -462,6 +562,15 @@ auto Parser::_parseFlingInstParamListItemPos() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingInstParamListItemPos);
+
+		PARSE_IFELSE
+		(
+			_parseFlingExprOrRange
+		)
+		else
+		{
+			_expect_wanted_tok();
+		}
 
 		return std::nullopt;
 	}
@@ -479,6 +588,17 @@ auto Parser::_parseFlingInstParamListItemNamed() -> ParseRet
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingInstParamListItemNamed);
 
+		DEFER_PUSH_NODE(node, StrAndNode);
+
+		EXPECT(PunctMemberAccess);
+		EXPECT_IDENT_AND_GRAB_S(node->str);
+
+		if (ATTEMPT_TOK_PARSE(PunctMapTo))
+		{
+			JUST_PARSE_AND_POP_AST_NODE
+				(node->node, _parseFlingInstParamListItemPos);
+		}
+
 		return std::nullopt;
 	}
 }
@@ -494,6 +614,21 @@ auto Parser::_parseFlingInstArgList() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingInstArgList);
+		DEFER_PUSH_NODE(node, ParamOrArgList);
+
+		EXPECT(PunctLparen);
+
+		while (ATTEMPT_PARSE(_parseFlingInstArgListItem))
+		{
+			node->item_list.push_back(_pop_ast());
+
+			if (!ATTEMPT_TOK_PARSE(PunctComma))
+			{
+				break;
+			}
+		}
+
+		EXPECT(PunctRparen);
 
 		return std::nullopt;
 	}

@@ -24,7 +24,7 @@
 #define make_ast(type) \
 	new type(_curr_ast_parent, lex_file_pos())
 
-#define DEFER_PUSH(name, type) \
+#define DEFER_PUSH_NODE(name, type) \
 	auto name = make_ast(type); \
 	AstNodeDeferredPusher deferred_pusher_ ## name (this, name)
 #define DEFER_PUSH_LIST(name) \
@@ -38,9 +38,8 @@
 	ParserBase::PrologueAndEpilogue p_and_e (this, #str)
 
 #define _INNER_PARSE_IFELSE(func) \
-	if (CHECK_PARSE(func)) \
+	if (ATTEMPT_PARSE(func)) \
 	{ \
-		func (); \
 	}
 #define PARSE_IFELSE(...) \
 	EVAL(MAP(_INNER_PARSE_IFELSE, ELSE, __VA_ARGS__))
@@ -52,63 +51,83 @@
 	_check_parse(_MEMB_FUNC(func))
 #define ATTEMPT_PARSE(func) \
 	_attempt_parse(_MEMB_FUNC(func))
+#define ATTEMPT_TOK_PARSE(tok) \
+	ATTEMPT_PARSE(TOK_PARSE_FUNC(tok))
 #define GET_VALID_TOK_SET(...) \
 	_get_valid_tok_set(EVAL(MAP(_MEMB_FUNC, COMMA, __VA_ARGS__)))
 
 
-#define _INNER_JUST_PARSE_AND_POP_AST(to_set, func) \
+//--------
+#define _INNER_JUST_PARSE_AND_POP_AST_NODE(to_set, func) \
 	func (); \
 	to_set = _pop_ast()
-#define _INNER_PARSE_AND_POP_AST_IF(to_set, func) \
-	if (CHECK_PARSE(func)) \
+#define JUST_PARSE_AND_POP_AST_NODE(...) \
+	EVAL(MAP_PAIRS(_INNER_JUST_PARSE_AND_POP_AST_NODE, SEMICOLON, \
+		__VA_ARGS__))
+//--------
+
+//--------
+#define _INNER_PARSE_AND_POP_AST_NODE_IF(to_set, func) \
+	if (ATTEMPT_PARSE(func)) \
 	{ \
-		_INNER_JUST_PARSE_AND_POP_AST(to_set, func); \
+		to_set = _pop_ast(); \
 	}
-#define JUST_PARSE_AND_POP_AST(...) \
-	EVAL(MAP_PAIRS(_INNER_JUST_PARSE_AND_POP_AST, SEMICOLON, __VA_ARGS__))
-#define _MULTI_PARSE_AND_POP_AST_IF(sep, ...) \
-	EVAL(MAP_PAIRS(_INNER_PARSE_AND_POP_AST_IF, sep, __VA_ARGS__))
+#define _MULTI_PARSE_AND_POP_AST_NODE_IF(sep, ...) \
+	EVAL(MAP_PAIRS(_INNER_PARSE_AND_POP_AST_NODE_IF, sep, __VA_ARGS__))
 
-#define PARSE_AND_POP_AST_IFELSE(...) \
-	_MULTI_PARSE_AND_POP_AST_IF(ELSE, __VA_ARGS__)
-#define PARSE_AND_POP_AST_IF(...) \
-	_MULTI_PARSE_AND_POP_AST_IF(SEMICOLON, __VA_ARGS__)
+#define PARSE_AND_POP_AST_NODE_IFELSE(...) \
+	_MULTI_PARSE_AND_POP_AST_NODE_IF(ELSE, __VA_ARGS__)
+#define PARSE_AND_POP_AST_NODE_IF(...) \
+	_MULTI_PARSE_AND_POP_AST_NODE_IF(SEMICOLON, __VA_ARGS__)
+//--------
 
+
+//--------
 #define _INNER_JUST_PARSE_AND_POP_AST_LIST(to_set, func) \
 	func (); \
 	to_set = _pop_ast_list()
-#define _INNER_PARSE_AND_POP_AST_LIST_IF(to_set, func) \
-	if (CHECK_PARSE(func)) \
-	{ \
-		_INNER_JUST_PARSE_AND_POP_AST_LIST(to_set, func); \
-	}
 #define JUST_PARSE_AND_POP_AST_LIST(...) \
 	EVAL(MAP_PAIRS(_INNER_JUST_PARSE_AND_POP_AST_LIST, SEMICOLON, \
 		__VA_ARGS__))
+//--------
+
+//--------
+#define _INNER_PARSE_AND_POP_AST_LIST_IF(to_set, func) \
+	if (ATTEMPT_PARSE(func)) \
+	{ \
+		to_set = _pop_ast_list(); \
+	}
+
 #define _MULTI_PARSE_AND_POP_AST_LIST_IF(sep, ...) \
 	EVAL(MAP_PAIRS(_INNER_PARSE_AND_POP_AST_LIST_IF, sep, __VA_ARGS__))
 #define PARSE_AND_POP_AST_LIST_IFELSE(...) \
 	_MULTI_PARSE_AND_POP_AST_LIST_IF(ELSE, __VA_ARGS__)
 #define PARSE_AND_POP_AST_LIST_IF(...) \
 	_MULTI_PARSE_AND_POP_AST_LIST_IF(SEMICOLON, __VA_ARGS__)
+//--------
 
+//--------
 #define _INNER_JUST_PARSE_AND_POP_IDENT_LIST(to_set, func) \
 	func (); \
 	to_set = _pop_ident_list()
-#define _INNER_PARSE_AND_POP_IDENT_LIST_IF(to_set, func) \
-	if (CHECK_PARSE(func)) \
-	{ \
-		_INNER_JUST_PARSE_AND_POP_IDENT_LIST(to_set, func); \
-	}
 #define JUST_PARSE_AND_POP_IDENT_LIST(...) \
 	EVAL(MAP_PAIRS(_INNER_JUST_PARSE_AND_POP_IDENT_LIST, SEMICOLON, \
 		__VA_ARGS__))
+//--------
+
+//--------
+#define _INNER_PARSE_AND_POP_IDENT_LIST_IF(to_set, func) \
+	if (ATTEMPT_PARSE(func)) \
+	{ \
+		to_set = _pop_ident_list(); \
+	}
 #define _MULTI_PARSE_AND_POP_IDENT_LIST_IF(sep, ...) \
 	EVAL(MAP_PAIRS(_INNER_PARSE_AND_POP_IDENT_LIST_IF, sep, __VA_ARGS__))
 #define PARSE_AND_POP_IDENT_LIST_IFELSE(...) \
 	_MULTI_PARSE_AND_POP_IDENT_LIST_IF(ELSE, __VA_ARGS__)
 #define PARSE_AND_POP_IDENT_LIST_IF(...) \
 	_MULTI_PARSE_AND_POP_IDENT_LIST_IF(SEMICOLON, __VA_ARGS__)
+//--------
 
 
 
@@ -143,7 +162,7 @@
 #define EXPECT_AND_GRAB_TOK(name, ...) \
 	EXPECT(__VA_ARGS__); \
 	const auto name = prev_lex_tok()
-#define EXPECT_IDENT_AND_GRAB_S(name, ...) \
+#define EXPECT_IDENT_AND_GRAB_S(name) \
 	EXPECT(MiscIdent); \
 	name = prev_lex_s()
 
