@@ -49,7 +49,7 @@ private:		// variables
 	//ast::IdentExprSuffix _ident_expr_suffix;
 
 	stack<IdentList> _ident_list_stack;
-	stack<ast::BaseUptr> _ast_stack;
+	stack<ast::BaseUptr> _ast_node_stack;
 	stack<ast::BaseUptrList> _ast_list_stack;
 	string _parse_func_str;
 
@@ -77,20 +77,20 @@ private:		// misc. functions
 		return ret;
 	}
 
-	inline void _push_ast(ast::Base* to_push)
+	inline void _push_ast_node(ast::Base* to_push)
 	{
-		_ast_stack.push(ast::BaseUptr(to_push));
+		_ast_node_stack.push(ast::BaseUptr(to_push));
 	}
-	inline void _pop_ast(ast::BaseUptr& to_set)
+	inline void _pop_ast_node(ast::BaseUptr& to_set)
 	{
-		to_set = move(_ast_stack.top());
-		_ast_stack.top().reset(nullptr);
-		_ast_stack.pop();
+		to_set = move(_ast_node_stack.top());
+		_ast_node_stack.top().reset(nullptr);
+		_ast_node_stack.pop();
 	}
-	inline ast::BaseUptr _pop_ast()
+	inline ast::BaseUptr _pop_ast_node()
 	{
 		ast::BaseUptr ret;
-		_pop_ast(ret);
+		_pop_ast_node(ret);
 		return ret;
 	}
 
@@ -340,7 +340,7 @@ public:		// functions
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AstNodeDeferredPusher);
 	inline ~AstNodeDeferredPusher()
 	{
-		_parser->_push_ast(_node);
+		_parser->_push_ast_node(_node);
 		_parser->_curr_ast_parent = _prev_ast_parent;
 	}
 };

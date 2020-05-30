@@ -47,8 +47,6 @@
 #define _MEMB_FUNC(func) \
 	&Parser::func
 
-#define CHECK_PARSE(func) \
-	_check_parse(_MEMB_FUNC(func))
 #define ATTEMPT_PARSE(func) \
 	_attempt_parse(_MEMB_FUNC(func))
 #define ATTEMPT_TOK_PARSE(tok) \
@@ -60,7 +58,7 @@
 //--------
 #define _INNER_JUST_PARSE_AND_POP_AST_NODE(to_set, func) \
 	func (); \
-	to_set = _pop_ast()
+	to_set = _pop_ast_node()
 #define JUST_PARSE_AND_POP_AST_NODE(...) \
 	EVAL(MAP_PAIRS(_INNER_JUST_PARSE_AND_POP_AST_NODE, SEMICOLON, \
 		__VA_ARGS__))
@@ -70,7 +68,7 @@
 #define _INNER_PARSE_AND_POP_AST_NODE_IF(to_set, func) \
 	if (ATTEMPT_PARSE(func)) \
 	{ \
-		to_set = _pop_ast(); \
+		to_set = _pop_ast_node(); \
 	}
 #define _MULTI_PARSE_AND_POP_AST_NODE_IF(sep, ...) \
 	EVAL(MAP_PAIRS(_INNER_PARSE_AND_POP_AST_NODE_IF, sep, __VA_ARGS__))
