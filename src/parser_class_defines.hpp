@@ -53,6 +53,12 @@
 	ATTEMPT_PARSE(TOK_PARSE_FUNC(tok))
 #define GET_VALID_TOK_SET(...) \
 	_get_valid_tok_set(EVAL(MAP(_MEMB_FUNC, COMMA, __VA_ARGS__)))
+#define START_PARSE_IFELSE(X) \
+	X(PARSE_IFELSE) \
+	else \
+	{ \
+		_expect_wanted_tok(); \
+	}
 
 
 //--------

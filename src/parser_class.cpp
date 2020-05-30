@@ -59,19 +59,23 @@ auto Parser::_parseFlingProgram() -> ParseRet
 //--------
 auto Parser::_parseFlingDeclPackage() -> ParseRet
 {
+	#define LIST(X) \
+		X \
+		( \
+			TOK_PARSE_FUNC(KwPackage) \
+		)
+
 	if (just_get_valid_tokens())
 	{
-		return GET_VALID_TOK_SET
-			(
-				TOK_PARSE_FUNC(KwPackage)
-			);
+		return LIST(GET_VALID_TOK_SET);
 	}
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclPackage);
 		DEFER_PUSH_NODE(node, DeclPackage);
 
-		EXPECT(KwPackage);
+		START_PARSE_IFELSE(LIST);
+
 		EXPECT_IDENT_AND_GRAB_S(node->ident);
 		EXPECT(PunctLbrace);
 
@@ -85,10 +89,11 @@ auto Parser::_parseFlingDeclPackage() -> ParseRet
 
 		return std::nullopt;
 	}
+
+	#undef LIST
 }
 auto Parser::_parseFlingDeclPackageItem() -> ParseRet
 {
-
 	#define LIST(X) \
 		X \
 		( \
@@ -115,11 +120,7 @@ auto Parser::_parseFlingDeclPackageItem() -> ParseRet
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclPackageItem);
 
-		LIST(PARSE_IFELSE)
-		else
-		{
-			_expect_wanted_tok();
-		}
+		START_PARSE_IFELSE(LIST);
 
 		return std::nullopt;
 	}
@@ -128,44 +129,51 @@ auto Parser::_parseFlingDeclPackageItem() -> ParseRet
 }
 auto Parser::_parseFlingImport() -> ParseRet
 {
+	#define LIST(X) \
+		X \
+		( \
+			TOK_PARSE_FUNC(KwImport) \
+		)
 	if (just_get_valid_tokens())
 	{
-		return GET_VALID_TOK_SET
-			(
-				TOK_PARSE_FUNC(KwImport)
-			);
+		return LIST(GET_VALID_TOK_SET);
 	}
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingImport);
 		DEFER_PUSH_NODE(node, Import);
 
-		EXPECT(KwImport);
+		START_PARSE_IFELSE(LIST);
+
 		JUST_PARSE_AND_POP_AST_LIST
 			(node->item_list, _parseFlingImportItemList);
 		EXPECT(PunctSemicolon);
 
 		return std::nullopt;
 	}
+
+	#undef LIST
 }
 //--------
 
 //--------
 auto Parser::_parseFlingDeclParamList() -> ParseRet
 {
+	#define LIST(X) \
+		X \
+		( \
+			TOK_PARSE_FUNC(PunctCmpLt) \
+		)
 	if (just_get_valid_tokens())
 	{
-		return GET_VALID_TOK_SET
-			(
-				TOK_PARSE_FUNC(PunctCmpLt)
-			);
+		return LIST(GET_VALID_TOK_SET);
 	}
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclParamList);
 		DEFER_PUSH_NODE(node, ParamOrArgList);
 
-		EXPECT(PunctCmpLt);
+		START_PARSE_IFELSE(LIST);
 
 		while (ATTEMPT_PARSE(_parseFlingDeclParamSublist))
 		{
@@ -186,6 +194,7 @@ auto Parser::_parseFlingDeclParamList() -> ParseRet
 
 		return std::nullopt;
 	}
+	#undef LIST
 }
 auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 {
@@ -803,11 +812,7 @@ auto Parser::_parseFlingDeclModuleItem() -> ParseRet
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleItem);
 
-		LIST(PARSE_IFELSE)
-		else
-		{
-			_expect_wanted_tok();
-		}
+		START_PARSE_IFELSE(LIST);
 
 		return std::nullopt;
 	}
@@ -819,40 +824,62 @@ auto Parser::_parseFlingDeclModuleItem() -> ParseRet
 //--------
 auto Parser::_parseFlingModinst() -> ParseRet
 {
+	#define LIST(X) \
+		X \
+		( \
+			TOK_PARSE_FUNC(KwModinst) \
+		)
 	if (just_get_valid_tokens())
 	{
-		return GET_VALID_TOK_SET
-			(
-				TOK_PARSE_FUNC(KwModinst)
-			);
+		return LIST(GET_VALID_TOK_SET);
 	}
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingModinst);
+		DEFER_PUSH_NODE(node, Modinst);
+
+		START_PARSE_IFELSE(LIST);
+
+		EXPECT_IDENT_AND_GRAB_S(node->ident);
+
+		EXPECT(PunctColon);
+
+		JUST_PARSE_AND_POP_AST_NODE
+		(
+			node->modnm, _parseFlingModnm,
+			node->arg_list, _parseFlingInstArgList
+		);
 
 		return std::nullopt;
 	}
+
+	#undef LIST
 }
 //--------
 
 //--------
 auto Parser::_parseFlingDeclModuleGen() -> ParseRet
 {
+	#define LIST(X) \
+		X \
+		( \
+			_parseFlingDeclModuleGenIf, \
+			_parseFlingDeclModuleGenSwitchEtc, \
+			_parseFlingDeclModuleGenFor \
+		)
 	if (just_get_valid_tokens())
 	{
-		return GET_VALID_TOK_SET
-			(
-				_parseFlingDeclModuleGenIf,
-				_parseFlingDeclModuleGenSwitchEtc,
-				_parseFlingDeclModuleGenFor
-			);
+		return LIST(GET_VALID_TOK_SET);
 	}
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleGen);
 
+		START_PARSE_IFELSE(LIST);
+
 		return std::nullopt;
 	}
+	#undef LIST
 }
 auto Parser::_parseFlingDeclModuleGenIf() -> ParseRet
 {
@@ -866,6 +893,9 @@ auto Parser::_parseFlingDeclModuleGenIf() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleGenIf);
+		DEFER_PUSH_NODE(node, GenIf);
+
+		EXPECT(KwGenIf);
 
 		return std::nullopt;
 	}
