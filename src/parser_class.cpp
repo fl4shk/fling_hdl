@@ -2536,6 +2536,14 @@ auto Parser::_inner_parseFlingGenCase(string&& func_name,
 	else // if (!just_get_valid_tokens())
 	{
 		PrologueAndEpilogue p_and_e(this, move(func_name));
+		DEFER_PUSH_NODE(node, GenCase);
+
+		EXPECT(KwGenCase);
+		JUST_PARSE_AND_POP_AST_LIST
+			(node->expr_list, _parseFlingExprList);
+
+		_call_parse_func(scope_func);
+		node->scope = _pop_ast_node();
 
 		return std::nullopt;
 	}
@@ -2553,6 +2561,12 @@ auto Parser::_inner_parseFlingGenDefault(string&& func_name,
 	else // if (!just_get_valid_tokens())
 	{
 		PrologueAndEpilogue p_and_e(this, move(func_name));
+		DEFER_PUSH_NODE(node, GenDefault);
+
+		EXPECT(KwGenDefault);
+
+		_call_parse_func(scope_func);
+		node->scope = _pop_ast_node();
 
 		return std::nullopt;
 	}
@@ -2570,6 +2584,24 @@ auto Parser::_inner_parseFlingGenFor(string&& func_name,
 	else // if (!just_get_valid_tokens())
 	{
 		PrologueAndEpilogue p_and_e(this, move(func_name));
+		DEFER_PUSH_NODE(node, GenFor);
+
+		EXPECT(KwGenFor);
+
+		if (ATTEMPT_TOK_PARSE(PunctLbracket))
+		{
+			EXPECT_IDENT_AND_GRAB_S(node->label);
+			EXPECT(PunctRbracket);
+		}
+
+		EXPECT_IDENT_AND_GRAB_S(node->iter_ident);
+		EXPECT(PunctColon);
+
+		JUST_PARSE_AND_POP_AST_NODE
+			(node->range, _parseFlingRange);
+
+		_call_parse_func(scope_func);
+		node->scope = _pop_ast_node();
 
 		return std::nullopt;
 	}
