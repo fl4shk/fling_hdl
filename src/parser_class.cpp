@@ -2456,7 +2456,8 @@ auto Parser::_inner_parseFlingGenIf(string&& func_name,
 	}
 }
 auto Parser::_inner_parseFlingGenSwitchEtc(string&& func_name,
-	const ParseFunc& scope_func) -> ParseRet
+	const ParseFunc& gen_case_func, const ParseFunc& gen_default_func)
+	-> ParseRet
 {
 	if (just_get_valid_tokens())
 	{
@@ -2469,6 +2470,32 @@ auto Parser::_inner_parseFlingGenSwitchEtc(string&& func_name,
 	else // if (!just_get_valid_tokens())
 	{
 		PrologueAndEpilogue p_and_e(this, move(func_name));
+		DEFER_PUSH_NODE(node, GenSwitchEtc);
+
+		using Kind = GenSwitchEtc::Kind;
+
+		if (ATTEMPT_TOK_PARSE(KwGenSwitch))
+		{
+			node->kind = Kind::Switch;
+		}
+		else if (ATTEMPT_TOK_PARSE(KwGenSwitchz))
+		{
+			node->kind = Kind::Switchz;
+		}
+		else
+		{
+			_expect_wanted_tok();
+		}
+
+		JUST_PARSE_AND_POP_AST_NODE
+			(node->expr, _parseFlingExpr);
+
+		auto set_opt_default = [&]() -> void
+		{
+		};
+		auto set_case_list = [&]() -> void
+		{
+		};
 
 		return std::nullopt;
 	}

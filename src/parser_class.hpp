@@ -321,7 +321,7 @@ public:		// parsing functions
 	ParseRet _inner_parseFlingGenIf(string&& func_name,
 		const ParseFunc& scope_func);
 	ParseRet _inner_parseFlingGenSwitchEtc(string&& func_name,
-		const ParseFunc& scope_func);
+		const ParseFunc& gen_case_func, const ParseFunc& gen_default_func);
 	ParseRet _inner_parseFlingGenCase(string&& func_name,
 		const ParseFunc& scope_func);
 	ParseRet _inner_parseFlingGenDefault(string&& func_name,
