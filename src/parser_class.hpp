@@ -39,6 +39,7 @@ class Parser final: public RdParserBase<Lexer, Parser>
 public:		// types
 	using ParserBase = RdParserBase<Lexer, Parser>;
 	using IdentList = IndCircLinkList<pair<string, FilePos>>;
+	using ParseFunc = ParserBase::ParseFunc;
 
 private:		// variables
 	size_t _max_ast_level;
@@ -311,6 +312,22 @@ public:		// parsing functions
 	ParseRet _parseFlingTypenmCstmChainItem();
 	ParseRet _parseFlingTypenm();
 	ParseRet _parseFlingModnm();
+	//--------
+
+	//--------
+	ParseRet _inner_parseFlingGen(const string& func_name,
+		const ParseFunc& gen_if_func, const ParseFunc& gen_switch_etc_func,
+		const ParseFunc& gen_for_func);
+	ParseRet _inner_parseFlingGenIf(const string& func_name,
+		const ParseFunc& scope_func);
+	ParseRet _inner_parseFlingGenSwitchEtc(const string& func_name,
+		const ParseFunc& scope_func);
+	ParseRet _inner_parseFlingGenCase(const string& func_name,
+		const ParseFunc& scope_func);
+	ParseRet _inner_parseFlingGenDefault(const string& func_name,
+		const ParseFunc& scope_func);
+	ParseRet _inner_parseFlingGenFor(const string& func_name,
+		const ParseFunc& scope_func);
 	//--------
 
 	#define X(name, dummy_0) \
