@@ -875,7 +875,8 @@ auto Parser::_parseFlingDeclModuleGenSwitchEtc() -> ParseRet
 {
 	return _inner_parseFlingGenSwitchEtc
 		("_parseFlingDeclModuleGenSwitchEtc",
-		MEMB_FUNC(_parseFlingDeclModuleScope));
+		MEMB_FUNC(_parseFlingDeclModuleGenCase),
+		MEMB_FUNC(_parseFlingDeclModuleGenDefault));
 }
 auto Parser::_parseFlingDeclModuleGenCase() -> ParseRet
 {
@@ -1113,7 +1114,8 @@ auto Parser::_parseFlingDeclModuleBehavScopeItemGenSwitchEtc() -> ParseRet
 {
 	return _inner_parseFlingGenSwitchEtc
 		("_parseFlingDeclModuleBehavScopeItemGenSwitchEtc",
-		MEMB_FUNC(_parseFlingDeclModuleBehavScope));
+		MEMB_FUNC(_parseFlingDeclModuleBehavScopeItemGenCase),
+		MEMB_FUNC(_parseFlingDeclModuleBehavScopeItemGenDefault));
 }
 auto Parser::_parseFlingDeclModuleBehavScopeItemGenCase() -> ParseRet
 {
@@ -1278,7 +1280,8 @@ auto Parser::_parseFlingDeclStructScopeItemGenSwitchEtc() -> ParseRet
 {
 	return _inner_parseFlingGenSwitchEtc
 		("_parseFlingDeclStructScopeItemGenSwitchEtc",
-		MEMB_FUNC(_parseFlingDeclStructScope));
+		MEMB_FUNC(_parseFlingDeclStructScopeItemGenCase),
+		MEMB_FUNC(_parseFlingDeclStructScopeItemGenDefault));
 }
 auto Parser::_parseFlingDeclStructScopeItemGenCase() -> ParseRet
 {
@@ -1552,7 +1555,8 @@ auto Parser::_parseFlingDeclSubprogScopeItemGenSwitchEtc() -> ParseRet
 {
 	return _inner_parseFlingGenSwitchEtc
 		("_parseFlingDeclSubprogScopeItemGenSwitchEtc",
-		MEMB_FUNC(_parseFlingDeclSubprogScope));
+		MEMB_FUNC(_parseFlingDeclSubprogScopeItemGenCase),
+		MEMB_FUNC(_parseFlingDeclSubprogScopeItemGenDefault));
 }
 auto Parser::_parseFlingDeclSubprogScopeItemGenCase() -> ParseRet
 {
@@ -2490,12 +2494,31 @@ auto Parser::_inner_parseFlingGenSwitchEtc(string&& func_name,
 		JUST_PARSE_AND_POP_AST_NODE
 			(node->expr, _parseFlingExpr);
 
-		auto set_opt_default = [&]() -> void
+		EXPECT(PunctLbrace);
+
+		if (_attempt_parse(gen_default_func))
 		{
-		};
-		auto set_case_list = [&]() -> void
+			node->opt_default = _pop_ast_node();
+
+			while (_attempt_parse(gen_case_func))
+			{
+				node->opt_case_list.push_back(_pop_ast_node());
+			}
+		}
+		else
 		{
-		};
+			while (_attempt_parse(gen_case_func))
+			{
+				node->opt_case_list.push_back(_pop_ast_node());
+			}
+
+			if (_attempt_parse(gen_default_func))
+			{
+				node->opt_default = _pop_ast_node();
+			}
+		}
+
+		EXPECT(PunctRbrace);
 
 		return std::nullopt;
 	}
