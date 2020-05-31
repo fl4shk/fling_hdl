@@ -267,13 +267,11 @@ private:		// functions
 		}
 	}
 
-protected:		// functions
 	inline bool _check_parse(const ParseFunc& parse_func)
 	{
 		return _check_parse(_wanted_tok_set, parse_func);
 	}
 
-private:		// functions
 	template<typename... RemArgTypes>
 	inline void _inner_get_valid_tok_set(TokSet& ret,
 		const ParseFunc& first_parse_func, RemArgTypes&&... rem_args)
@@ -296,21 +294,21 @@ protected:		// functions
 		return ret;
 	}
 
-private:		// functions
-	inline bool _inner_attempt_parse(const ParseFunc& parse_func)
-	{
-		//_wanted_tok_set_merge(_get_valid_tok_set(parse_func));
-
-		if (_check_parse(parse_func))
-		{
-			_call_parse_func(parse_func);
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+//private:		// functions
+//	inline bool _inner_attempt_parse(const ParseFunc& parse_func)
+//	{
+//		//_wanted_tok_set_merge(_get_valid_tok_set(parse_func));
+//
+//		if (_check_parse(parse_func))
+//		{
+//			_call_parse_func(parse_func);
+//			return true;
+//		}
+//		else
+//		{
+//			return false;
+//		}
+//	}
 
 protected:		// functions
 	//inline bool _attempt_parse_basic(const ParseFunc& parse_func)
@@ -320,8 +318,17 @@ protected:		// functions
 	//}
 	inline bool _attempt_parse(const ParseFunc& parse_func)
 	{
-		_wanted_tok_set_merge(_get_valid_tok_set(parse_func));
-		return _inner_attempt_parse(parse_func);
+		//_wanted_tok_set_merge(_get_valid_tok_set(parse_func));
+		//return _inner_attempt_parse(parse_func);
+		if (_check_parse(parse_func))
+		{
+			_call_parse_func(parse_func);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 	//inline bool _attempt_parse_opt(const ParseFunc& parse_func)
 	//{
