@@ -901,20 +901,26 @@ auto Parser::_parseFlingDeclModuleGenFor() -> ParseRet
 //--------
 auto Parser::_parseFlingDeclModuleBehav() -> ParseRet
 {
+	#define LIST(X) \
+		X \
+		( \
+			_parseFlingDeclModuleBehavComb, \
+			_parseFlingDeclModuleBehavSeq \
+		)
 	if (just_get_valid_tokens())
 	{
-		return GET_VALID_TOK_SET
-			(
-				_parseFlingDeclModuleBehavComb,
-				_parseFlingDeclModuleBehavSeq
-			);
+		return LIST(GET_VALID_TOK_SET);
 	}
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehav);
 
+		START_PARSE_IFELSE(LIST);
+
 		return std::nullopt;
 	}
+
+	#undef LIST
 }
 auto Parser::_parseFlingDeclModuleBehavComb() -> ParseRet
 {
@@ -928,6 +934,12 @@ auto Parser::_parseFlingDeclModuleBehavComb() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavComb);
+		DEFER_PUSH_NODE(node, DeclModuleBehavComb);
+
+		EXPECT(KwComb);
+
+		JUST_PARSE_AND_POP_AST_NODE
+			(node->scope, _parseFlingDeclModuleScope);
 
 		return std::nullopt;
 	}
@@ -944,6 +956,18 @@ auto Parser::_parseFlingDeclModuleBehavSeq() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavSeq);
+		DEFER_PUSH_NODE(node, DeclModuleBehavSeq);
+
+		EXPECT(KwSeq);
+
+		do
+		{
+			_parseFlingDeclModuleBehavSeqEdgeItem();
+			node->edge_item_list.push_back(_pop_ast_node());
+		} while (ATTEMPT_TOK_PARSE(PunctComma));
+
+		JUST_PARSE_AND_POP_AST_NODE
+			(node->scope, _parseFlingDeclModuleBehavScope);
 
 		return std::nullopt;
 	}
@@ -961,6 +985,25 @@ auto Parser::_parseFlingDeclModuleBehavSeqEdgeItem() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavSeqEdgeItem);
+		DEFER_PUSH_NODE(node, DeclModuleBehavSeqEdgeItem);
+
+		using Kind = DeclModuleBehavSeqEdgeItem::Kind;
+
+		if (ATTEMPT_TOK_PARSE(KwPosedge))
+		{
+			node->kind = Kind::Posedge;
+		}
+		else if (ATTEMPT_TOK_PARSE(KwNegedge))
+		{
+			node->kind = Kind::Negedge;
+		}
+		else
+		{
+			_expect_wanted_tok();
+		}
+
+		JUST_PARSE_AND_POP_AST_NODE
+			(node->expr, _parseFlingExpr);
 
 		return std::nullopt;
 	}
@@ -977,122 +1020,85 @@ auto Parser::_parseFlingDeclModuleBehavScope() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScope);
+		DEFER_PUSH_NODE(node, Scope);
+
+		EXPECT(PunctLbrace);
+
+		while (ATTEMPT_PARSE(_parseFlingDeclModuleBehavScopeItem))
+		{
+			node->item_list.push_back(_pop_ast_node());
+		}
+
+		EXPECT(PunctRbrace);
 
 		return std::nullopt;
 	}
 }
 auto Parser::_parseFlingDeclModuleBehavScopeItem() -> ParseRet
 {
+	#define LIST(X) \
+		X \
+		( \
+			_parseFlingDeclModuleBehavScope, \
+			\
+			_parseFlingDeclModuleBehavScopeItemIf, \
+			_parseFlingDeclModuleBehavScopeItemSwitchEtc, \
+			_parseFlingDeclModuleBehavScopeItemFor, \
+			_parseFlingDeclModuleBehavScopeItemWhile, \
+			\
+			_parseFlingDeclModuleBehavScopeItemGen, \
+			\
+			_parseFlingAnyBehavScopeItem \
+		)
 	if (just_get_valid_tokens())
 	{
-		return GET_VALID_TOK_SET
-			(
-				_parseFlingDeclModuleBehavScope,
-
-				_parseFlingDeclModuleBehavScopeItemIf,
-				_parseFlingDeclModuleBehavScopeItemSwitchEtc,
-				_parseFlingDeclModuleBehavScopeItemFor,
-				_parseFlingDeclModuleBehavScopeItemWhile,
-
-				_parseFlingDeclModuleBehavScopeItemGen,
-
-				_parseFlingAnyBehavScopeItem
-			);
+		return LIST(GET_VALID_TOK_SET);
 	}
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItem);
 
+		START_PARSE_IFELSE(LIST);
+
 		return std::nullopt;
 	}
+	#undef LIST
 }
 auto Parser::_parseFlingDeclModuleBehavScopeItemIf() -> ParseRet
 {
-	if (just_get_valid_tokens())
-	{
-		return GET_VALID_TOK_SET(TOK_PARSE_FUNC(KwIf));
-	}
-	else // if (!just_get_valid_tokens())
-	{
-		PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItemIf);
-
-		return std::nullopt;
-	}
+	return _inner_parseFlingIf("_parseFlingDeclModuleBehavScopeItemIf",
+		MEMB_FUNC(_parseFlingDeclModuleBehavScope));
 }
 auto Parser::_parseFlingDeclModuleBehavScopeItemSwitchEtc() -> ParseRet
 {
-	if (just_get_valid_tokens())
-	{
-		return GET_VALID_TOK_SET
-			(
-				TOK_PARSE_FUNC(KwSwitch),
-				TOK_PARSE_FUNC(KwSwitchz)
-			);
-	}
-	else // if (!just_get_valid_tokens())
-	{
-		PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItemSwitchEtc);
-
-		return std::nullopt;
-	}
+	return _inner_parseFlingSwitchEtc
+		("_parseFlingDeclModuleBehavScopeItemSwitchEtc",
+		MEMB_FUNC(_parseFlingDeclModuleBehavScopeItemCase),
+		MEMB_FUNC(_parseFlingDeclModuleBehavScopeItemDefault));
 }
 auto Parser::_parseFlingDeclModuleBehavScopeItemCase() -> ParseRet
 {
-	if (just_get_valid_tokens())
-	{
-		return GET_VALID_TOK_SET
-			(
-				TOK_PARSE_FUNC(KwCase)
-			);
-	}
-	else // if (!just_get_valid_tokens())
-	{
-		PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItemCase);
-
-		return std::nullopt;
-	}
+	return _inner_parseFlingCase
+		("_parseFlingDeclModuleBehavScopeItemCase",
+		MEMB_FUNC(_parseFlingDeclModuleBehavScope));
 }
 auto Parser::_parseFlingDeclModuleBehavScopeItemDefault() -> ParseRet
 {
-	if (just_get_valid_tokens())
-	{
-		return GET_VALID_TOK_SET
-			(
-				TOK_PARSE_FUNC(KwDefault)
-			);
-	}
-	else // if (!just_get_valid_tokens())
-	{
-		PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItemDefault);
-
-		return std::nullopt;
-	}
+	return _inner_parseFlingDefault
+		("_parseFlingDeclModuleBehavScopeItemDefault",
+		MEMB_FUNC(_parseFlingDeclModuleBehavScope));
 }
 auto Parser::_parseFlingDeclModuleBehavScopeItemFor() -> ParseRet
 {
-	if (just_get_valid_tokens())
-	{
-		return GET_VALID_TOK_SET(TOK_PARSE_FUNC(KwFor));
-	}
-	else // if (!just_get_valid_tokens())
-	{
-		PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItemFor);
-
-		return std::nullopt;
-	}
+	return _inner_parseFlingFor
+		("_parseFlingDeclModuleBehavScopeItemFor",
+		MEMB_FUNC(_parseFlingDeclModuleBehavScope));
 }
 auto Parser::_parseFlingDeclModuleBehavScopeItemWhile() -> ParseRet
 {
-	if (just_get_valid_tokens())
-	{
-		return GET_VALID_TOK_SET(TOK_PARSE_FUNC(KwWhile));
-	}
-	else // if (!just_get_valid_tokens())
-	{
-		PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleBehavScopeItemWhile);
-
-		return std::nullopt;
-	}
+	return _inner_parseFlingWhile
+		("_parseFlingDeclModuleBehavScopeItemWhile",
+		MEMB_FUNC(_parseFlingDeclModuleBehavScope));
 }
 //--------
 
@@ -1440,100 +1446,39 @@ auto Parser::_parseFlingDeclSubprogScopeItem() -> ParseRet
 }
 auto Parser::_parseFlingDeclSubprogScopeItemIf() -> ParseRet
 {
-	if (just_get_valid_tokens())
-	{
-		return GET_VALID_TOK_SET
-			(
-				TOK_PARSE_FUNC(KwIf)
-			);
-	}
-	else // if (!just_get_valid_tokens())
-	{
-		PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItemIf);
-
-		return std::nullopt;
-	}
+	return _inner_parseFlingIf("_parseFlingDeclSubprogScopeItemIf",
+		MEMB_FUNC(_parseFlingDeclSubprogScope));
 }
 auto Parser::_parseFlingDeclSubprogScopeItemSwitchEtc() -> ParseRet
 {
-	if (just_get_valid_tokens())
-	{
-		return GET_VALID_TOK_SET
-			(
-				TOK_PARSE_FUNC(KwSwitch),
-				TOK_PARSE_FUNC(KwSwitchz)
-			);
-	}
-	else // if (!just_get_valid_tokens())
-	{
-		PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItemSwitchEtc);
-
-		return std::nullopt;
-	}
+	return _inner_parseFlingSwitchEtc
+		("_parseFlingDeclSubprogScopeItemSwitchEtc",
+		MEMB_FUNC(_parseFlingDeclSubprogScopeItemCase),
+		MEMB_FUNC(_parseFlingDeclSubprogScopeItemDefault));
 }
 auto Parser::_parseFlingDeclSubprogScopeItemCase() -> ParseRet
 {
-	if (just_get_valid_tokens())
-	{
-		return GET_VALID_TOK_SET
-			(
-				TOK_PARSE_FUNC(KwCase)
-			);
-	}
-	else // if (!just_get_valid_tokens())
-	{
-		PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItemCase);
-
-		return std::nullopt;
-	}
+	return _inner_parseFlingCase
+		("_parseFlingDeclSubprogScopeItemCase",
+		MEMB_FUNC(_parseFlingDeclSubprogScope));
 }
 auto Parser::_parseFlingDeclSubprogScopeItemDefault() -> ParseRet
 {
-	if (just_get_valid_tokens())
-	{
-		return GET_VALID_TOK_SET
-			(
-				TOK_PARSE_FUNC(KwDefault)
-			);
-	}
-	else // if (!just_get_valid_tokens())
-	{
-		PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItemDefault);
-
-		return std::nullopt;
-	}
+	return _inner_parseFlingDefault
+		("_parseFlingDeclSubprogScopeItemDefault",
+		MEMB_FUNC(_parseFlingDeclSubprogScope));
 }
 auto Parser::_parseFlingDeclSubprogScopeItemFor() -> ParseRet
 {
-	if (just_get_valid_tokens())
-	{
-		return GET_VALID_TOK_SET
-			(
-				TOK_PARSE_FUNC(KwFor)
-			);
-	}
-	else // if (!just_get_valid_tokens())
-	{
-		PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItemFor);
-
-		return std::nullopt;
-	}
+	return _inner_parseFlingFor
+		("_parseFlingDeclSubprogScopeItemFor",
+		MEMB_FUNC(_parseFlingDeclSubprogScope));
 }
 auto Parser::_parseFlingDeclSubprogScopeItemWhile() -> ParseRet
 {
-	if (just_get_valid_tokens())
-	{
-		return GET_VALID_TOK_SET
-			(
-				TOK_PARSE_FUNC(KwWhile)
-			);
-	}
-	else // if (!just_get_valid_tokens())
-	{
-		PROLOGUE_AND_EPILOGUE(_parseFlingDeclSubprogScopeItemWhile);
-
-		return std::nullopt;
-	}
+	return _inner_parseFlingWhile
+		("_parseFlingDeclSubprogScopeItemWhile",
+		MEMB_FUNC(_parseFlingDeclSubprogScope));
 }
 //--------
 
@@ -2378,6 +2323,227 @@ auto Parser::_parseFlingModnm() -> ParseRet
 	}
 }
 //--------
+
+//--------
+auto Parser::_inner_parseFlingIf(string&& func_name,
+	const ParseFunc& scope_func) -> ParseRet
+{
+	if (just_get_valid_tokens())
+	{
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwIf)
+			);
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		ParserBase::PrologueAndEpilogue p_and_e(this, move(func_name));
+		DEFER_PUSH_NODE(node, BehavIf);
+
+		EXPECT(KwIf);
+		JUST_PARSE_AND_POP_AST_NODE
+		(
+			node->if_expr, _parseFlingExpr,
+		);
+
+		_call_parse_func(scope_func);
+		node->if_scope = _pop_ast_node();
+
+		while (ATTEMPT_TOK_PARSE(KwElif))
+		{
+			{
+				DEFER_PUSH_NODE(elif_node, BehavElif);
+				JUST_PARSE_AND_POP_AST_NODE
+				(
+					elif_node->expr, _parseFlingExpr,
+				);
+
+				_call_parse_func(scope_func);
+				elif_node->scope = _pop_ast_node();
+			}
+
+			node->opt_elif_list.push_back(_pop_ast_node());
+		}
+
+		if (ATTEMPT_TOK_PARSE(KwElse))
+		{
+			_call_parse_func(scope_func);
+			node->opt_else_scope = _pop_ast_node();
+		}
+
+		return std::nullopt;
+	}
+}
+auto Parser::_inner_parseFlingSwitchEtc(string&& func_name,
+	const ParseFunc& case_func, const ParseFunc& default_func)
+	-> ParseRet
+{
+	if (just_get_valid_tokens())
+	{
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwSwitch),
+				TOK_PARSE_FUNC(KwSwitchz)
+			);
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		PrologueAndEpilogue p_and_e(this, move(func_name));
+		DEFER_PUSH_NODE(node, BehavSwitchEtc);
+
+		using Kind = BehavSwitchEtc::Kind;
+
+		if (ATTEMPT_TOK_PARSE(KwSwitch))
+		{
+			node->kind = Kind::Switch;
+		}
+		else if (ATTEMPT_TOK_PARSE(KwSwitchz))
+		{
+			node->kind = Kind::Switchz;
+		}
+		else
+		{
+			_expect_wanted_tok();
+		}
+
+		JUST_PARSE_AND_POP_AST_NODE
+			(node->expr, _parseFlingExpr);
+
+		EXPECT(PunctLbrace);
+
+		if (_attempt_parse(default_func))
+		{
+			node->opt_default = _pop_ast_node();
+
+			while (_attempt_parse(case_func))
+			{
+				node->opt_case_list.push_back(_pop_ast_node());
+			}
+		}
+		else
+		{
+			while (_attempt_parse(case_func))
+			{
+				node->opt_case_list.push_back(_pop_ast_node());
+			}
+
+			if (_attempt_parse(default_func))
+			{
+				node->opt_default = _pop_ast_node();
+			}
+		}
+
+		EXPECT(PunctRbrace);
+
+		return std::nullopt;
+	}
+}
+auto Parser::_inner_parseFlingCase(string&& func_name,
+	const ParseFunc& scope_func) -> ParseRet
+{
+	if (just_get_valid_tokens())
+	{
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwCase)
+			);
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		PrologueAndEpilogue p_and_e(this, move(func_name));
+		DEFER_PUSH_NODE(node, BehavCase);
+
+		EXPECT(KwCase);
+		JUST_PARSE_AND_POP_AST_LIST
+			(node->expr_list, _parseFlingExprList);
+
+		_call_parse_func(scope_func);
+		node->scope = _pop_ast_node();
+
+		return std::nullopt;
+	}
+}
+auto Parser::_inner_parseFlingDefault(string&& func_name,
+	const ParseFunc& scope_func) -> ParseRet
+{
+	if (just_get_valid_tokens())
+	{
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwDefault)
+			);
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		PrologueAndEpilogue p_and_e(this, move(func_name));
+		DEFER_PUSH_NODE(node, BehavDefault);
+
+		EXPECT(KwDefault);
+
+		_call_parse_func(scope_func);
+		node->scope = _pop_ast_node();
+
+		return std::nullopt;
+	}
+}
+auto Parser::_inner_parseFlingFor(string&& func_name,
+	const ParseFunc& scope_func) -> ParseRet
+{
+	if (just_get_valid_tokens())
+	{
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwFor)
+			);
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		PrologueAndEpilogue p_and_e(this, move(func_name));
+		DEFER_PUSH_NODE(node, BehavFor);
+
+		EXPECT(KwFor);
+
+		EXPECT_IDENT_AND_GRAB_S(node->iter_ident);
+		EXPECT(PunctColon);
+
+		JUST_PARSE_AND_POP_AST_NODE
+			(node->range, _parseFlingRange);
+
+		_call_parse_func(scope_func);
+		node->scope = _pop_ast_node();
+
+		return std::nullopt;
+	}
+}
+auto Parser::_inner_parseFlingWhile(string&& func_name,
+	const ParseFunc& scope_func) -> ParseRet
+{
+	if (just_get_valid_tokens())
+	{
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwWhile)
+			);
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		PrologueAndEpilogue p_and_e(this, move(func_name));
+		DEFER_PUSH_NODE(node, BehavWhile);
+
+		EXPECT(KwWhile);
+
+		JUST_PARSE_AND_POP_AST_NODE
+			(node->expr, _parseFlingExpr);
+
+		_call_parse_func(scope_func);
+		node->scope = _pop_ast_node();
+
+		return std::nullopt;
+	}
+}
+//--------
+
+//--------
 auto Parser::_inner_parseFlingGen(string&& func_name,
 	const ParseFunc& gen_if_func, const ParseFunc& gen_switch_etc_func,
 	const ParseFunc& gen_for_func) -> ParseRet
@@ -2606,6 +2772,7 @@ auto Parser::_inner_parseFlingGenFor(string&& func_name,
 		return std::nullopt;
 	}
 }
+//--------
 
 #define X(name, dummy_0) \
 	auto Parser::_parseTok##name() -> ParseRet \

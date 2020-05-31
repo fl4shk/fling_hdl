@@ -315,6 +315,21 @@ public:		// parsing functions
 	//--------
 
 	//--------
+	ParseRet _inner_parseFlingIf(string&& func_name,
+		const ParseFunc& scope_func);
+	ParseRet _inner_parseFlingSwitchEtc(string&& func_name,
+		const ParseFunc& case_func, const ParseFunc& default_func);
+	ParseRet _inner_parseFlingCase(string&& func_name,
+		const ParseFunc& scope_func);
+	ParseRet _inner_parseFlingDefault(string&& func_name,
+		const ParseFunc& scope_func);
+	ParseRet _inner_parseFlingFor(string&& func_name,
+		const ParseFunc& scope_func);
+	ParseRet _inner_parseFlingWhile(string&& func_name,
+		const ParseFunc& scope_func);
+	//--------
+
+	//--------
 	ParseRet _inner_parseFlingGen(string&& func_name,
 		const ParseFunc& gen_if_func, const ParseFunc& gen_switch_etc_func,
 		const ParseFunc& gen_for_func);
