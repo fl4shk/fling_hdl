@@ -315,18 +315,18 @@ public:		// parsing functions
 	//--------
 
 	//--------
-	ParseRet _inner_parseFlingGen(const string& func_name,
+	ParseRet _inner_parseFlingGen(string&& func_name,
 		const ParseFunc& gen_if_func, const ParseFunc& gen_switch_etc_func,
 		const ParseFunc& gen_for_func);
-	ParseRet _inner_parseFlingGenIf(const string& func_name,
+	ParseRet _inner_parseFlingGenIf(string&& func_name,
 		const ParseFunc& scope_func);
-	ParseRet _inner_parseFlingGenSwitchEtc(const string& func_name,
+	ParseRet _inner_parseFlingGenSwitchEtc(string&& func_name,
 		const ParseFunc& scope_func);
-	ParseRet _inner_parseFlingGenCase(const string& func_name,
+	ParseRet _inner_parseFlingGenCase(string&& func_name,
 		const ParseFunc& scope_func);
-	ParseRet _inner_parseFlingGenDefault(const string& func_name,
+	ParseRet _inner_parseFlingGenDefault(string&& func_name,
 		const ParseFunc& scope_func);
-	ParseRet _inner_parseFlingGenFor(const string& func_name,
+	ParseRet _inner_parseFlingGenFor(string&& func_name,
 		const ParseFunc& scope_func);
 	//--------
 
