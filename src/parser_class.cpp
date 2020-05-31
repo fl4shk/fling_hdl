@@ -45,7 +45,7 @@ auto Parser::_parseFlingProgram() -> ParseRet
 {
 	PROLOGUE_AND_EPILOGUE(_parseFlingProgram);
 
-	while (ATTEMPT_PARSE(_parseFlingDeclPackageItem))
+	while (ATTEMPT_PARSE_WTSM(_parseFlingDeclPackageItem))
 	{
 		_ast_program->item_list.push_back(_pop_ast_node());
 	}
@@ -80,7 +80,7 @@ auto Parser::_parseFlingDeclPackage() -> ParseRet
 		EXPECT(PunctLbrace);
 
 
-		while (ATTEMPT_PARSE(_parseFlingDeclPackageItem))
+		while (ATTEMPT_PARSE_WTSM(_parseFlingDeclPackageItem))
 		{
 			node->item_list.push_back(_pop_ast_node());
 		}
@@ -175,7 +175,7 @@ auto Parser::_parseFlingDeclParamList() -> ParseRet
 
 		START_PARSE_IFELSE(LIST);
 
-		while (ATTEMPT_PARSE(_parseFlingDeclParamSublist))
+		while (ATTEMPT_PARSE_WTSM(_parseFlingDeclParamSublist))
 		{
 			auto sublist = _pop_ast_list();
 			for (auto& item: sublist)
@@ -184,7 +184,7 @@ auto Parser::_parseFlingDeclParamList() -> ParseRet
 			}
 
 			// This also inserts PunctComma into `_wanted_tok_set`.
-			if (!ATTEMPT_TOK_PARSE(PunctComma))
+			if (!ATTEMPT_TOK_PARSE_WTSM(PunctComma))
 			{
 				break;
 			}
@@ -222,34 +222,34 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 		BaseUptrList opt_def_val_list;
 		FilePos err_file_pos;
 
-		if (ATTEMPT_PARSE(_parseFlingTypenm))
+		if (ATTEMPT_PARSE_WTSM(_parseFlingTypenm))
 		{
 			_pop_ast_node(opt_typenm);
 			kind = Kind::Var;
 
-			if (ATTEMPT_TOK_PARSE(PunctBlkAssign))
+			if (ATTEMPT_TOK_PARSE_WTSM(PunctBlkAssign))
 			{
 				err_file_pos = lex_file_pos();
 				JUST_PARSE_AND_POP_AST_LIST
 					(opt_def_val_list, _parseFlingExprList);
 			}
 		}
-		else if (ATTEMPT_TOK_PARSE(KwRange))
+		else if (ATTEMPT_TOK_PARSE_WTSM(KwRange))
 		{
 			kind = Kind::Range;
 
-			if (ATTEMPT_TOK_PARSE(PunctBlkAssign))
+			if (ATTEMPT_TOK_PARSE_WTSM(PunctBlkAssign))
 			{
 				err_file_pos = lex_file_pos();
 				JUST_PARSE_AND_POP_AST_LIST
 					(opt_def_val_list, _parseFlingRangeList);
 			}
 		}
-		else if (ATTEMPT_TOK_PARSE(KwType))
+		else if (ATTEMPT_TOK_PARSE_WTSM(KwType))
 		{
 			kind = Kind::Type;
 
-			if (ATTEMPT_TOK_PARSE(PunctBlkAssign))
+			if (ATTEMPT_TOK_PARSE_WTSM(PunctBlkAssign))
 			{
 				err_file_pos = lex_file_pos();
 
@@ -257,11 +257,11 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 					(opt_def_val_list, _parseFlingTypenmList);
 			}
 		}
-		else if (ATTEMPT_TOK_PARSE(KwModule))
+		else if (ATTEMPT_TOK_PARSE_WTSM(KwModule))
 		{
 			kind = Kind::Module;
 
-			if (ATTEMPT_TOK_PARSE(PunctBlkAssign))
+			if (ATTEMPT_TOK_PARSE_WTSM(PunctBlkAssign))
 			{
 				err_file_pos = lex_file_pos();
 
@@ -269,11 +269,11 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 					(opt_def_val_list, _parseFlingModnmList);
 			}
 		}
-		else if (ATTEMPT_TOK_PARSE(KwFunc))
+		else if (ATTEMPT_TOK_PARSE_WTSM(KwFunc))
 		{
 			kind = Kind::Func;
 
-			if (ATTEMPT_TOK_PARSE(PunctBlkAssign))
+			if (ATTEMPT_TOK_PARSE_WTSM(PunctBlkAssign))
 			{
 				err_file_pos = lex_file_pos();
 
@@ -281,11 +281,11 @@ auto Parser::_parseFlingDeclParamSublist() -> ParseRet
 					(opt_def_val_list, _parseFlingSubprogIdentList);
 			}
 		}
-		else if (ATTEMPT_TOK_PARSE(KwTask))
+		else if (ATTEMPT_TOK_PARSE_WTSM(KwTask))
 		{
 			kind = Kind::Task;
 
-			if (ATTEMPT_TOK_PARSE(PunctBlkAssign))
+			if (ATTEMPT_TOK_PARSE_WTSM(PunctBlkAssign))
 			{
 				err_file_pos = lex_file_pos();
 
@@ -373,7 +373,7 @@ auto Parser::_parseFlingDeclArgList() -> ParseRet
 
 		EXPECT(PunctLparen);
 
-		while (ATTEMPT_PARSE(_parseFlingDeclArgSublist))
+		while (ATTEMPT_PARSE_WTSM(_parseFlingDeclArgSublist))
 		{
 			auto sublist = _pop_ast_list();
 
@@ -383,7 +383,7 @@ auto Parser::_parseFlingDeclArgList() -> ParseRet
 			}
 
 			// This also inserts PunctComma into `_wanted_tok_set`.
-			if (!ATTEMPT_TOK_PARSE(PunctComma))
+			if (!ATTEMPT_TOK_PARSE_WTSM(PunctComma))
 			{
 				break;
 			}
@@ -417,15 +417,15 @@ auto Parser::_parseFlingDeclArgSublist() -> ParseRet
 
 		Kind kind = Kind::Input;
 
-		if (ATTEMPT_TOK_PARSE(KwInput))
+		if (ATTEMPT_TOK_PARSE_WTSM(KwInput))
 		{
 			kind = Kind::Input;
 		}
-		else if (ATTEMPT_TOK_PARSE(KwOutput))
+		else if (ATTEMPT_TOK_PARSE_WTSM(KwOutput))
 		{
 			kind = Kind::Output;
 		}
-		else if (ATTEMPT_TOK_PARSE(KwInout))
+		else if (ATTEMPT_TOK_PARSE_WTSM(KwInout))
 		{
 			kind = Kind::Inout;
 		}
@@ -440,7 +440,7 @@ auto Parser::_parseFlingDeclArgSublist() -> ParseRet
 		FilePos err_file_pos;
 		BaseUptrList opt_def_val_list;
 
-		if (ATTEMPT_TOK_PARSE(PunctBlkAssign))
+		if (ATTEMPT_TOK_PARSE_WTSM(PunctBlkAssign))
 		{
 			err_file_pos = lex_file_pos();
 			JUST_PARSE_AND_POP_AST_LIST
@@ -517,11 +517,11 @@ auto Parser::_parseFlingInstParamList() -> ParseRet
 
 		EXPECT(PunctCmpLt);
 
-		while (ATTEMPT_PARSE(_parseFlingInstParamListItem))
+		while (ATTEMPT_PARSE_WTSM(_parseFlingInstParamListItem))
 		{
 			node->item_list.push_back(_pop_ast_node());
 
-			if (!ATTEMPT_TOK_PARSE(PunctComma))
+			if (!ATTEMPT_TOK_PARSE_WTSM(PunctComma))
 			{
 				break;
 			}
@@ -602,7 +602,7 @@ auto Parser::_parseFlingInstParamListItemNamed() -> ParseRet
 		EXPECT(PunctMemberAccess);
 		EXPECT_IDENT_AND_GRAB_S(node->str);
 
-		if (ATTEMPT_TOK_PARSE(PunctMapTo))
+		if (ATTEMPT_TOK_PARSE_WTSM(PunctMapTo))
 		{
 			JUST_PARSE_AND_POP_AST_NODE
 				(node->node, _parseFlingInstParamListItemPos);
@@ -627,11 +627,11 @@ auto Parser::_parseFlingInstArgList() -> ParseRet
 
 		EXPECT(PunctLparen);
 
-		while (ATTEMPT_PARSE(_parseFlingInstArgListItem))
+		while (ATTEMPT_PARSE_WTSM(_parseFlingInstArgListItem))
 		{
 			node->item_list.push_back(_pop_ast_node());
 
-			if (!ATTEMPT_TOK_PARSE(PunctComma))
+			if (!ATTEMPT_TOK_PARSE_WTSM(PunctComma))
 			{
 				break;
 			}
@@ -712,7 +712,7 @@ auto Parser::_parseFlingInstArgListItemNamed() -> ParseRet
 		EXPECT(PunctMemberAccess);
 		EXPECT_IDENT_AND_GRAB_S(node->str);
 
-		if (ATTEMPT_TOK_PARSE(PunctMapTo))
+		if (ATTEMPT_TOK_PARSE_WTSM(PunctMapTo))
 		{
 			JUST_PARSE_AND_POP_AST_NODE
 				(node->node, _parseFlingInstArgListItemPos);
@@ -769,7 +769,7 @@ auto Parser::_parseFlingDeclModuleScope() -> ParseRet
 
 		EXPECT(PunctLbrace);
 
-		while (ATTEMPT_PARSE(_parseFlingDeclModuleItem))
+		while (ATTEMPT_PARSE_WTSM(_parseFlingDeclModuleItem))
 		{
 			node->item_list.push_back(_pop_ast_node());
 		}
@@ -902,7 +902,7 @@ auto Parser::_parseFlingDeclModuleGenIf() -> ParseRet
 			node->if_scope, _parseFlingDeclModuleScope
 		);
 
-		while (ATTEMPT_TOK_PARSE(KwGenElif))
+		while (ATTEMPT_TOK_PARSE_WTSM(KwGenElif))
 		{
 			{
 				DEFER_PUSH_NODE(gen_elif_node, GenElif);
@@ -915,7 +915,7 @@ auto Parser::_parseFlingDeclModuleGenIf() -> ParseRet
 			node->opt_elif_list.push_back(_pop_ast_node());
 		}
 
-		if (ATTEMPT_TOK_PARSE(KwGenElse))
+		if (ATTEMPT_TOK_PARSE_WTSM(KwGenElse))
 		{
 			JUST_PARSE_AND_POP_AST_NODE
 			(
@@ -939,9 +939,6 @@ auto Parser::_parseFlingDeclModuleGenSwitchEtc() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclModuleGenSwitchEtc);
-		DEFER_PUSH_NODE(node, GenSwitchEtc);
-
-		if (ATTEMPT_TOK_PARSE(KwGenSwitch))
 
 		return std::nullopt;
 	}

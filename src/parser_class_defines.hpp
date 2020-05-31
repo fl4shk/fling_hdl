@@ -38,7 +38,7 @@
 	ParserBase::PrologueAndEpilogue p_and_e (this, #str)
 
 #define _INNER_PARSE_IFELSE(func) \
-	if (ATTEMPT_PARSE(func)) \
+	if (ATTEMPT_PARSE_WTSM(func)) \
 	{ \
 	}
 #define PARSE_IFELSE(...) \
@@ -47,10 +47,16 @@
 #define _MEMB_FUNC(func) \
 	&Parser::func
 
-#define ATTEMPT_PARSE(func) \
-	_attempt_parse(_MEMB_FUNC(func))
-#define ATTEMPT_TOK_PARSE(tok) \
-	ATTEMPT_PARSE(TOK_PARSE_FUNC(tok))
+#define ATTEMPT_PARSE_BASIC(func) \
+	_attempt_parse_basic(_MEMB_FUNC(func))
+#define ATTEMPT_TOK_PARSE_BASIC(tok) \
+	ATTEMPT_PARSE_BASIC(TOK_PARSE_FUNC(tok))
+
+#define ATTEMPT_PARSE_WTSM(func) \
+	_attempt_parse_wtsm(_MEMB_FUNC(func))
+#define ATTEMPT_TOK_PARSE_WTSM(tok) \
+	ATTEMPT_PARSE_WTSM(TOK_PARSE_FUNC(tok))
+
 #define GET_VALID_TOK_SET(...) \
 	_get_valid_tok_set(EVAL(MAP(_MEMB_FUNC, COMMA, __VA_ARGS__)))
 #define START_PARSE_IFELSE(X) \
@@ -72,7 +78,7 @@
 
 //--------
 #define _INNER_PARSE_AND_POP_AST_NODE_IF(to_set, func) \
-	if (ATTEMPT_PARSE(func)) \
+	if (ATTEMPT_PARSE_WTSM(func)) \
 	{ \
 		to_set = _pop_ast_node(); \
 	}
@@ -97,7 +103,7 @@
 
 //--------
 #define _INNER_PARSE_AND_POP_AST_LIST_IF(to_set, func) \
-	if (ATTEMPT_PARSE(func)) \
+	if (ATTEMPT_PARSE_WTSM(func)) \
 	{ \
 		to_set = _pop_ast_list(); \
 	}
@@ -121,7 +127,7 @@
 
 //--------
 #define _INNER_PARSE_AND_POP_IDENT_LIST_IF(to_set, func) \
-	if (ATTEMPT_PARSE(func)) \
+	if (ATTEMPT_PARSE_WTSM(func)) \
 	{ \
 		to_set = _pop_ident_list(); \
 	}
