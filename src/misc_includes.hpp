@@ -83,6 +83,8 @@ namespace fs = std::filesystem;
 #include "liborangepower_src/arg_parsing_stuff.hpp"
 #include "liborangepower_src/lang/lexer_base_class.hpp"
 #include "liborangepower_src/lang/rd_parser_base_class.hpp"
+#include "liborangepower_src/lang/ast_node_base_class.hpp"
+#include "liborangepower_src/lang/ast_visitor_base_class.hpp"
 
 using namespace liborangepower::misc_output;
 using namespace liborangepower::misc_input;

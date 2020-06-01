@@ -344,14 +344,23 @@ flingAnyBehavScopeItem:
 	| flingDeclSubprog
 
 	// Functions actually can't have non-blocking assignments in them, but
-	// we'll save that for semantic analysis.
-	| MiscIdent 
+	// we'll save the ban on that for semantic analysis.
+	| flingAnyBehavScopeItemStWithIdent
+	| flingAnyBehavScopeItemStWithCat
+	;
+
+flingAnyBehavScopeItemStWithIdent:
+	MiscIdent 
 		(
 			flingIdentExprSuffix? flingAnyBehavScopeItemAssignSuffix
-			| flingInstParamList? flingTypenmCstmChainItem* 
-				flingInstArgList PunctSemicolon
+			| flingInstParamList? flingTypenmCstmChainItem*
+				flingInstArgList
 		)
-	| flingAssignLhsCatExpr flingAnyBehavScopeItemAssignSuffix
+		PunctSemicolon
+	;
+
+flingAnyBehavScopeItemStWithCat:
+	flingAssignLhsCatExpr flingAnyBehavScopeItemAssignSuffix PunctSemicolon
 	;
 
 flingAnyBehavScopeItemAssignSuffix:
@@ -852,7 +861,7 @@ flingIdentExprStart:
 	;
 
 flingIdentExpr:
-	MiscIdent flingInstParamList?
+	flingIdentExprStart
 		flingTypenmCstmChainItem*
 		// Call a subprogram, which may be located inside of a package or
 		// inside of a type (via an `alias` in the latter's case).

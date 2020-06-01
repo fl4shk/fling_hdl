@@ -1146,25 +1146,78 @@ auto Parser::_parseFlingDeclModuleBehavScopeItemGenFor() -> ParseRet
 //--------
 auto Parser::_parseFlingAnyBehavScopeItem() -> ParseRet
 {
+	#define LIST(X) \
+		X \
+		( \
+			_parseFlingDeclConst, \
+			_parseFlingDeclVar, \
+			\
+			_parseFlingDeclCompositeType, \
+			_parseFlingDeclEnum, \
+			\
+			_parseFlingDeclSubprog, \
+			\
+			_parseFlingAnyBehavScopeItemStWithIdent, \
+			_parseFlingAnyBehavScopeItemStWithCat \
+		)
+		
+	if (just_get_valid_tokens())
+	{
+		return LIST(GET_VALID_TOK_SET);
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		PROLOGUE_AND_EPILOGUE(_parseFlingAnyBehavScopeItem);
+
+		START_PARSE_IFELSE(LIST);
+
+		return std::nullopt;
+	}
+
+	#undef LIST
+}
+auto Parser::_parseFlingAnyBehavScopeItemStWithIdent() -> ParseRet
+{
 	if (just_get_valid_tokens())
 	{
 		return GET_VALID_TOK_SET
 			(
-				_parseFlingDeclConst,
-				_parseFlingDeclVar,
+				TOK_PARSE_FUNC(MiscIdent)
+			);
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		PROLOGUE_AND_EPILOGUE(_parseFlingAnyBehavScopeItemStWithIdent);
 
-				_parseFlingDeclCompositeType,
-				_parseFlingDeclEnum,
+		string ident;
+		EXPECT_IDENT_AND_GRAB_S(ident);
 
-				_parseFlingDeclSubprog,
+		BaseUptr ie_suffix;
+		IdentExpr
 
-				TOK_PARSE_FUNC(MiscIdent),
+		if (ATTEMPT_PARSE(_parseFlingIdentExprSuffix))
+		{
+			ie_suffix = _pop_ast_node();
+		}
+		else if (ATTEMPT_PARSE(_parseFlingAnyBehavScopeItemAssignSuffix))
+		{
+		}
+
+		return std::nullopt;
+	}
+}
+auto Parser::_parseFlingAnyBehavScopeItemStWithCat() -> ParseRet
+{
+	if (just_get_valid_tokens())
+	{
+		return GET_VALID_TOK_SET
+			(
 				_parseFlingAssignLhsCatExpr
 			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
-		PROLOGUE_AND_EPILOGUE(_parseFlingAnyBehavScopeItem);
+		PROLOGUE_AND_EPILOGUE(_parseFlingAnyBehavScopeItemStWithCat);
 
 		return std::nullopt;
 	}
@@ -2141,7 +2194,7 @@ auto Parser::_parseFlingIdentExpr() -> ParseRet
 	{
 		return GET_VALID_TOK_SET
 			(
-				TOK_PARSE_FUNC(MiscIdent)
+				_parseFlingIdentExprStart
 			);
 	}
 	else // if (!just_get_valid_tokens())

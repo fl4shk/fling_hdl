@@ -197,6 +197,8 @@ public:		// parsing functions
 
 	//--------
 	ParseRet _parseFlingAnyBehavScopeItem();
+	ParseRet _parseFlingAnyBehavScopeItemStWithIdent();
+	ParseRet _parseFlingAnyBehavScopeItemStWithCat();
 	ParseRet _parseFlingAnyBehavScopeItemAssignSuffix();
 	//--------
 

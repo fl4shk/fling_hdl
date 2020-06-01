@@ -35,26 +35,11 @@ namespace ast
 LIST_OF_AST_NODE_CLASSES(X)
 #undef X
 
-class Base;
-using BaseUptr = unique_ptr<Base>;
-using BaseUptrList = IndCircLinkList<BaseUptr>;
-
-class AstVisitor
+class AstVisitor: public AstVisitorBase
 {
-	friend class Base;
-
-public:		// types
-	using AstChild = variant<BaseUptr, BaseUptrList>;
-
-protected:		// variables
-	string _memb_name;
-	AstChild _child;
-
 public:		// functions
 	inline AstVisitor() = default;
 	virtual inline ~AstVisitor() = default;
-
-	GEN_GETTER_AND_SETTER_BY_CON_REF(memb_name);
 
 	#define GEN_VISIT_FUNC(name) \
 		virtual void visit##name(ast::name* node) = 0;

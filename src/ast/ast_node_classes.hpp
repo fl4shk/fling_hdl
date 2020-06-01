@@ -25,6 +25,8 @@
 #include "../logic_value_class.hpp"
 #include "ast_visitor_class.hpp"
 
+#define AST_VISITOR AstVisitor
+
 namespace fling_hdl
 {
 
@@ -34,214 +36,9 @@ namespace ast
 {
 
 //--------
-#define CTAGS_MEMB_VAR(type, name) \
-	type, name
-
-#define MEMB_VAR(type, name) \
-	type name
-#define COPY_MEMB_VAR(type, name) \
-	casted_dst->name = name
-#define INNER_WRAP_DATA(type, name) \
-	ret += sconcat(#name, ":  ", name) 
-
-#define PLUS_RAW_NEWLINE() + "\\n";
-
-#define DATA(...) \
-	IF (HAS_ARGS(__VA_ARGS__)) \
-	( \
-		EVAL(MAP_PAIRS(MEMB_VAR, SEMICOLON, __VA_ARGS__)); \
-		\
-		virtual inline void dup_data(Base* dst) const \
-		{ \
-			Self* casted_dst = static_cast<Self*>(dst); \
-			EVAL(MAP_PAIRS(COPY_MEMB_VAR, SEMICOLON, __VA_ARGS__)); \
-		} \
-		virtual inline string wrap_data() const \
-		{ \
-			string ret; \
-			EVAL(MAP_PAIRS(INNER_WRAP_DATA, PLUS_RAW_NEWLINE, \
-				__VA_ARGS__)); \
-			return ret; \
-		} \
-	)
-
-#define INNER_ACCEPT_CHILDREN(type, name) \
-	_inner_accept_children(visitor, #name, name)
-#define INNER_DUP(type, name) \
-	_inner_dup(ret_ptr, ret_ptr->name, name)
-
-#define CHILDREN(...) \
-	IF (HAS_ARGS(__VA_ARGS__)) \
-	( \
-		EVAL(MAP_PAIRS(MEMB_VAR, SEMICOLON, __VA_ARGS__)); \
-		\
-		virtual inline void accept_children(AstVisitor* visitor) \
-		{ \
-			EVAL(MAP_PAIRS(INNER_ACCEPT_CHILDREN, SEMICOLON, \
-				__VA_ARGS__)); \
-		} \
-		\
-		virtual inline BaseUptr dup(Base* s_parent) const \
-		{ \
-			BaseUptr ret(new Self(s_parent, fp())); \
-			auto ret_ptr = static_cast<Self*>(ret.get()); \
-			\
-			this->dup_data(ret_ptr); \
-			EVAL(MAP_PAIRS(INNER_DUP, SEMICOLON, __VA_ARGS__)); \
-			\
-			return ret; \
-		} \
-	)
-
-
-#define SHARED_FUNC_CONTENTS_2(name, base_name) \
-	inline name() = default; \
-	inline name(Base* s_parent, const FilePos& s_fp) \
-		: base_name(s_parent, s_fp) \
-	{ \
-		if (_parent != nullptr) \
-		{ \
-			_level = _parent->level() + static_cast<size_t>(1); \
-		} \
-		else \
-		{ \
-			_level = 0; \
-		} \
-	} \
-	GEN_MOVE_ONLY_CONSTRUCTORS_AND_ASSIGN(name); \
-	virtual inline ~name() = default; \
-	virtual inline string id() const \
-	{ \
-		return string(#name); \
-	} \
-	using Self = name;
-#define SHARED_CONTENTS(name, base_name) \
-	SHARED_FUNC_CONTENTS_2(name, base_name) \
-	virtual void accept(AstVisitor* visitor) \
-	{ \
-		visitor->visit##name(this); \
-	}
-
-#define CONV_ENUM_CASE(type, which) \
-	case type::which: \
-		return #which;
-#define CONV_KIND_CASE(which) \
-	CONV_ENUM_CASE(Kind, which)
-#define CONV_ENUM_SWITCH(CONV_CASE, ...) \
-	switch (to_conv) \
-	{ \
-	/* -------- */ \
-	EVAL(MAP(CONV_CASE, EMPTY, __VA_ARGS__)) \
-	default: \
-		return "Eek!"; \
-	/* -------- */ \
-	}
-
-#define BUILD_KIND_OPERATOR_LSHIFT(type) \
-	inline std::ostream& operator << (std::ostream& os, \
-		type::Kind to_conv) \
-	{ \
-		os << type::conv_kind(to_conv); \
-		return os; \
-	}
-//--------
-
-//--------
-class Base;
-using BaseUptr = unique_ptr<Base>;
-using BaseUptrList = IndCircLinkList<BaseUptr>;
-//using BaseWptr = weak_ptr<Base>;
-
-class Base
-{
-public:		// types
-protected:		// variables
-	Base* _parent = nullptr;
-	FilePos _fp;
-	size_t _level = 0;
-
-//public:		// variables
-//	Symbol* sym = nullptr;
-
-public:		// functions
-	inline Base() = default;
-	inline Base(Base* s_parent, const FilePos& s_fp)
-		: _parent(s_parent), _fp(s_fp)
-	{
-	}
-	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(Base);
-	virtual inline ~Base() = default;
-	virtual inline string id() const
-	{
-		return string("Base");
-	}
-
-	// Derived classes should fill these in
-	virtual inline void accept(AstVisitor* visitor)
-	{
-	}
-	virtual inline void dup_data(Base* dst) const
-	{
-	}
-	virtual inline string wrap_data() const
-	{
-		return "";
-	}
-	virtual inline BaseUptr dup(Base* s_parent) const
-	{
-		return BaseUptr();
-	}
-	virtual inline void accept_children(AstVisitor* visitor)
-	{
-	}
-	virtual inline void accept_children(AstVisitor* visitor,
-		const BaseUptr& other)
-	{
-	}
-
-	GEN_GETTER_BY_VAL(parent);
-	GEN_GETTER_BY_CON_REF(fp);
-	GEN_GETTER_BY_VAL(level);
-
-protected:		// functions
-	static inline void _inner_accept_children(AstVisitor* visitor,
-		const string& memb_name, BaseUptr& child)
-	{
-		if (child)
-		{
-			visitor->set_memb_name(memb_name);
-			child->accept(visitor);
-		}
-	}
-	static inline void _inner_accept_children(AstVisitor* visitor,
-		const string& memb_name, BaseUptrList& child_list)
-	{
-		size_t i = 0;
-		for (const auto& child: child_list)
-		{
-			visitor->set_memb_name(sconcat(memb_name, "[", i, "]"));
-			child.data->accept(visitor);
-			++i;
-		}
-	}
-
-	static inline void _inner_dup(Base* s_parent, BaseUptr& item,
-		const BaseUptr& other_item)
-	{
-		if (other_item)
-		{
-			item = other_item->dup(s_parent);
-		}
-	}
-	static inline void _inner_dup(Base* s_parent, BaseUptrList& item_list,
-		const BaseUptrList& other_item_list)
-	{
-		for (const auto& other_item: other_item_list)
-		{
-			item_list.push_back(other_item.data->dup(s_parent));
-		}
-	}
-};
+using Base = AstNodeBase;
+using BaseUptr = AstNodeBaseUptr;
+using BaseUptrList = AstNodeBaseUptrList;
 //--------
 
 //--------
@@ -250,7 +47,7 @@ class Program: public Base
 public:		// variables
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptrList, item_list)
+		MEMB_VAR(BaseUptrList, item_list)
 	);
 public:		// functions
 	SHARED_CONTENTS(Program, Base);
@@ -263,12 +60,12 @@ class DeclPackage: public Base
 public:		// variables
 	DATA
 	(
-		CTAGS_MEMB_VAR(string, ident)
+		MEMB_VAR(string, ident)
 	);
 
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptrList, item_list)
+		MEMB_VAR(BaseUptrList, item_list)
 	)
 public:		// functions
 	SHARED_CONTENTS(DeclPackage, Base);
@@ -279,7 +76,7 @@ class Import: public Base
 public:		// variables
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptrList, item_list)
+		MEMB_VAR(BaseUptrList, item_list)
 	);
 public:		// functions
 	SHARED_CONTENTS(Import, Base);
@@ -290,12 +87,12 @@ class ImportItem: public Base
 public:		// variables
 	DATA
 	(
-		CTAGS_MEMB_VAR(bool, ends_with_all)
+		MEMB_VAR(bool, ends_with_all)
 	);
 
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptrList, item_list)
+		MEMB_VAR(BaseUptrList, item_list)
 	);
 public:		// functions
 	SHARED_CONTENTS(ImportItem, Base);
@@ -310,7 +107,7 @@ class ParamOrArgList: public Base
 public:		// variables
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptrList, item_list)
+		MEMB_VAR(BaseUptrList, item_list)
 	);
 public:		// functions
 	SHARED_CONTENTS(ParamOrArgList, Base);
@@ -345,17 +142,17 @@ public:		// types
 public:		// variables
 	DATA
 	(
-		CTAGS_MEMB_VAR(string, ident),
-		CTAGS_MEMB_VAR(Kind, kind)
+		MEMB_VAR(string, ident),
+		MEMB_VAR(Kind, kind)
 	);
 
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, opt_typenm),
+		MEMB_VAR(BaseUptr, opt_typenm),
 
 		// Default value list, the type of which is dependent upon the
 		// value of `kind`.
-		CTAGS_MEMB_VAR(BaseUptr, opt_def_val)
+		MEMB_VAR(BaseUptr, opt_def_val)
 	);
 public:		// functions
 	SHARED_CONTENTS(DeclParamSublistItem, Base);
@@ -382,14 +179,14 @@ public:		// types
 public:		// variables
 	DATA
 	(
-		CTAGS_MEMB_VAR(string, ident),
-		CTAGS_MEMB_VAR(Kind, kind)
+		MEMB_VAR(string, ident),
+		MEMB_VAR(Kind, kind)
 	);
 
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, typenm),
-		CTAGS_MEMB_VAR(BaseUptr, opt_def_val)
+		MEMB_VAR(BaseUptr, typenm),
+		MEMB_VAR(BaseUptr, opt_def_val)
 	);
 public:		// functions
 	SHARED_CONTENTS(DeclArgSublistItem, Base);
@@ -401,12 +198,12 @@ class StrAndNode: public Base
 public:		// variables
 	DATA
 	(
-		CTAGS_MEMB_VAR(string, str)
+		MEMB_VAR(string, str)
 	);
 
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, node)
+		MEMB_VAR(BaseUptr, node)
 	);
 public:		// functions
 	SHARED_CONTENTS(StrAndNode, Base);
@@ -419,14 +216,14 @@ class DeclModule: public Base
 public:		// variables
 	DATA
 	(
-		CTAGS_MEMB_VAR(string, ident)
+		MEMB_VAR(string, ident)
 	);
 
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, opt_param_list),
-		CTAGS_MEMB_VAR(BaseUptr, arg_list),
-		CTAGS_MEMB_VAR(BaseUptr, scope)
+		MEMB_VAR(BaseUptr, opt_param_list),
+		MEMB_VAR(BaseUptr, arg_list),
+		MEMB_VAR(BaseUptr, scope)
 	);
 public:		// functions
 	SHARED_CONTENTS(DeclModule, Base);
@@ -437,7 +234,7 @@ class Scope: public Base
 public:		// variables
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptrList, item_list)
+		MEMB_VAR(BaseUptrList, item_list)
 	);
 public:		// functions
 	SHARED_CONTENTS(Scope, Base);
@@ -450,13 +247,13 @@ class Modinst: public Base
 public:		// variables
 	DATA
 	(
-		CTAGS_MEMB_VAR(string, ident)
+		MEMB_VAR(string, ident)
 	);
 
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, modnm),
-		CTAGS_MEMB_VAR(BaseUptr, arg_list)
+		MEMB_VAR(BaseUptr, modnm),
+		MEMB_VAR(BaseUptr, arg_list)
 	);
 public:		// functions
 	SHARED_CONTENTS(Modinst, Base);
@@ -469,10 +266,10 @@ class GenIf: public Base
 public:		// variables
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, if_expr),
-		CTAGS_MEMB_VAR(BaseUptr, if_scope),
-		CTAGS_MEMB_VAR(BaseUptrList, opt_elif_list),
-		CTAGS_MEMB_VAR(BaseUptr, opt_else_scope)
+		MEMB_VAR(BaseUptr, if_expr),
+		MEMB_VAR(BaseUptr, if_scope),
+		MEMB_VAR(BaseUptrList, opt_elif_list),
+		MEMB_VAR(BaseUptr, opt_else_scope)
 	);
 public:		// functions
 	SHARED_CONTENTS(GenIf, Base);
@@ -502,14 +299,14 @@ public:		// types
 public:		// variables
 	DATA
 	(
-		CTAGS_MEMB_VAR(Kind, kind)
+		MEMB_VAR(Kind, kind)
 	)
 
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, expr),
-		CTAGS_MEMB_VAR(BaseUptr, opt_default),
-		CTAGS_MEMB_VAR(BaseUptrList, opt_case_list)
+		MEMB_VAR(BaseUptr, expr),
+		MEMB_VAR(BaseUptr, opt_default),
+		MEMB_VAR(BaseUptrList, opt_case_list)
 	);
 public:		// functions
 	SHARED_CONTENTS(GenSwitchEtc, Base);
@@ -521,8 +318,8 @@ class GenCase: public Base
 public:		// variables
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptrList, expr_list),
-		CTAGS_MEMB_VAR(BaseUptr, scope)
+		MEMB_VAR(BaseUptrList, expr_list),
+		MEMB_VAR(BaseUptr, scope)
 	)
 public:		// functions
 	SHARED_CONTENTS(GenCase, Base);
@@ -533,7 +330,7 @@ class GenDefault: public Base
 public:		// variables
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, scope)
+		MEMB_VAR(BaseUptr, scope)
 	);
 public:		// functions
 	SHARED_CONTENTS(GenDefault, Base);
@@ -544,14 +341,14 @@ class GenFor: public Base
 public:		// variables
 	DATA
 	(
-		CTAGS_MEMB_VAR(string, label),
-		CTAGS_MEMB_VAR(string, iter_ident)
+		MEMB_VAR(string, label),
+		MEMB_VAR(string, iter_ident)
 	);
 
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, range),
-		CTAGS_MEMB_VAR(BaseUptr, scope)
+		MEMB_VAR(BaseUptr, range),
+		MEMB_VAR(BaseUptr, scope)
 	);
 public:		// functions
 	SHARED_CONTENTS(GenFor, Base);
@@ -564,7 +361,7 @@ class DeclModuleBehavComb: public Base
 public:		// variables
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, scope)
+		MEMB_VAR(BaseUptr, scope)
 	);
 public:		// functions
 	SHARED_CONTENTS(DeclModuleBehavComb, Base);
@@ -575,8 +372,8 @@ class DeclModuleBehavSeq: public Base
 public:		// variables
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptrList, edge_item_list),
-		CTAGS_MEMB_VAR(BaseUptr, scope)
+		MEMB_VAR(BaseUptrList, edge_item_list),
+		MEMB_VAR(BaseUptr, scope)
 	);
 public:		// functions
 	SHARED_CONTENTS(DeclModuleBehavSeq, Base);
@@ -598,12 +395,12 @@ public:		// types
 public:		// variables
 	DATA
 	(
-		CTAGS_MEMB_VAR(Kind, kind)
+		MEMB_VAR(Kind, kind)
 	);
 
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, expr)
+		MEMB_VAR(BaseUptr, expr)
 	);
 public:		// functions
 	SHARED_CONTENTS(DeclModuleBehavSeqEdgeItem, Base);
@@ -646,13 +443,13 @@ class BehavFor: public Base
 public:		// variables
 	DATA
 	(
-		CTAGS_MEMB_VAR(string, iter_ident)
+		MEMB_VAR(string, iter_ident)
 	);
 
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, range),
-		CTAGS_MEMB_VAR(BaseUptr, scope)
+		MEMB_VAR(BaseUptr, range),
+		MEMB_VAR(BaseUptr, scope)
 	);
 public:		// functions
 	SHARED_CONTENTS(BehavFor, Base);
@@ -663,8 +460,8 @@ class BehavWhile: public Base
 public:		// variables
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, expr),
-		CTAGS_MEMB_VAR(BaseUptr, scope)
+		MEMB_VAR(BaseUptr, expr),
+		MEMB_VAR(BaseUptr, scope)
 	);
 public:		// functions
 	SHARED_CONTENTS(BehavWhile, Base);
@@ -689,13 +486,13 @@ public:		// types
 public:		// variables
 	DATA
 	(
-		CTAGS_MEMB_VAR(Kind, kind)
+		MEMB_VAR(Kind, kind)
 	);
 
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, lhs),
-		CTAGS_MEMB_VAR(BaseUptr, rhs)
+		MEMB_VAR(BaseUptr, lhs),
+		MEMB_VAR(BaseUptr, rhs)
 	);
 public:		// functions
 	SHARED_CONTENTS(BehavAssign, Base);
@@ -709,13 +506,13 @@ class DeclStruct: public Base
 public:		// variables
 	DATA
 	(
-		CTAGS_MEMB_VAR(string, ident)
+		MEMB_VAR(string, ident)
 	);
 
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, opt_param_list),
-		CTAGS_MEMB_VAR(BaseUptr, scope)
+		MEMB_VAR(BaseUptr, opt_param_list),
+		MEMB_VAR(BaseUptr, scope)
 	);
 public:		// functions
 	SHARED_CONTENTS(DeclStruct, Base);
@@ -728,13 +525,13 @@ class DeclEnum: public Base
 public:		// variables
 	DATA
 	(
-		CTAGS_MEMB_VAR(string, ident)
+		MEMB_VAR(string, ident)
 	);
 
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, opt_typenm),
-		CTAGS_MEMB_VAR(BaseUptrList, item_list)
+		MEMB_VAR(BaseUptr, opt_typenm),
+		MEMB_VAR(BaseUptrList, item_list)
 	);
 public:		// functions
 	SHARED_CONTENTS(DeclEnum, Base);
@@ -759,16 +556,16 @@ public:		// types
 public:		// variables
 	DATA
 	(
-		CTAGS_MEMB_VAR(Kind, kind),
-		CTAGS_MEMB_VAR(string, ident)
+		MEMB_VAR(Kind, kind),
+		MEMB_VAR(string, ident)
 	);
 
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, opt_param_list),
-		CTAGS_MEMB_VAR(BaseUptr, arg_list),
-		CTAGS_MEMB_VAR(BaseUptr, opt_ret_typenm),
-		CTAGS_MEMB_VAR(BaseUptr, scope)
+		MEMB_VAR(BaseUptr, opt_param_list),
+		MEMB_VAR(BaseUptr, arg_list),
+		MEMB_VAR(BaseUptr, opt_ret_typenm),
+		MEMB_VAR(BaseUptr, scope)
 	);
 public:		// functions
 	SHARED_CONTENTS(DeclSubprog, Base);
@@ -796,14 +593,14 @@ public:		// types
 public:		// variables
 	DATA
 	(
-		CTAGS_MEMB_VAR(Kind, kind),
-		CTAGS_MEMB_VAR(string, ident)
+		MEMB_VAR(Kind, kind),
+		MEMB_VAR(string, ident)
 	);
 
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, typenm),
-		CTAGS_MEMB_VAR(BaseUptr, val)
+		MEMB_VAR(BaseUptr, typenm),
+		MEMB_VAR(BaseUptr, val)
 	);
 public:		// functions
 	SHARED_CONTENTS(DeclVarEtc, Base);
@@ -816,8 +613,8 @@ public:		// variables
 
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, lhs),
-		CTAGS_MEMB_VAR(BaseUptr, rhs)
+		MEMB_VAR(BaseUptr, lhs),
+		MEMB_VAR(BaseUptr, rhs)
 	);
 public:		// functions
 	SHARED_CONTENTS(WireAssign, Base);
@@ -854,13 +651,13 @@ public:		// types
 public:		// variables
 	DATA
 	(
-		CTAGS_MEMB_VAR(string, ident),
-		CTAGS_MEMB_VAR(Kind, kind)
+		MEMB_VAR(string, ident),
+		MEMB_VAR(Kind, kind)
 	);
 
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, rhs)
+		MEMB_VAR(BaseUptr, rhs)
 	);
 public:		// functions
 	SHARED_CONTENTS(DeclAlias, Base);
@@ -876,7 +673,7 @@ public:		// variables
 	(
 		// Expected child type:  `StrAndNode`, where `node` is intended to
 		// be an instance of `ParamOrArgList`
-		CTAGS_MEMB_VAR(BaseUptrList, item_list)
+		MEMB_VAR(BaseUptrList, item_list)
 	);
 public:		// functions
 	SHARED_CONTENTS(NamedScope, Base);
@@ -889,8 +686,8 @@ class ExprBase: public Base
 public:		// variables
 	DATA
 	(
-		//CTAGS_MEMB_VAR(LogicValue, val),
-		CTAGS_MEMB_VAR(bool, is_self_determined)
+		//MEMB_VAR(LogicValue, val),
+		MEMB_VAR(bool, is_self_determined)
 	);
 public:		// functions
 	SHARED_FUNC_CONTENTS_2(ExprBase, Base);
@@ -901,9 +698,9 @@ class MuxExpr: public ExprBase
 public:		// variables
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, cond),
-		CTAGS_MEMB_VAR(BaseUptr, when_true),
-		CTAGS_MEMB_VAR(BaseUptr, when_false)
+		MEMB_VAR(BaseUptr, cond),
+		MEMB_VAR(BaseUptr, when_true),
+		MEMB_VAR(BaseUptr, when_false)
 	);
 public:		// functions
 	SHARED_CONTENTS(MuxExpr, ExprBase);
@@ -986,13 +783,13 @@ public:		// types
 public:		// variables
 	DATA
 	(
-		CTAGS_MEMB_VAR(Kind, kind)
+		MEMB_VAR(Kind, kind)
 	);
 
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, left),
-		CTAGS_MEMB_VAR(BaseUptr, right)
+		MEMB_VAR(BaseUptr, left),
+		MEMB_VAR(BaseUptr, right)
 	);
 public:		// functions
 	SHARED_CONTENTS(BinopExpr, ExprBase);
@@ -1040,12 +837,12 @@ public:		// types
 public:		// variables
 	DATA
 	(
-		CTAGS_MEMB_VAR(Kind, kind)
+		MEMB_VAR(Kind, kind)
 	);
 
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, arg)
+		MEMB_VAR(BaseUptr, arg)
 	);
 public:		// functions
 	SHARED_CONTENTS(UnopExpr, ExprBase);
@@ -1071,14 +868,14 @@ public:		// types
 public:		// variables
 	DATA
 	(
-		CTAGS_MEMB_VAR(Kind, kind),
-		CTAGS_MEMB_VAR(string, opt_num_str),
-		CTAGS_MEMB_VAR(BigNum, opt_num)
+		MEMB_VAR(Kind, kind),
+		MEMB_VAR(string, opt_num_str),
+		MEMB_VAR(BigNum, opt_num)
 	);
 
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, opt_expr)
+		MEMB_VAR(BaseUptr, opt_expr)
 	);
 public:		// functions
 	SHARED_CONTENTS(LitValExpr, ExprBase);
@@ -1120,13 +917,13 @@ public:		// types
 public:		// variables
 	DATA
 	(
-		CTAGS_MEMB_VAR(Kind, kind)
+		MEMB_VAR(Kind, kind)
 	);
 
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, arg), 
-		CTAGS_MEMB_VAR(BaseUptr, opt_second_arg)
+		MEMB_VAR(BaseUptr, arg), 
+		MEMB_VAR(BaseUptr, opt_second_arg)
 	);
 public:		// functions
 	SHARED_CONTENTS(CallDollarFuncExpr, ExprBase);
@@ -1138,7 +935,7 @@ class String: public Base
 public:		// variables
 	DATA
 	(
-		CTAGS_MEMB_VAR(string, data)
+		MEMB_VAR(string, data)
 	);
 public:		// functions
 	SHARED_CONTENTS(String, Base);
@@ -1149,16 +946,16 @@ class IdentExprSuffix: public Base
 public:		// variables
 	DATA
 	(
-		CTAGS_MEMB_VAR(bool, part_sel_is_minus_colon)
+		MEMB_VAR(bool, part_sel_is_minus_colon)
 	);
 
 	CHILDREN
 	(
 		// Access members or array elements
-		CTAGS_MEMB_VAR(BaseUptrList, acc_memb_or_arr_list),
+		MEMB_VAR(BaseUptrList, acc_memb_or_arr_list),
 
-		CTAGS_MEMB_VAR(BaseUptr, opt_range_etc),
-		CTAGS_MEMB_VAR(BaseUptr, opt_part_sel_right)
+		MEMB_VAR(BaseUptr, opt_range_etc),
+		MEMB_VAR(BaseUptr, opt_part_sel_right)
 	);
 public:		// functions
 	SHARED_CONTENTS(IdentExprSuffix, Base);
@@ -1169,10 +966,12 @@ class IdentExpr: public ExprBase
 public:		// variables
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptrList, prologue_list),
-		CTAGS_MEMB_VAR(BaseUptr, opt_arg_list),
+		// Expected list type (from `flingIdentExprStart):  `StrAndNode`,
+		// storing a `MiscIdent` and optionally a `ParamOrArgList`
+		MEMB_VAR(BaseUptrList, prologue_list),
+		MEMB_VAR(BaseUptr, opt_arg_list),
 
-		CTAGS_MEMB_VAR(BaseUptr, suffix)
+		MEMB_VAR(BaseUptr, suffix)
 	);
 public:		// functions
 	SHARED_CONTENTS(IdentExpr, ExprBase);
@@ -1183,7 +982,7 @@ class CatExpr: public ExprBase
 public:		// variables
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptrList, item_list)
+		MEMB_VAR(BaseUptrList, item_list)
 	);
 public:		// functions
 	SHARED_CONTENTS(CatExpr, ExprBase);
@@ -1195,8 +994,8 @@ public:		// variables
 
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, amount),
-		CTAGS_MEMB_VAR(BaseUptr, to_repl)
+		MEMB_VAR(BaseUptr, amount),
+		MEMB_VAR(BaseUptr, to_repl)
 	);
 public:		// functions
 	SHARED_CONTENTS(ReplExpr, ExprBase);
@@ -1207,8 +1006,8 @@ class SizedExpr: public ExprBase
 public:		// variables
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, lit_num),
-		CTAGS_MEMB_VAR(BaseUptr, width)
+		MEMB_VAR(BaseUptr, lit_num),
+		MEMB_VAR(BaseUptr, width)
 	);
 public:		// functions
 	SHARED_CONTENTS(SizedExpr, ExprBase);
@@ -1221,8 +1020,8 @@ class NonDollarFuncRange: public Base
 public:		// variables
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, arg),
-		CTAGS_MEMB_VAR(BaseUptr, opt_second_arg)
+		MEMB_VAR(BaseUptr, arg),
+		MEMB_VAR(BaseUptr, opt_second_arg)
 	);
 public:		// functions
 	SHARED_CONTENTS(NonDollarFuncRange, Base);
@@ -1251,14 +1050,14 @@ public:		// types
 public:		// variables
 	DATA
 	(
-		CTAGS_MEMB_VAR(Kind, kind)
+		MEMB_VAR(Kind, kind)
 	);
 
 	CHILDREN
 	(
-		CTAGS_MEMB_VAR(BaseUptr, opt_ident_expr),
-		CTAGS_MEMB_VAR(BaseUptr, opt_vec_dim),
-		CTAGS_MEMB_VAR(BaseUptrList, opt_arr_dim_list)
+		MEMB_VAR(BaseUptr, opt_ident_expr),
+		MEMB_VAR(BaseUptr, opt_vec_dim),
+		MEMB_VAR(BaseUptrList, opt_arr_dim_list)
 	);
 public:		// functions
 	SHARED_CONTENTS(Typenm, Base);
@@ -1275,25 +1074,7 @@ public:		// functions
 
 } // namespace ast
 
-#undef CTAGS_MEMB_VAR
-#undef MEMB_VAR
-#undef COPY_MEMB_VAR
-#undef INNER_WRAP_DATA
-#undef PLUS_RAW_NEWLINE
-#undef DATA
-
-#undef INNER_ACCEPT_CHILDREN
-#undef INNER_DUP
-#undef CHILDREN
-
-#undef SHARED_CONTENTS
-#undef SHARED_FUNC_CONTENTS_2
-
-#undef CONV_ENUM_CASE
-#undef CONV_KIND_CASE
-#undef CONV_ENUM_SWITCH
-
-#undef BUILD_KIND_OPERATOR_LSHIFT
+#include "../liborangepower_src/lang/ast_node_base_class_undefines.hpp"
 
 } // namespace fling_hdl
 
