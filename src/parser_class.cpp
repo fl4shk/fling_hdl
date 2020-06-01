@@ -1193,7 +1193,6 @@ auto Parser::_parseFlingAnyBehavScopeItemStWithIdent() -> ParseRet
 		EXPECT_IDENT_AND_GRAB_S(ident);
 
 		BaseUptr ie_suffix;
-		IdentExpr
 
 		if (ATTEMPT_PARSE(_parseFlingIdentExprSuffix))
 		{
