@@ -1488,6 +1488,30 @@ auto Parser::_parseFlingDeclEnum() -> ParseRet
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclEnum);
 		DEFER_PUSH_NODE(node, DeclEnum);
 
+		EXPECT(KwEnum);
+
+		EXPECT_IDENT_AND_GRAB_S(node->ident);
+
+		if (ATTEMPT_TOK_PARSE(PunctColon))
+		{
+			JUST_PARSE_AND_POP_AST_NODE
+				(node->opt_typenm, _parseFlingTypenm);
+		}
+
+		EXPECT(PunctLbrace);
+
+		while (ATTEMPT_PARSE(_parseFlingDeclEnumItem))
+		{
+			node->item_list.push_back(_pop_ast_node());
+
+			if (!ATTEMPT_TOK_PARSE(PunctComma))
+			{
+				break;
+			}
+		}
+
+		EXPECT(PunctRbrace);
+
 		return std::nullopt;
 	}
 }
