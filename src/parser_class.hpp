@@ -28,6 +28,7 @@ namespace fling_hdl
 {
 
 class TempAstNodeDeferredRestorer;
+class AstNodeDeferredBase;
 class AstNodeDeferredPusher;
 class AstNodeListDeferredPusher;
 class IdentListDeferredPusher;
@@ -35,6 +36,7 @@ class IdentListDeferredPusher;
 class Parser final: public RdParserBase<Lexer, Parser>
 {
 	friend class TempAstNodeDeferredRestorer;
+	friend class AstNodeDeferredBase;
 	friend class AstNodeDeferredPusher;
 	friend class AstNodeListDeferredPusher;
 	friend class IdentListDeferredPusher;
