@@ -1259,6 +1259,14 @@ auto Parser::_parseFlingAnyBehavScopeItemStWithCat() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingAnyBehavScopeItemStWithCat);
+		DEFER_PUSH_NODE_AND_SET_TEMP(node, BehavAssign);
+
+		JUST_PARSE_AND_POP_AST_NODE
+			(node->lhs, _parseFlingAssignLhsCatExpr);
+
+		_parseFlingAnyBehavScopeItemAssignSuffix();
+
+		EXPECT(PunctSemicolon);
 
 		return std::nullopt;
 	}
@@ -1277,6 +1285,34 @@ auto Parser::_parseFlingAnyBehavScopeItemAssignSuffix() -> ParseRet
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingAnyBehavScopeItemAssignSuffix);
 
+		if (_temp_ast->id() == "BehavAssign")
+		{
+			auto node = static_cast<BehavAssign*>(_temp_ast);
+			using Kind = BehavAssign::Kind;
+
+			if (ATTEMPT_TOK_PARSE(PunctBlkAssign))
+			{
+				node->kind = Kind::Blk;
+			}
+			else if (ATTEMPT_TOK_PARSE(PunctNonBlkAssign))
+			{
+				node->kind = Kind::NonBlk;
+			}
+			else
+			{
+				_expect_wanted_tok();
+			}
+
+			JUST_PARSE_AND_POP_AST_NODE
+				(node->rhs, _parseFlingExpr);
+
+			EXPECT(PunctSemicolon);
+		}
+		else
+		{
+			_pfs_internal_err();
+		}
+
 		return std::nullopt;
 	}
 }
@@ -1285,19 +1321,26 @@ auto Parser::_parseFlingAnyBehavScopeItemAssignSuffix() -> ParseRet
 //--------
 auto Parser::_parseFlingDeclCompositeType() -> ParseRet
 {
+	#define LIST(X) \
+		X \
+		( \
+			_parseFlingDeclStruct \
+		)
+
 	if (just_get_valid_tokens())
 	{
-		return GET_VALID_TOK_SET
-			(
-				_parseFlingDeclStruct
-			);
+		return LIST(GET_VALID_TOK_SET);
 	}
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclCompositeType);
 
+		START_PARSE_IFELSE(LIST);
+
 		return std::nullopt;
 	}
+
+	#undef LIST
 }
 //--------
 
@@ -1314,6 +1357,16 @@ auto Parser::_parseFlingDeclStruct() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclStruct);
+		DEFER_PUSH_NODE(node, DeclStruct);
+
+		EXPECT(KwStruct);
+		EXPECT_IDENT_AND_GRAB_S(node->ident);
+
+		PARSE_AND_POP_AST_NODE_IF
+			(node->opt_param_list, _parseFlingDeclParamList);
+
+		JUST_PARSE_AND_POP_AST_NODE
+			(node->scope, _parseFlingDeclStructScope);
 
 		return std::nullopt;
 	}
@@ -1330,35 +1383,52 @@ auto Parser::_parseFlingDeclStructScope() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclStructScope);
+		DEFER_PUSH_NODE(node, Scope);
+
+		EXPECT(PunctLbrace);
+
+		while (ATTEMPT_PARSE(_parseFlingDeclStructScopeItem))
+		{
+			node->item_list.push_back(_pop_ast_node());
+		}
+
+		EXPECT(PunctRbrace);
 
 		return std::nullopt;
 	}
 }
 auto Parser::_parseFlingDeclStructScopeItem() -> ParseRet
 {
+	#define LIST(X) \
+		X \
+		( \
+			_parseFlingImport, \
+			\
+			_parseFlingDeclConst, \
+			_parseFlingDeclVarNoDefVal, \
+			\
+			_parseFlingDeclAlias, \
+			\
+			_parseFlingDeclCompositeType, \
+			_parseFlingDeclEnum, \
+			\
+			_parseFlingDeclStructScopeItemGen \
+		)
+
 	if (just_get_valid_tokens())
 	{
-		return GET_VALID_TOK_SET
-			(
-				_parseFlingImport,
-
-				_parseFlingDeclConst,
-				_parseFlingDeclVarNoDefVal,
-
-				_parseFlingDeclAlias,
-
-				_parseFlingDeclCompositeType,
-				_parseFlingDeclEnum,
-
-				_parseFlingDeclStructScopeItemGen
-			);
+		return LIST(GET_VALID_TOK_SET);
 	}
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclStructScopeItem);
 
+		START_PARSE_IFELSE(LIST);
+
 		return std::nullopt;
 	}
+
+	#undef LIST
 }
 //--------
 
@@ -1416,6 +1486,7 @@ auto Parser::_parseFlingDeclEnum() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parseFlingDeclEnum);
+		DEFER_PUSH_NODE(node, DeclEnum);
 
 		return std::nullopt;
 	}

@@ -53,7 +53,7 @@ private:		// variables
 	ast::Program* _ast_program = nullptr;
 	ast::Base* _curr_ast_parent = nullptr;
 
-	ast::BaseUptr* _temp_ast = nullptr;
+	ast::Base* _temp_ast = nullptr;
 	//ast::IdentExprSuffix _ident_expr_suffix;
 
 	stack<IdentList> _ident_list_stack;
@@ -364,14 +364,14 @@ class TempAstNodeDeferredRestorer final
 {
 private:		// variables
 	Parser* _parser = nullptr;
-	ast::BaseUptr* _prev_temp_ast = nullptr;
+	ast::Base* _prev_temp_ast = nullptr;
 public:		// functions
 	inline TempAstNodeDeferredRestorer(Parser* s_parser,
-		ast::BaseUptr& s_temp_ast)
+		ast::Base* s_temp_ast)
 		: _parser(s_parser)
 	{
 		_prev_temp_ast = _parser->_temp_ast;
-		_parser->_temp_ast = &s_temp_ast;
+		_parser->_temp_ast = s_temp_ast;
 	}
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(TempAstNodeDeferredRestorer);
 	inline ~TempAstNodeDeferredRestorer()
