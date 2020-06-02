@@ -966,7 +966,8 @@ class IdentExpr: public ExprBase
 public:		// variables
 	CHILDREN
 	(
-		// Expected list type (from `flingIdentExprStart):  `StrAndNode`,
+		// Expected list type (from `flingIdentExprStart`,
+		// `flingTypenmCstmChainItem`, etc.):  `StrAndNode`,
 		// storing a `MiscIdent` and optionally a `ParamOrArgList`
 		MEMB_VAR(BaseUptrList, prologue_list),
 		MEMB_VAR(BaseUptr, opt_arg_list),

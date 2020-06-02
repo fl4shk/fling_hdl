@@ -27,6 +27,9 @@
 #define DEFER_PUSH_NODE(name, type) \
 	auto name = make_ast(type); \
 	AstNodeDeferredPusher deferred_pusher_ ## name (this, name)
+#define DEFER_PUSH_NODE_AND_SET_TEMP(name, type) \
+	DEFER_PUSH_NODE(name, type); \
+	TempAstNodeDeferredRestorer tandr_ ## name (this, name)
 #define DEFER_PUSH_LIST(name) \
 	BaseUptrList name; \
 	AstNodeListDeferredPusher deferred_pusher_ ## name (this, &name)
@@ -53,6 +56,9 @@
 
 #define MEMB_FUNC(func) \
 	&Parser::func
+
+#define CHECK_PARSE(...) \
+	_check_parse(EVAL(MAP(MEMB_FUNC, COMMA, __VA_ARGS__)))
 
 #define ATTEMPT_PARSE(func) \
 	_attempt_parse(MEMB_FUNC(func))

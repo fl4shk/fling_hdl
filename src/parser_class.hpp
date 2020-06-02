@@ -27,11 +27,14 @@
 namespace fling_hdl
 {
 
+class TempAstNodeDeferredRestorer;
 class AstNodeDeferredPusher;
 class AstNodeListDeferredPusher;
+class IdentListDeferredPusher;
 
 class Parser final: public RdParserBase<Lexer, Parser>
 {
+	friend class TempAstNodeDeferredRestorer;
 	friend class AstNodeDeferredPusher;
 	friend class AstNodeListDeferredPusher;
 	friend class IdentListDeferredPusher;
@@ -47,6 +50,8 @@ private:		// variables
 	ast::BaseUptr _ast;
 	ast::Program* _ast_program = nullptr;
 	ast::Base* _curr_ast_parent = nullptr;
+
+	ast::BaseUptr* _temp_ast = nullptr;
 	//ast::IdentExprSuffix _ident_expr_suffix;
 
 	stack<IdentList> _ident_list_stack;
@@ -353,14 +358,35 @@ public:		// parsing functions
 	#undef X
 };
 
-class AstNodeDeferredPusher final
+class TempAstNodeDeferredRestorer final
 {
 private:		// variables
 	Parser* _parser = nullptr;
+	ast::BaseUptr* _prev_temp_ast = nullptr;
+public:		// functions
+	inline TempAstNodeDeferredRestorer(Parser* s_parser,
+		ast::BaseUptr& s_temp_ast)
+		: _parser(s_parser)
+	{
+		_prev_temp_ast = _parser->_temp_ast;
+		_parser->_temp_ast = &s_temp_ast;
+	}
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(TempAstNodeDeferredRestorer);
+	inline ~TempAstNodeDeferredRestorer()
+	{
+		_parser->_temp_ast = _prev_temp_ast;
+	}
+};
+
+class AstNodeDeferredBase
+{
+protected:		// variables
+	Parser* _parser = nullptr;
 	ast::Base * _node = nullptr,
 		* _prev_ast_parent = nullptr;
+
 public:		// functions
-	inline AstNodeDeferredPusher(Parser* s_parser, ast::Base* s_node)
+	inline AstNodeDeferredBase(Parser* s_parser, ast::Base* s_node)
 		: _parser(s_parser), _node(s_node)
 	{
 		_prev_ast_parent = _parser->_curr_ast_parent;
@@ -371,11 +397,23 @@ public:		// functions
 			_parser->_max_ast_level = _node->level();
 		}
 	}
+	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AstNodeDeferredBase);
+	virtual inline ~AstNodeDeferredBase()
+	{
+		_parser->_curr_ast_parent = _prev_ast_parent;
+	}
+};
+class AstNodeDeferredPusher final: public AstNodeDeferredBase
+{
+public:		// functions
+	inline AstNodeDeferredPusher(Parser* s_parser, ast::Base* s_node)
+		: AstNodeDeferredBase(s_parser, s_node)
+	{
+	}
 	GEN_CM_BOTH_CONSTRUCTORS_AND_ASSIGN(AstNodeDeferredPusher);
-	inline ~AstNodeDeferredPusher()
+	virtual inline ~AstNodeDeferredPusher()
 	{
 		_parser->_push_ast_node(_node);
-		_parser->_curr_ast_parent = _prev_ast_parent;
 	}
 };
 

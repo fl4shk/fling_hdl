@@ -1192,15 +1192,57 @@ auto Parser::_parseFlingAnyBehavScopeItemStWithIdent() -> ParseRet
 		string ident;
 		EXPECT_IDENT_AND_GRAB_S(ident);
 
-		BaseUptr ie_suffix;
+		if (CHECK_PARSE(_parseFlingIdentExprSuffix,
+			_parseFlingAnyBehavScopeItemAssignSuffix))
+		{
+			DEFER_PUSH_NODE_AND_SET_TEMP(node, BehavAssign);
 
-		if (ATTEMPT_PARSE(_parseFlingIdentExprSuffix))
-		{
-			ie_suffix = _pop_ast_node();
+			{
+				DEFER_PUSH_NODE(ident_expr, IdentExpr);
+
+				{
+					DEFER_PUSH_NODE(to_push, StrAndNode);
+					to_push->str = move(ident);
+				}
+
+				ident_expr->prologue_list.push_back(_pop_ast_node());
+
+				PARSE_AND_POP_AST_NODE_IF
+					(ident_expr->suffix, _parseFlingIdentExprSuffix);
+			}
+
+			node->lhs = _pop_ast_node();
+
+			// Just a regular call here.  This function exclusively
+			// operates on `_temp_ast`.
+			_parseFlingAnyBehavScopeItemAssignSuffix();
 		}
-		else if (ATTEMPT_PARSE(_parseFlingAnyBehavScopeItemAssignSuffix))
+		else if (CHECK_PARSE(_parseFlingInstParamList,
+			_parseFlingTypenmCstmChainItem,
+			_parseFlingInstArgList))
 		{
+			DEFER_PUSH_NODE(node, IdentExpr);
+
+			{
+				DEFER_PUSH_NODE(to_push, StrAndNode);
+				to_push->str = move(ident);
+
+				PARSE_AND_POP_AST_NODE_IF
+					(to_push->node, _parseFlingInstParamList);
+			}
+
+			node->prologue_list.push_back(_pop_ast_node());
+
+			while (ATTEMPT_PARSE(_parseFlingTypenmCstmChainItem))
+			{
+				node->prologue_list.push_back(_pop_ast_node());
+			}
+
+			JUST_PARSE_AND_POP_AST_NODE
+				(node->opt_arg_list, _parseFlingInstArgList);
 		}
+
+		EXPECT(PunctSemicolon);
 
 		return std::nullopt;
 	}
