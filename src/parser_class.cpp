@@ -459,31 +459,6 @@ auto Parser::_parse_flingDeclArgSublist() -> ParseRet
 
 		const auto err_msg = sconcat("Number of default values unequal ",
 			"to number of parameters in sublist.");
-		//vector<ParamVarEtcTriple> triple_vec;
-
-		//for (auto& node: ident_list)
-		//{
-		//	ParamVarEtcTriple to_push;
-
-		//	to_push.ident = move(node.data.first);
-		//	to_push.ident_fp = move(node.data.second);
-		//	triple_vec.push_back(move(to_push));
-		//}
-
-		//if (opt_def_val_list.size() > 0)
-		//{
-		//	if (ident_list.size() != opt_def_val_list.size())
-		//	{
-		//		_err(err_file_pos, err_msg);
-		//	}
-
-		//	size_t i = 0;
-		//	for (auto& node: opt_def_val_list)
-		//	{
-		//		triple_vec.at(i).opt_def_val = move(node.data);
-		//		++i;
-		//	}
-		//}
 		auto triple_vec = _build_pv_etc_vec(ident_list, opt_def_val_list,
 			false, err_file_pos, err_msg);
 
@@ -1847,7 +1822,6 @@ auto Parser::_parse_flingDeclConst() -> ParseRet
 
 		const auto err_msg = sconcat("Number of values unequal to ",
 			"number of names provided.");
-
 		auto triple_vec = _build_pv_etc_vec(ident_list, expr_list,
 			true, err_file_pos, err_msg);
 
@@ -1882,6 +1856,36 @@ auto Parser::_parse_flingDeclVarNoDefVal() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingDeclVarNoDefVal);
+		DEFER_PUSH_NODE(node, DeclVarEtcList);
+
+		EXPECT(KwVar);
+
+		IdentList ident_list;
+		JUST_PARSE_AND_POP_IDENT_LIST
+			(ident_list, _parse_flingIdentList);
+
+		EXPECT(PunctColon);
+
+		BaseUptr typenm;
+		JUST_PARSE_AND_POP_AST_NODE
+			(typenm, _parse_flingTypenm);
+
+		EXPECT(PunctSemicolon);
+
+		for (auto& ident: ident_list)
+		{
+			using AstNodeType = DeclVarEtc;
+			BaseUptr to_push(new DeclVarEtc(_curr_ast_parent,
+				ident.data.second));
+			auto to_push_ptr = static_cast<AstNodeType*>(to_push.get());
+			shared_ptr<void> defer(nullptr, 
+				bind([&]() -> void
+				{
+					node->item_list.push_back(move(to_push));
+				}));
+
+			//node->item_list.push_back(move(to_push));
+		}
 
 		return std::nullopt;
 	}

@@ -34,6 +34,7 @@
 #include <array>
 #include <filesystem>
 #include <system_error>
+#include <functional>
 
 #include <string.h>
 #include <libgen.h>
@@ -63,6 +64,8 @@ using std::set;
 using std::stringstream;
 using std::fstream;
 using std::error_code;
+
+using std::bind;
 
 namespace fs = std::filesystem;
 
