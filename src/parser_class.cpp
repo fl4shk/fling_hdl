@@ -51,7 +51,12 @@ auto Parser::_build_pv_etc_vec(IdentList& ident_list,
 	for (auto& p: ident_list)
 	{
 		ParamVarEtcTriple to_push;
-		defer(_, ret.push_back(move(to_push)));
+		defer
+		(
+			_,
+			ret.push_back(move(to_push));
+			printout("nice\n");
+		);
 
 		// It's okay to do a `move` here because we don't need
 		// to keep `ident_list` itself around.
