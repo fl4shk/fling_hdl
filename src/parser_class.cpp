@@ -51,12 +51,13 @@ auto Parser::_build_pv_etc_vec(IdentList& ident_list,
 	for (auto& p: ident_list)
 	{
 		ParamVarEtcTriple to_push;
+		defer(_, ret.push_back(move(to_push)));
 
 		// It's okay to do a `move` here because we don't need
 		// to keep `ident_list` itself around.
 		to_push.ident = move(p.data.first);
 		to_push.ident_fp = move(p.data.second);
-		ret.push_back(move(to_push));
+		//ret.push_back(move(to_push));
 	}
 
 	if (force_build_expr || (expr_list.size() > 0))
@@ -1878,7 +1879,7 @@ auto Parser::_parse_flingDeclVarNoDefVal() -> ParseRet
 			BaseUptr to_push(new DeclVarEtc(_curr_ast_parent,
 				ident.data.second));
 			auto to_push_ptr = static_cast<AstNodeType*>(to_push.get());
-			shared_ptr<void> defer(nullptr, 
+			shared_ptr<void> defer_(nullptr, 
 				bind([&]() -> void
 				{
 					node->item_list.push_back(move(to_push));
