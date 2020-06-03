@@ -506,7 +506,9 @@ class DeclStruct: public Base
 public:		// variables
 	DATA
 	(
-		MEMB_VAR(string, ident)
+		MEMB_VAR(string, ident),
+		MEMB_VAR(bool, is_packed),
+		MEMB_VAR(bool, is_signed)
 	);
 
 	CHILDREN
@@ -574,6 +576,17 @@ BUILD_KIND_OPERATOR_LSHIFT(DeclSubprog);
 //--------
 
 //--------
+class DeclVarEtcList: public Base
+{
+public:		// variables
+	CHILDREN
+	(
+		MEMB_VAR(BaseUptrList, item_list)
+	);
+public:		// functions
+	SHARED_CONTENTS(DeclVarEtcList, Base);
+};
+
 class DeclVarEtc: public Base
 {
 public:		// types
@@ -665,19 +678,19 @@ public:		// functions
 BUILD_KIND_OPERATOR_LSHIFT(DeclAlias);
 //--------
 
-//--------
-class NamedScope: public Base
-{
-public:		// variables
-	CHILDREN
-	(
-		// Expected child type:  `StrAndNode`, where `node` is intended to
-		// be an instance of `ParamOrArgList`
-		MEMB_VAR(BaseUptrList, item_list)
-	);
-public:		// functions
-	SHARED_CONTENTS(NamedScope, Base);
-};
+////--------
+//class NamedScope: public Base
+//{
+//public:		// variables
+//	CHILDREN
+//	(
+//		// Expected child type:  `StrAndNode`, where `node` is intended to
+//		// be an instance of `ParamOrArgList`
+//		MEMB_VAR(BaseUptrList, item_list)
+//	);
+//public:		// functions
+//	SHARED_CONTENTS(NamedScope, Base);
+//};
 //--------
 
 //--------
@@ -930,16 +943,16 @@ public:		// functions
 };
 BUILD_KIND_OPERATOR_LSHIFT(CallDollarFuncExpr);
 
-class String: public Base
-{
-public:		// variables
-	DATA
-	(
-		MEMB_VAR(string, data)
-	);
-public:		// functions
-	SHARED_CONTENTS(String, Base);
-};
+//class String: public Base
+//{
+//public:		// variables
+//	DATA
+//	(
+//		MEMB_VAR(string, data)
+//	);
+//public:		// functions
+//	SHARED_CONTENTS(String, Base);
+//};
 
 class IdentExprSuffix: public Base
 {

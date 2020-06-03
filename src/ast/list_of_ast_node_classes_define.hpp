@@ -64,19 +64,20 @@
 	\
 	X(DeclSubprog) \
 	\
+	X(DeclVarEtcList) \
 	X(DeclVarEtc) \
 	X(WireAssign) \
 	\
 	X(DeclAlias) \
 	\
-	X(NamedScope) \
+	/* X(NamedScope) */ \
 	\
 	X(MuxExpr) \
 	X(BinopExpr) \
 	X(UnopExpr) \
 	X(LitValExpr) \
 	X(CallDollarFuncExpr) \
-	X(String) \
+	/* X(String) */ \
 	X(IdentExprSuffix) \
 	X(IdentExpr) \
 	X(CatExpr) \

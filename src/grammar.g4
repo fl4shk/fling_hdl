@@ -380,7 +380,7 @@ flingDeclCompositeType:
 
 //--------
 flingDeclStruct:
-	KwStruct MiscIdent flingDeclParamList?
+	KwStruct (KwPacked KwSigned?)? MiscIdent flingDeclParamList?
 		flingDeclStructScope
 	;
 
@@ -1133,7 +1133,7 @@ KwWhile: 'while' ;
 
 
 KwStruct: 'struct' ;
-//KwPacked: 'packed' ;
+KwPacked: 'packed' ;
 KwEnum: 'enum' ;
 
 
