@@ -41,6 +41,44 @@ int Parser::run()
 //--------
 
 //--------
+auto Parser::_build_pv_etc_vec(IdentList& ident_list,
+	BaseUptrList& expr_list, bool force_build_expr,
+	const FilePos& err_file_pos, const string& err_msg) 
+	const -> vector<ParamVarEtcTriple>
+{
+	vector<ParamVarEtcTriple> ret;
+
+	for (auto& p: ident_list)
+	{
+		ParamVarEtcTriple to_push;
+
+		// It's okay to do a `move` here because we don't need
+		// to keep `ident_list` itself around.
+		to_push.ident = move(p.data.first);
+		to_push.ident_fp = move(p.data.second);
+		ret.push_back(move(to_push));
+	}
+
+	if (force_build_expr || (expr_list.size() > 0))
+	{
+		if (ident_list.size() != expr_list.size())
+		{
+			_err(err_file_pos, err_msg);
+		}
+
+		size_t i = 0;
+		for (auto& p: expr_list)
+		{
+			ret.at(i).expr = move(p.data);
+			++i;
+		}
+	}
+
+	return ret;
+}
+//--------
+
+//--------
 auto Parser::_parse_flingProgram() -> ParseRet
 {
 	PROLOGUE_AND_EPILOGUE(_parse_flingProgram);
@@ -298,41 +336,11 @@ auto Parser::_parse_flingDeclParamSublist() -> ParseRet
 			_expect_wanted_tok();
 		}
 
-		struct Triple
-		{
-			string ident;
-			FilePos ident_fp;
-			BaseUptr opt_def_val;
-		};
+		const auto err_msg = sconcat("Number of default values unequal ",
+			"to number of parameters in sublist.");
+		auto triple_vec = _build_pv_etc_vec(ident_list, opt_def_val_list,
+			false, err_file_pos, err_msg);
 
-		vector<Triple> triple_vec;
-
-		for (auto& node: ident_list)
-		{
-			Triple to_push;
-
-			// It's okay to do a `move` here because we don't need
-			// to keep `ident_list` itself around.
-			to_push.ident = move(node.data.first);
-			to_push.ident_fp = move(node.data.second);
-			triple_vec.push_back(move(to_push));
-		}
-
-		if (opt_def_val_list.size() > 0)
-		{
-			if (ident_list.size() != opt_def_val_list.size())
-			{
-				_err(err_file_pos, "Number of default values unequal to ",
-					"number of parameters in sublist.");
-			}
-
-			size_t i = 0;
-			for (auto& node: opt_def_val_list)
-			{
-				triple_vec.at(i).opt_def_val = move(node.data);
-				++i;
-			}
-		}
 		for (auto& triple: triple_vec)
 		{
 			using AstNodeType = DeclParamSublistItem;
@@ -349,7 +357,7 @@ auto Parser::_parse_flingDeclParamSublist() -> ParseRet
 					(opt_typenm->parent());
 			}
 
-			to_push_ptr->opt_def_val = move(triple.opt_def_val);
+			to_push_ptr->opt_def_val = move(triple.expr);
 
 			sublist.push_back(move(to_push));
 		}
@@ -448,39 +456,36 @@ auto Parser::_parse_flingDeclArgSublist() -> ParseRet
 				(opt_def_val_list, _parse_flingExprList);
 		}
 
-		struct Triple
-		{
-			string ident;
-			FilePos ident_fp;
-			BaseUptr opt_def_val;
-		};
 
-		vector<Triple> triple_vec;
+		const auto err_msg = sconcat("Number of default values unequal ",
+			"to number of parameters in sublist.");
+		//vector<ParamVarEtcTriple> triple_vec;
 
-		for (auto& node: ident_list)
-		{
-			Triple to_push;
+		//for (auto& node: ident_list)
+		//{
+		//	ParamVarEtcTriple to_push;
 
-			to_push.ident = move(node.data.first);
-			to_push.ident_fp = move(node.data.second);
-			triple_vec.push_back(move(to_push));
-		}
+		//	to_push.ident = move(node.data.first);
+		//	to_push.ident_fp = move(node.data.second);
+		//	triple_vec.push_back(move(to_push));
+		//}
 
-		if (opt_def_val_list.size() > 0)
-		{
-			if (ident_list.size() != opt_def_val_list.size())
-			{
-				_err(err_file_pos, "Number of default values unequal to ",
-					"number of parameters in sublist.");
-			}
+		//if (opt_def_val_list.size() > 0)
+		//{
+		//	if (ident_list.size() != opt_def_val_list.size())
+		//	{
+		//		_err(err_file_pos, err_msg);
+		//	}
 
-			size_t i = 0;
-			for (auto& node: opt_def_val_list)
-			{
-				triple_vec.at(i).opt_def_val = move(node.data);
-				++i;
-			}
-		}
+		//	size_t i = 0;
+		//	for (auto& node: opt_def_val_list)
+		//	{
+		//		triple_vec.at(i).opt_def_val = move(node.data);
+		//		++i;
+		//	}
+		//}
+		auto triple_vec = _build_pv_etc_vec(ident_list, opt_def_val_list,
+			false, err_file_pos, err_msg);
 
 		for (auto& triple: triple_vec)
 		{
@@ -493,7 +498,7 @@ auto Parser::_parse_flingDeclArgSublist() -> ParseRet
 
 			to_push_ptr->typenm = typenm->dup(typenm->parent());
 
-			to_push_ptr->opt_def_val = move(triple.opt_def_val);
+			to_push_ptr->opt_def_val = move(triple.expr);
 
 			sublist.push_back(move(to_push));
 		}
@@ -1839,36 +1844,12 @@ auto Parser::_parse_flingDeclConst() -> ParseRet
 
 		EXPECT(PunctSemicolon);
 
-		struct Triple
-		{
-			string ident;
-			FilePos ident_fp;
-			BaseUptr expr;
-		};
 
-		vector<Triple> triple_vec;
+		const auto err_msg = sconcat("Number of values unequal to ",
+			"number of names provided.");
 
-		for (auto& p: ident_list)
-		{
-			Triple to_push;
-
-			to_push.ident = move(p.data.first);
-			to_push.ident_fp = move(p.data.second);
-		}
-
-		if (ident_list.size() != expr_list.size())
-		{
-			_err(err_file_pos, "Number of values unequal to number of ",
-				"names provided.");
-		}
-		{
-			size_t i = 0;
-			for (auto& p: expr_list)
-			{
-				triple_vec.at(i).expr = move(p.data);
-				++i;
-			}
-		}
+		auto triple_vec = _build_pv_etc_vec(ident_list, expr_list,
+			true, err_file_pos, err_msg);
 
 		for (auto& triple: triple_vec)
 		{
@@ -1881,7 +1862,9 @@ auto Parser::_parse_flingDeclConst() -> ParseRet
 
 			to_push_ptr->ident = move(triple.ident);
 			to_push_ptr->typenm = typenm->dup(typenm->parent());
-			to_push_ptr->
+			to_push_ptr->val = move(triple.expr);
+
+			node->item_list.push_back(move(to_push));
 		}
 
 		return std::nullopt;

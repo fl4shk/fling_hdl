@@ -46,6 +46,13 @@ public:		// types
 	using IdentList = IndCircLinkList<pair<string, FilePos>>;
 	using ParseFunc = ParserBase::ParseFunc;
 
+	struct ParamVarEtcTriple
+	{
+		string ident;
+		FilePos ident_fp;
+		ast::BaseUptr expr;
+	};
+
 private:		// variables
 	size_t _max_ast_level;
 
@@ -132,6 +139,12 @@ public:		// functions
 	int run();
 
 	GEN_GETTER_BY_VAL(max_ast_level);
+
+private:		// functions
+	vector<ParamVarEtcTriple> _build_pv_etc_vec
+		(IdentList& ident_list, ast::BaseUptrList& expr_list,
+		bool force_build_expr, const FilePos& err_file_pos,
+		const string& err_msg) const;
 
 public:		// parsing functions
 	//--------
