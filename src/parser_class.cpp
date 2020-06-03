@@ -51,18 +51,12 @@ auto Parser::_build_pv_etc_vec(IdentList& ident_list,
 	for (auto& p: ident_list)
 	{
 		ParamVarEtcTriple to_push;
-		defer
-		(
-			_,
-			ret.push_back(move(to_push));
-			printout("nice\n");
-		);
+		defer(_, ret.push_back(move(to_push)););
 
 		// It's okay to do a `move` here because we don't need
 		// to keep `ident_list` itself around.
 		to_push.ident = move(p.data.first);
 		to_push.ident_fp = move(p.data.second);
-		//ret.push_back(move(to_push));
 	}
 
 	if (force_build_expr || (expr_list.size() > 0))
@@ -352,6 +346,8 @@ auto Parser::_parse_flingDeclParamSublist() -> ParseRet
 			using AstNodeType = DeclParamSublistItem;
 			BaseUptr to_push(new AstNodeType(_curr_ast_parent,
 				triple.ident_fp));
+			defer(_, sublist.push_back(move(to_push)););
+
 			auto to_push_ptr = static_cast<AstNodeType*>(to_push.get());
 
 			to_push_ptr->ident = move(triple.ident);
@@ -364,8 +360,6 @@ auto Parser::_parse_flingDeclParamSublist() -> ParseRet
 			}
 
 			to_push_ptr->opt_def_val = move(triple.expr);
-
-			sublist.push_back(move(to_push));
 		}
 
 		return std::nullopt;
@@ -472,6 +466,8 @@ auto Parser::_parse_flingDeclArgSublist() -> ParseRet
 		{
 			BaseUptr to_push(new AstNodeType(_curr_ast_parent,
 				triple.ident_fp));
+			defer(_, sublist.push_back(move(to_push)););
+
 			auto to_push_ptr = static_cast<AstNodeType*>(to_push.get());
 
 			to_push_ptr->ident = move(triple.ident);
@@ -480,8 +476,6 @@ auto Parser::_parse_flingDeclArgSublist() -> ParseRet
 			to_push_ptr->typenm = typenm->dup(typenm->parent());
 
 			to_push_ptr->opt_def_val = move(triple.expr);
-
-			sublist.push_back(move(to_push));
 		}
 
 		return std::nullopt;
@@ -1836,6 +1830,8 @@ auto Parser::_parse_flingDeclConst() -> ParseRet
 			using AstNodeType = DeclVarEtc;
 			BaseUptr to_push(new DeclVarEtc(_curr_ast_parent,
 				triple.ident_fp));
+			defer(_, node->item_list.push_back(move(to_push)););
+
 			auto to_push_ptr = static_cast<AstNodeType*>(to_push.get());
 
 			to_push_ptr->kind = AstNodeType::Kind::Const;
@@ -1843,8 +1839,6 @@ auto Parser::_parse_flingDeclConst() -> ParseRet
 			to_push_ptr->ident = move(triple.ident);
 			to_push_ptr->typenm = typenm->dup(typenm->parent());
 			to_push_ptr->val = move(triple.expr);
-
-			node->item_list.push_back(move(to_push));
 		}
 
 		return std::nullopt;
@@ -1878,19 +1872,18 @@ auto Parser::_parse_flingDeclVarNoDefVal() -> ParseRet
 
 		EXPECT(PunctSemicolon);
 
-		for (auto& ident: ident_list)
+		for (auto& p: ident_list)
 		{
 			using AstNodeType = DeclVarEtc;
-			BaseUptr to_push(new DeclVarEtc(_curr_ast_parent,
-				ident.data.second));
-			auto to_push_ptr = static_cast<AstNodeType*>(to_push.get());
-			shared_ptr<void> defer_(nullptr, 
-				bind([&]() -> void
-				{
-					node->item_list.push_back(move(to_push));
-				}));
+			BaseUptr to_push(new AstNodeType(_curr_ast_parent,
+				move(p.data.second)));
+			defer(_, node->item_list.push_back(move(to_push)););
 
-			//node->item_list.push_back(move(to_push));
+			auto to_push_ptr = static_cast<AstNodeType*>(to_push.get());
+
+			to_push_ptr->kind = AstNodeType::Kind::Var;
+			to_push_ptr->ident = move(p.data.first);
+			to_push_ptr->typenm = typenm->dup(typenm->parent());
 		}
 
 		return std::nullopt;
