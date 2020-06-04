@@ -68,6 +68,7 @@
 	X(DeclVarEtc) \
 	X(WireAssign) \
 	\
+	X(DeclAliasList) \
 	X(DeclAlias) \
 	\
 	/* X(NamedScope) */ \

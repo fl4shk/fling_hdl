@@ -42,7 +42,7 @@ int Parser::run()
 
 //--------
 auto Parser::_build_pv_etc_vec(IdentList& ident_list,
-	BaseUptrList& expr_list, bool force_build_expr,
+	BaseUptrList& rhs_list, bool force_build_expr,
 	const FilePos& err_file_pos, const string& err_msg) 
 	const -> vector<ParamVarEtcTriple>
 {
@@ -59,17 +59,17 @@ auto Parser::_build_pv_etc_vec(IdentList& ident_list,
 		to_push.ident_fp = move(p.data.second);
 	}
 
-	if (force_build_expr || (expr_list.size() > 0))
+	if (force_build_expr || (rhs_list.size() > 0))
 	{
-		if (ident_list.size() != expr_list.size())
+		if (ident_list.size() != rhs_list.size())
 		{
 			_err(err_file_pos, err_msg);
 		}
 
 		size_t i = 0;
-		for (auto& p: expr_list)
+		for (auto& p: rhs_list)
 		{
-			ret.at(i).expr = move(p.data);
+			ret.at(i).rhs = move(p.data);
 			++i;
 		}
 	}
@@ -248,13 +248,12 @@ auto Parser::_parse_flingDeclParamSublist() -> ParseRet
 		PROLOGUE_AND_EPILOGUE(_parse_flingDeclParamSublist);
 		DEFER_PUSH_LIST(sublist);
 
-		using Kind = DeclParamSublistItem::Kind;
-
 		IdentList ident_list;
 		JUST_PARSE_AND_POP_IDENT_LIST(ident_list, _parse_flingIdentList);
 
 		EXPECT(PunctColon);
 
+		using Kind = DeclParamSublistItem::Kind;
 		Kind kind = Kind::Var;
 		BaseUptr opt_typenm;
 		BaseUptrList opt_def_val_list;
@@ -345,7 +344,7 @@ auto Parser::_parse_flingDeclParamSublist() -> ParseRet
 		{
 			using AstNodeType = DeclParamSublistItem;
 			BaseUptr to_push(new AstNodeType(_curr_ast_parent,
-				triple.ident_fp));
+				move(triple.ident_fp)));
 			defer(_, sublist.push_back(move(to_push)););
 
 			auto to_push_ptr = static_cast<AstNodeType*>(to_push.get());
@@ -359,7 +358,7 @@ auto Parser::_parse_flingDeclParamSublist() -> ParseRet
 					(opt_typenm->parent());
 			}
 
-			to_push_ptr->opt_def_val = move(triple.expr);
+			to_push_ptr->opt_def_val = move(triple.rhs);
 		}
 
 		return std::nullopt;
@@ -475,7 +474,7 @@ auto Parser::_parse_flingDeclArgSublist() -> ParseRet
 
 			to_push_ptr->typenm = typenm->dup(typenm->parent());
 
-			to_push_ptr->opt_def_val = move(triple.expr);
+			to_push_ptr->opt_def_val = move(triple.rhs);
 		}
 
 		return std::nullopt;
@@ -1817,19 +1816,18 @@ auto Parser::_parse_flingDeclConst() -> ParseRet
 		JUST_PARSE_AND_POP_AST_LIST
 			(expr_list, _parse_flingExprList);
 
-		EXPECT(PunctSemicolon);
-
-
 		const auto err_msg = sconcat("Number of values unequal to ",
 			"number of names provided.");
-		auto triple_vec = _build_pv_etc_vec(ident_list, expr_list,
-			true, err_file_pos, err_msg);
+		auto triple_vec = _build_pv_etc_vec(ident_list, expr_list, true,
+			err_file_pos, err_msg);
+
+		EXPECT(PunctSemicolon);
 
 		for (auto& triple: triple_vec)
 		{
 			using AstNodeType = DeclVarEtc;
 			BaseUptr to_push(new DeclVarEtc(_curr_ast_parent,
-				triple.ident_fp));
+				move(triple.ident_fp)));
 			defer(_, node->item_list.push_back(move(to_push)););
 
 			auto to_push_ptr = static_cast<AstNodeType*>(to_push.get());
@@ -1838,7 +1836,7 @@ auto Parser::_parse_flingDeclConst() -> ParseRet
 
 			to_push_ptr->ident = move(triple.ident);
 			to_push_ptr->typenm = typenm->dup(typenm->parent());
-			to_push_ptr->val = move(triple.expr);
+			to_push_ptr->val = move(triple.rhs);
 		}
 
 		return std::nullopt;
@@ -1901,6 +1899,48 @@ auto Parser::_parse_flingDeclVar() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingDeclVar);
+		DEFER_PUSH_NODE(node, DeclVarEtcList);
+
+		EXPECT(KwVar);
+
+		IdentList ident_list;
+		JUST_PARSE_AND_POP_IDENT_LIST
+			(ident_list, _parse_flingIdentList);
+
+		EXPECT(PunctColon);
+
+		BaseUptr typenm;
+
+		FilePos err_file_pos;
+		BaseUptrList expr_list;
+		if (ATTEMPT_TOK_PARSE(PunctBlkAssign))
+		{
+			err_file_pos = lex_file_pos();
+			JUST_PARSE_AND_POP_AST_LIST
+				(expr_list, _parse_flingExprList);
+		}
+
+		const auto err_msg = sconcat("Number of values unequal to ",
+			"number of names provided.");
+		auto triple_vec = _build_pv_etc_vec(ident_list, expr_list, false,
+			err_file_pos, err_msg);
+
+		EXPECT(PunctSemicolon);
+
+		for (auto& triple: triple_vec)
+		{
+			using AstNodeType = DeclVarEtc;
+			BaseUptr to_push(new DeclVarEtc(_curr_ast_parent,
+				move(triple.ident_fp)));
+			defer(_, node->item_list.push_back(move(to_push)););
+
+			auto to_push_ptr = static_cast<AstNodeType*>(to_push.get());
+
+			to_push_ptr->kind = AstNodeType::Kind::Var;
+			to_push_ptr->ident = move(triple.ident);
+			to_push_ptr->typenm = typenm->dup(typenm->parent());
+			to_push_ptr->val = move(triple.rhs);
+		}
 
 		return std::nullopt;
 	}
@@ -1916,7 +1956,49 @@ auto Parser::_parse_flingDeclWire() -> ParseRet
 	}
 	else // if (!just_get_valid_tokens())
 	{
-		PROLOGUE_AND_EPILOGUE(_parse_flingDeclWire);
+		PROLOGUE_AND_EPILOGUE(_parse_flingDeclVar);
+		DEFER_PUSH_NODE(node, DeclVarEtcList);
+
+		EXPECT(KwWire);
+
+		IdentList ident_list;
+		JUST_PARSE_AND_POP_IDENT_LIST
+			(ident_list, _parse_flingIdentList);
+
+		EXPECT(PunctColon);
+
+		BaseUptr typenm;
+
+		FilePos err_file_pos;
+		BaseUptrList expr_list;
+		if (ATTEMPT_TOK_PARSE(PunctBlkAssign))
+		{
+			err_file_pos = lex_file_pos();
+			JUST_PARSE_AND_POP_AST_LIST
+				(expr_list, _parse_flingExprList);
+		}
+
+		const auto err_msg = sconcat("Number of values unequal to ",
+			"number of names provided.");
+		auto triple_vec = _build_pv_etc_vec(ident_list, expr_list, false,
+			err_file_pos, err_msg);
+
+		EXPECT(PunctSemicolon);
+
+		for (auto& triple: triple_vec)
+		{
+			using AstNodeType = DeclVarEtc;
+			BaseUptr to_push(new DeclVarEtc(_curr_ast_parent,
+				move(triple.ident_fp)));
+			defer(_, node->item_list.push_back(move(to_push)););
+
+			auto to_push_ptr = static_cast<AstNodeType*>(to_push.get());
+
+			to_push_ptr->kind = AstNodeType::Kind::Wire;
+			to_push_ptr->ident = move(triple.ident);
+			to_push_ptr->typenm = typenm->dup(typenm->parent());
+			to_push_ptr->val = move(triple.rhs);
+		}
 
 		return std::nullopt;
 	}
@@ -1933,6 +2015,27 @@ auto Parser::_parse_flingWireAssign() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingWireAssign);
+		DEFER_PUSH_NODE(node, WireAssign);
+
+		EXPECT(KwAssign);
+
+		PARSE_IFELSE
+		(
+			_parse_flingAssignLhsIdentExpr,
+			_parse_flingAssignLhsCatExpr
+		)
+		else
+		{
+			_expect_wanted_tok();
+		}
+		node->lhs = _pop_ast_node();
+
+		EXPECT(PunctBlkAssign);
+
+		JUST_PARSE_AND_POP_AST_NODE
+			(node->rhs, _parse_flingExpr);
+
+		EXPECT(PunctSemicolon);
 
 		return std::nullopt;
 	}
@@ -1949,6 +2052,106 @@ auto Parser::_parse_flingDeclAlias() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingDeclAlias);
+		DEFER_PUSH_NODE(node, DeclAliasList);
+
+		using AstNodeType = DeclAlias;
+
+		EXPECT(KwAlias);
+
+		IdentList ident_list;
+		JUST_PARSE_AND_POP_IDENT_LIST
+			(ident_list, _parse_flingIdentList);
+
+		EXPECT(PunctColon);
+
+		using Kind = AstNodeType::Kind;
+		Kind kind = Kind::Var;
+		BaseUptr opt_typenm;
+		BaseUptrList rhs_list;
+		FilePos err_file_pos;
+
+		if (ATTEMPT_PARSE(_parse_flingTypenm))
+		{
+			_pop_ast_node(opt_typenm);
+			kind = Kind::Var;
+
+			err_file_pos = lex_file_pos();
+			JUST_PARSE_AND_POP_AST_LIST
+				(rhs_list, _parse_flingExprList);
+		}
+		else if (ATTEMPT_TOK_PARSE(KwRange))
+		{
+			kind = Kind::Range;
+
+			err_file_pos = lex_file_pos();
+			JUST_PARSE_AND_POP_AST_LIST
+				(rhs_list, _parse_flingRangeList);
+		}
+		else if (ATTEMPT_TOK_PARSE(KwType))
+		{
+			kind = Kind::Type;
+
+			err_file_pos = lex_file_pos();
+
+			JUST_PARSE_AND_POP_AST_LIST
+				(rhs_list, _parse_flingTypenmList);
+		}
+		else if (ATTEMPT_TOK_PARSE(KwModule))
+		{
+			kind = Kind::Module;
+
+			err_file_pos = lex_file_pos();
+
+			JUST_PARSE_AND_POP_AST_LIST
+				(rhs_list, _parse_flingModnmList);
+		}
+		else if (ATTEMPT_TOK_PARSE(KwFunc))
+		{
+			kind = Kind::Func;
+
+			err_file_pos = lex_file_pos();
+
+			JUST_PARSE_AND_POP_AST_LIST
+				(rhs_list, _parse_flingSubprogIdentList);
+		}
+		else if (ATTEMPT_TOK_PARSE(KwTask))
+		{
+			kind = Kind::Task;
+
+			err_file_pos = lex_file_pos();
+
+			JUST_PARSE_AND_POP_AST_LIST
+				(rhs_list, _parse_flingSubprogIdentList);
+		}
+		else
+		{
+			_expect_wanted_tok();
+		}
+
+		const auto err_msg = sconcat("Number of identifiers unequal to ",
+			"number of values.");
+		auto triple_vec = _build_pv_etc_vec(ident_list, rhs_list, true,
+			err_file_pos, err_msg);
+
+		for (auto& triple: triple_vec)
+		{
+			BaseUptr to_push(new AstNodeType(_curr_ast_parent,
+				move(triple.ident_fp)));
+			defer(_, node->item_list.push_back(move(to_push)););
+
+			auto to_push_ptr = static_cast<AstNodeType*>(to_push.get());
+
+			to_push_ptr->ident = move(triple.ident);
+			to_push_ptr->kind = kind;
+
+			if (opt_typenm)
+			{
+				to_push_ptr->opt_typenm = opt_typenm->dup
+					(opt_typenm->parent());
+			}
+
+			to_push_ptr->rhs = move(triple.rhs);
+		}
 
 		return std::nullopt;
 	}

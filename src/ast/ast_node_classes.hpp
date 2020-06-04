@@ -635,6 +635,18 @@ public:		// functions
 //--------
 
 //--------
+class DeclAliasList: public Base
+{
+public:		// variables
+	CHILDREN
+	(
+		MEMB_VAR(BaseUptrList, item_list)
+	);
+
+public:		// functions
+	SHARED_CONTENTS(DeclAliasList, Base);
+};
+
 class DeclAlias: public Base
 {
 public:		// types
@@ -670,6 +682,7 @@ public:		// variables
 
 	CHILDREN
 	(
+		MEMB_VAR(BaseUptr, opt_typenm),
 		MEMB_VAR(BaseUptr, rhs)
 	);
 public:		// functions

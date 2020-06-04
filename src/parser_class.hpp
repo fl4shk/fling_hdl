@@ -50,7 +50,7 @@ public:		// types
 	{
 		string ident;
 		FilePos ident_fp;
-		ast::BaseUptr expr;
+		ast::BaseUptr rhs;
 	};
 
 private:		// variables
@@ -142,7 +142,7 @@ public:		// functions
 
 private:		// functions
 	vector<ParamVarEtcTriple> _build_pv_etc_vec
-		(IdentList& ident_list, ast::BaseUptrList& expr_list,
+		(IdentList& ident_list, ast::BaseUptrList& rhs_list,
 		bool force_build_expr, const FilePos& err_file_pos,
 		const string& err_msg) const;
 
