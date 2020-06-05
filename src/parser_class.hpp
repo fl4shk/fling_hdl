@@ -285,7 +285,6 @@ public:		// parsing functions
 	//--------
 
 	//--------
-	ParseRet _parse_flingScopedIdent();
 	ParseRet _parse_flingIdentList();
 	ParseRet _parse_flingSubprogIdentList();
 	ParseRet _parse_flingExprList();
@@ -312,7 +311,6 @@ public:		// parsing functions
 	ParseRet _parse_flingUnaryExpr();
 	ParseRet _parse_flingLowExpr();
 	ParseRet _parse_flingCallDollarFuncExpr();
-	ParseRet _parse_flingSubprogIdent();
 	ParseRet _parse_flingAssignLhsIdentExpr();
 	ParseRet _parse_flingAssignLhsCatExpr();
 	ParseRet _parse_flingIdentExprSuffix();

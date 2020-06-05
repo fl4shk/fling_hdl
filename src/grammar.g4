@@ -625,16 +625,12 @@ flingDeclAlias:
 //--------
 
 //--------
-flingScopedIdent:
-	MiscIdent (PunctScopeAccess MiscIdent)*
-	;
-
 flingIdentList:
 	MiscIdent (PunctComma MiscIdent)*
 	;
 
 flingSubprogIdentList:
-	flingSubprogIdent (PunctComma flingSubprogIdent)*
+	flingIdentExprStart (PunctComma flingIdentExprStart)*
 	;
 
 flingExprList:
@@ -806,10 +802,9 @@ flingCallDollarFuncExpr:
 //	flingSubprogIdent flingInstArgList
 //	;
 
-flingSubprogIdent:
-	flingIdentExprStart flingTypenmCstmChainItem*
-		flingInstParamList?
-	;
+//flingSubprogIdent:
+//	flingIdentExprStart
+//	;
 
 flingAssignLhsIdentExpr:
 	MiscIdent flingIdentExprSuffix?
@@ -858,11 +853,11 @@ flingIdentExprSuffix:
 
 flingIdentExprStart:
 	MiscIdent flingInstParamList?
+		flingTypenmCstmChainItem?
 	;
 
 flingIdentExpr:
 	flingIdentExprStart
-		flingTypenmCstmChainItem*
 		// Call a subprogram, which may be located inside of a package or
 		// inside of a type (via an `alias` in the latter's case).
 		flingInstArgList?
@@ -931,7 +926,6 @@ flingTypenmCstmChainItem:
 flingTypenm:
 	(
 		flingIdentExprStart
-			flingTypenmCstmChainItem*
 		| KwLogic (KwUnsigned | KwSigned)? 
 			// Vector dimensions
 			(PunctVecDimStart flingExprOrRange PunctRbracket)?
@@ -942,7 +936,8 @@ flingTypenm:
 	;
 
 flingModnm:
-	flingScopedIdent
+	//flingScopedIdent
+	flingIdentExprStart
 	;
 
 //--------

@@ -2159,22 +2159,6 @@ auto Parser::_parse_flingDeclAlias() -> ParseRet
 //--------
 
 //--------
-auto Parser::_parse_flingScopedIdent() -> ParseRet
-{
-	if (just_get_valid_tokens())
-	{
-		return GET_VALID_TOK_SET
-			(
-				TOK_PARSE_FUNC(MiscIdent)
-			);
-	}
-	else // if (!just_get_valid_tokens())
-	{
-		PROLOGUE_AND_EPILOGUE(_parse_flingScopedIdent);
-
-		return std::nullopt;
-	}
-}
 auto Parser::_parse_flingIdentList() -> ParseRet
 {
 	if (just_get_valid_tokens())
@@ -2187,6 +2171,17 @@ auto Parser::_parse_flingIdentList() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingIdentList);
+		DEFER_PUSH_IDENT_LIST(ident_list);
+
+		do
+		{
+			pair<string, FilePos> to_push;
+			defer(_, ident_list.push_back(move(to_push)););
+
+			to_push.second = lex_file_pos();
+
+			EXPECT_IDENT_AND_GRAB_S(to_push.first);
+		} while (ATTEMPT_TOK_PARSE(PunctComma));
 
 		return std::nullopt;
 	}
@@ -2197,12 +2192,19 @@ auto Parser::_parse_flingSubprogIdentList() -> ParseRet
 	{
 		return GET_VALID_TOK_SET
 			(
-				_parse_flingSubprogIdent
+				_parse_flingIdentExprStart
 			);
 	}
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingSubprogIdentList);
+		DEFER_PUSH_LIST(list);
+
+		do
+		{
+			_parse_flingIdentExprStart();
+			list.push_back(_pop_ast_node());
+		} while (ATTEMPT_TOK_PARSE(PunctComma));
 
 		return std::nullopt;
 	}
@@ -2219,6 +2221,13 @@ auto Parser::_parse_flingExprList() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingExprList);
+		DEFER_PUSH_LIST(list);
+
+		do
+		{
+			_parse_flingExpr();
+			list.push_back(_pop_ast_node());
+		} while (ATTEMPT_TOK_PARSE(PunctComma));
 
 		return std::nullopt;
 	}
@@ -2235,6 +2244,13 @@ auto Parser::_parse_flingRangeList() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingRangeList);
+		DEFER_PUSH_LIST(list);
+
+		do
+		{
+			_parse_flingRange();
+			list.push_back(_pop_ast_node());
+		} while (ATTEMPT_TOK_PARSE(PunctComma));
 
 		return std::nullopt;
 	}
@@ -2251,6 +2267,13 @@ auto Parser::_parse_flingTypenmList() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingTypenmList);
+		DEFER_PUSH_LIST(list);
+
+		do
+		{
+			_parse_flingTypenm();
+			list.push_back(_pop_ast_node());
+		} while (ATTEMPT_TOK_PARSE(PunctComma));
 
 		return std::nullopt;
 	}
@@ -2267,6 +2290,13 @@ auto Parser::_parse_flingModnmList() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingModnmList);
+		DEFER_PUSH_LIST(list);
+
+		do
+		{
+			_parse_flingModnm();
+			list.push_back(_pop_ast_node());
+		} while (ATTEMPT_TOK_PARSE(PunctComma));
 
 		return std::nullopt;
 	}
@@ -2283,6 +2313,12 @@ auto Parser::_parse_flingImportItem() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingImportItem);
+		DEFER_PUSH_NODE(node, ImportItem);
+
+		node->ends_with_all = false;
+
+		{
+		}
 
 		return std::nullopt;
 	}
@@ -2588,22 +2624,6 @@ auto Parser::_parse_flingCallDollarFuncExpr() -> ParseRet
 		return std::nullopt;
 	}
 }
-auto Parser::_parse_flingSubprogIdent() -> ParseRet
-{
-	if (just_get_valid_tokens())
-	{
-		return GET_VALID_TOK_SET
-			(
-				_parse_flingIdentExprStart
-			);
-	}
-	else // if (!just_get_valid_tokens())
-	{
-		PROLOGUE_AND_EPILOGUE(_parse_flingSubprogIdent);
-
-		return std::nullopt;
-	}
-}
 auto Parser::_parse_flingAssignLhsIdentExpr() -> ParseRet
 {
 	if (just_get_valid_tokens())
@@ -2848,7 +2868,7 @@ auto Parser::_parse_flingModnm() -> ParseRet
 	{
 		return GET_VALID_TOK_SET
 			(
-				_parse_flingScopedIdent
+				_parse_flingIdentExprStart
 			);
 	}
 	else // if (!just_get_valid_tokens())

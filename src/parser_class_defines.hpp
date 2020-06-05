@@ -181,7 +181,7 @@
 	const auto name = prev_lex_tok()
 #define EXPECT_IDENT_AND_GRAB_S(name) \
 	EXPECT(MiscIdent); \
-	name = prev_lex_s()
+	name = prev_lex_s() \
 
 
 //#endif		// src_parser_class_defines_hpp
