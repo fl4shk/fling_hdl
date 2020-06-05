@@ -365,6 +365,21 @@ public:		// parsing functions
 		const ParseFunc& scope_func);
 	//--------
 
+	//--------
+	using BinopParsePair = pair<ParseFunc, ast::BinopExpr::Kind>;
+	template<typename... RemArgTypes>
+	void _inner_parse_binop_expr(const BinopParsePair& first_pair,
+		RemArgTypes&&... rem_args);
+
+	template<typename... RemArgTypes>
+	inline void _inner_parse_binop_expr(const ParseFunc& start_parse_func,
+		const BinopParsePair& first_pair, RemArgTypes&&... rem_args)
+	{
+		_call_parse_func(start_parse_func);
+		_inner_parse_binop_expr(first_pair, rem_args...);
+	}
+	//--------
+
 	#define X(name, dummy_0) \
 		ParseRet _parseTok##name();
 	LIST_OF_TOKENS(X)

@@ -2355,6 +2355,13 @@ auto Parser::_parse_flingImportItemList() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingImportItemList);
+		DEFER_PUSH_LIST(list);
+
+		do
+		{
+			_parse_flingImportItem();
+			list.push_back(_pop_ast_node());
+		} while (ATTEMPT_TOK_PARSE(PunctComma));
 
 		return std::nullopt;
 	}
@@ -2375,6 +2382,8 @@ auto Parser::_parse_flingExpr() -> ParseRet
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingExpr);
 
+		_parse_flingMuxExpr();
+
 		return std::nullopt;
 	}
 }
@@ -2392,6 +2401,31 @@ auto Parser::_parse_flingMuxExpr() -> ParseRet
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingMuxExpr);
 
+		if (ATTEMPT_TOK_PARSE(KwMux))
+		{
+			DEFER_PUSH_NODE(node, MuxExpr);
+
+			EXPECT(PunctLparen);
+
+			JUST_PARSE_AND_POP_AST_NODE
+				(node->cond, _parse_flingExpr);
+			EXPECT(PunctComma);
+			JUST_PARSE_AND_POP_AST_NODE
+				(node->when_true, _parse_flingExpr);
+			EXPECT(PunctComma);
+			JUST_PARSE_AND_POP_AST_NODE
+				(node->when_false, _parse_flingExpr);
+
+			EXPECT(PunctRparen);
+		}
+		else if (ATTEMPT_PARSE(_parse_flingLogorExpr))
+		{
+		}
+		else
+		{
+			_expect_wanted_tok();
+		}
+
 		return std::nullopt;
 	}
 }
@@ -2407,6 +2441,9 @@ auto Parser::_parse_flingLogorExpr() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingLogorExpr);
+
+		_inner_parse_binop_expr(MEMB_FUNC(_parse_flingLogandExpr()),
+			pair(TOK_PARSE_FUNC(PunctLogor), BinopExpr::Kind::Logor));
 
 		return std::nullopt;
 	}
@@ -3346,6 +3383,33 @@ auto Parser::_inner_parse_flingGenFor(string&& func_name,
 		node->scope = _pop_ast_node();
 
 		return std::nullopt;
+	}
+}
+//--------
+
+//--------
+template<typename... RemArgTypes>
+void Parser::_inner_parse_binop_expr(const BinopParsePair& first_pair,
+	RemArgTypes&&... rem_args)
+{
+	if (_attempt_parse(first_pair.first))
+	{
+		DEFER_PUSH_NODE(node, BinopExpr);
+
+		node->kind = first_pair.second;
+
+		node->left = _pop_ast_node();
+
+		JUST_PARSE_AND_POP_AST_NODE
+			(node->right, _parse_flingExpr);
+	}
+	else if constexpr (sizeof...(rem_args) > 0)
+	{
+		_inner_parse_binop_expr(rem_args...);
+	}
+	else
+	{
+		_expect_wanted_tok();
 	}
 }
 //--------
