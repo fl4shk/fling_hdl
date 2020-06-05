@@ -2318,6 +2318,26 @@ auto Parser::_parse_flingImportItem() -> ParseRet
 		node->ends_with_all = false;
 
 		{
+			string ident;
+			defer(_, node->ident_list.push_back(move(ident)););
+			EXPECT_IDENT_AND_GRAB_S(ident);
+		}
+
+		while (ATTEMPT_TOK_PARSE(PunctScopeAccess))
+		{
+			if (ATTEMPT_TOK_PARSE(MiscIdent))
+			{
+				node->ident_list.push_back(prev_lex_s());
+			}
+			else if (ATTEMPT_TOK_PARSE(KwAll))
+			{
+				node->ends_with_all = true;
+				break;
+			}
+			else
+			{
+				_expect_wanted_tok();
+			}
 		}
 
 		return std::nullopt;

@@ -39,6 +39,7 @@ namespace ast
 using Base = AstNodeBase;
 using BaseUptr = AstNodeBaseUptr;
 using BaseUptrList = AstNodeBaseUptrList;
+using StringIndCircLinkList = IndCircLinkList<string>;
 //--------
 
 //--------
@@ -87,13 +88,10 @@ class ImportItem: public Base
 public:		// variables
 	DATA
 	(
+		MEMB_VAR(StringIndCircLinkList, ident_list),
 		MEMB_VAR(bool, ends_with_all)
 	);
 
-	CHILDREN
-	(
-		MEMB_VAR(BaseUptrList, item_list)
-	);
 public:		// functions
 	SHARED_CONTENTS(ImportItem, Base);
 };
