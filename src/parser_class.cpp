@@ -2847,29 +2847,60 @@ auto Parser::_parse_flingParenExpr() -> ParseRet
 
 auto Parser::_parse_flingCallDollarFuncExpr() -> ParseRet
 {
+	#define LIST(X) \
+		X \
+		( \
+			TOK_PARSE_FUNC(KwDollarSize), \
+			TOK_PARSE_FUNC(KwDollarHigh), \
+			TOK_PARSE_FUNC(KwDollarLow), \
+			\
+			TOK_PARSE_FUNC(KwDollarUnsigned), \
+			TOK_PARSE_FUNC(KwDollarSigned), \
+			\
+			TOK_PARSE_FUNC(KwDollarIsUnsigned), \
+			TOK_PARSE_FUNC(KwDollarIsSigned), \
+			\
+			TOK_PARSE_FUNC(KwDollarPow) \
+		)
+
 	if (just_get_valid_tokens())
 	{
-		return GET_VALID_TOK_SET
-			(
-				TOK_PARSE_FUNC(KwDollarSize),
-				TOK_PARSE_FUNC(KwDollarHigh),
-				TOK_PARSE_FUNC(KwDollarLow),
-
-				TOK_PARSE_FUNC(KwDollarUnsigned),
-				TOK_PARSE_FUNC(KwDollarSigned),
-
-				TOK_PARSE_FUNC(KwDollarIsUnsigned),
-				TOK_PARSE_FUNC(KwDollarIsSigned),
-
-				TOK_PARSE_FUNC(KwDollarPow)
-			);
+		return LIST(GET_VALID_TOK_SET);
 	}
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingCallDollarFuncExpr);
+		DEFER_PUSH_NODE(node, CallDollarFuncExpr);
+
+		START_PARSE_IFELSE(LIST);
+
+		if (prev_lex_tok() != Tok::KwDollarPow)
+		{
+			if (ATTEMPT_PARSE(_parse_flingExpr)
+				|| ATTEMPT_PARSE(_parse_flingTypenm))
+			{
+				node->arg = _pop_ast_node();
+			}
+			else
+			{
+				_expect_wanted_tok();
+			}
+		}
+		else // if (prev_lex_tok() == Tok::KwDollarPow)
+		{
+			EXPECT(PunctLparen);
+			JUST_PARSE_AND_POP_AST_NODE
+				(node->arg, _parse_flingExpr);
+			EXPECT(PunctComma);
+			JUST_PARSE_AND_POP_AST_NODE
+				(node->opt_second_arg, _parse_flingExpr);
+			EXPECT(PunctRparen);
+		}
 
 		return std::nullopt;
 	}
+
+	#undef LIST
 }
 auto Parser::_parse_flingAssignLhsIdentExpr() -> ParseRet
 {
