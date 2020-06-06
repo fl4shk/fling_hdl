@@ -2675,15 +2675,6 @@ auto Parser::_parse_flingUnaryExpr() -> ParseRet
 
 		using Kind = UnopExpr::Kind;
 
-		//if (_attempt_parse(p.first))
-		//{
-		//	DEFER_PUSH_NODE(node, UnopExpr);
-
-		//	node->kind = p.second;
-
-		//	JUST_PARSE_AND_POP_AST_NODE
-		//		(node->arg, _parse_flingExpr);
-		//}
 		#define _INNER_X(tok, some_kind) \
 			if (ATTEMPT_TOK_PARSE(tok)) \
 			{ \
@@ -2711,36 +2702,149 @@ auto Parser::_parse_flingUnaryExpr() -> ParseRet
 }
 auto Parser::_parse_flingLowExpr() -> ParseRet
 {
+	#define LIST(X) \
+		X \
+		( \
+			_parse_flingLitNumExpr, \
+			_parse_flingLitHighImpedExpr, \
+			_parse_flingLitUnknExpr, \
+			_parse_flingParenExpr, \
+			\
+			_parse_flingCallDollarFuncExpr, \
+			\
+			_parse_flingIdentExpr, \
+			\
+			_parse_flingCatExpr, \
+			_parse_flingReplExpr, \
+			_parse_flingSizedExpr \
+		)
 	if (just_get_valid_tokens())
 	{
-		return GET_VALID_TOK_SET
-			(
-				TOK_PARSE_FUNC(LitDecNum),
-				TOK_PARSE_FUNC(LitHexNum),
-				TOK_PARSE_FUNC(LitOctNum),
-				TOK_PARSE_FUNC(LitBinNum),
-
-				TOK_PARSE_FUNC(KwHighImped),
-				TOK_PARSE_FUNC(KwUnkn),
-
-				TOK_PARSE_FUNC(PunctLparen),
-
-				_parse_flingCallDollarFuncExpr,
-
-				_parse_flingIdentExpr,
-
-				_parse_flingCatExpr,
-				_parse_flingReplExpr,
-				_parse_flingSizedExpr
-			);
+		return LIST(GET_VALID_TOK_SET);
 	}
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingLowExpr);
 
+		START_PARSE_IFELSE(LIST);
+
+		return std::nullopt;
+	}
+	#undef LIST
+}
+auto Parser::_parse_flingLitNumExpr() -> ParseRet
+{
+	#define LIST(X) \
+		X \
+		( \
+			TOK_PARSE_FUNC(LitDecNum), \
+			TOK_PARSE_FUNC(LitHexNum), \
+			TOK_PARSE_FUNC(LitOctNum), \
+			TOK_PARSE_FUNC(LitBinNum) \
+		)
+
+	if (just_get_valid_tokens())
+	{
+		return LIST(GET_VALID_TOK_SET);
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		PROLOGUE_AND_EPILOGUE(_parse_flingLitNumExpr);
+
+		DEFER_PUSH_NODE(node, LitValExpr);
+
+		START_PARSE_IFELSE(LIST);
+
+		node->kind = LitValExpr::Kind::Number;
+		node->opt_num_str = prev_lex_s();
+		node->opt_num = prev_lex_n();
+
+		return std::nullopt;
+	}
+
+	#undef LIST
+}
+auto Parser::_parse_flingLitHighImpedExpr() -> ParseRet
+{
+	if (just_get_valid_tokens())
+	{
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwHighImped)
+			);
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		PROLOGUE_AND_EPILOGUE(_parse_flingLitHighImpedExpr);
+
+		DEFER_PUSH_NODE(node, LitValExpr);
+
+		EXPECT(KwHighImped);
+
+		node->kind = LitValExpr::Kind::HighImped;
+
+		if (ATTEMPT_TOK_PARSE(PunctLparen))
+		{
+			JUST_PARSE_AND_POP_AST_NODE
+				(node->opt_expr, _parse_flingExpr);
+
+			EXPECT(PunctRparen);
+		}
+
 		return std::nullopt;
 	}
 }
+auto Parser::_parse_flingLitUnknExpr() -> ParseRet
+{
+	if (just_get_valid_tokens())
+	{
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(KwUnkn)
+			);
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		PROLOGUE_AND_EPILOGUE(_parse_flingLitUnknExpr);
+
+		DEFER_PUSH_NODE(node, LitValExpr);
+
+		EXPECT(KwUnkn);
+
+		node->kind = LitValExpr::Kind::Unknown;
+
+		if (ATTEMPT_TOK_PARSE(PunctLparen))
+		{
+			JUST_PARSE_AND_POP_AST_NODE
+				(node->opt_expr, _parse_flingExpr);
+
+			EXPECT(PunctRparen);
+		}
+
+		return std::nullopt;
+	}
+}
+auto Parser::_parse_flingParenExpr() -> ParseRet
+{
+	if (just_get_valid_tokens())
+	{
+		return GET_VALID_TOK_SET
+			(
+				TOK_PARSE_FUNC(PunctLparen)
+			);
+	}
+	else // if (!just_get_valid_tokens())
+	{
+		PROLOGUE_AND_EPILOGUE(_parse_flingParenExpr);
+
+		EXPECT(PunctLparen);
+		_parse_flingExpr();
+		EXPECT(PunctRparen);
+
+		return std::nullopt;
+	}
+}
+
 auto Parser::_parse_flingCallDollarFuncExpr() -> ParseRet
 {
 	if (just_get_valid_tokens())

@@ -309,7 +309,13 @@ public:		// parsing functions
 	ParseRet _parse_flingBitxorBitxnorExpr();
 	ParseRet _parse_flingBitshiftExpr();
 	ParseRet _parse_flingUnaryExpr();
+
 	ParseRet _parse_flingLowExpr();
+	ParseRet _parse_flingLitNumExpr();
+	ParseRet _parse_flingLitHighImpedExpr();
+	ParseRet _parse_flingLitUnknExpr();
+	ParseRet _parse_flingParenExpr();
+
 	ParseRet _parse_flingCallDollarFuncExpr();
 	ParseRet _parse_flingAssignLhsIdentExpr();
 	ParseRet _parse_flingAssignLhsCatExpr();

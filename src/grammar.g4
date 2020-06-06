@@ -760,15 +760,11 @@ flingUnaryExpr:
 	;
 
 flingLowExpr:
-	LitDecNum
-	| LitHexNum
-	| LitOctNum
-	| LitBinNum
+	flingLitNumExpr
 
-	| KwHighImped (PunctLparen flingExpr PunctRparen)?
-	| KwUnkn (PunctLparen flingExpr PunctRparen)?
-
-	| PunctLparen flingExpr PunctRparen
+	| flingLitHighImpedExpr
+	| flingLitUnknExpr
+	| flingParenExpr
 
 	| flingCallDollarFuncExpr
 
@@ -779,6 +775,25 @@ flingLowExpr:
 	| flingCatExpr
 	| flingReplExpr
 	| flingSizedExpr
+	;
+
+flingLitNumExpr:
+	LitDecNum
+	| LitHexNum
+	| LitOctNum
+	| LitBinNum
+	;
+
+flingLitHighImpedExpr:
+	KwHighImped (PunctLparen flingExpr PunctRparen)?
+	;
+
+flingLitUnknExpr:
+	KwUnkn (PunctLparen flingExpr PunctRparen)?
+	;
+
+flingParenExpr:
+	PunctLparen flingExpr PunctRparen
 	;
 
 flingCallDollarFuncExpr:
