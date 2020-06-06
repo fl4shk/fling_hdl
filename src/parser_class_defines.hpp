@@ -185,5 +185,12 @@
 	EXPECT(MiscIdent); \
 	name = prev_lex_s() \
 
+#define _INNER_INNER_PARSE_BINOP_EXPR(tok, kind) \
+	pair(TOK_PARSE_MEMB_FUNC(tok), BinopExpr::Kind::kind)
+
+#define INNER_PARSE_BINOP_EXPR(first_parse_func, ...) \
+	_inner_parse_binop_expr(MEMB_FUNC(first_parse_func), \
+		EVAL(MAP_PAIRS(_INNER_INNER_PARSE_BINOP_EXPR, COMMA, __VA_ARGS__)))
+
 
 //#endif		// src_parser_class_defines_hpp

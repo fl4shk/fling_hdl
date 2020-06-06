@@ -2442,8 +2442,10 @@ auto Parser::_parse_flingLogorExpr() -> ParseRet
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingLogorExpr);
 
-		_inner_parse_binop_expr(MEMB_FUNC(_parse_flingLogandExpr),
-			pair(TOK_PARSE_MEMB_FUNC(PunctLogor), BinopExpr::Kind::Logor));
+		//_inner_parse_binop_expr(MEMB_FUNC(_parse_flingLogandExpr),
+		//	pair(TOK_PARSE_MEMB_FUNC(PunctLogor), BinopExpr::Kind::Logor));
+		INNER_PARSE_BINOP_EXPR(_parse_flingLogandExpr,
+			PunctLogor, Logor);
 
 		return std::nullopt;
 	}
@@ -2461,6 +2463,9 @@ auto Parser::_parse_flingLogandExpr() -> ParseRet
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingLogandExpr);
 
+		INNER_PARSE_BINOP_EXPR(_parse_flingCmpEqEtcExpr,
+			PunctLogand, Logand);
+
 		return std::nullopt;
 	}
 }
@@ -2476,6 +2481,12 @@ auto Parser::_parse_flingCmpEqEtcExpr() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingCmpEqEtcExpr);
+
+		INNER_PARSE_BINOP_EXPR(_parse_flingCmpLtEtcExpr,
+			PunctCmpEq, CmpEq,
+			PunctCmpNe, CmpNe,
+			PunctCaseCmpEq, CaseCmpEq,
+			PunctCaseCmpNe, CaseCmpNe);
 
 		return std::nullopt;
 	}
@@ -2493,6 +2504,12 @@ auto Parser::_parse_flingCmpLtEtcExpr() -> ParseRet
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingCmpLtEtcExpr);
 
+		INNER_PARSE_BINOP_EXPR(_parse_flingPlusMinusExpr,
+			PunctCmpLt, CmpLt,
+			PunctCmpGt, CmpGt,
+			PunctCmpLe, CmpLe,
+			PunctCmpGe, CmpGe);
+
 		return std::nullopt;
 	}
 }
@@ -2508,6 +2525,10 @@ auto Parser::_parse_flingPlusMinusExpr() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingPlusMinusExpr);
+
+		INNER_PARSE_BINOP_EXPR(_parse_flingMulDivModExpr,
+			PunctPlus, Plus,
+			PunctMinus, Minus);
 
 		return std::nullopt;
 	}
@@ -2525,6 +2546,11 @@ auto Parser::_parse_flingMulDivModExpr() -> ParseRet
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingMulDivModExpr);
 
+		INNER_PARSE_BINOP_EXPR(_parse_flingBitorBitnorExpr,
+			PunctMul, Mul,
+			PunctDiv, Div,
+			PunctMod, Mod);
+
 		return std::nullopt;
 	}
 }
@@ -2540,6 +2566,10 @@ auto Parser::_parse_flingBitorBitnorExpr() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingBitorBitnorExpr);
+
+		INNER_PARSE_BINOP_EXPR(_parse_flingBitandBitnandExpr,
+			PunctBitor, Bitor,
+			PunctBitnor, Bitnor);
 
 		return std::nullopt;
 	}
@@ -2557,6 +2587,10 @@ auto Parser::_parse_flingBitandBitnandExpr() -> ParseRet
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingBitandBitnandExpr);
 
+		INNER_PARSE_BINOP_EXPR(_parse_flingBitxorBitxnorExpr,
+			PunctBitand, Bitand,
+			PunctBitnand, Bitnand);
+
 		return std::nullopt;
 	}
 }
@@ -2572,6 +2606,10 @@ auto Parser::_parse_flingBitxorBitxnorExpr() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingBitxorBitxnorExpr);
+
+		INNER_PARSE_BINOP_EXPR(_parse_flingBitshiftExpr,
+			PunctBitxor, Bitxor,
+			PunctBitxnor, Bitxnor);
 
 		return std::nullopt;
 	}
@@ -2589,39 +2627,87 @@ auto Parser::_parse_flingBitshiftExpr() -> ParseRet
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingBitshiftExpr);
 
+		INNER_PARSE_BINOP_EXPR(_parse_flingUnaryExpr,
+			KwLsl, Lsl,
+			KwLsr, Lsr,
+			KwAsr, Asr);
+
 		return std::nullopt;
 	}
 }
 auto Parser::_parse_flingUnaryExpr() -> ParseRet
 {
+	#define LIST(X) \
+		X \
+		( \
+			PunctPlus, Kind::Plus, \
+			PunctMinus, Kind::Minus, \
+			\
+			PunctBitnot, Kind::Bitnot, \
+			PunctLognot, Kind::Lognot, \
+			\
+			PunctBitor, Kind::Bitor, \
+			PunctBitnor, Kind::Bitnor, \
+			\
+			PunctBitand, Kind::Bitand, \
+			PunctBitnand, Kind::Bitnand, \
+			\
+			PunctBitxor, Kind::Bitxor, \
+			PunctBitxnor, Kind::Bitxnor \
+		)
 	if (just_get_valid_tokens())
 	{
-		return GET_VALID_TOK_SET
-			(
-				TOK_PARSE_FUNC(PunctPlus),
-				TOK_PARSE_FUNC(PunctMinus),
-
-				TOK_PARSE_FUNC(PunctBitnot),
-				TOK_PARSE_FUNC(PunctLognot),
-
-				TOK_PARSE_FUNC(PunctBitor),
-				TOK_PARSE_FUNC(PunctBitnor),
-
-				TOK_PARSE_FUNC(PunctBitand),
-				TOK_PARSE_FUNC(PunctBitnand),
-
-				TOK_PARSE_FUNC(PunctBitxor),
-				TOK_PARSE_FUNC(PunctBitxnor),
-
-				_parse_flingLowExpr
-			);
+		#define _INNER_X(tok, kind) \
+			TOK_PARSE_FUNC(tok)
+		#define X(...) \
+			GET_VALID_TOK_SET \
+			( \
+				EVAL(MAP_PAIRS(_INNER_X, COMMA, __VA_ARGS__)), \
+				_parse_flingLowExpr \
+			)
+		return LIST(X);
+		#undef _INNER_X
+		#undef X
 	}
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingUnaryExpr);
 
+		using Kind = UnopExpr::Kind;
+
+		//if (_attempt_parse(p.first))
+		//{
+		//	DEFER_PUSH_NODE(node, UnopExpr);
+
+		//	node->kind = p.second;
+
+		//	JUST_PARSE_AND_POP_AST_NODE
+		//		(node->arg, _parse_flingExpr);
+		//}
+		#define _INNER_X(tok, some_kind) \
+			if (ATTEMPT_TOK_PARSE(tok)) \
+			{ \
+				DEFER_PUSH_NODE(node, UnopExpr); \
+				node->kind = some_kind; \
+				_parse_flingExpr(); \
+				node->arg = _pop_ast_node(); \
+			}
+		#define X(...) \
+			EVAL(MAP_PAIRS(_INNER_X, ELSE, __VA_ARGS__))
+		LIST(X)
+		#undef _INNER_X
+		#undef X
+		else if (ATTEMPT_PARSE(_parse_flingLowExpr))
+		{
+		}
+		else
+		{
+			_expect_wanted_tok();
+		}
+
 		return std::nullopt;
 	}
+	#undef LIST
 }
 auto Parser::_parse_flingLowExpr() -> ParseRet
 {
