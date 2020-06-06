@@ -2915,6 +2915,19 @@ auto Parser::_parse_flingAssignLhsIdentExpr() -> ParseRet
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingAssignLhsIdentExpr);
 
+		DEFER_PUSH_NODE(node, IdentExpr);
+
+		{
+			DEFER_PUSH_NODE(str_and_node, StrAndNode);
+			EXPECT_IDENT_AND_GRAB_S(str_and_node->str);
+		}
+		node->prologue_list.push_back(_pop_ast_node());
+
+		if (ATTEMPT_PARSE(_parse_flingIdentExprSuffix))
+		{
+			node->suffix = _pop_ast_node();
+		}
+
 		return std::nullopt;
 	}
 }
@@ -2930,6 +2943,18 @@ auto Parser::_parse_flingAssignLhsCatExpr() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingAssignLhsCatExpr);
+		DEFER_PUSH_NODE(node, CatExpr);
+
+		EXPECT(KwCat);
+		EXPECT(PunctLparen);
+
+		do
+		{
+			_parse_flingAssignLhsIdentExpr();
+			node->item_list.push_back(_pop_ast_node());
+		} while (ATTEMPT_TOK_PARSE(PunctComma));
+
+		EXPECT(PunctRparen);
 
 		return std::nullopt;
 	}
@@ -2949,6 +2974,71 @@ auto Parser::_parse_flingIdentExprSuffix() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingIdentExprSuffix);
+		DEFER_PUSH_NODE(node, IdentExprSuffix);
+
+		while (ATTEMPT_TOK_PARSE(PunctMemberAccess)
+			|| ATTEMPT_TOK_PARSE(PunctLbracket))
+		{
+			if (prev_lex_tok() == Tok::PunctMemberAccess)
+			{
+				DEFER_PUSH_NODE(child, StrAndNode);
+				EXPECT_IDENT_AND_GRAB_S(child->str);
+			}
+			else // if (prev_lex_tok() == Tok::PunctLbracket)
+			{
+				_parse_flingExpr();
+				EXPECT(PunctRbracket);
+			}
+			node->acc_memb_or_arr_list.push_back(_pop_ast_node());
+		}
+
+		if (ATTEMPT_TOK_PARSE(PunctVecDimStart))
+		{
+			if (ATTEMPT_PARSE(_parse_flingExpr))
+			{
+				if (ATTEMPT_TOK_PARSE(PunctPlusColon)
+					|| ATTEMPT_TOK_PARSE(PunctMinusColon))
+				{
+					DEFER_PUSH_NODE(ind_part_sel, IndexedPartSel);
+					ind_part_sel->left = _pop_ast_node();
+
+					using Kind = IndexedPartSel::Kind;
+
+					if (prev_lex_tok() == Tok::PunctPlusColon)
+					{
+						ind_part_sel->kind = Kind::PlusColon;
+					}
+					else // if (prev_lex_tok() == Tok::PunctMinusColon)
+					{
+						ind_part_sel->kind = Kind::MinusColon;
+					}
+
+					JUST_PARSE_AND_POP_AST_NODE
+						(ind_part_sel->right, _parse_flingExpr);
+				}
+				else 
+				{
+					DEFER_PUSH_NODE(range, NonDollarFuncRange);
+
+					range->arg = _pop_ast_node();
+
+					PARSE_AND_POP_AST_NODE_IF
+						(range->opt_second_arg,
+						_parse_flingSimpleRangeSuffix);
+				}
+			}
+			else if (ATTEMPT_PARSE(_parse_flingNonSimpleRange))
+			{
+			}
+			else
+			{
+				_expect_wanted_tok();
+			}
+
+			node->opt_range_etc = _pop_ast_node();
+
+			EXPECT(PunctRbracket);
+		}
 
 		return std::nullopt;
 	}

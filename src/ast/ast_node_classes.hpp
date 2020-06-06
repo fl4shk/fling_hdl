@@ -965,21 +965,46 @@ BUILD_KIND_OPERATOR_LSHIFT(CallDollarFuncExpr);
 //	SHARED_CONTENTS(String, Base);
 //};
 
-class IdentExprSuffix: public Base
+class IndexedPartSel: public Base
 {
+public:		// types
+	enum class Kind
+	{
+		PlusColon,
+		MinusColon,
+	};
+	static string conv_kind(Kind to_conv)
+	{
+		CONV_ENUM_SWITCH(CONV_KIND_CASE,
+			PlusColon,
+			MinusColon);
+	}
 public:		// variables
 	DATA
 	(
-		MEMB_VAR(bool, part_sel_is_minus_colon)
+		MEMB_VAR(Kind, kind)
 	);
 
+	CHILDREN
+	(
+		MEMB_VAR(BaseUptr, left),
+		MEMB_VAR(BaseUptr, right)
+	);
+public:		// functions
+	SHARED_CONTENTS(IndexedPartSel, Base);
+};
+BUILD_KIND_OPERATOR_LSHIFT(IndexedPartSel);
+
+
+class IdentExprSuffix: public Base
+{
+public:		// variables
 	CHILDREN
 	(
 		// Access members or array elements
 		MEMB_VAR(BaseUptrList, acc_memb_or_arr_list),
 
 		MEMB_VAR(BaseUptr, opt_range_etc),
-		MEMB_VAR(BaseUptr, opt_part_sel_right)
 	);
 public:		// functions
 	SHARED_CONTENTS(IdentExprSuffix, Base);

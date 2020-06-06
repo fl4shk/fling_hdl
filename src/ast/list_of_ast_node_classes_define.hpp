@@ -79,6 +79,8 @@
 	X(LitValExpr) \
 	X(CallDollarFuncExpr) \
 	/* X(String) */ \
+	\
+	X(IndexedPartSel) \
 	X(IdentExprSuffix) \
 	X(IdentExpr) \
 	X(CatExpr) \
