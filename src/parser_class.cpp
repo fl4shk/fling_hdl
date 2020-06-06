@@ -2442,8 +2442,8 @@ auto Parser::_parse_flingLogorExpr() -> ParseRet
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingLogorExpr);
 
-		_inner_parse_binop_expr(MEMB_FUNC(_parse_flingLogandExpr()),
-			pair(TOK_PARSE_FUNC(PunctLogor), BinopExpr::Kind::Logor));
+		_inner_parse_binop_expr(MEMB_FUNC(_parse_flingLogandExpr),
+			pair(TOK_PARSE_MEMB_FUNC(PunctLogor), BinopExpr::Kind::Logor));
 
 		return std::nullopt;
 	}

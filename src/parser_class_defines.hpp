@@ -166,6 +166,8 @@
 
 #define TOK_PARSE_FUNC(tok) \
 	_parseTok##tok
+#define TOK_PARSE_MEMB_FUNC(tok) \
+	MEMB_FUNC(TOK_PARSE_FUNC(tok))
 
 #define _INNER_INSERT_WANTED_TOK(tok) \
 	_wanted_tok_set.insert(_INNER_TOK_CSL(tok))
