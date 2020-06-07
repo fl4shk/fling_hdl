@@ -1180,14 +1180,17 @@ auto Parser::_parse_flingAnyBehavScopeItemStWithIdent() -> ParseRet
 				DEFER_PUSH_NODE(ident_expr, IdentExpr);
 
 				{
-					DEFER_PUSH_NODE(to_push, StrAndNode);
-					to_push->str = move(ident);
+					DEFER_PUSH_NODE(start, IdentExprStart);
+					defer(_, start->item_list.push_back(_pop_ast_node()););
+					{
+						DEFER_PUSH_NODE(to_push, StrAndNode);
+						to_push->str = move(ident);
+					}
 				}
-
-				ident_expr->prologue_list.push_back(_pop_ast_node());
+				ident_expr->start = _pop_ast_node();
 
 				PARSE_AND_POP_AST_NODE_IF
-					(ident_expr->suffix, _parse_flingIdentExprSuffix);
+					(ident_expr->opt_suffix, _parse_flingIdentExprSuffix);
 			}
 
 			node->lhs = _pop_ast_node();
@@ -1203,19 +1206,22 @@ auto Parser::_parse_flingAnyBehavScopeItemStWithIdent() -> ParseRet
 			DEFER_PUSH_NODE(node, IdentExpr);
 
 			{
-				DEFER_PUSH_NODE(to_push, StrAndNode);
-				to_push->str = move(ident);
+				DEFER_PUSH_NODE(start, IdentExprStart);
+				{
+					DEFER_PUSH_NODE(to_push, StrAndNode);
+					to_push->str = move(ident);
 
-				PARSE_AND_POP_AST_NODE_IF
-					(to_push->node, _parse_flingInstParamList);
+					PARSE_AND_POP_AST_NODE_IF
+						(to_push->node, _parse_flingInstParamList);
+				}
+				start->item_list.push_back(_pop_ast_node());
+
+				while (ATTEMPT_PARSE(_parse_flingTypenmCstmChainItem))
+				{
+					start->item_list.push_back(_pop_ast_node());
+				}
 			}
-
-			node->prologue_list.push_back(_pop_ast_node());
-
-			while (ATTEMPT_PARSE(_parse_flingTypenmCstmChainItem))
-			{
-				node->prologue_list.push_back(_pop_ast_node());
-			}
+			node->start = _pop_ast_node();
 
 			JUST_PARSE_AND_POP_AST_NODE
 				(node->opt_arg_list, _parse_flingInstArgList);
@@ -2918,14 +2924,18 @@ auto Parser::_parse_flingAssignLhsIdentExpr() -> ParseRet
 		DEFER_PUSH_NODE(node, IdentExpr);
 
 		{
-			DEFER_PUSH_NODE(str_and_node, StrAndNode);
-			EXPECT_IDENT_AND_GRAB_S(str_and_node->str);
+			DEFER_PUSH_NODE(start, IdentExprStart);
+			defer(_, start->item_list.push_back(_pop_ast_node()););
+			{
+				DEFER_PUSH_NODE(str_and_node, StrAndNode);
+				EXPECT_IDENT_AND_GRAB_S(str_and_node->str);
+			}
 		}
-		node->prologue_list.push_back(_pop_ast_node());
+		node->start = _pop_ast_node();
 
 		if (ATTEMPT_PARSE(_parse_flingIdentExprSuffix))
 		{
-			node->suffix = _pop_ast_node();
+			node->opt_suffix = _pop_ast_node();
 		}
 
 		return std::nullopt;
@@ -3055,6 +3065,18 @@ auto Parser::_parse_flingIdentExprStart() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingIdentExprStart);
+		DEFER_PUSH_NODE(node, IdentExprStart);
+
+		do
+		{
+			{
+				DEFER_PUSH_NODE(str_and_node, StrAndNode);
+				EXPECT_IDENT_AND_GRAB_S(str_and_node->str);
+				PARSE_AND_POP_AST_NODE_IF
+					(str_and_node->node, _parse_flingInstParamList);
+			}
+			node->item_list.push_back(_pop_ast_node());
+		} while (ATTEMPT_TOK_PARSE(PunctScopeAccess));
 
 		return std::nullopt;
 	}
@@ -3071,6 +3093,14 @@ auto Parser::_parse_flingIdentExpr() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingIdentExpr);
+		DEFER_PUSH_NODE(node, IdentExpr);
+
+		JUST_PARSE_AND_POP_AST_NODE
+			(node->start, _parse_flingIdentExprStart);
+		PARSE_AND_POP_AST_NODE_IF
+			(node->opt_arg_list, _parse_flingInstArgList);
+		PARSE_AND_POP_AST_NODE_IF
+			(node->opt_suffix, _parse_flingIdentExprSuffix);
 
 		return std::nullopt;
 	}
@@ -3087,6 +3117,13 @@ auto Parser::_parse_flingCatExpr() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingCatExpr);
+		DEFER_PUSH_NODE(node, CatExpr);
+
+		EXPECT(KwCat);
+		EXPECT(PunctLparen);
+		JUST_PARSE_AND_POP_AST_LIST
+			(node->item_list, _parse_flingExprList);
+		EXPECT(PunctRparen);
 
 		return std::nullopt;
 	}
@@ -3103,6 +3140,16 @@ auto Parser::_parse_flingReplExpr() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingReplExpr);
+		DEFER_PUSH_NODE(node, ReplExpr);
+
+		EXPECT(KwRepl);
+		EXPECT(PunctLparen);
+		JUST_PARSE_AND_POP_AST_NODE
+			(node->amount, _parse_flingExpr);
+		EXPECT(PunctComma);
+		JUST_PARSE_AND_POP_AST_NODE
+			(node->to_repl, _parse_flingExpr);
+		EXPECT(PunctRparen);
 
 		return std::nullopt;
 	}
@@ -3119,6 +3166,16 @@ auto Parser::_parse_flingSizedExpr() -> ParseRet
 	else // if (!just_get_valid_tokens())
 	{
 		PROLOGUE_AND_EPILOGUE(_parse_flingSizedExpr);
+		DEFER_PUSH_NODE(node, SizedExpr);
+
+		EXPECT(KwSized);
+		EXPECT(PunctLparen);
+		JUST_PARSE_AND_POP_AST_NODE
+			(node->lit_num, _parse_flingLitNumExpr);
+		EXPECT(PunctComma);
+		JUST_PARSE_AND_POP_AST_NODE
+			(node->width, _parse_flingExpr);
+		EXPECT(PunctRparen);
 
 		return std::nullopt;
 	}

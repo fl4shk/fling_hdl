@@ -996,6 +996,20 @@ public:		// functions
 BUILD_KIND_OPERATOR_LSHIFT(IndexedPartSel);
 
 
+class IdentExprStart: public Base
+{
+public:		// variables
+	CHILDREN
+	(
+		// Expected list type (from `flingIdentExprStart`,
+		// `flingTypenmCstmChainItem`, etc.):  `StrAndNode`,
+		// storing a `MiscIdent` and optionally a `ParamOrArgList`
+		MEMB_VAR(BaseUptrList, item_list)
+	);
+public:		// functions
+	SHARED_CONTENTS(IdentExprStart, Base);
+};
+
 class IdentExprSuffix: public Base
 {
 public:		// variables
@@ -1015,13 +1029,9 @@ class IdentExpr: public ExprBase
 public:		// variables
 	CHILDREN
 	(
-		// Expected list type (from `flingIdentExprStart`,
-		// `flingTypenmCstmChainItem`, etc.):  `StrAndNode`,
-		// storing a `MiscIdent` and optionally a `ParamOrArgList`
-		MEMB_VAR(BaseUptrList, prologue_list),
+		MEMB_VAR(BaseUptr, start),
 		MEMB_VAR(BaseUptr, opt_arg_list),
-
-		MEMB_VAR(BaseUptr, suffix)
+		MEMB_VAR(BaseUptr, opt_suffix)
 	);
 public:		// functions
 	SHARED_CONTENTS(IdentExpr, ExprBase);

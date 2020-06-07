@@ -81,8 +81,11 @@
 	/* X(String) */ \
 	\
 	X(IndexedPartSel) \
+	\
+	X(IdentExprStart) \
 	X(IdentExprSuffix) \
 	X(IdentExpr) \
+	\
 	X(CatExpr) \
 	X(ReplExpr) \
 	X(SizedExpr) \

@@ -352,7 +352,10 @@ flingAnyBehavScopeItem:
 flingAnyBehavScopeItemStWithIdent:
 	MiscIdent 
 		(
+			// behavioral assignment
 			flingIdentExprSuffix? flingAnyBehavScopeItemAssignSuffix
+
+			// function call
 			| flingInstParamList? flingTypenmCstmChainItem*
 				flingInstArgList
 		)
@@ -868,7 +871,7 @@ flingIdentExprSuffix:
 
 flingIdentExprStart:
 	MiscIdent flingInstParamList?
-		flingTypenmCstmChainItem?
+		(PunctScopeAccess MiscIdent flingInstParamList)*
 	;
 
 flingIdentExpr:
@@ -891,13 +894,7 @@ flingReplExpr:
 flingSizedExpr:
 	KwSized
 		PunctLparen 
-			(
-				LitDecNum
-				| LitHexNum
-				| LitOctNum
-				| LitBinNum
-			)
-			PunctComma flingExpr 
+			flingLitNumExpr PunctComma flingExpr 
 		PunctRparen
 	;
 //--------
@@ -936,7 +933,7 @@ flingExprOrRange:
 
 //--------
 flingTypenmCstmChainItem:
-	PunctScopeAccess flingIdentExprStart
+	PunctScopeAccess MiscIdent flingInstParamList?
 	;
 flingTypenm:
 	(
