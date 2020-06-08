@@ -20,9 +20,9 @@
 
 // src/parser/parser_class.hpp
 
-#include "misc_includes.hpp"
-#include "lexer_class.hpp"
-#include "ast/ast_node_classes.hpp"
+#include "../misc_includes.hpp"
+#include "../lexer_class.hpp"
+#include "../ast/ast_node_classes.hpp"
 
 namespace fling_hdl
 {
