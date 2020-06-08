@@ -15,10 +15,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Fling HDL.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef src_parser_class_hpp
-#define src_parser_class_hpp
+#ifndef src_parser_parser_class_hpp
+#define src_parser_parser_class_hpp
 
-// src/parser_class.hpp
+// src/parser/parser_class.hpp
 
 #include "misc_includes.hpp"
 #include "lexer_class.hpp"
@@ -490,4 +490,4 @@ public:		// functions
 } // namespace fling_hdl
 
 
-#endif		// src_parser_class_hpp
+#endif		// src_parser_parser_class_hpp
