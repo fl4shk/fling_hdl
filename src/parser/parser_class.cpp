@@ -16,7 +16,7 @@
 // along with Fling HDL.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "parser_class.hpp"
-#include "liborangepower_src/cpp_magic.hpp"
+#include "liborangepower_src/metaprog_defines.hpp"
 
 namespace fling_hdl
 {

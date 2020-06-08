@@ -21,7 +21,7 @@
 // src/ast/ast_node_classes.hpp
 
 #include "../misc_includes.hpp"
-#include "../liborangepower_src/cpp_magic.hpp"
+#include "../liborangepower_src/metaprog_defines.hpp"
 #include "../logic_value_class.hpp"
 #include "ast_visitor_class.hpp"
 

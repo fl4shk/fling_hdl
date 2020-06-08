@@ -17,7 +17,7 @@
 
 #include "ast_visitor_class.hpp"
 #include "ast_node_classes.hpp"
-#include "../liborangepower_src/cpp_magic.hpp"
+#include "../liborangepower_src/metaprog_defines.hpp"
 
 namespace fling_hdl
 {
